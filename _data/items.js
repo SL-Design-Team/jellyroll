@@ -983,14 +983,6 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "network-graph.html",
-          name: "Network graph · full demo",
-          tagline: "Full-page force-directed network graph demo (uses D3).",
-          meta: {
-            usage: "Reference page for the Network graph at full canvas scale. Mirror the layout, interaction model, and node/edge styling when building a network view in production. Note: this demo uses D3 v7 via CDN — production code may use a different rendering library."
-          }
-        },
-        {
           file: "preview/dataviz-categorical.html",
           name: "Palette · Categorical",
           tagline: "Five-color palette for unordered categories — designed for light and dark backgrounds.",
