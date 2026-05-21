@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Advanced editors · Key/value editor</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); display: flex; align-items: baseline; }
+  .sl-field__label .count { margin-left: auto; font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
+  .sl-input {
+    height: 32px;
+    padding: 4px 10px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    font: 400 13px/20px var(--font-mono);
+    color: var(--field-text-default);
+    width: 100%;
+    outline: none;
+  }
+  .sl-input:focus { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .sl-input.secret { letter-spacing: 0.1em; }
+
+  .kv-tabs { display: flex; gap: 4px; }
+  .kv-tab {
+    padding: 4px 10px;
+    font: 800 11px/14px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    color: var(--color-text-subtle);
+    background: transparent;
+    border: 1px solid transparent;
+  }
+  .kv-tab.active { background: var(--sl-white); color: var(--sl-blue-700); border-color: var(--sl-grey-300); }
+
+  /* KV table */
+  .kv {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+  .kv__head {
+    display: grid;
+    grid-template-columns: 28px 1fr 1.4fr 28px 32px;
+    gap: 8px;
+    padding: 6px 10px 6px 40px;
+    background: var(--sl-grey-100);
+    border-bottom: 1px solid var(--sl-grey-200);
+    font: 800 10px/14px var(--font-mono);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+  }
+  .kv__row {
+    display: grid;
+    grid-template-columns: 28px 28px 1fr 1.4fr 28px 32px;
+    gap: 8px;
+    padding: 6px 10px;
+    align-items: center;
+    border-bottom: 1px solid var(--sl-grey-100);
+  }
+  .kv__row:last-child { border-bottom: 0; }
+  .kv__row:hover { background: var(--sl-grey-100); }
+  .kv__handle {
+    width: 28px; height: 28px;
+    color: var(--color-text-subtle);
+    cursor: grab;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-xs);
+  }
+  .kv__handle:hover { background: var(--sl-grey-200); color: var(--color-text-body); }
+  .kv__handle svg { width: 12px; height: 12px; }
+  .kv__check {
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .kv__check input { accent-color: var(--sl-blue-600); width: 14px; height: 14px; }
+  .kv__row.off input.sl-input { color: var(--color-text-subtle); text-decoration: line-through; }
+  .kv__row.off .kv__handle, .kv__row.off .kv__type, .kv__row.off .kv__del { opacity: 0.4; }
+  .kv__type {
+    width: 28px; height: 28px;
+    color: var(--color-text-subtle);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    border-radius: var(--radius-xs);
+  }
+  .kv__type:hover { background: var(--sl-grey-200); }
+  .kv__type svg { width: 14px; height: 14px; }
+  .kv__type.secret { color: var(--ai-accent); }
+  .kv__del {
+    width: 32px; height: 32px;
+    border: 0; background: transparent;
+    border-radius: var(--radius-xs);
+    color: var(--color-text-subtle);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .kv__del:hover { background: var(--sl-red-100); color: var(--sl-red-700); }
+  .kv__del svg { width: 14px; height: 14px; }
+
+  .kv__footer {
+    padding: 8px 10px;
+    background: var(--sl-grey-100);
+    border-top: 1px solid var(--sl-grey-200);
+    display: flex; gap: 8px;
+  }
+  .kv__footer button {
+    display: inline-flex; align-items: center; gap: 6px;
+    font: 800 12px/16px var(--font-sans);
+    color: var(--sl-blue-600);
+    background: transparent; border: 0;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+  .kv__footer button:hover { background: var(--sl-blue-100); }
+  .kv__footer button svg { width: 12px; height: 12px; }
+
+  /* JSON view */
+  .kv__json {
+    padding: 12px;
+    background: var(--sl-blue-1000);
+    color: #B7C4E0;
+    font: 400 13px/20px var(--font-mono);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .kv__json .key { color: #79B8FF; }
+  .kv__json .str { color: #9ECBFF; }
+  .kv__json .num { color: #F97583; }
+  .kv__json .pnct { color: #8B98A8; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; display: flex; align-items: center; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .section-h .right { margin-left: auto; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Key/value editor</span><span class="meta">env vars · query params · headers · enable/disable toggles</span></div>
+
+    <div>
+      <div class="section-h">
+        Editor
+        <span class="meta">8 pairs · 1 disabled · 1 secret</span>
+        <div class="right kv-tabs">
+          <button class="kv-tab active">Table</button>
+          <button class="kv-tab">JSON</button>
+        </div>
+      </div>
+
+      <div class="sl-field">
+        <label class="sl-field__label">Environment variables <span class="count">8 of unlimited</span></label>
+        <div class="kv">
+          <div class="kv__head">
+            <span></span>
+            <span>Key</span>
+            <span>Value</span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="kv__row">
+            <span class="kv__check"><input type="checkbox" checked aria-label="Enable" /></span>
+            <span class="kv__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="DATABASE_URL" />
+            <input class="sl-input" value="postgresql://prod-east.snaplogic.internal/main" />
+            <span class="kv__type" title="Plain value"><i data-lucide="text"></i></span>
+            <button class="kv__del"><i data-lucide="trash-2"></i></button>
+          </div>
+
+          <div class="kv__row">
+            <span class="kv__check"><input type="checkbox" checked /></span>
+            <span class="kv__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="API_TOKEN" />
+            <input class="sl-input secret" value="••••••••••••••••••••" />
+            <span class="kv__type secret" title="Secret · masked"><i data-lucide="key"></i></span>
+            <button class="kv__del"><i data-lucide="trash-2"></i></button>
+          </div>
+
+          <div class="kv__row">
+            <span class="kv__check"><input type="checkbox" checked /></span>
+            <span class="kv__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="MAX_RETRIES" />
+            <input class="sl-input" value="3" />
+            <span class="kv__type"><i data-lucide="text"></i></span>
+            <button class="kv__del"><i data-lucide="trash-2"></i></button>
+          </div>
+
+          <div class="kv__row off">
+            <span class="kv__check"><input type="checkbox" /></span>
+            <span class="kv__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="DEBUG_MODE" />
+            <input class="sl-input" value="true" />
+            <span class="kv__type"><i data-lucide="text"></i></span>
+            <button class="kv__del"><i data-lucide="trash-2"></i></button>
+          </div>
+
+          <div class="kv__row">
+            <span class="kv__check"><input type="checkbox" checked /></span>
+            <span class="kv__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="REGION" />
+            <input class="sl-input" value="us-east-1" />
+            <span class="kv__type"><i data-lucide="text"></i></span>
+            <button class="kv__del"><i data-lucide="trash-2"></i></button>
+          </div>
+
+          <div class="kv__footer">
+            <button><i data-lucide="plus"></i>Add variable</button>
+            <button><i data-lucide="clipboard"></i>Bulk paste</button>
+            <button><i data-lucide="upload"></i>Import .env</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">JSON view <span class="meta">same data, edit-as-text mode</span></div>
+      <div class="kv__json">{
+  <span class="key">"DATABASE_URL"</span><span class="pnct">:</span> <span class="str">"postgresql://prod-east.snaplogic.internal/main"</span><span class="pnct">,</span>
+  <span class="key">"API_TOKEN"</span><span class="pnct">:</span> <span class="str">"$secrets.api_token"</span><span class="pnct">,</span>
+  <span class="key">"MAX_RETRIES"</span><span class="pnct">:</span> <span class="num">3</span><span class="pnct">,</span>
+  <span class="key">"REGION"</span><span class="pnct">:</span> <span class="str">"us-east-1"</span>
+<span class="pnct">}</span></div>
+    </div>
+
+    <dl class="spec">
+      <dt>row anatomy</dt><dd>Checkbox (enable/disable) · drag handle · key · value · type indicator · delete.</dd>
+      <dt>type indicators</dt><dd><code>text</code> plain · <code>key</code> secret (value masked, requires hold-to-reveal) · others can be added (number, bool, list).</dd>
+      <dt>enable/disable</dt><dd>Unchecking the row's checkbox doesn't delete — line-through value, dims chrome. Useful for temporarily killing a var without losing it.</dd>
+      <dt>views</dt><dd><b>Table</b> default. <b>JSON</b> toggle shows the same data as paste-ready JSON for bulk edit / version control.</dd>
+      <dt>import</dt><dd>Bulk paste (parses <code>KEY=value</code>, <code>KEY: value</code>, or JSON object) · Import .env file · drag-drop .env file onto the table.</dd>
+      <dt>related</dt><dd>Same anatomy as <b>Dynamic repeater</b>, specialized for key/value pairs. Use <b>repeater</b> when columns aren't strictly key/value.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

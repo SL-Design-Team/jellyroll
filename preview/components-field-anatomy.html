@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Field anatomy</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 22px; }
+
+  /* ─── FIELD ANATOMY ────────────────────────────────────────
+     The canonical form field. Every input in the system
+     composes label + control + helper + error + counter
+     using the structure defined here.
+  */
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label {
+    font: 800 14px/22px var(--font-sans);
+    color: var(--sl-indigo-900);
+    display: flex; align-items: baseline; gap: 4px;
+  }
+  .sl-field__label .req  { color: var(--sl-red-600); font-weight: 800; }
+  .sl-field__label .opt  { color: var(--color-text-subtle); font-weight: 400; font-size: 12px; }
+  .sl-field__label .help { margin-left: auto; color: var(--color-text-subtle); cursor: help; }
+  .sl-field__label .help svg { width: 14px; height: 14px; }
+
+  .sl-field__control {
+    height: var(--field-height-md);
+    padding: var(--field-padding-y-md) var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    color: var(--field-text-default);
+    font: var(--field-font);
+    outline: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .sl-field__control:hover  { border-color: var(--field-border-hover); }
+  .sl-field__control:focus,
+  .sl-field__control.focus  { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .sl-field__control::placeholder { color: var(--field-text-placeholder); font-style: italic; font-weight: 300; }
+
+  .sl-field__control .affix {
+    color: var(--color-text-subtle);
+    font: 400 14px/22px var(--font-sans);
+    flex: none;
+    user-select: none;
+  }
+  .sl-field__control .icon { color: var(--color-text-subtle); display: inline-flex; flex: none; }
+  .sl-field__control .icon svg { width: 16px; height: 16px; stroke-width: 2; }
+  .sl-field__control input {
+    border: 0; outline: 0; background: transparent;
+    flex: 1; min-width: 0;
+    font: inherit; color: inherit;
+    padding: 0;
+  }
+
+  .sl-field__meta {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+  .sl-field__helper { color: var(--color-text-subtle); }
+  .sl-field__error  { color: var(--sl-red-700); display: inline-flex; align-items: center; gap: 4px; }
+  .sl-field__error svg { width: 12px; height: 12px; stroke-width: 2.25; }
+  .sl-field__count  { color: var(--color-text-subtle); font-family: var(--font-mono); font-size: 11px; }
+  .sl-field__count.over { color: var(--sl-red-700); }
+
+  /* Anatomy diagram: numbered markers + legend below */
+  .anatomy {
+    padding: 28px 24px;
+    background: var(--sl-grey-100);
+    border-radius: var(--field-radius);
+  }
+  .anatomy .demo { position: relative; max-width: 540px; }
+  .anatomy .marker {
+    position: absolute;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px;
+    border-radius: 999px;
+    background: var(--sl-blue-600);
+    color: var(--sl-white);
+    font: 800 10px/12px var(--font-mono);
+    pointer-events: none;
+    z-index: 1;
+    box-shadow: 0 0 0 2px var(--sl-grey-100);
+  }
+  .anatomy .m1 { top: -10px;  left: -10px; }
+  .anatomy .m2 { top: -10px;  left: 110px; }
+  .anatomy .m3 { top: -10px;  left: 138px; }
+  .anatomy .m4 { top: 24px;   left: -10px; }
+  .anatomy .m5 { top: 32px;   left: 62px; }
+  .anatomy .m6 { top: 32px;   right: -10px; }
+  .anatomy .m7 { top: 78px;   left: -10px; }
+  .anatomy .m8 { top: 78px;   right: -10px; }
+
+  .legend {
+    margin: 28px 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 32px;
+  }
+  .legend .item { display: grid; grid-template-columns: 24px 1fr; gap: 8px; }
+  .legend .n {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; margin-top: 1px;
+    border-radius: 999px;
+    background: var(--sl-blue-600);
+    color: var(--sl-white);
+    font: 800 10px/12px var(--font-mono);
+    flex: none;
+  }
+  .legend .name { font: 800 12px/16px var(--font-sans); color: var(--sl-indigo-900); }
+  .legend .desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .legend .desc code { font: 400 11px/16px var(--font-mono); background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+
+  .spec {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 4px 16px;
+    font: 400 11px/16px var(--font-sans);
+    padding: 12px 14px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+  }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label">
+      <span class="name">Field anatomy</span>
+      <span class="meta">canonical structure · contract for every input</span>
+    </div>
+
+    <!-- ─── ANATOMY ──────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Anatomy <span class="meta">label · control · helper · error · counter</span></div>
+      <div class="anatomy">
+        <div class="demo">
+          <span class="marker m1">1</span>
+          <span class="marker m2">2</span>
+          <span class="marker m3">3</span>
+          <span class="marker m4">4</span>
+          <span class="marker m5">5</span>
+          <span class="marker m6">6</span>
+          <span class="marker m7">7</span>
+          <span class="marker m8">8</span>
+          <div class="sl-field">
+            <div class="sl-field__label">
+              Pipeline name
+              <span class="req" aria-hidden="true">*</span>
+              <span class="help" title="A short, descriptive name for this pipeline"><i data-lucide="help-circle"></i></span>
+            </div>
+            <div class="sl-field__control focus">
+              <span class="affix">project/</span>
+              <input type="text" value="sf-to-snowflake-nightly" />
+              <span class="icon"><i data-lucide="check"></i></span>
+            </div>
+            <div class="sl-field__meta">
+              <span class="sl-field__helper">Letters, numbers, and dashes only — used in URLs.</span>
+              <span class="sl-field__count">25 / 64</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="legend">
+          <div class="item"><span class="n">1</span><div><div class="name">Label</div><div class="desc">14/22 ExtraBold · sentence case</div></div></div>
+          <div class="item"><span class="n">2</span><div><div class="name">Required indicator</div><div class="desc">Red-600 asterisk · <code>aria-hidden</code></div></div></div>
+          <div class="item"><span class="n">3</span><div><div class="name">Inline help</div><div class="desc">? icon · tooltip on hover/focus</div></div></div>
+          <div class="item"><span class="n">4</span><div><div class="name">Control</div><div class="desc">40px · 4px radius · Grey-400 border</div></div></div>
+          <div class="item"><span class="n">5</span><div><div class="name">Prefix / suffix</div><div class="desc">Inline static text · non-interactive</div></div></div>
+          <div class="item"><span class="n">6</span><div><div class="name">Trailing icon</div><div class="desc">Status / clear · inherits <code>currentColor</code></div></div></div>
+          <div class="item"><span class="n">7</span><div><div class="name">Helper text</div><div class="desc">12/18 subtle · hides when error replaces it</div></div></div>
+          <div class="item"><span class="n">8</span><div><div class="name">Counter</div><div class="desc">11px mono · <code>current / max</code> · Red-700 when over</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── VARIANTS ─────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Variants <span class="meta">composable parts of the same anatomy</span></div>
+      <div class="row">
+
+        <div class="sl-field">
+          <div class="sl-field__label">Plain label</div>
+          <div class="sl-field__control"><input value="value" /></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">Required <span class="req">*</span></div>
+          <div class="sl-field__control"><input value="" placeholder="required" /></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">Optional <span class="opt">(optional)</span></div>
+          <div class="sl-field__control"><input value="" placeholder="optional" /></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">With help <span class="help" title="A short, descriptive name"><i data-lucide="help-circle"></i></span></div>
+          <div class="sl-field__control"><input value="value" /></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">With prefix</div>
+          <div class="sl-field__control"><span class="affix">https://</span><input value="api.snaplogic.com" /></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">With suffix</div>
+          <div class="sl-field__control"><input value="60" /><span class="affix">seconds</span></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">With leading icon</div>
+          <div class="sl-field__control"><span class="icon"><i data-lucide="search"></i></span><input value="" placeholder="search snaps" /></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">With trailing icon</div>
+          <div class="sl-field__control"><input value="value" /><span class="icon"><i data-lucide="x"></i></span></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">With helper</div>
+          <div class="sl-field__control"><input value="" placeholder="value" /></div>
+          <div class="sl-field__meta"><span class="sl-field__helper">Helper explains the format expected.</span></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">With error</div>
+          <div class="sl-field__control" style="border-color: var(--field-border-error);"><input value="bad@value" /></div>
+          <div class="sl-field__meta"><span class="sl-field__error"><i data-lucide="alert-circle"></i>Must be a valid email address.</span></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">With counter</div>
+          <div class="sl-field__control"><input value="A short description goes here" /></div>
+          <div class="sl-field__meta"><span class="sl-field__helper"></span><span class="sl-field__count">31 / 120</span></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">Over limit</div>
+          <div class="sl-field__control" style="border-color: var(--field-border-error);"><input value="A description that exceeds the maximum length quite obviously and won't pass." /></div>
+          <div class="sl-field__meta"><span class="sl-field__error"><i data-lucide="alert-circle"></i>Exceeds maximum length.</span><span class="sl-field__count over">130 / 120</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── SPEC ─────────────────────────────────────────────── -->
+    <dl class="spec">
+      <dt>label</dt><dd><b>14/22 ExtraBold</b> Indigo-900, sentence case. Always associated to control via <code>for</code>/<code>id</code> or wrapping.</dd>
+      <dt>required</dt><dd>Red-600 asterisk after label, <code>aria-hidden="true"</code> (the semantic comes from <code>aria-required="true"</code> on the control).</dd>
+      <dt>optional</dt><dd>Lowercase "(optional)" in subtle grey, 12px regular. Use when most fields in a form are required and a few are not. Don't use both required asterisks and optional labels in the same form.</dd>
+      <dt>control</dt><dd>40px default height · 12px horizontal padding · 4px radius · 1px Grey-400 border. Uses <code>--field-*</code> tokens — never invent new values.</dd>
+      <dt>prefix / suffix</dt><dd>Inline static text (URLs, units, currency). Non-interactive. Colored <code>--color-text-subtle</code>. Sits inside the same control container, separated from input by 8px gap.</dd>
+      <dt>icons</dt><dd>16px Lucide, inherits <code>currentColor</code>. Leading = context (search, link). Trailing = action (clear, dropdown, status).</dd>
+      <dt>helper text</dt><dd>12/18 below the control, subtle grey. Use for format hints and examples. Disappears (or moves to error) when validation fails.</dd>
+      <dt>error text</dt><dd>12/18 below the control, Red-700 with leading <code>alert-circle</code>. Always specific ("Must be a valid email") — never "Invalid input."</dd>
+      <dt>counter</dt><dd>11px monospace, right-aligned in the meta row. Turns Red-700 at limit. <code>aria-live="polite"</code> when approaching limit.</dd>
+      <dt>a11y</dt><dd>Label-to-control: <code>&lt;label for="id"&gt;</code>. Error linkage: <code>aria-invalid="true" aria-describedby="error-id"</code>. Required: <code>aria-required="true"</code>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

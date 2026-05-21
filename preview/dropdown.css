@@ -1,0 +1,46 @@
+/* Shared styles for dropdown / popover preview cards.
+   Popovers anchor to the global header but drop down onto the page canvas (white). */
+
+.dropdown-stage {
+  background: var(--sl-white);
+  border-radius: var(--radius-sm);
+  padding: 40px;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 240px;
+  border: 1px solid var(--sl-grey-200);
+}
+
+/* Standard dark-navy popover chrome — same across all header dropdowns */
+.dropdown {
+  background: var(--sl-blue-900);                     /* SL Blue 900 — shared chrome */
+  color: var(--sl-white);
+  border-radius: 10px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+/* Section labels — ALL CAPS, light blue, looser tracking */
+.dd-group {
+  font: 800 11px/14px var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: #6F8BC6;
+  margin-bottom: 14px;
+}
+
+/* Tappable text rows — 14px, near-white, teal-on-hover */
+.dd-link {
+  font: 500 14px/26px var(--font-sans);
+  color: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  display: block;
+}
+.dd-link:hover { color: var(--sl-teal-300); }
+
+/* Hairline divider between sections */
+.dd-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0;
+}

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Buttons</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 22px; width: 920px; }
+
+  /* ─── BASE ──────────────────────────────────────────────── */
+  .sl-btn {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+  }
+  .sl-btn svg { width: 16px; height: 16px; stroke-width: 2; flex: none; }
+
+  /* ─── SIZES (1:3 padding ratio · matches Figma proportions) ─ */
+  .sl-btn--lg { font-size: 14px; line-height: 22px; padding: 8px 24px; }  /* 40px */
+  .sl-btn--md { font-size: 14px; line-height: 22px; padding: 6px 18px; }  /* 37px ≈ 36 */
+  .sl-btn--sm { font-size: 12px; line-height: 16px; padding: 4px 12px; }  /* 27px ≈ 28 */
+  .sl-btn--sm svg { width: 14px; height: 14px; }
+
+  /* ─── ICON-ONLY (square) ────────────────────────────────── */
+  .sl-btn--icon-only { padding: 0; gap: 0; }
+  .sl-btn--icon-only.sl-btn--lg { width: 40px; height: 40px; }
+  .sl-btn--icon-only.sl-btn--md { width: 36px; height: 36px; }
+  .sl-btn--icon-only.sl-btn--sm { width: 28px; height: 28px; }
+  .sl-btn--icon-only.sl-btn--lg svg { width: 20px; height: 20px; }
+  .sl-btn--icon-only.sl-btn--md svg { width: 18px; height: 18px; }
+  .sl-btn--icon-only.sl-btn--sm svg { width: 16px; height: 16px; }
+
+  /* ─── PRIMARY ───────────────────────────────────────────── */
+  .sl-btn--primary { background: var(--sl-blue-600); color: var(--sl-white); }
+  .sl-btn--primary.hover    { background: linear-gradient(112.63deg, #0B9D9B 12.38%, #0841B4 137.46%); }
+  .sl-btn--primary.pressed  { background: var(--sl-teal-400); }
+  .sl-btn--primary.disabled { background: var(--sl-blue-200); color: var(--sl-white); }
+
+  /* ─── SECONDARY ─────────────────────────────────────────── */
+  .sl-btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .sl-btn--secondary.hover    { background: var(--sl-white); border-color: var(--sl-teal-600); color: var(--sl-teal-600); }
+  .sl-btn--secondary.pressed  { background: var(--sl-teal-200); border-color: var(--sl-teal-400); color: var(--sl-teal-400); }
+  .sl-btn--secondary.disabled { background: var(--sl-white); border-color: var(--sl-blue-200); color: var(--sl-blue-300); }
+
+  /* ─── TERTIARY ──────────────────────────────────────────── */
+  .sl-btn--tertiary { background: transparent; color: var(--sl-blue-600); border: none; }
+  .sl-btn--tertiary.sl-btn--lg { padding: 8px 12px; }
+  .sl-btn--tertiary.sl-btn--md { padding: 6px 10px; }
+  .sl-btn--tertiary.sl-btn--sm { padding: 4px 8px;  }
+  .sl-btn--tertiary.sl-btn--icon-only { padding: 0; }
+  .sl-btn--tertiary.hover    { color: var(--sl-teal-600); text-decoration: underline; }
+  .sl-btn--tertiary.pressed  { color: var(--sl-teal-400); text-decoration: underline; }
+  .sl-btn--tertiary.disabled { color: var(--sl-blue-300); }
+
+  /* ─── COUNT / BADGE CHIP (inside button) ───────────────── */
+  .sl-btn__count {
+    font: 800 12px/16px var(--font-sans);
+    padding: 0 8px;
+    border-radius: 999px;
+    margin-left: 2px;
+    flex: none;
+  }
+  .sl-btn__badge {
+    font: 800 10px/14px var(--font-sans);
+    padding: 1px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-left: 2px;
+    flex: none;
+  }
+  .sl-btn--md .sl-btn__count, .sl-btn--md .sl-btn__badge { font-size: 11px; line-height: 14px; padding: 0 7px; }
+  .sl-btn--sm .sl-btn__count, .sl-btn--sm .sl-btn__badge { font-size: 10px; line-height: 12px; padding: 0 6px; }
+
+  .sl-btn--primary   .sl-btn__count,
+  .sl-btn--primary   .sl-btn__badge { background: rgba(255,255,255,0.22); color: var(--sl-white); }
+  .sl-btn--secondary .sl-btn__count,
+  .sl-btn--secondary .sl-btn__badge { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+  .sl-btn--tertiary  .sl-btn__count,
+  .sl-btn--tertiary  .sl-btn__badge { background: var(--sl-grey-200); color: var(--sl-blue-700); }
+
+  /* ─── ICON-DROPDOWN (icon + chevron, no text) ──────────── */
+  .sl-btn--icon-dropdown { gap: 2px; }
+  .sl-btn--icon-dropdown.sl-btn--lg { padding: 8px 12px; }
+  .sl-btn--icon-dropdown.sl-btn--md { padding: 6px 10px; }
+  .sl-btn--icon-dropdown.sl-btn--sm { padding: 4px 8px; }
+  .sl-btn--icon-dropdown .sl-btn__caret { width: 14px; height: 14px; opacity: 0.85; }
+
+  /* ─── SPLIT BUTTON GROUP ───────────────────────────────── */
+  .sl-btn-group { display: inline-flex; }
+  .sl-btn-group > .sl-btn:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .sl-btn-group > .sl-btn:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  /* trigger button is narrower — just the caret */
+  .sl-btn-group > .sl-btn--split-trigger { gap: 0; }
+  .sl-btn-group > .sl-btn--split-trigger.sl-btn--lg { padding: 8px 10px; }
+  .sl-btn-group > .sl-btn--split-trigger.sl-btn--md { padding: 6px 9px; }
+  .sl-btn-group > .sl-btn--split-trigger.sl-btn--sm { padding: 4px 7px; }
+  /* dividers */
+  .sl-btn-group .sl-btn--primary:first-child   { border-right: 1.5px solid rgba(255,255,255,0.28); }
+  .sl-btn-group .sl-btn--secondary + .sl-btn--secondary { border-left-width: 0; }
+  .sl-btn-group .sl-btn--tertiary:first-child  { border-right: 1px solid var(--sl-grey-300); }
+
+  /* ─── LAYOUT ────────────────────────────────────────────── */
+  .row { display: flex; align-items: center; gap: 14px; }
+  .row + .row { margin-top: 10px; }
+  .tag { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
+  .tag.lbl { width: 80px; flex: none; }
+  .slot { width: 130px; }
+  .slot--icon { width: 60px; }
+  .col-headers { display: flex; gap: 14px; padding-left: 94px; align-items: flex-end; margin-bottom: 8px; }
+  .h { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-subtle); margin-top: 2px; display: block; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Buttons</span><span class="meta">3 variants · 3 sizes · simple + icon-left/right/only</span></div>
+
+    <!-- ═══ STATES ═══════════════════════════════════════════ -->
+    <div>
+      <div class="section-h">States <span class="meta">large · 40px</span></div>
+      <div class="col-headers">
+        <span class="tag slot">Default</span>
+        <span class="tag slot">Hover</span>
+        <span class="tag slot">Pressed</span>
+        <span class="tag slot">Disabled</span>
+      </div>
+
+      <div class="row">
+        <span class="tag lbl">Primary</span>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--primary">Primary</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--primary hover">Primary</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--primary pressed">Primary</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--primary disabled">Primary</button></div>
+      </div>
+      <div class="row">
+        <span class="tag lbl">Secondary</span>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--secondary">Secondary</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--secondary hover">Secondary</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--secondary pressed">Secondary</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--secondary disabled">Secondary</button></div>
+      </div>
+      <div class="row">
+        <span class="tag lbl">Tertiary</span>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--tertiary">Tertiary</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--tertiary hover">Tertiary</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--tertiary pressed">Tertiary</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--tertiary disabled">Tertiary</button></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══ SIZES + ICON VARIANTS ═══════════════════════════ -->
+    <div>
+      <div class="section-h">Sizes &amp; icon variants <span class="meta">primary · all variants follow the same pattern</span></div>
+      <div class="col-headers">
+        <span class="slot tag">Simple<span class="h">text only</span></span>
+        <span class="slot tag">Icon right<span class="h">action / forward</span></span>
+        <span class="slot tag">Icon left<span class="h">back / status</span></span>
+        <span class="slot--icon tag">Icon only<span class="h">square · aria-label</span></span>
+      </div>
+
+      <div class="row">
+        <span class="tag lbl">Large<br><span class="h" style="font-weight: 400;">40px</span></span>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--primary">Continue</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--primary">Continue<i data-lucide="arrow-right"></i></button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--primary"><i data-lucide="arrow-left"></i>Back</button></div>
+        <div class="slot--icon"><button class="sl-btn sl-btn--lg sl-btn--primary sl-btn--icon-only" aria-label="Settings"><i data-lucide="settings"></i></button></div>
+      </div>
+      <div class="row">
+        <span class="tag lbl">Medium<br><span class="h" style="font-weight: 400;">36px</span></span>
+        <div class="slot"><button class="sl-btn sl-btn--md sl-btn--primary">Continue</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--md sl-btn--primary">Continue<i data-lucide="arrow-right"></i></button></div>
+        <div class="slot"><button class="sl-btn sl-btn--md sl-btn--primary"><i data-lucide="arrow-left"></i>Back</button></div>
+        <div class="slot--icon"><button class="sl-btn sl-btn--md sl-btn--primary sl-btn--icon-only" aria-label="Settings"><i data-lucide="settings"></i></button></div>
+      </div>
+      <div class="row">
+        <span class="tag lbl">Small<br><span class="h" style="font-weight: 400;">28px</span></span>
+        <div class="slot"><button class="sl-btn sl-btn--sm sl-btn--primary">Continue</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--sm sl-btn--primary">Continue<i data-lucide="arrow-right"></i></button></div>
+        <div class="slot"><button class="sl-btn sl-btn--sm sl-btn--primary"><i data-lucide="arrow-left"></i>Back</button></div>
+        <div class="slot--icon"><button class="sl-btn sl-btn--sm sl-btn--primary sl-btn--icon-only" aria-label="Settings"><i data-lucide="settings"></i></button></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══ ICON VARIANTS ACROSS VARIANTS ════════════════════ -->
+    <div>
+      <div class="section-h">Icon variants across button variants <span class="meta">large · default state</span></div>
+      <div class="col-headers">
+        <span class="slot tag">Simple</span>
+        <span class="slot tag">Icon right</span>
+        <span class="slot tag">Icon left</span>
+        <span class="slot--icon tag">Icon only</span>
+      </div>
+
+      <div class="row">
+        <span class="tag lbl">Primary</span>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--primary">Continue</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--primary">Continue<i data-lucide="arrow-right"></i></button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--primary"><i data-lucide="arrow-left"></i>Back</button></div>
+        <div class="slot--icon"><button class="sl-btn sl-btn--lg sl-btn--primary sl-btn--icon-only" aria-label="Settings"><i data-lucide="settings"></i></button></div>
+      </div>
+      <div class="row">
+        <span class="tag lbl">Secondary</span>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--secondary">Continue</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--secondary">Continue<i data-lucide="arrow-right"></i></button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--secondary"><i data-lucide="arrow-left"></i>Back</button></div>
+        <div class="slot--icon"><button class="sl-btn sl-btn--lg sl-btn--secondary sl-btn--icon-only" aria-label="Filter"><i data-lucide="filter"></i></button></div>
+      </div>
+      <div class="row">
+        <span class="tag lbl">Tertiary</span>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--tertiary">Continue</button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--tertiary">Continue<i data-lucide="arrow-right"></i></button></div>
+        <div class="slot"><button class="sl-btn sl-btn--lg sl-btn--tertiary"><i data-lucide="arrow-left"></i>Back</button></div>
+        <div class="slot--icon"><button class="sl-btn sl-btn--lg sl-btn--tertiary sl-btn--icon-only" aria-label="More"><i data-lucide="more-vertical"></i></button></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══ COUNTS · BADGES · DROPDOWNS · SPLIT ════════════ -->
+    <div>
+      <div class="section-h">Counts, badges &amp; dropdowns <span class="meta">large · default state · pattern scales to md/sm</span></div>
+
+      <!-- Counts -->
+      <div class="row">
+        <span class="tag lbl">With count</span>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--primary">
+            Notifications <span class="sl-btn__count">12</span>
+          </button>
+        </div>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--secondary">
+            <i data-lucide="bell"></i>Inbox <span class="sl-btn__count">99+</span>
+          </button>
+        </div>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--tertiary">
+            Comments <span class="sl-btn__count">5</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="row">
+        <span class="tag lbl">With badge</span>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--primary">
+            Upgrade <span class="sl-btn__badge">Beta</span>
+          </button>
+        </div>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--secondary">
+            SnapGPT <span class="sl-btn__badge">New</span>
+          </button>
+        </div>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--tertiary">
+            Advanced <span class="sl-btn__badge">Pro</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dropdown buttons -->
+      <div class="row">
+        <span class="tag lbl">Dropdown</span>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--primary">
+            Export <i data-lucide="chevron-down"></i>
+          </button>
+        </div>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--secondary">
+            Environment <i data-lucide="chevron-down"></i>
+          </button>
+        </div>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--tertiary">
+            Sort by <i data-lucide="chevron-down"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Icon-only dropdowns -->
+      <div class="row">
+        <span class="tag lbl">Icon dropdown</span>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--primary sl-btn--icon-dropdown" aria-label="Download menu">
+            <i data-lucide="download"></i><i data-lucide="chevron-down" class="sl-btn__caret"></i>
+          </button>
+        </div>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--secondary sl-btn--icon-dropdown" aria-label="Filter menu">
+            <i data-lucide="filter"></i><i data-lucide="chevron-down" class="sl-btn__caret"></i>
+          </button>
+        </div>
+        <div class="slot" style="width: 180px;">
+          <button class="sl-btn sl-btn--lg sl-btn--tertiary sl-btn--icon-dropdown" aria-label="More actions">
+            <i data-lucide="more-horizontal"></i><i data-lucide="chevron-down" class="sl-btn__caret"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Split buttons -->
+      <div class="row">
+        <span class="tag lbl">Split</span>
+        <div class="slot" style="width: 180px;">
+          <div class="sl-btn-group">
+            <button class="sl-btn sl-btn--lg sl-btn--primary">Save</button>
+            <button class="sl-btn sl-btn--lg sl-btn--primary sl-btn--split-trigger" aria-label="Save options"><i data-lucide="chevron-down"></i></button>
+          </div>
+        </div>
+        <div class="slot" style="width: 180px;">
+          <div class="sl-btn-group">
+            <button class="sl-btn sl-btn--lg sl-btn--secondary">Validate</button>
+            <button class="sl-btn sl-btn--lg sl-btn--secondary sl-btn--split-trigger" aria-label="Validate options"><i data-lucide="chevron-down"></i></button>
+          </div>
+        </div>
+        <div class="slot" style="width: 180px;">
+          <div class="sl-btn-group">
+            <button class="sl-btn sl-btn--lg sl-btn--tertiary">Execute</button>
+            <button class="sl-btn sl-btn--lg sl-btn--tertiary sl-btn--split-trigger" aria-label="Execute options"><i data-lucide="chevron-down"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ USAGE NOTE ═══════════════════════════════════════ -->
+    <div style="font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); display: flex; flex-direction: column; gap: 4px;">
+      <div><b style="color: var(--color-text-body);">Counts</b> are numeric ("12", "99+"). <b style="color: var(--color-text-body);">Badges</b> are short labels ("Beta", "New", "Pro") — UPPERCASE 10px ExtraBold matching the system's pill style. Chip color adapts to the parent button.</div>
+      <div><b style="color: var(--color-text-body);">Dropdown</b> buttons use <code style="background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px;">chevron-down</code> as the right icon — visually identical to icon-right, semantically distinct (opens a menu vs. triggers an action).</div>
+      <div><b style="color: var(--color-text-body);">Split</b> buttons share a height and corners. Divider is a 1.5px white-translucent inset on primary, the existing border on secondary, a 1px Grey-300 line on tertiary. The trigger half always has an <code style="background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px;">aria-label</code>.</div>
+      <div style="height: 1px; background: var(--sl-grey-200); margin: 6px 0;"></div>
+      <div><b style="color: var(--color-text-body);">Large (40px)</b> · page actions, modal footers, primary CTAs &nbsp;|&nbsp; <b style="color: var(--color-text-body);">Medium (36px)</b> · toolbars, inline forms, dense panels &nbsp;|&nbsp; <b style="color: var(--color-text-body);">Small (28px)</b> · table row actions, chips, condensed property editors</div>
+      <div><b style="color: var(--color-text-body);">Icon-left</b> for back / status / object-type prefix. <b style="color: var(--color-text-body);">Icon-right</b> for forward / open / disclosure. Never both at once. Icons inherit <code style="background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px;">currentColor</code>.</div>
+      <div><b style="color: var(--color-text-body);">Icon-only</b> buttons are square (40 / 36 / 28). <b>Always include <code style="background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px;">aria-label</code></b> describing the action.</div>
+      <div><b style="color: var(--color-text-body);">Disabled</b> uses tinted blue (Blue-200 fill / Blue-300 text) — keeps the blue identity rather than greying out.</div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

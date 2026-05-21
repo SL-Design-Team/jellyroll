@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Colors · Surfaces</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .surfaces { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .surf { aspect-ratio: 1.1; border-radius: var(--radius-sm); display:flex; flex-direction: column; justify-content:flex-end; padding: 10px; gap: 2px; border: 1px solid rgba(0,0,0,0.06); }
+  .surf .n { font-size: 12px; font-weight: 800; }
+  .surf .t { font-size: 10px; font-family: var(--font-mono); }
+  .surf.navbar  { background: var(--color-surface-navbar); color: var(--sl-white); }
+  .surf.canvas  { background: var(--color-surface-primary); color: var(--sl-indigo-900); }
+  .surf.sunken  { background: var(--color-surface-sunken); color: var(--sl-indigo-900); }
+  .surf.raised  { background: var(--color-surface-raised); color: var(--sl-indigo-900); box-shadow: var(--shadow-raised); }
+  .surf.overlay { background: var(--color-surface-overlay); color: var(--sl-indigo-900); box-shadow: var(--shadow-overlay); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Surfaces &amp; elevation</span><span class="meta">5 surfaces · Navbar → Overlay</span></div>
+    <div class="surfaces">
+      <div class="surf navbar"><div class="n">Navbar</div><div class="t">blue-900</div></div>
+      <div class="surf canvas"><div class="n">Canvas</div><div class="t">white</div></div>
+      <div class="surf sunken"><div class="n">Sunken</div><div class="t">grey-100</div></div>
+      <div class="surf raised"><div class="n">Raised</div><div class="t">+ shadow</div></div>
+      <div class="surf overlay"><div class="n">Overlay</div><div class="t">+ shadow-lg</div></div>
+    </div>
+  </div>
+</body>
+</html>

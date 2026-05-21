@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Type · Specimen</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .spec { padding: 24px; background: var(--sl-grey-100); border: 1.5px solid rgba(108,132,157,0.18); border-radius: var(--radius-lg); display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .spec .big { font-size: 96px; line-height: 1; color: var(--sl-indigo-900); }
+  .spec .name { font-weight: 800; font-size: 16px; color: var(--sl-indigo-900); margin-top: 8px; }
+  .spec .note { font-size: 11px; color: var(--color-text-subtle); text-align:center; line-height: 1.4; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Typefaces</span><span class="meta">Acherus Grotesque · SF Mono</span></div>
+    <div class="spec-grid">
+      <div class="spec">
+        <div class="big" style="font-family: var(--font-sans); font-weight: 800;">Aa</div>
+        <div class="name" style="font-family: var(--font-sans);">Acherus Grotesque</div>
+        <div class="note">Default font across all products. Weights 200–900, full italic axis.</div>
+      </div>
+      <div class="spec">
+        <div class="big" style="font-family: var(--font-mono); font-weight: 400;">Aa</div>
+        <div class="name" style="font-family: var(--font-mono);">SF&nbsp;Mono</div>
+        <div class="note">Monospaced — code, tokens, JSON only. Weights 400, 700.</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

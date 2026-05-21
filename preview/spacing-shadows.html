@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Shadows</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .shadows { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 12px; }
+  .shadow-tile { aspect-ratio: 1.4; background: var(--sl-white); border-radius: var(--radius-sm); display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 4px; color: var(--sl-indigo-900); }
+  .shadow-tile .v { font-weight: 800; font-size: 13px; }
+  .shadow-tile .t { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-subtle); text-align: center; padding: 0 8px; }
+  .tile-raised { box-shadow: var(--shadow-raised); }
+  .tile-overlay { box-shadow: var(--shadow-overlay); }
+  .tile-focus { box-shadow: var(--shadow-focus-ring); border: 1px solid var(--sl-teal-600); }
+</style>
+</head>
+<body>
+  <div class="card" style="background: var(--sl-grey-100)">
+    <div class="row-label"><span class="name">Elevation shadows</span><span class="meta">light · blue-tinted · low spread</span></div>
+    <div class="shadows">
+      <div class="shadow-tile tile-raised"><div class="v">Raised</div><div class="t">cards, drawers — 2y, 4 blur</div></div>
+      <div class="shadow-tile tile-overlay"><div class="v">Overlay</div><div class="t">modal, popover — 8y, 24 blur</div></div>
+      <div class="shadow-tile tile-focus"><div class="v">Focus ring</div><div class="t">3px teal-600 @ 35%</div></div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Chip</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+
+  /* ─── CHIP ─────────────────────────────────────────────────
+     Compact, interactive control. Renamed from "Tag" — status
+     now belongs to Badge. Chips represent user-selectable
+     options: filters, choices, input tokens, suggested actions.
+
+     4 types — action · filter · choice · input
+     2 sizes — md (default · 32px) · sm (24px)
+     States  — default · hover · focus · selected · disabled
+     Corner  — 4px (--radius-sm), not pill, per SnapLogic system
+  */
+  .sl-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);     /* 4px — not pill */
+    background: var(--sl-white);
+    color: var(--sl-indigo-900);
+    border: 1px solid var(--sl-grey-400);
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+    transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
+  }
+  .sl-chip svg { width: 14px; height: 14px; stroke-width: 2; flex: none; }
+  .sl-chip:focus-visible { outline: none; box-shadow: var(--shadow-focus-ring); }
+
+  /* Sizes */
+  .sl-chip--sm { font-size: 11px; line-height: 14px; padding: 3px 8px; gap: 4px; }
+  .sl-chip--sm svg { width: 12px; height: 12px; }
+
+  /* ─── States (visual demo classes) ──────────────────────── */
+  .sl-chip.hover,
+  .sl-chip:hover {
+    border-color: var(--sl-blue-600);
+    color: var(--sl-blue-700);
+    background: var(--sl-white);
+  }
+  .sl-chip.focus { box-shadow: var(--shadow-focus-ring); }
+  .sl-chip.selected,
+  .sl-chip[aria-pressed="true"],
+  .sl-chip[aria-selected="true"] {
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    border-color: var(--sl-blue-600);
+    font-weight: 800;
+  }
+  .sl-chip.disabled,
+  .sl-chip[aria-disabled="true"] {
+    background: var(--sl-white);
+    color: var(--sl-grey-500);
+    border-color: var(--sl-grey-300);
+    cursor: not-allowed;
+  }
+  .sl-chip.disabled:hover { border-color: var(--sl-grey-300); color: var(--sl-grey-500); }
+
+  /* ─── Trailing remove button (input chips) ──────────────── */
+  .sl-chip__remove {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px;
+    margin-right: -4px;
+    margin-left: 2px;
+    border-radius: 999px;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  .sl-chip__remove:hover { opacity: 1; background: rgba(0,0,0,0.08); }
+  .sl-chip__remove svg { width: 12px; height: 12px; stroke-width: 2.5; }
+  .sl-chip--sm .sl-chip__remove { width: 14px; height: 14px; }
+  .sl-chip--sm .sl-chip__remove svg { width: 10px; height: 10px; }
+
+  /* ─── Layout helpers ──────────────────────────────────────── */
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .row + .row { margin-top: 10px; }
+  .row-tall { gap: 12px; }
+  .lbl { width: 100px; flex: none; font: 800 10px/12px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
+  .lbl small { display: block; font: 400 10px/14px var(--font-mono); text-transform: none; letter-spacing: 0; opacity: 0.7; margin-top: 2px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .demo-context {
+    background: var(--sl-grey-100);
+    padding: 12px 14px;
+    border-radius: var(--radius-xs);
+  }
+  .demo-context .ctx-lbl {
+    font: 400 11px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    margin-bottom: 8px;
+  }
+
+  .spec {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 4px 16px;
+    font: 400 11px/16px var(--font-sans);
+    padding: 10px 12px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+  }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label">
+      <span class="name">Chip</span>
+      <span class="meta">4 types · 2 sizes · interactive · 4px radius</span>
+    </div>
+
+    <!-- ─── STATES ───────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">States <span class="meta">md · default action chip</span></div>
+      <div class="row row-tall">
+        <span class="lbl">Default</span>
+        <button class="sl-chip">All projects</button>
+      </div>
+      <div class="row row-tall">
+        <span class="lbl">Hover</span>
+        <button class="sl-chip hover">All projects</button>
+      </div>
+      <div class="row row-tall">
+        <span class="lbl">Focus</span>
+        <button class="sl-chip focus">All projects</button>
+      </div>
+      <div class="row row-tall">
+        <span class="lbl">Selected</span>
+        <button class="sl-chip selected">All projects</button>
+      </div>
+      <div class="row row-tall">
+        <span class="lbl">Disabled</span>
+        <button class="sl-chip disabled" aria-disabled="true">All projects</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── TYPES ────────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Types</div>
+
+      <div class="row row-tall">
+        <span class="lbl">Action<small>triggers action</small></span>
+        <button class="sl-chip"><i data-lucide="plus"></i>Add filter</button>
+        <button class="sl-chip"><i data-lucide="download"></i>Export</button>
+        <button class="sl-chip"><i data-lucide="zap"></i>Validate</button>
+      </div>
+
+      <div class="row row-tall">
+        <span class="lbl">Filter<small>multi-select</small></span>
+        <button class="sl-chip selected"><i data-lucide="check"></i>Running</button>
+        <button class="sl-chip selected"><i data-lucide="check"></i>Succeeded</button>
+        <button class="sl-chip">Failed</button>
+        <button class="sl-chip">Queued</button>
+      </div>
+
+      <div class="row row-tall">
+        <span class="lbl">Choice<small>single-select</small></span>
+        <button class="sl-chip selected">Last hour</button>
+        <button class="sl-chip">Last 24h</button>
+        <button class="sl-chip">Last 7 days</button>
+        <button class="sl-chip">Last 30 days</button>
+      </div>
+
+      <div class="row row-tall">
+        <span class="lbl">Input<small>token · removable</small></span>
+        <span class="sl-chip"><i data-lucide="user"></i>elif.yilmaz<button class="sl-chip__remove" aria-label="Remove elif.yilmaz"><i data-lucide="x"></i></button></span>
+        <span class="sl-chip"><i data-lucide="tag"></i>production<button class="sl-chip__remove" aria-label="Remove production"><i data-lucide="x"></i></button></span>
+        <span class="sl-chip"><i data-lucide="folder"></i>SF-pipelines<button class="sl-chip__remove" aria-label="Remove SF-pipelines"><i data-lucide="x"></i></button></span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── SIZES ────────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Sizes</div>
+      <div class="row row-tall">
+        <span class="lbl">Medium<small>32px · default</small></span>
+        <button class="sl-chip">Action chip</button>
+        <button class="sl-chip selected"><i data-lucide="check"></i>Filter chip</button>
+        <span class="sl-chip">Input<button class="sl-chip__remove" aria-label="Remove"><i data-lucide="x"></i></button></span>
+      </div>
+      <div class="row row-tall">
+        <span class="lbl">Small<small>24px</small></span>
+        <button class="sl-chip sl-chip--sm">Action chip</button>
+        <button class="sl-chip sl-chip--sm selected"><i data-lucide="check"></i>Filter chip</button>
+        <span class="sl-chip sl-chip--sm">Input<button class="sl-chip__remove" aria-label="Remove"><i data-lucide="x"></i></button></span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── IN CONTEXT ───────────────────────────────────────── -->
+    <div>
+      <div class="section-h">In context</div>
+
+      <div class="demo-context" style="margin-bottom: 10px;">
+        <div class="ctx-lbl">Filter bar — Monitor / pipeline runs</div>
+        <div class="row">
+          <button class="sl-chip selected"><i data-lucide="check"></i>Running</button>
+          <button class="sl-chip selected"><i data-lucide="check"></i>Succeeded</button>
+          <button class="sl-chip">Failed</button>
+          <button class="sl-chip">Queued</button>
+          <button class="sl-chip">Stopped</button>
+          <button class="sl-chip"><i data-lucide="plus"></i>Status</button>
+        </div>
+      </div>
+
+      <div class="demo-context" style="margin-bottom: 10px;">
+        <div class="ctx-lbl">Suggested actions — empty state</div>
+        <div class="row">
+          <button class="sl-chip"><i data-lucide="file-plus"></i>Create pipeline</button>
+          <button class="sl-chip"><i data-lucide="upload"></i>Import from Git</button>
+          <button class="sl-chip"><i data-lucide="book-open"></i>Browse templates</button>
+        </div>
+      </div>
+
+      <div class="demo-context">
+        <div class="ctx-lbl">Input field with token chips</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 10px; background: var(--sl-white); border: 1px solid var(--sl-grey-400); border-radius: var(--radius-sm); min-height: 40px; align-items: center;">
+          <span class="sl-chip sl-chip--sm"><i data-lucide="user"></i>anita.brown<button class="sl-chip__remove" aria-label="Remove anita.brown"><i data-lucide="x"></i></button></span>
+          <span class="sl-chip sl-chip--sm"><i data-lucide="user"></i>bilal.khan<button class="sl-chip__remove" aria-label="Remove bilal.khan"><i data-lucide="x"></i></button></span>
+          <span class="sl-chip sl-chip--sm"><i data-lucide="user"></i>chen.wei<button class="sl-chip__remove" aria-label="Remove chen.wei"><i data-lucide="x"></i></button></span>
+          <span style="flex: 1; min-width: 100px; padding: 4px 0; font: 400 14px/22px var(--font-sans); color: var(--color-text-subtle); font-style: italic;">Add reviewer…</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SPEC ─────────────────────────────────────────────── -->
+    <dl class="spec">
+      <dt>types</dt>
+      <dd><b>Action</b> — triggers an action (filter, add) · <b>Filter</b> — multi-select toggle · <b>Choice</b> — single-select within a group · <b>Input</b> — token in a field, removable with X</dd>
+      <dt>states</dt>
+      <dd>Default · hover (border + text shift to Blue) · focus (teal halo) · selected (Blue-100 fill + Blue-600 border + ExtraBold) · disabled (muted grey, no-cursor)</dd>
+      <dt>sizes</dt>
+      <dd><b>Medium</b> 32px · 13/16 · pad 6/10 (default) &nbsp;|&nbsp; <b>Small</b> 24px · 11/14 · pad 3/8</dd>
+      <dt>corner</dt>
+      <dd>4px (<code>--radius-sm</code>) — matches the SnapLogic system. Not pill-shaped.</dd>
+      <dt>icon</dt>
+      <dd>Optional leading icon (14px md, 12px sm). Filter chips use <code>check</code> when selected. Input chips end with a small <code>x</code> remove button.</dd>
+      <dt>a11y</dt>
+      <dd>Use <code>&lt;button&gt;</code> for action/filter/choice. <code>aria-pressed="true"</code> for filter, <code>aria-selected="true"</code> for choice (inside a listbox). Input chips: trailing X is its own button with <code>aria-label="Remove …"</code>.</dd>
+      <dt>vs. Badge</dt>
+      <dd>Use a <b>Chip</b> when the user can interact with it (toggle, click, remove). Use a <b>Badge</b> for static metadata (status, tier, count) the user can't change.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

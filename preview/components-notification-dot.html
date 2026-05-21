@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Notification dot</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 20px; }
+
+  /* ─── NOTIFICATION DOT ─────────────────────────────────────
+     A positional indicator that sits on top of a host element
+     (icon button, avatar, nav item, tab). Conveys "needs
+     attention" or "active state" without taking up its own
+     real estate.
+
+     Plain dot — needs attention, unread, error
+     With count — number of items needing attention
+     With presence variant — online/away/offline for avatars
+  */
+  .sl-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--sl-red-600);
+    box-shadow: 0 0 0 2px var(--sl-white);   /* white ring — surface-colored */
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Sizes */
+  .sl-dot--sm { width: 6px;  height: 6px;  }
+  .sl-dot--lg { width: 12px; height: 12px; }
+
+  /* Color variants */
+  .sl-dot--danger  { background: var(--sl-red-600); }       /* default — needs attention */
+  .sl-dot--info    { background: var(--sl-blue-600); }      /* new / informational */
+  .sl-dot--success { background: var(--sl-green-600); }     /* online / active */
+  .sl-dot--warning { background: var(--sl-yellow-600); }    /* away / idle */
+  .sl-dot--neutral { background: var(--sl-grey-500); }      /* offline */
+
+  /* With count — grows into a pill */
+  .sl-dot--count {
+    top: -6px;
+    right: -8px;
+    width: auto;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    font: 800 9px/12px var(--font-sans);
+    color: var(--sl-white);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0;
+  }
+  .sl-dot--count.sl-dot--sm { min-width: 14px; height: 14px; font-size: 8px; padding: 0 3px; }
+  .sl-dot--count.sl-dot--lg { min-width: 20px; height: 20px; font-size: 11px; padding: 0 5px; }
+
+  /* Bottom-right (for presence on avatars) */
+  .sl-dot--bottom-right { top: auto; bottom: -1px; right: -1px; }
+
+  /* Surface variants — ring color matches the surface beneath */
+  .on-sunken .sl-dot { box-shadow: 0 0 0 2px var(--sl-grey-100); }
+  .on-navbar .sl-dot { box-shadow: 0 0 0 2px var(--sl-blue-900); }
+
+  /* ─── Host elements used in demos ─────────────────────────── */
+  .sl-icon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    border: none;
+    color: var(--color-text-body);
+    cursor: pointer;
+  }
+  .sl-icon-btn:hover { background: var(--sl-grey-100); }
+  .sl-icon-btn svg { width: 22px; height: 22px; stroke-width: 1.75; }
+  .on-navbar .sl-icon-btn { color: rgba(255,255,255,0.85); }
+  .on-navbar .sl-icon-btn:hover { background: rgba(255,255,255,0.08); }
+
+  .sl-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    color: var(--sl-white);
+    background: var(--sl-teal-600);
+    width: 32px; height: 32px; font-size: 18px;
+    position: relative;
+    flex: none;
+  }
+
+  .sl-nav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font: 500 13px/16px var(--font-sans);
+    color: var(--color-text-body);
+    cursor: pointer;
+    position: relative;
+  }
+  .sl-nav-item:hover { background: var(--sl-grey-100); }
+  .sl-nav-item svg { width: 18px; height: 18px; flex: none; }
+
+  .sl-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0;
+    margin-right: 24px;
+    font: 800 13px/16px var(--font-sans);
+    color: var(--color-text-subtle);
+    cursor: pointer;
+    position: relative;
+    border-bottom: 2px solid transparent;
+  }
+  .sl-tab--active { color: var(--sl-blue-600); border-bottom-color: var(--sl-blue-600); }
+
+  /* ─── Layout helpers ──────────────────────────────────────── */
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+  .row + .row { margin-top: 12px; }
+  .lbl { width: 100px; flex: none; font: 800 10px/12px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
+  .lbl small { display: block; font: 400 10px/14px var(--font-mono); text-transform: none; letter-spacing: 0; opacity: 0.7; margin-top: 2px; }
+  .with-label { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 4px 16px;
+    font: 400 11px/16px var(--font-sans);
+    padding: 10px 12px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+  }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+
+  .on-navbar-block { background: var(--sl-blue-900); padding: 14px; border-radius: var(--radius-sm); }
+  .on-sunken-block { background: var(--sl-grey-100); padding: 14px; border-radius: var(--radius-sm); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label">
+      <span class="name">Notification dot</span>
+      <span class="meta">positional indicator · plain or with count</span>
+    </div>
+
+    <!-- ─── BASIC ────────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Plain dot <span class="meta">"needs attention" / unread state</span></div>
+      <div class="row">
+        <span class="with-label">
+          <button class="sl-icon-btn" aria-label="Notifications — 3 unread">
+            <i data-lucide="bell"></i>
+            <span class="sl-dot"></span>
+          </button>
+          Bell
+        </span>
+        <span class="with-label">
+          <button class="sl-icon-btn" aria-label="Inbox — has new messages">
+            <i data-lucide="inbox"></i>
+            <span class="sl-dot"></span>
+          </button>
+          Inbox
+        </span>
+        <span class="with-label">
+          <button class="sl-icon-btn" aria-label="Account — action required">
+            <i data-lucide="user"></i>
+            <span class="sl-dot"></span>
+          </button>
+          Account
+        </span>
+        <span class="with-label">
+          <button class="sl-icon-btn" aria-label="Settings — update available">
+            <i data-lucide="settings"></i>
+            <span class="sl-dot"></span>
+          </button>
+          Settings
+        </span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── WITH COUNT ───────────────────────────────────────── -->
+    <div>
+      <div class="section-h">With count <span class="meta">specific number · "99+" for &gt;99</span></div>
+      <div class="row">
+        <span class="with-label">
+          <button class="sl-icon-btn" aria-label="Notifications — 1 unread">
+            <i data-lucide="bell"></i>
+            <span class="sl-dot sl-dot--count">1</span>
+          </button>
+          1
+        </span>
+        <span class="with-label">
+          <button class="sl-icon-btn" aria-label="Notifications — 3 unread">
+            <i data-lucide="bell"></i>
+            <span class="sl-dot sl-dot--count">3</span>
+          </button>
+          3
+        </span>
+        <span class="with-label">
+          <button class="sl-icon-btn" aria-label="Notifications — 12 unread">
+            <i data-lucide="bell"></i>
+            <span class="sl-dot sl-dot--count">12</span>
+          </button>
+          12
+        </span>
+        <span class="with-label">
+          <button class="sl-icon-btn" aria-label="Notifications — more than 99 unread">
+            <i data-lucide="bell"></i>
+            <span class="sl-dot sl-dot--count">99+</span>
+          </button>
+          99+
+        </span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── COLOR VARIANTS ───────────────────────────────────── -->
+    <div>
+      <div class="section-h">Color variants <span class="meta">danger default · presence variants for avatars</span></div>
+      <div class="row">
+        <span class="with-label"><button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot sl-dot--danger"></span></button>Danger</span>
+        <span class="with-label"><button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot sl-dot--info"></span></button>Info</span>
+        <span class="with-label"><button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot sl-dot--success"></span></button>Success</span>
+        <span class="with-label"><button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot sl-dot--warning"></span></button>Warning</span>
+        <span class="with-label"><button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot sl-dot--neutral"></span></button>Neutral</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── PRESENCE (on avatars) ────────────────────────────── -->
+    <div>
+      <div class="section-h">Presence on avatars <span class="meta">bottom-right position · success/warning/neutral</span></div>
+      <div class="row">
+        <span class="with-label">
+          <span class="sl-avatar" aria-label="Anita Brown — online">A
+            <span class="sl-dot sl-dot--success sl-dot--bottom-right"></span>
+          </span>
+          Online
+        </span>
+        <span class="with-label">
+          <span class="sl-avatar" aria-label="Bilal Khan — away" style="background: var(--sl-orange-600);">B
+            <span class="sl-dot sl-dot--warning sl-dot--bottom-right"></span>
+          </span>
+          Away
+        </span>
+        <span class="with-label">
+          <span class="sl-avatar" aria-label="Chen Wei — offline" style="background: var(--sl-purple-600);">C
+            <span class="sl-dot sl-dot--neutral sl-dot--bottom-right"></span>
+          </span>
+          Offline
+        </span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── ON OTHER HOSTS ───────────────────────────────────── -->
+    <div>
+      <div class="section-h">On other hosts <span class="meta">nav items · tabs · text</span></div>
+
+      <div class="row">
+        <span class="lbl">Tabs</span>
+        <span class="sl-tab sl-tab--active">Issues<span class="sl-dot" style="position: static; box-shadow: none;"></span></span>
+        <span class="sl-tab">Merge requests <span style="background: var(--sl-grey-200); color: var(--sl-grey-900); padding: 1px 6px; border-radius: 999px; font: 800 10px/14px var(--font-sans);">3</span></span>
+        <span class="sl-tab">Activity</span>
+      </div>
+
+      <div class="row">
+        <span class="lbl">Nav items</span>
+        <span class="sl-nav-item"><i data-lucide="bell"></i>Notifications<span class="sl-dot sl-dot--count" style="position: static; box-shadow: none; margin-left: 4px;">12</span></span>
+        <span class="sl-nav-item"><i data-lucide="message-circle"></i>Messages<span class="sl-dot" style="position: static; box-shadow: none;"></span></span>
+        <span class="sl-nav-item"><i data-lucide="folder"></i>Projects</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── SURFACE VARIANTS ─────────────────────────────────── -->
+    <div>
+      <div class="section-h">Surface variants <span class="meta">ring color matches the surface beneath</span></div>
+
+      <div class="row" style="border: 1px solid var(--sl-grey-200); padding: 14px; border-radius: var(--radius-sm);">
+        <span class="lbl">on canvas<small>white</small></span>
+        <button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot"></span></button>
+        <button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot sl-dot--count">3</span></button>
+      </div>
+
+      <div class="row on-sunken on-sunken-block">
+        <span class="lbl">on sunken<small>grey-100</small></span>
+        <button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot"></span></button>
+        <button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot sl-dot--count">3</span></button>
+      </div>
+
+      <div class="row on-navbar on-navbar-block">
+        <span class="lbl" style="color: rgba(255,255,255,0.55);">on navbar<small style="opacity: 0.5;">blue-900</small></span>
+        <button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot"></span></button>
+        <button class="sl-icon-btn"><i data-lucide="bell"></i><span class="sl-dot sl-dot--count">3</span></button>
+      </div>
+    </div>
+
+    <!-- ─── SPEC ─────────────────────────────────────────────── -->
+    <dl class="spec">
+      <dt>structure</dt>
+      <dd>Absolutely positioned child of a <code>position: relative</code> host. Plain: 8px circle. With count: pill that grows with content.</dd>
+      <dt>position</dt>
+      <dd>Top-right by default (icons, buttons, nav items). Bottom-right for presence on avatars. Always offset slightly outside the host bounds.</dd>
+      <dt>ring</dt>
+      <dd>2px ring in the surface color via <code>box-shadow</code>. Visually "cuts out" the dot from the host edge.</dd>
+      <dt>variants</dt>
+      <dd><b>Danger</b> (red) — needs attention, default · <b>Info</b> (blue) — new, neutral-positive · <b>Success</b> (green) — online/active · <b>Warning</b> (yellow) — away/idle · <b>Neutral</b> (grey) — offline/muted</dd>
+      <dt>a11y</dt>
+      <dd>The dot itself is <code>pointer-events: none</code> and decorative. The <b>host</b> element carries the <code>aria-label</code> describing the state (e.g. <code>aria-label="Notifications — 3 unread"</code>). Don't use a dot as the only indication of state for screen readers.</dd>
+      <dt>vs. Badge</dt>
+      <dd>Use a <b>Notification dot</b> when the indicator sits on top of another element. Use a <b>Badge</b> when the indicator is inline metadata next to text.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Bar chart</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .demo { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .demo .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .demo .desc { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-top: 10px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .bar-wrap { padding: 20px 22px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .bar-wrap .t { font: 800 14px/18px var(--font-sans); color: var(--sl-indigo-900); margin-bottom: 14px; }
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Bar chart</span><span class="meta">categorical comparison · horizontal bars with value labels</span></div>
+    <div class="bar-wrap">
+      <div class="t">Top 8 pipelines by records processed · last 7 days</div>
+      <svg width="100%" height="320" viewBox="0 0 1000 320" xmlns="http://www.w3.org/2000/svg">
+        
+              <text x="230" y="32" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Kafka → BigQuery realtime</text>
+              <rect x="240" y="20" width="700" height="24" fill="#008DFF" rx="2"/>
+              <text x="948" y="37" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#7D8695">1,204,883</text>
+            
+              <text x="230" y="68" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Salesforce → Snowflake daily</text>
+              <rect x="240" y="56" width="477.3824512421538" height="24" fill="#FF73B6" rx="2"/>
+              <text x="725.3824512421538" y="73" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#7D8695">821,700</text>
+            
+              <text x="230" y="104" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Stripe events → Postgres</text>
+              <rect x="240" y="92" width="283.06623962658614" height="24" fill="#C701FF" rx="2"/>
+              <text x="531.0662396265861" y="109" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#7D8695">487,231</text>
+            
+              <text x="230" y="140" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">HubSpot contacts nightly</text>
+              <rect x="240" y="128" width="181.290880525329" height="24" fill="#4ECB8D" rx="2"/>
+              <text x="429.290880525329" y="145" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#7D8695">312,049</text>
+            
+              <text x="230" y="176" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">REST API ingest hourly</text>
+              <rect x="240" y="164" width="121.06760573433272" height="24" fill="#FF9D3A" rx="2"/>
+              <text x="369.0676057343327" y="181" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#7D8695">208,389</text>
+            
+              <text x="230" y="212" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Workday HR sync</text>
+              <rect x="240" y="200" width="59.771861666236475" height="24" fill="#D83034" rx="2"/>
+              <text x="307.7718616662365" y="217" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#7D8695">102,883</text>
+            
+              <text x="230" y="248" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">MG-pipeline-Nov2022</text>
+              <rect x="240" y="236" width="36.25422551401257" height="24" fill="#003A7D" rx="2"/>
+              <text x="284.25422551401255" y="253" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#7D8695">62,403</text>
+            
+              <text x="230" y="284" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Marketing leads enrichment</text>
+              <rect x="240" y="272" width="14.002521406642801" height="24" fill="#F9E858" rx="2"/>
+              <text x="262.0025214066428" y="289" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#7D8695">24,102</text>
+            
+      </svg>
+    </div>
+  </div>
+</body></html>

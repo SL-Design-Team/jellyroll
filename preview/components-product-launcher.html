@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Product launcher</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<link rel="stylesheet" href="dropdown.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .dropdown-stage { background: var(--sl-white); padding: 40px; min-height: 920px; border: 1px solid var(--sl-grey-200); }
+
+  .pl {
+    width: 360px; padding: 0;
+    background: var(--sl-blue-900);
+    border-radius: 10px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.55);
+    overflow: hidden;
+    position: relative;
+  }
+  /* Full-width rainbow gradient strip at the very top */
+  .pl::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px;
+    background: linear-gradient(90deg,
+      #FF1FA0 0%,
+      #B936D4 22%,
+      #5E5BFF 42%,
+      #2BAEFF 60%,
+      #2BE3A0 78%,
+      #FFB951 100%);
+  }
+
+  .pl-body { padding: 24px 24px 20px; }
+
+  .section-label {
+    font: 800 11px/14px var(--font-sans);
+    text-transform: uppercase; letter-spacing: 0.10em;
+    color: #6F8BC6;                     /* light blue, not grey */
+    margin-bottom: 18px;
+  }
+
+  .pl-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0; margin-bottom: 28px;
+  }
+  .pl-tile {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    padding: 4px 0; cursor: pointer;
+  }
+  .pl-bubble {
+    width: 52px; height: 52px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    box-shadow: 0 0 28px rgba(94, 91, 255, 0.18);
+  }
+  .pl-bubble svg { width: 24px; height: 24px; stroke-width: 2; }
+  .pl-bubble.designer { background: radial-gradient(circle at 35% 30%, #FF59C6 0%, #6E2BE1 70%); }
+  .pl-bubble.apim     { background: radial-gradient(circle at 35% 30%, #4FB6FF 0%, #0841B4 80%); }
+  .pl-bubble.autosync { background: radial-gradient(circle at 35% 30%, #FFD08A 0%, #F09040 80%); }
+  .pl-bubble.admin    { background: radial-gradient(circle at 35% 30%, #4FB6FF 0%, #0841B4 80%); }
+  .pl-bubble.monitor  { background: radial-gradient(circle at 35% 30%, #6BD9C0 0%, #0E837A 80%); }
+  .pl-bubble.project  { background: radial-gradient(circle at 35% 30%, #B58CFF 0%, #6E2BE1 80%); }
+
+  .pl-name {
+    font: 500 14px/18px var(--font-sans);
+    color: var(--sl-white);
+    text-align: center;
+  }
+
+  .divider { height: 1px; background: rgba(255,255,255,0.08); margin: 0 24px; }
+
+  .pl-section {
+    padding: 18px 24px 8px;
+  }
+  .pl-link {
+    font: 500 14px/26px var(--font-sans);
+    color: rgba(255,255,255,0.92);
+    cursor: pointer;
+    display: block;
+  }
+  .pl-link:hover { color: var(--sl-teal-300); }
+
+  .release-card {
+    margin: 18px 24px 16px;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    border: 1px solid rgba(43, 227, 160, 0.30);
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer;
+  }
+  .release-card .stack { flex: 1; }
+  .release-card .t {
+    font: 800 14px/18px var(--font-sans);
+    color: var(--sl-white);
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 4px;
+  }
+  .release-card .new {
+    font: 800 10px/14px var(--font-sans);
+    padding: 2px 7px;
+    background: var(--sl-teal-400);
+    color: var(--sl-blue-1000);
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .release-card .s {
+    font: 400 12px/16px var(--font-sans);
+    color: rgba(255,255,255,0.62);
+  }
+  .release-card .arrow {
+    color: rgba(255,255,255,0.55);
+  }
+
+  .feedback {
+    padding: 16px 24px 22px;
+    font: 500 13px/16px var(--font-sans);
+    color: #8FA4D4;                     /* light blue muted */
+    cursor: pointer;
+  }
+  .feedback:hover { color: var(--sl-white); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Product launcher</span><span class="meta">anchored to waffle (3×3) in global header</span></div>
+    <div class="dropdown-stage">
+      <div class="pl">
+        <div class="pl-body">
+          <div class="section-label">Development</div>
+          <div class="pl-row">
+            <div class="pl-tile">
+              <div class="pl-bubble designer">
+                <!-- 4-point sparkle/star -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+                  <path d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" fill="currentColor"/>
+                </svg>
+              </div>
+              <div class="pl-name">Designer</div>
+            </div>
+            <div class="pl-tile">
+              <div class="pl-bubble apim"><i data-lucide="shield-check"></i></div>
+              <div class="pl-name">APIM</div>
+            </div>
+            <div class="pl-tile">
+              <div class="pl-bubble autosync">
+                <!-- Two interlocking circles -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="9" cy="12" r="6"/>
+                  <circle cx="15" cy="12" r="6"/>
+                </svg>
+              </div>
+              <div class="pl-name">AutoSync</div>
+            </div>
+          </div>
+
+          <div class="section-label">Mission Control</div>
+          <div class="pl-row" style="margin-bottom: 0;">
+            <div class="pl-tile">
+              <div class="pl-bubble admin"><i data-lucide="settings"></i></div>
+              <div class="pl-name">Admin<br/>Manager</div>
+            </div>
+            <div class="pl-tile">
+              <div class="pl-bubble monitor"><i data-lucide="bar-chart-3"></i></div>
+              <div class="pl-name">Monitor</div>
+            </div>
+            <div class="pl-tile">
+              <div class="pl-bubble project"><i data-lucide="folder"></i></div>
+              <div class="pl-name">Project<br/>Manager</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="pl-section">
+          <div class="section-label" style="margin-bottom: 10px;">Resources</div>
+          <a class="pl-link">Agent Creator examples</a>
+          <a class="pl-link">Public Pattern Library</a>
+          <a class="pl-link">API Developer Hub</a>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="pl-section">
+          <div class="section-label" style="margin-bottom: 10px;">Help &amp; policies</div>
+          <a class="pl-link">Documentation</a>
+          <a class="pl-link">Community</a>
+          <a class="pl-link">Privacy policy</a>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="release-card">
+          <div class="stack">
+            <div class="t">April Release Notes <span class="new">NEW</span></div>
+            <div class="s">See what's new in the latest update</div>
+          </div>
+          <div class="arrow"><i data-lucide="chevron-right" style="width:20px;height:20px"></i></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="feedback">Give us feedback on the new experience!</div>
+      </div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

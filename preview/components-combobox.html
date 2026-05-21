@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Combobox</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  .sl-combobox {
+    height: var(--field-height-md);
+    padding: var(--field-padding-y-md) var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    display: flex; align-items: center; gap: 8px;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .sl-combobox:hover { border-color: var(--field-border-hover); }
+  .sl-combobox.focus, .sl-combobox.open { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .sl-combobox input {
+    border: 0; outline: 0; background: transparent;
+    flex: 1; min-width: 0; padding: 0;
+    font: var(--field-font); color: var(--field-text-default);
+  }
+  .sl-combobox input::placeholder { color: var(--field-text-placeholder); font-style: italic; font-weight: 300; }
+  .sl-combobox .caret { color: var(--color-text-subtle); display: inline-flex; flex: none; }
+  .sl-combobox .caret svg { width: 16px; height: 16px; }
+  .sl-combobox .spinner { animation: spin 1s linear infinite; color: var(--sl-teal-600); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .sl-combobox-wrap { position: relative; }
+  .sl-menu {
+    position: absolute;
+    top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    box-shadow: var(--shadow-overlay);
+    z-index: 10;
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 4px 0;
+  }
+  .sl-menu__item {
+    padding: 8px 12px;
+    font: 400 14px/22px var(--font-sans);
+    color: var(--sl-indigo-900);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sl-menu__item:hover, .sl-menu__item.active { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+  .sl-menu__item .match { font-weight: 800; }
+  .sl-menu__item .sub { color: var(--color-text-subtle); font-size: 12px; margin-left: auto; }
+  .sl-menu__item .icon { color: var(--color-text-subtle); flex: none; }
+  .sl-menu__item .icon svg { width: 14px; height: 14px; }
+  .sl-menu__group-label {
+    padding: 8px 12px 4px;
+    font: 800 10px/14px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-subtle);
+  }
+  .sl-menu__empty {
+    padding: 16px 12px;
+    text-align: center;
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+  .sl-menu__empty b { display: block; color: var(--color-text-body); margin-bottom: 4px; }
+  .sl-menu__loading {
+    padding: 12px;
+    display: flex; align-items: center; gap: 8px;
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+  .sl-menu__loading .spinner { width: 14px; height: 14px; color: var(--sl-teal-600); animation: spin 1s linear infinite; }
+  .sl-menu__create {
+    padding: 8px 12px;
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-100);
+    font: 800 13px/20px var(--font-sans);
+    color: var(--sl-blue-600);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sl-menu__create svg { width: 14px; height: 14px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .stage { min-height: 380px; padding-top: 8px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Combobox</span><span class="meta">type-ahead autocomplete · async · grouped · create-new</span></div>
+
+    <div>
+      <div class="section-h">States</div>
+      <div class="row stage">
+
+        <div class="sl-field">
+          <label class="sl-field__label">Typing · live filter</label>
+          <div class="sl-combobox-wrap">
+            <div class="sl-combobox open"><input value="snow" /><span class="caret"><i data-lucide="chevron-up"></i></span></div>
+            <div class="sl-menu">
+              <div class="sl-menu__group-label">Recently used</div>
+              <div class="sl-menu__item active"><i data-lucide="database" class="icon"></i><span><span class="match">Snow</span>flake</span><span class="sub">Database</span></div>
+              <div class="sl-menu__group-label">All</div>
+              <div class="sl-menu__item"><i data-lucide="database" class="icon"></i><span><span class="match">Snow</span>flake bulk loader</span></div>
+              <div class="sl-menu__item"><i data-lucide="database" class="icon"></i><span><span class="match">Snow</span>flake SCD2</span></div>
+              <div class="sl-menu__item"><i data-lucide="globe" class="icon"></i><span><span class="match">Snow</span>plow tracker</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">Loading (async)</label>
+          <div class="sl-combobox-wrap">
+            <div class="sl-combobox open"><input value="acme corp" /><span class="spinner"><i data-lucide="loader"></i></span></div>
+            <div class="sl-menu">
+              <div class="sl-menu__loading"><span class="spinner"><i data-lucide="loader"></i></span>Searching accounts…</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">No results · with create</label>
+          <div class="sl-combobox-wrap">
+            <div class="sl-combobox open"><input value="MyNewAccount" /><span class="caret"><i data-lucide="chevron-up"></i></span></div>
+            <div class="sl-menu">
+              <div class="sl-menu__empty">
+                <b>No matching accounts</b>
+                Search returned nothing for "MyNewAccount"
+              </div>
+              <div class="sl-menu__create"><i data-lucide="plus"></i>Create account "MyNewAccount"</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">Selected · resolved</label>
+          <div class="sl-combobox"><input value="Snowflake bulk loader" /><span class="caret"><i data-lucide="chevron-down"></i></span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>vs. select</dt><dd>Use a <b>Combobox</b> when there are many options (&gt;~20) and users will type to find. Use a <b>Select</b> for short, fully-known option lists.</dd>
+      <dt>filtering</dt><dd>Local for &lt;500 items (filter in JS). Async for remote/large datasets, with <code>--validate-debounce</code> (350ms) before firing. Show <b>loading state</b> via spinner replacing chevron + loading row in menu.</dd>
+      <dt>matching</dt><dd>Substring match by default, bolded in the option. Consider fuzzy match (Fuse.js or similar) for long names with abbreviations.</dd>
+      <dt>create-new</dt><dd>When async search returns empty, surface a "<b>+ Create … </b>" footer that resolves to a new entity. Critical for connection pickers.</dd>
+      <dt>keyboard</dt><dd>Type filters · <code>↑/↓</code> navigates · <code>Enter</code> selects active or creates · <code>Esc</code> closes without selecting · <code>Tab</code> selects active and closes.</dd>
+      <dt>a11y</dt><dd><code>role="combobox" aria-autocomplete="list" aria-expanded aria-activedescendant="option-id"</code>. Menu: <code>role="listbox"</code>; items: <code>role="option"</code>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

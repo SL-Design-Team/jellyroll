@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Filter, sort, faceted search</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .frame {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-white);
+    flex-wrap: wrap;
+  }
+  .search {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    flex: 1; min-width: 200px;
+  }
+  .search i, .search svg { width: 14px; height: 14px; color: var(--color-text-subtle); flex: none; }
+  .search input {
+    flex: 1; border: 0; outline: 0; background: transparent;
+    font: 400 13px/20px var(--font-sans); color: var(--field-text-default);
+  }
+  .search input::placeholder { color: var(--field-text-placeholder); font-style: italic; }
+  .search kbd {
+    background: var(--sl-grey-100); border: 1px solid var(--sl-grey-300);
+    border-radius: 3px; padding: 1px 5px;
+    font: 800 10px/14px var(--font-mono); color: var(--color-text-subtle);
+  }
+
+  .filter-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 32px; padding: 0 10px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--sl-grey-300);
+    background: var(--sl-white);
+    font: 800 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    cursor: pointer;
+  }
+  .filter-btn:hover { border-color: var(--sl-blue-600); color: var(--sl-blue-600); }
+  .filter-btn i { width: 14px; height: 14px; }
+  .filter-btn.active {
+    background: var(--sl-blue-100);
+    border-color: var(--sl-blue-600);
+    color: var(--sl-blue-900);
+  }
+  .filter-btn .count {
+    background: var(--sl-blue-600);
+    color: var(--sl-white);
+    border-radius: 999px;
+    padding: 0 6px;
+    font: 800 10px/16px var(--font-mono);
+    min-width: 16px; text-align: center;
+  }
+
+  /* Applied filter chips */
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-50, var(--sl-grey-100));
+    align-items: center;
+  }
+  .chips__lbl { font: 800 10px/14px var(--font-mono); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 4px 3px 10px;
+    border-radius: 999px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .chip b { font-weight: 800; color: var(--sl-indigo-900); }
+  .chip__x {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 0; background: var(--sl-grey-200);
+    color: var(--color-text-subtle);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .chip__x i { width: 10px; height: 10px; }
+  .chip:hover .chip__x { background: var(--sl-red-100); color: var(--sl-red-700); }
+  .chips a.clear-all { color: var(--color-text-link); font: 800 12px/18px var(--font-sans); text-decoration: underline; margin-left: auto; cursor: pointer; }
+
+  /* Faceted filter popover (open state) */
+  .pop-stage { position: relative; padding-top: 6px; padding-left: 220px; padding-bottom: 18px; }
+  .pop-anchor {
+    position: absolute; left: 14px; top: 6px;
+  }
+  .pop {
+    width: 260px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    box-shadow: var(--shadow-overlay);
+    padding: 10px;
+  }
+  .pop__title { font: 800 12px/18px var(--font-sans); color: var(--color-text-heading); margin-bottom: 6px; }
+  .pop__search {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--field-border-default);
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  .pop__search i, .pop__search svg { width: 12px; height: 12px; color: var(--color-text-subtle); flex: none; }
+  .pop__search input { flex: 1; border: 0; outline: 0; background: transparent; font: 400 12px/18px var(--font-sans); }
+  .pop__option {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 6px;
+    border-radius: var(--radius-xs);
+    font: 400 13px/18px var(--font-sans);
+    color: var(--color-text-body);
+    cursor: pointer;
+  }
+  .pop__option:hover { background: var(--sl-blue-50); }
+  .pop__option .cb {
+    width: 14px; height: 14px; border-radius: 2px;
+    border: 1.5px solid var(--sl-grey-500);
+    flex: none;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--sl-white);
+  }
+  .pop__option .cb.checked { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .pop__option .cb i { width: 10px; height: 10px; }
+  .pop__option .ct { margin-left: auto; font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
+  .pop__actions { display: flex; justify-content: space-between; gap: 6px; padding-top: 6px; border-top: 1px solid var(--sl-grey-200); margin-top: 6px; }
+  .pop__actions button { font: 800 12px/18px var(--font-sans); padding: 4px 10px; border-radius: var(--field-radius); border: 1px solid; cursor: pointer; }
+  .pop__actions .pop-apply { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .pop__actions .pop-clear { background: var(--sl-white); color: var(--color-text-subtle); border-color: var(--sl-grey-300); }
+
+  /* Table with sort */
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl thead th {
+    text-align: left;
+    font: 800 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 10px 14px;
+    background: var(--sl-grey-100);
+    border-bottom: 1px solid var(--sl-grey-200);
+    cursor: pointer;
+    user-select: none;
+  }
+  .tbl thead th:hover { color: var(--color-text-link); }
+  .tbl thead th.sorted { color: var(--sl-blue-900); }
+  .tbl thead th .sort-ico {
+    display: inline-block; vertical-align: -2px; margin-left: 4px;
+  }
+  .tbl thead th .sort-ico i { width: 12px; height: 12px; }
+  .tbl tbody td {
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-body);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .tbl tbody tr:last-child td { border-bottom: 0; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 3px 8px; border-radius: 999px;
+  }
+  .pill--ok { background: var(--sl-green-100); color: var(--sl-green-800); }
+  .pill--ok::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sl-green-600); }
+  .pill--err { background: var(--sl-red-100); color: var(--sl-red-800); }
+  .pill--err::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sl-red-600); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Filter, sort, and faceted search</span><span class="meta">toolbar · facet chips · sortable columns</span></div>
+
+    <div>
+      <div class="section-h">Toolbar <span class="meta">search + filter buttons (resting + active)</span></div>
+      <div class="frame">
+        <div class="toolbar">
+          <div class="search">
+            <i data-lucide="search"></i>
+            <input placeholder="Search 1,240 pipelines by name, snap, or owner…" />
+            <kbd>⌘K</kbd>
+          </div>
+          <button class="filter-btn"><i data-lucide="plus"></i>Add filter</button>
+          <button class="filter-btn active">Status<span class="count">2</span></button>
+          <button class="filter-btn">Owner</button>
+          <button class="filter-btn">Snaplex</button>
+          <button class="filter-btn active">Tag<span class="count">1</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Faceted filter popover <span class="meta">multi-select with counts</span></div>
+      <div class="frame">
+        <div class="pop-stage" style="background: var(--sl-grey-100);">
+          <div class="pop-anchor">
+            <button class="filter-btn active">Status<span class="count">2</span></button>
+          </div>
+          <div class="pop">
+            <div class="pop__title">Filter by status</div>
+            <div class="pop__search"><i data-lucide="search"></i><input placeholder="Search statuses" /></div>
+            <div class="pop__option"><span class="cb checked"><i data-lucide="check"></i></span><span>Active</span><span class="ct">1,142</span></div>
+            <div class="pop__option"><span class="cb checked"><i data-lucide="check"></i></span><span>Failed</span><span class="ct">17</span></div>
+            <div class="pop__option"><span class="cb"></span><span>Paused</span><span class="ct">68</span></div>
+            <div class="pop__option"><span class="cb"></span><span>Draft</span><span class="ct">13</span></div>
+            <div class="pop__actions">
+              <button class="pop-clear">Clear</button>
+              <button class="pop-apply">Apply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Applied filters → chips <span class="meta">individually removable · clear all</span></div>
+      <div class="frame">
+        <div class="chips">
+          <span class="chips__lbl">Filters</span>
+          <span class="chip">Status: <b>Active, Failed</b><button class="chip__x" aria-label="Remove"><i data-lucide="x"></i></button></span>
+          <span class="chip">Tag: <b>nightly</b><button class="chip__x" aria-label="Remove"><i data-lucide="x"></i></button></span>
+          <span class="chip">Owner: <b>m.garcia@</b><button class="chip__x" aria-label="Remove"><i data-lucide="x"></i></button></span>
+          <a class="clear-all">Clear all</a>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Pipeline <span class="sort-ico"><i data-lucide="chevrons-up-down"></i></span></th>
+              <th class="sorted">Last run <span class="sort-ico"><i data-lucide="arrow-down"></i></span></th>
+              <th>Duration <span class="sort-ico"><i data-lucide="chevrons-up-down"></i></span></th>
+              <th>Status <span class="sort-ico"><i data-lucide="chevrons-up-down"></i></span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>sf-to-snowflake-nightly</td><td>2 min ago</td><td>3m 14s</td><td><span class="pill pill--ok">Active</span></td></tr>
+            <tr><td>orders-to-warehouse</td><td>14 min ago</td><td>1m 02s</td><td><span class="pill pill--ok">Active</span></td></tr>
+            <tr><td>users-cdc-stream</td><td>1 h ago</td><td>—</td><td><span class="pill pill--err">Failed</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>toolbar order</dt><dd>From left: <b>search</b> (always present) · <b>"+ Add filter"</b> · <b>active filter buttons</b> · view density / saved view to the right. Wrap to next row past 6 buttons.</dd>
+      <dt>search</dt><dd>Free-text search, scoped to the current view. Placeholder names the corpus and key facets ("1,240 pipelines by name, snap, or owner"). <code>⌘K</code> focuses. Debounce 300ms (<code>--validate-debounce</code> token).</dd>
+      <dt>filter buttons</dt><dd>Resting buttons are subtle (grey border). Active filters show <b>Blue 100 fill + Blue 600 border</b> with a count pill of selected values. Click to open the popover; click a separate X-chip area to clear.</dd>
+      <dt>popover</dt><dd>Anchored under the button, 260px wide. Header title · in-popover search (when ≥10 options) · checkbox list with <b>counts</b> per facet · Clear / Apply at bottom. Apply commits; click-away cancels.</dd>
+      <dt>chips</dt><dd>One chip per <b>facet</b> (not per value) — "Status: Active, Failed" not two chips. Remove button on each. <b>"Clear all"</b> link on far right. Chip strip only appears when ≥1 filter is applied.</dd>
+      <dt>sort</dt><dd>Sortable column headers show <code>chevrons-up-down</code> at rest, switch to <code>arrow-up</code>/<code>arrow-down</code> when active. Only one column sorted at a time. Active sort header uses <b>Indigo 900 text</b>.</dd>
+      <dt>persist</dt><dd>Filters + sort persist in URL query string so deep links share. Reset only on explicit "Clear all" or app-level reset. Saved views are a separate pattern.</dd>
+      <dt>empty</dt><dd>If filters return zero rows, use the <b>No results</b> empty state with a "Clear filters" CTA — not the generic "No data" state.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

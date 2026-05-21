@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Histogram</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .panel { padding: 20px 22px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .panel .t { font: 800 14px/18px var(--font-sans); color: var(--sl-indigo-900); margin-bottom: 4px; }
+  .panel .sub { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-bottom: 14px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Histogram</span><span class="meta">distribution of run durations · long tail = problem rows</span></div>
+    <div class="panel">
+      <div class="t">Run duration distribution · last 7 days · 1,247 runs</div>
+      <div class="sub">x-axis = duration bucket · y-axis = run count · p50/p95/p99 marked</div>
+      <svg width="100%" height="300" viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- gridlines + y -->
+        <line x1="60" y1="30" x2="960" y2="30" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="82" x2="960" y2="82" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="134" x2="960" y2="134" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="186" x2="960" y2="186" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="238" x2="960" y2="238" class="axis" stroke-dasharray=""/>
+        <text x="48" y="34" text-anchor="end" class="axis-text">400</text><text x="48" y="86" text-anchor="end" class="axis-text">300</text><text x="48" y="138" text-anchor="end" class="axis-text">200</text><text x="48" y="190" text-anchor="end" class="axis-text">100</text><text x="48" y="242" text-anchor="end" class="axis-text">0</text>
+        <!-- bins: 15 bars, long-tail Poisson-ish distribution -->
+        <rect x="62" y="216.16" width="56" height="21.84" fill="#008DFF" opacity="0.85" rx="2"/><rect x="122" y="150.64" width="56" height="87.36" fill="#008DFF" opacity="0.85" rx="2"/><rect x="182" y="75.75999999999999" width="56" height="162.24" fill="#008DFF" opacity="0.85" rx="2"/><rect x="242" y="40.400000000000006" width="56" height="197.6" fill="#008DFF" opacity="0.85" rx="2"/><rect x="302" y="92.4" width="56" height="145.6" fill="#008DFF" opacity="0.85" rx="2"/><rect x="362" y="136.60000000000002" width="56" height="101.39999999999999" fill="#008DFF" opacity="0.85" rx="2"/><rect x="422" y="169.36" width="56" height="68.64" fill="#008DFF" opacity="0.85" rx="2"/><rect x="482" y="193.28" width="56" height="44.72" fill="#008DFF" opacity="0.85" rx="2"/><rect x="542" y="209.92" width="56" height="28.080000000000002" fill="#008DFF" opacity="0.85" rx="2"/><rect x="602" y="221.36" width="56" height="16.64" fill="#008DFF" opacity="0.85" rx="2"/><rect x="662" y="228.64" width="56" height="9.36" fill="#008DFF" opacity="0.85" rx="2"/><rect x="722" y="232.28" width="56" height="5.72" fill="#008DFF" opacity="0.85" rx="2"/><rect x="782" y="234.36" width="56" height="3.6400000000000006" fill="#008DFF" opacity="0.85" rx="2"/><rect x="842" y="235.92" width="56" height="2.08" fill="#008DFF" opacity="0.85" rx="2"/><rect x="902" y="236.96" width="56" height="1.04" fill="#008DFF" opacity="0.85" rx="2"/>
+        <!-- x labels (durations in mm:ss) -->
+        <text x="60" y="260" text-anchor="middle" class="axis-text">0:00</text><text x="120" y="260" text-anchor="middle" class="axis-text">0:30</text><text x="180" y="260" text-anchor="middle" class="axis-text">1:00</text><text x="240" y="260" text-anchor="middle" class="axis-text">1:30</text><text x="300" y="260" text-anchor="middle" class="axis-text">2:00</text><text x="360" y="260" text-anchor="middle" class="axis-text">2:30</text><text x="420" y="260" text-anchor="middle" class="axis-text">3:00</text><text x="480" y="260" text-anchor="middle" class="axis-text">3:30</text><text x="540" y="260" text-anchor="middle" class="axis-text">4:00</text><text x="600" y="260" text-anchor="middle" class="axis-text">4:30</text><text x="660" y="260" text-anchor="middle" class="axis-text">5:00</text><text x="720" y="260" text-anchor="middle" class="axis-text">5:30</text><text x="780" y="260" text-anchor="middle" class="axis-text">6:00</text><text x="840" y="260" text-anchor="middle" class="axis-text">6:30</text><text x="900" y="260" text-anchor="middle" class="axis-text">7:00</text><text x="960" y="260" text-anchor="middle" class="axis-text">7:30</text>
+        <!-- p50, p95, p99 markers -->
+        <line x1="240" y1="20" x2="240" y2="238" stroke="#017D1B" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="244" y="32" font-family="Acherus Grotesque, sans-serif" font-size="10" font-weight="800" fill="#017D1B">P50 · 1:34</text>
+
+        <line x1="540" y1="20" x2="540" y2="238" stroke="#F9660B" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="544" y="32" font-family="Acherus Grotesque, sans-serif" font-size="10" font-weight="800" fill="#F9660B">P95 · 4:18</text>
+
+        <line x1="720" y1="20" x2="720" y2="238" stroke="#D83034" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="724" y="32" font-family="Acherus Grotesque, sans-serif" font-size="10" font-weight="800" fill="#D83034">P99 · 6:02</text>
+
+        <!-- baseline -->
+        <line x1="60" y1="238" x2="960" y2="238" class="axis" stroke="#7D8695"/>
+        <text x="20" y="135" font-family="Acherus Grotesque, sans-serif" font-size="11" font-weight="800" fill="#7D8695" transform="rotate(-90 20 135)">RUN COUNT</text>
+        <text x="500" y="288" text-anchor="middle" font-family="Acherus Grotesque, sans-serif" font-size="11" font-weight="800" fill="#7D8695" letter-spacing="0.06em">DURATION (MM:SS)</text>
+      </svg>
+    </div>
+  </div>
+</body></html>

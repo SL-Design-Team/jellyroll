@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Search overlay</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<link rel="stylesheet" href="dropdown.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .so { width: 560px; padding: 0; }
+  .search-bar { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .search-bar input { background: none; border: none; outline: none; color: var(--sl-white); font: 500 14px/20px var(--font-sans); flex: 1; }
+  .search-bar input::placeholder { color: var(--sl-grey-500); }
+  .empty { padding: 36px 16px 24px; text-align: center; }
+  .empty .ic { width: 36px; height: 36px; margin: 0 auto 10px; color: var(--sl-grey-600); }
+  .empty .t { font: 500 14px/18px var(--font-sans); color: var(--sl-white); }
+  .empty .s { font: 400 12px/16px var(--font-sans); color: var(--sl-grey-500); margin-top: 4px; }
+  .kbar { display: flex; gap: 14px; padding: 10px 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .kbar .kb { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--sl-grey-500); }
+  .kbar .kb kbd { font: 800 10px/14px var(--font-mono); padding: 2px 6px; border-radius: 3px; background: rgba(255,255,255,0.08); color: var(--sl-white); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Search overlay</span><span class="meta">anchored to search icon · ⌘K to open</span></div>
+    <div class="dropdown-stage">
+      <div class="dropdown so">
+        <div class="search-bar">
+          <i data-lucide="search" style="width:16px;height:16px;color:var(--sl-grey-500)"></i>
+          <input placeholder="Search everything…" />
+          <i data-lucide="x" style="width:16px;height:16px;color:var(--sl-grey-500);cursor:pointer"></i>
+        </div>
+        <div class="empty">
+          <i data-lucide="search" class="ic" style="width:36px;height:36px"></i>
+          <div class="t">Search for snaps, pipelines, patterns, APIs, and more</div>
+          <div class="s">Start typing to see results</div>
+        </div>
+        <div class="kbar">
+          <span class="kb"><kbd>↑↓</kbd>Navigate</span>
+          <span class="kb"><kbd>↵</kbd>Select</span>
+          <span class="kb"><kbd>ESC</kbd>Close</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

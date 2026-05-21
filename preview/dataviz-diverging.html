@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Diverging</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 16px; }
+  .div-strip { display: grid; grid-template-columns: repeat(11, 1fr); border-radius: var(--radius-sm); overflow: hidden; }
+  .div-cell { height: 80px; padding: 8px 6px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+  .div-cell .lbl { font: 800 14px/16px var(--font-sans); }
+  .div-cell .hex { font: 400 9px/12px var(--font-mono); opacity: 0.85; }
+  .axis-labels { display: flex; justify-content: space-between; margin-top: 6px; font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; }
+  .demo { padding: 16px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .demo .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .demo .desc { font: 400 13px/19px var(--font-sans); color: var(--color-text-body); margin-top: 10px; }
+</style></head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Diverging · magenta ↔ cyan</span><span class="meta">two-tailed metrics centered on a baseline</span></div>
+    <div class="div-strip"><div class="div-cell" style="background:#6E0747;color:white"><span class="lbl">−5</span><span class="hex">#6E0747</span></div><div class="div-cell" style="background:#A30A67;color:white"><span class="lbl">−4</span><span class="hex">#A30A67</span></div><div class="div-cell" style="background:#D60F84;color:var(--sl-indigo-900)"><span class="lbl">−3</span><span class="hex">#D60F84</span></div><div class="div-cell" style="background:#FF1FA0;color:var(--sl-indigo-900)"><span class="lbl">−2</span><span class="hex">#FF1FA0</span></div><div class="div-cell" style="background:#FF8CC6;color:var(--sl-indigo-900)"><span class="lbl">−1</span><span class="hex">#FF8CC6</span></div><div class="div-cell" style="background:#EBEDF1;color:var(--sl-indigo-900)"><span class="lbl">0</span><span class="hex">#EBEDF1</span></div><div class="div-cell" style="background:#80C8FF;color:var(--sl-indigo-900)"><span class="lbl">+1</span><span class="hex">#80C8FF</span></div><div class="div-cell" style="background:#2BAEFF;color:var(--sl-indigo-900)"><span class="lbl">+2</span><span class="hex">#2BAEFF</span></div><div class="div-cell" style="background:#1080D6;color:var(--sl-indigo-900)"><span class="lbl">+3</span><span class="hex">#1080D6</span></div><div class="div-cell" style="background:#0A56A0;color:white"><span class="lbl">+4</span><span class="hex">#0A56A0</span></div><div class="div-cell" style="background:#063670;color:white"><span class="lbl">+5</span><span class="hex">#063670</span></div></div>
+    <div class="axis-labels"><span>Below baseline</span><span>Baseline</span><span>Above baseline</span></div>
+    <div class="demo">
+      <div class="lbl">When to use</div>
+      <div class="desc">Diverging scales encode a value that can be <strong>above or below a meaningful midpoint</strong> — engagement vs. baseline, sentiment vs. neutral, expected vs. actual. The neutral grey center anchors "no change". Magenta and cyan are the rainbow's two anchor poles, giving high contrast at both ends. Reserve red ↔ blue diverging for explicit "good / bad" framing (SLA hits/misses); use this magenta ↔ cyan variant for neutral two-tailed data.</div>
+    </div>
+  </div>
+</body></html>

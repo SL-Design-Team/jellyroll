@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Form row</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+
+  /* Field minimal (reused) */
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+  .sl-input {
+    height: var(--field-height-md);
+    padding: var(--field-padding-y-md) var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    font: var(--field-font); color: var(--field-text-default);
+    outline: none;
+    width: 100%;
+  }
+
+  /* ─── FORM ROW ─────────────────────────────────────────────
+     Compositional primitive. Lays out N fields horizontally
+     with consistent gutter. 1, 2, or 3 columns. Each column
+     is equal width by default; can be flagged "grow" for
+     single-wide rows with a long field.
+  */
+  .sl-form-row { display: grid; gap: 16px; }
+  .sl-form-row--1 { grid-template-columns: 1fr; }
+  .sl-form-row--2 { grid-template-columns: 1fr 1fr; }
+  .sl-form-row--3 { grid-template-columns: 1fr 1fr 1fr; }
+  .sl-form-row--2-1 { grid-template-columns: 2fr 1fr; }   /* asymmetric — primary + secondary */
+  .sl-form-row--1-2 { grid-template-columns: 1fr 2fr; }   /* asymmetric — secondary + primary */
+
+  .sl-form-rows { display: flex; flex-direction: column; gap: 20px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .demo {
+    padding: 16px;
+    background: var(--sl-grey-100);
+    border-radius: var(--field-radius);
+  }
+  .lbl-mini {
+    font: 800 10px/14px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-subtle);
+    margin-bottom: 8px;
+  }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Form row</span><span class="meta">layout primitive · 1/2/3 columns · consistent gutter</span></div>
+
+    <div>
+      <div class="section-h">Single column</div>
+      <div class="demo">
+        <div class="lbl-mini">.sl-form-row--1</div>
+        <div class="sl-form-row sl-form-row--1">
+          <div class="sl-field"><label class="sl-field__label">Pipeline name</label><input class="sl-input" value="sf-to-snowflake-nightly" /></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-h">Two columns</div>
+      <div class="demo">
+        <div class="lbl-mini">.sl-form-row--2</div>
+        <div class="sl-form-row sl-form-row--2">
+          <div class="sl-field"><label class="sl-field__label">First name</label><input class="sl-input" value="Anita" /></div>
+          <div class="sl-field"><label class="sl-field__label">Last name</label><input class="sl-input" value="Brown" /></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-h">Three columns</div>
+      <div class="demo">
+        <div class="lbl-mini">.sl-form-row--3</div>
+        <div class="sl-form-row sl-form-row--3">
+          <div class="sl-field"><label class="sl-field__label">City</label><input class="sl-input" value="San Mateo" /></div>
+          <div class="sl-field"><label class="sl-field__label">State</label><input class="sl-input" value="CA" /></div>
+          <div class="sl-field"><label class="sl-field__label">ZIP</label><input class="sl-input" value="94402" /></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-h">Asymmetric · 2:1</div>
+      <div class="demo">
+        <div class="lbl-mini">.sl-form-row--2-1</div>
+        <div class="sl-form-row sl-form-row--2-1">
+          <div class="sl-field"><label class="sl-field__label">Endpoint URL</label><input class="sl-input" value="https://api.snaplogic.com/v2/pipelines" /></div>
+          <div class="sl-field"><label class="sl-field__label">Method</label><input class="sl-input" value="POST" /></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-h">Stacked rows · same form</div>
+      <div class="demo">
+        <div class="lbl-mini">.sl-form-rows wrapping multiple .sl-form-row</div>
+        <div class="sl-form-rows">
+          <div class="sl-form-row sl-form-row--1">
+            <div class="sl-field"><label class="sl-field__label">Pipeline name</label><input class="sl-input" value="sf-to-snowflake-nightly" /></div>
+          </div>
+          <div class="sl-form-row sl-form-row--2">
+            <div class="sl-field"><label class="sl-field__label">Environment</label><input class="sl-input" value="prod-east-1" /></div>
+            <div class="sl-field"><label class="sl-field__label">Schedule</label><input class="sl-input" value="0 2 * * *" /></div>
+          </div>
+          <div class="sl-form-row sl-form-row--3">
+            <div class="sl-field"><label class="sl-field__label">Retries</label><input class="sl-input" value="3" /></div>
+            <div class="sl-field"><label class="sl-field__label">Timeout</label><input class="sl-input" value="60s" /></div>
+            <div class="sl-field"><label class="sl-field__label">Concurrency</label><input class="sl-input" value="1" /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>columns</dt><dd><code>.sl-form-row--1</code> · <code>--2</code> · <code>--3</code> · <code>--2-1</code> · <code>--1-2</code>. Symmetric for related fields (first/last name), asymmetric when one field needs more room (URL + method).</dd>
+      <dt>gutter</dt><dd>16px between columns. Matches <code>--space-4</code>. Do not invent custom gaps.</dd>
+      <dt>vertical</dt><dd>Wrap rows in <code>.sl-form-rows</code> (flex column, gap 20px) so the spacing between rows stays consistent.</dd>
+      <dt>responsive</dt><dd>Collapse multi-column rows to <code>--1</code> below 640px viewport. (Implement at the wrapper level via media query or React breakpoint.)</dd>
+      <dt>composition</dt><dd>Wrap individual fields with the <b>Field anatomy</b> primitive. Form row does <i>not</i> own field chrome — only layout.</dd>
+    </dl>
+  </div>
+</body>
+</html>

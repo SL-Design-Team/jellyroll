@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · AI confidence</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .conf-card {
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    padding: 16px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .conf-card.high { border-color: var(--ai-confidence-high); }
+  .conf-card.med  { border-color: var(--ai-confidence-med); }
+  .conf-card.low  { border-color: var(--ai-confidence-low); }
+
+  .conf-pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; font: 800 11px/14px var(--font-sans); width: max-content; }
+  .conf-pill.high { background: var(--sl-green-100); color: var(--sl-green-800); }
+  .conf-pill.med  { background: var(--sl-yellow-200); color: var(--sl-yellow-1000); }
+  .conf-pill.low  { background: var(--sl-orange-100); color: var(--sl-orange-700); }
+  .conf-pill .dot { width: 8px; height: 8px; border-radius: 999px; }
+  .conf-pill.high .dot { background: var(--ai-confidence-high); }
+  .conf-pill.med  .dot { background: var(--ai-confidence-med); }
+  .conf-pill.low  .dot { background: var(--ai-confidence-low); }
+
+  .conf-range { font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
+  .conf-bar { height: 6px; background: var(--sl-grey-200); border-radius: 999px; overflow: hidden; }
+  .conf-bar > div { height: 100%; border-radius: 999px; }
+  .conf-card.high .conf-bar > div { background: var(--ai-confidence-high); }
+  .conf-card.med  .conf-bar > div { background: var(--ai-confidence-med); }
+  .conf-card.low  .conf-bar > div { background: var(--ai-confidence-low); }
+
+  .conf-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+
+  /* In-field indicator */
+  .sl-input {
+    height: var(--field-height-md);
+    padding: 8px 12px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--ai-accent);
+    background: var(--ai-tint);
+    font: var(--field-font);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sl-input input { flex: 1; border: 0; outline: 0; background: transparent; font: inherit; color: var(--sl-indigo-900); padding: 0; }
+  .sl-input .conf-pill { flex: none; padding: 1px 8px; font-size: 10px; line-height: 12px; }
+
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">AI confidence</span><span class="meta">3 levels · communicates model certainty</span></div>
+
+    <div>
+      <div class="section-h">Levels</div>
+      <div class="row">
+        <div class="conf-card high">
+          <span class="conf-pill high"><span class="dot"></span>High confidence</span>
+          <div class="conf-range">≥ 0.85 · safe to auto-apply if user opts in</div>
+          <div class="conf-bar"><div style="width: 94%"></div></div>
+          <div class="conf-desc">The model is highly likely correct. Use a light-touch review affordance — small Accept button, no warnings.</div>
+        </div>
+        <div class="conf-card med">
+          <span class="conf-pill med"><span class="dot"></span>Medium confidence</span>
+          <div class="conf-range">0.60 – 0.85 · review recommended</div>
+          <div class="conf-bar"><div style="width: 73%"></div></div>
+          <div class="conf-desc">The model has plausible options. Surface multiple candidates if available, encourage explicit human accept.</div>
+        </div>
+        <div class="conf-card low">
+          <span class="conf-pill low"><span class="dot"></span>Low confidence</span>
+          <div class="conf-range">&lt; 0.60 · human verification required</div>
+          <div class="conf-bar"><div style="width: 42%"></div></div>
+          <div class="conf-desc">The model is uncertain. Surface alternates, warn the user, never auto-apply. Consider asking for more context before generating.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">In-field indicator</div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="sl-field">
+          <label class="sl-field__label">Pipeline name <span style="color: var(--ai-accent); font-weight: 400; font-size: 11px; font-family: var(--font-mono); margin-left: 6px;">SnapGPT generated</span></label>
+          <div class="sl-input">
+            <span style="color: var(--ai-accent); flex: none; display: inline-flex;"><i data-lucide="sparkle"></i></span>
+            <input value="sf-to-snowflake-nightly" />
+            <span class="conf-pill high"><span class="dot"></span>0.94</span>
+          </div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Description <span style="color: var(--ai-accent); font-weight: 400; font-size: 11px; font-family: var(--font-mono); margin-left: 6px;">SnapGPT generated</span></label>
+          <div class="sl-input">
+            <span style="color: var(--ai-accent); flex: none; display: inline-flex;"><i data-lucide="sparkle"></i></span>
+            <input value="Pulls accounts from SF and writes them to Snowflake." />
+            <span class="conf-pill med"><span class="dot"></span>0.72</span>
+          </div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Schedule expression <span style="color: var(--ai-accent); font-weight: 400; font-size: 11px; font-family: var(--font-mono); margin-left: 6px;">SnapGPT generated</span></label>
+          <div class="sl-input">
+            <span style="color: var(--ai-accent); flex: none; display: inline-flex;"><i data-lucide="sparkle"></i></span>
+            <input value="0 2 * * *" />
+            <span class="conf-pill low"><span class="dot"></span>0.51</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>levels</dt><dd><b>High</b> ≥0.85 (green) · <b>Medium</b> 0.60–0.85 (yellow) · <b>Low</b> &lt;0.60 (orange). Tune thresholds per model and field type.</dd>
+      <dt>placement</dt><dd>Inline trailing pill in the field for AI-generated values. Larger card view for the AI output review (Editable AI output card).</dd>
+      <dt>behaviour</dt><dd><b>High</b>: small "Accept" affordance, allow auto-apply if user has opted in via setting · <b>Medium</b>: prominent Accept + Revise; surface alternates · <b>Low</b>: warn, require explicit confirmation, suggest providing more context.</dd>
+      <dt>tokens</dt><dd><code>--ai-confidence-high</code> · <code>--ai-confidence-med</code> · <code>--ai-confidence-low</code>.</dd>
+      <dt>a11y</dt><dd>Pills carry text label ("High confidence" not just color). Announce changes via <code>aria-live="polite"</code> when confidence shifts (e.g., user edited an AI value).</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

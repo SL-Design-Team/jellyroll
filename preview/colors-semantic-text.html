@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Colors · Semantic text</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .stack { display: flex; flex-direction: column; gap: 12px; }
+  .row { display: grid; grid-template-columns: 28px 1fr 160px; align-items: center; gap: 14px; padding: 10px 14px; background: var(--sl-grey-100); border-radius: var(--radius-sm); }
+  .dot { width: 20px; height: 20px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06); }
+  .label { font-size: 14px; font-weight: 800; }
+  .token { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-subtle); text-align: right; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Text colors</span><span class="meta">color.text.*</span></div>
+    <div class="stack">
+      <div class="row"><div class="dot" style="background: var(--color-text-body)"></div><span class="label" style="color: var(--color-text-body)">Body — primary content text</span><span class="token">text.body · #031A48</span></div>
+      <div class="row"><div class="dot" style="background: var(--color-text-subtle)"></div><span class="label" style="color: var(--color-text-subtle)">Subtle — secondary captions</span><span class="token">text.subtle · #7D8695</span></div>
+      <div class="row"><div class="dot" style="background: var(--color-text-disabled)"></div><span class="label" style="color: var(--color-text-disabled)">Disabled</span><span class="token">text.disabled · #B0B9C8</span></div>
+      <div class="row"><div class="dot" style="background: var(--color-text-link)"></div><span class="label" style="color: var(--color-text-link)">Link — Blue 600</span><span class="token">text.link · #0841B4</span></div>
+      <div class="row"><div class="dot" style="background: var(--color-text-success)"></div><span class="label" style="color: var(--color-text-success)">Success</span><span class="token">text.success · #014B10</span></div>
+      <div class="row"><div class="dot" style="background: var(--color-text-alert)"></div><span class="label" style="color: var(--color-text-alert)">Alert / error</span><span class="token">text.alert · #B61631</span></div>
+      <div class="row"><div class="dot" style="background: var(--sl-yellow-500)"></div><span class="label" style="color: var(--sl-yellow-500)">Discovery — exploration / new features</span><span class="token">text.discovery · yellow-500</span></div>
+    </div>
+  </div>
+</body>
+</html>

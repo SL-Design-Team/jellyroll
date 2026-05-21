@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Editable AI output</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  /* AI output block */
+  .ai-out {
+    border: 1px solid var(--ai-accent);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+  .ai-out__head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
+    background: var(--ai-tint);
+    border-bottom: 1px solid var(--ai-accent);
+    color: var(--ai-accent);
+  }
+  .ai-out__head svg { width: 14px; height: 14px; }
+  .ai-out__head .label { font: 800 12px/16px var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; flex: 1; }
+  .ai-out__head .conf { font: 400 11px/14px var(--font-mono); display: inline-flex; align-items: center; gap: 4px; }
+  .ai-out__head .conf .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--ai-confidence-high); }
+  .ai-out__head .actions { display: flex; gap: 4px; }
+  .ai-out__head .actions button {
+    height: 24px; padding: 0 10px;
+    font: 800 11px/14px var(--font-sans);
+    border-radius: var(--radius-xs);
+    border: 0; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .ai-out__head .actions .accept { background: var(--ai-accent); color: var(--sl-white); }
+  .ai-out__head .actions .revise { background: transparent; color: var(--ai-accent); }
+  .ai-out__head .actions svg { width: 12px; height: 12px; }
+
+  .ai-out__body { padding: 14px 16px; font: 400 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  /* Diff view */
+  .diff { font: 400 13px/22px var(--font-mono); padding: 8px 14px; background: var(--sl-grey-100); border-bottom: 1px solid var(--sl-grey-200); }
+  .diff .add { background: var(--sl-green-100); color: var(--sl-green-800); padding: 1px 4px; }
+  .diff .del { background: var(--sl-red-100); color: var(--sl-red-700); padding: 1px 4px; text-decoration: line-through; }
+  .diff .unchanged { color: var(--color-text-body); }
+
+  /* Suggested values list (multiple candidates) */
+  .suggestions { display: flex; flex-direction: column; gap: 4px; padding: 8px; background: var(--sl-grey-100); border-top: 1px solid var(--sl-grey-200); }
+  .suggestion-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    cursor: pointer;
+    font: 400 13px/20px var(--font-sans);
+    color: var(--sl-indigo-900);
+  }
+  .suggestion-item:hover { border-color: var(--ai-accent); background: var(--ai-tint); }
+  .suggestion-item.active { border-color: var(--ai-accent); background: var(--ai-tint); }
+  .suggestion-item .marker { color: var(--ai-accent); flex: none; }
+  .suggestion-item .marker svg { width: 14px; height: 14px; }
+  .suggestion-item .conf { margin-left: auto; font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Editable AI output</span><span class="meta">diff view · multiple candidates · accept / revise / regenerate</span></div>
+
+    <div>
+      <div class="section-h">Diff view <span class="meta">old → AI-proposed · word-level diff</span></div>
+      <div class="ai-out">
+        <div class="ai-out__head">
+          <img src="../assets/snapgpt-icon.svg" width="14" height="14" alt="SnapGPT" />
+          <span class="label">SnapGPT · proposed rewrite</span>
+          <span class="conf"><span class="dot"></span>High confidence</span>
+          <div class="actions">
+            <button class="revise"><i data-lucide="rotate-cw"></i>Regenerate</button>
+            <button class="accept"><i data-lucide="check"></i>Accept</button>
+          </div>
+        </div>
+        <div class="diff">
+          <span class="unchanged">Loads </span><span class="del">SF</span> <span class="add">Salesforce</span><span class="unchanged"> accounts to </span><span class="del">snowflake</span><span class="add">Snowflake</span><span class="unchanged"> </span><span class="add">nightly</span><span class="unchanged">, transforming </span><span class="del">stuff</span><span class="add">case and rounding revenue to 2 decimals</span><span class="unchanged">.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Multiple candidates <span class="meta">SnapGPT returns N options · user picks one</span></div>
+      <div class="ai-out">
+        <div class="ai-out__head">
+          <img src="../assets/snapgpt-icon.svg" width="14" height="14" alt="SnapGPT" />
+          <span class="label">SnapGPT · 3 suggestions for "Pipeline name"</span>
+          <span class="conf"><span class="dot" style="background: var(--ai-confidence-med);"></span>Medium confidence</span>
+          <div class="actions">
+            <button class="revise"><i data-lucide="rotate-cw"></i>Regenerate</button>
+            <button class="accept"><i data-lucide="check"></i>Use selected</button>
+          </div>
+        </div>
+        <div class="suggestions">
+          <div class="suggestion-item active">
+            <span class="marker"><i data-lucide="circle-dot"></i></span>
+            <span>sf-to-snowflake-nightly</span>
+            <span class="conf">0.94</span>
+          </div>
+          <div class="suggestion-item">
+            <span class="marker"><i data-lucide="circle"></i></span>
+            <span>salesforce-snowflake-sync</span>
+            <span class="conf">0.81</span>
+          </div>
+          <div class="suggestion-item">
+            <span class="marker"><i data-lucide="circle"></i></span>
+            <span>nightly-acct-load</span>
+            <span class="conf">0.62</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Inline editable <span class="meta">user can tweak the proposal before accepting</span></div>
+      <div class="ai-out">
+        <div class="ai-out__head">
+          <img src="../assets/snapgpt-icon.svg" width="14" height="14" alt="SnapGPT" />
+          <span class="label">SnapGPT · description</span>
+          <span class="conf"><span class="dot"></span>High confidence</span>
+          <div class="actions">
+            <button class="revise"><i data-lucide="x"></i>Discard</button>
+            <button class="accept"><i data-lucide="check"></i>Accept</button>
+          </div>
+        </div>
+        <div class="ai-out__body" contenteditable="true" style="outline: none;">Loads Salesforce accounts to Snowflake nightly, transforming case and rounding revenue to 2 decimals.</div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>chrome</dt><dd>Purple bordered card with header band. Header carries label · confidence pill · actions. Always make it visually clear this is AI-generated, not user-typed.</dd>
+      <dt>confidence pill</dt><dd>Three levels: <span style="color: var(--ai-confidence-high); font-weight: 800;">High</span> (green dot · &gt;0.85) · <span style="color: var(--ai-confidence-med); font-weight: 800;">Medium</span> (yellow · 0.6–0.85) · <span style="color: var(--ai-confidence-low); font-weight: 800;">Low</span> (orange · &lt;0.6). Encourage human review more aggressively when low.</dd>
+      <dt>diff view</dt><dd>Word-level diff between previous value and AI proposal. Adds in green (Green-100/800), deletes in red strikethrough (Red-100/700), unchanged in body color. Best for "rewrite this" interactions.</dd>
+      <dt>candidates</dt><dd>For ambiguous fields (names, labels), surface N suggestions ranked by confidence. Single radio-style select. "Use selected" applies the active one.</dd>
+      <dt>edit</dt><dd>Body is <code>contenteditable</code> — user can refine the proposal before accepting. Edits don't change the "AI-proposed" provenance flag.</dd>
+      <dt>actions</dt><dd><b>Accept</b> commits the value, removes the AI chrome · <b>Regenerate</b> runs again · <b>Discard</b> reverts to the prior value.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

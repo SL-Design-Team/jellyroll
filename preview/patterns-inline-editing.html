@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Inline editing</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .frame {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+  .frame__bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-100);
+    font: 800 12px/16px var(--font-sans); color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .frame__bar i { width: 14px; height: 14px; }
+
+  /* Rename in place (heading) */
+  .rename-row {
+    padding: 22px 24px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .rename-row.idle:hover .rename__title { background: var(--sl-grey-100); border-color: var(--sl-grey-200); }
+  .rename-row.idle:hover .rename__edit-btn { opacity: 1; }
+  .rename__title {
+    font: 800 22px/30px var(--font-sans);
+    color: var(--color-text-heading);
+    padding: 2px 8px;
+    border-radius: var(--radius-xs);
+    border: 1px solid transparent;
+    cursor: text;
+  }
+  .rename__edit-btn {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-xs);
+    background: var(--sl-grey-100);
+    color: var(--color-text-subtle);
+    border: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
+  }
+  .rename__edit-btn i { width: 14px; height: 14px; }
+
+  .rename__input {
+    font: 800 22px/30px var(--font-sans);
+    color: var(--color-text-heading);
+    padding: 2px 8px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--sl-teal-600);
+    box-shadow: var(--shadow-focus-ring);
+    outline: none;
+    width: 360px;
+  }
+  .rename__inline-actions { display: flex; gap: 4px; margin-left: 4px; }
+  .icon-btn {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--sl-grey-300);
+    background: var(--sl-white);
+    color: var(--color-text-body);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .icon-btn--confirm { background: var(--sl-blue-600); border-color: var(--sl-blue-600); color: var(--sl-white); }
+  .icon-btn i { width: 14px; height: 14px; }
+  .rename__hint {
+    font: 400 11px/16px var(--font-mono);
+    color: var(--color-text-subtle);
+    margin-left: 8px;
+  }
+  .rename__hint kbd {
+    background: var(--sl-grey-100);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 10px;
+    font-weight: 800;
+    font-family: var(--font-mono);
+  }
+
+  /* Editable table cell */
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl thead th {
+    text-align: left;
+    font: 800 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 10px 14px;
+    background: var(--sl-grey-100);
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .tbl tbody td {
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-body);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    vertical-align: middle;
+  }
+  .tbl tbody tr:last-child td { border-bottom: 0; }
+  .cell-editable {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 8px;
+    border-radius: var(--radius-xs);
+    border: 1px solid transparent;
+    cursor: text;
+    max-width: 100%;
+  }
+  .cell-editable:hover { background: var(--sl-grey-100); border-color: var(--sl-grey-200); }
+  .cell-editable:hover i { opacity: 1; }
+  .cell-editable i {
+    width: 12px; height: 12px;
+    color: var(--color-text-subtle);
+    opacity: 0;
+    flex: none;
+  }
+  .cell-active {
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .cell-active input {
+    font: 400 13px/20px var(--font-sans);
+    padding: 3px 8px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--sl-teal-600);
+    box-shadow: var(--shadow-focus-ring);
+    outline: none;
+    color: var(--color-text-body);
+    width: 220px;
+  }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 3px 8px; border-radius: 999px;
+  }
+  .pill--saving { background: var(--sl-teal-100); color: var(--sl-teal-800); }
+  .pill--saving::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--sl-teal-600); border-top-color: transparent; animation: pspin 0.9s linear infinite; }
+  .pill--err { background: var(--sl-red-100); color: var(--sl-red-800); }
+  .pill--err::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sl-red-600); }
+  @keyframes pspin { to { transform: rotate(360deg); } }
+
+  .err-row { background: var(--sl-red-50); }
+  .err-row .err-msg {
+    font: 400 12px/16px var(--font-sans);
+    color: var(--sl-red-800);
+    margin-top: 4px;
+  }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Inline editing</span><span class="meta">rename in place · editable cells · optimistic update</span></div>
+
+    <div>
+      <div class="section-h">Rename in place <span class="meta">idle · hover · active</span></div>
+      <div class="frame">
+        <div class="frame__bar"><i data-lucide="git-branch"></i>Pipeline</div>
+        <div class="rename-row idle">
+          <span class="rename__title">sf-to-snowflake-nightly</span>
+          <button class="rename__edit-btn" aria-label="Rename"><i data-lucide="pencil-line"></i></button>
+        </div>
+      </div>
+
+      <div class="frame" style="margin-top: 10px;">
+        <div class="frame__bar"><i data-lucide="git-branch"></i>Pipeline · editing</div>
+        <div class="rename-row">
+          <input class="rename__input" value="sf-to-snowflake-nightly" />
+          <div class="rename__inline-actions">
+            <button class="icon-btn icon-btn--confirm" aria-label="Save"><i data-lucide="check"></i></button>
+            <button class="icon-btn" aria-label="Cancel"><i data-lucide="x"></i></button>
+          </div>
+          <span class="rename__hint"><kbd>↵</kbd> save · <kbd>Esc</kbd> cancel</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Editable cells <span class="meta">click-to-edit · save-on-blur · optimistic</span></div>
+      <div class="frame">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width: 35%;">Connection name</th>
+              <th>Host</th>
+              <th style="width: 20%;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cell-editable">prod-snowflake-east<i data-lucide="pencil-line"></i></span></td>
+              <td><span class="cell-editable">prod.us-east-1.snowflakecomputing.com<i data-lucide="pencil-line"></i></span></td>
+              <td><span class="pill" style="background: var(--sl-green-100); color: var(--sl-green-800);"><span style="width:6px;height:6px;border-radius:50%;background:var(--sl-green-600);"></span>Connected</span></td>
+            </tr>
+            <tr>
+              <td>
+                <span class="cell-active">
+                  <input value="staging-snowflake-west" autofocus />
+                </span>
+              </td>
+              <td><span class="cell-editable">staging.us-west-2.snowflakecomputing.com<i data-lucide="pencil-line"></i></span></td>
+              <td><span class="pill pill--saving">Saving…</span></td>
+            </tr>
+            <tr class="err-row">
+              <td>
+                <span class="cell-active">
+                  <input value="dev-snowflake@bad" />
+                </span>
+                <div class="err-msg"><i data-lucide="alert-circle" style="width:11px;height:11px;vertical-align:-1px;"></i> Only letters, numbers, and dashes allowed.</div>
+              </td>
+              <td><span class="cell-editable">dev.us-west-2.snowflakecomputing.com<i data-lucide="pencil-line"></i></span></td>
+              <td><span class="pill pill--err">Error</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>affordance</dt><dd>Editable text shows a pencil icon on hover, plus a subtle grey background. Don't show the pencil at rest — it adds noise to every row. Hover state is enough to discover the affordance.</dd>
+      <dt>activate</dt><dd>Click anywhere on the value to enter edit mode. <code>F2</code> or <code>Enter</code> from keyboard focus also enters edit mode. Field auto-selects the full value on entry so typing replaces it.</dd>
+      <dt>border</dt><dd>Active field uses the standard input style — <b>1px teal-600 border + focus ring</b>. Inherits sibling typography (don't shrink to default 14px when editing a 22px heading).</dd>
+      <dt>commit</dt><dd>Save on <code>Enter</code>, <b>blur</b>, or check-button click. Cancel on <code>Esc</code> or X-button. Show keyboard hint inline while editing. Empty submit reverts to original value, never clears the field permanently.</dd>
+      <dt>optimistic</dt><dd>Update the cell visually on commit and show an inline <b>"Saving…"</b> chip. If save fails, revert the value and surface an inline error message in red below the cell — never a toast.</dd>
+      <dt>validation</dt><dd>Validate client-side on commit. Show error inline beneath the cell with row-tint <code>red-50</code>. Field stays in edit mode until valid or cancelled.</dd>
+      <dt>when not to</dt><dd>Inline edit only for <b>label-like values</b> (names, descriptions, tags, simple selects). For multi-field configuration, structured types, or anything requiring side-effects, open a drawer or modal instead.</dd>
+      <dt>a11y</dt><dd>Editable elements expose <code>role="button"</code> with <code>aria-label="Edit {field}"</code>. Active input is a real <code>&lt;input&gt;</code>. Save/Cancel buttons have <code>aria-label</code>. Errors are <code>role="alert"</code>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

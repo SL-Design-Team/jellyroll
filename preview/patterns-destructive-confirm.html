@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Destructive confirm</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .scrim {
+    background: var(--color-scrim);
+    border-radius: var(--field-radius);
+    padding: 28px;
+    display: flex; justify-content: center;
+  }
+
+  .modal {
+    width: 440px;
+    background: var(--sl-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-overlay-strong);
+    overflow: hidden;
+    position: relative;
+  }
+  .modal__close {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 32px; height: 32px;
+    border: 0;
+    background: transparent;
+    color: var(--color-text-subtle);
+    border-radius: var(--radius-xs);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background-color 150ms ease-out;
+  }
+  .modal__close:hover { background: var(--sl-grey-100); color: var(--color-text-body); }
+  .modal__close i { width: 18px; height: 18px; }
+  .modal__body { padding: 24px; }
+  .modal h3 {
+    font: 800 18px/26px var(--font-sans);
+    color: var(--color-text-heading);
+    margin: 0 0 8px;
+  }
+  .modal p { font: 400 14px/22px var(--font-sans); color: var(--color-text-body); margin: 0 0 16px; }
+  .modal p b { font-weight: 800; }
+
+  .modal__quote {
+    background: var(--sl-grey-100);
+    border-left: 3px solid var(--sl-grey-400);
+    padding: 10px 12px;
+    font: 400 13px/20px var(--font-mono);
+    color: var(--color-text-body);
+    border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+    margin: 0 0 16px;
+  }
+  .modal__quote b { font-weight: 800; }
+
+  .modal__confirm-input {
+    display: flex; flex-direction: column; gap: 6px;
+    margin-bottom: 16px;
+  }
+  .modal__confirm-input label { font: 800 13px/20px var(--font-sans); color: var(--color-text-body); }
+  .modal__confirm-input label code { background: var(--sl-grey-100); padding: 1px 6px; border-radius: 2px; font-family: var(--font-mono); font-weight: 800; color: var(--sl-red-800); font-size: 12px; }
+  .modal__confirm-input input {
+    height: var(--field-height-md);
+    padding: 8px 12px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    font: var(--field-font);
+    color: var(--field-text-default);
+    outline: none;
+  }
+  .modal__confirm-input input:focus { border-color: var(--sl-teal-600); box-shadow: var(--shadow-focus-ring); }
+
+  .modal__actions {
+    display: flex; justify-content: flex-end; gap: 8px;
+    padding: 12px 24px 18px;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 18px;
+    font: 800 14px/22px var(--font-sans);
+    border-radius: var(--field-radius);
+    border: 1.5px solid;
+    cursor: pointer;
+  }
+  .btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .btn--danger { background: var(--sl-red-600); color: var(--sl-white); border-color: var(--sl-red-600); }
+  .btn--danger:disabled { background: var(--sl-red-200); border-color: var(--sl-red-200); cursor: not-allowed; }
+  .btn--primary { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .btn i { width: 14px; height: 14px; }
+
+  .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+  /* Variant header strip */
+  .modal__head-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--sl-red-100); color: var(--sl-red-700);
+    margin-bottom: 12px;
+  }
+  .modal__head-icon i { width: 22px; height: 22px; }
+  .modal__head-icon--warn { background: var(--sl-yellow-100); color: var(--sl-yellow-1000); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Destructive confirm</span><span class="meta">delete · soft-delete · type-to-confirm · revert</span></div>
+
+    <div>
+      <div class="section-h">Standard delete <span class="meta">soft-delete → Recycle Bin · 30 day retention</span></div>
+      <div class="scrim">
+        <div class="modal">
+          <button class="modal__close" aria-label="Close"><i data-lucide="x"></i></button>
+          <div class="modal__body">
+            <div class="modal__head-icon"><i data-lucide="trash-2"></i></div>
+            <h3>Are you sure you want to delete this pipeline?</h3>
+            <p><b>'MG-pipeline-Nov2022'</b> will be moved to the Recycle Bin and deleted forever after 30 days. Pipelines do not run while they are in the Recycle Bin.</p>
+          </div>
+          <div class="modal__actions">
+            <button class="btn btn--secondary">Cancel</button>
+            <button class="btn btn--danger">Yes, delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">High-risk · type to confirm <span class="meta">permanent · org-wide impact</span></div>
+      <div class="scrim">
+        <div class="modal">
+          <button class="modal__close" aria-label="Close"><i data-lucide="x"></i></button>
+          <div class="modal__body">
+            <div class="modal__head-icon"><i data-lucide="alert-octagon"></i></div>
+            <h3>Permanently delete this environment?</h3>
+            <p>You're about to delete the <b>prod-us-west-2</b> environment. This is <b>not recoverable</b>. 14 pipelines, 6 tasks, and 28 connections will be removed.</p>
+            <div class="modal__quote">
+              <b>14 pipelines</b> · <b>6 scheduled tasks</b> · <b>28 connections</b><br>
+              <span style="color: var(--color-text-subtle);">Affected users: 47 across 3 projects</span>
+            </div>
+            <div class="modal__confirm-input">
+              <label>Type <code>prod-us-west-2</code> to confirm</label>
+              <input placeholder="environment name" />
+            </div>
+          </div>
+          <div class="modal__actions">
+            <button class="btn btn--secondary">Cancel</button>
+            <button class="btn btn--danger" disabled>Delete environment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Revert / lose-changes warning <span class="meta">positive-phrasing two-step</span></div>
+      <div class="scrim">
+        <div class="modal">
+          <button class="modal__close" aria-label="Close"><i data-lucide="x"></i></button>
+          <div class="modal__body">
+            <div class="modal__head-icon modal__head-icon--warn"><i data-lucide="alert-triangle"></i></div>
+            <h3>Do you want to save your changes before you leave this page?</h3>
+            <p>Your changes to <b>sf-to-snowflake-nightly</b> haven't been saved. If you leave now, your edits will be lost.</p>
+          </div>
+          <div class="modal__actions">
+            <button class="btn btn--secondary">No, don't save</button>
+            <button class="btn btn--primary">Yes, save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>headline</dt><dd>Always a <b>question</b>. Sentence case. Names the object type ("delete this pipeline?", "delete this environment?"). Never starts with "Confirm" or "Are you sure" alone — always specifies the action.</dd>
+      <dt>body</dt><dd>Names the specific object <b>in quotes and bold</b> ("'MG-pipeline-Nov2022'"). Describes the consequence (Recycle Bin? permanent? affected dependents?). Cites the retention window if soft-delete.</dd>
+      <dt>buttons</dt><dd><b>Soft delete</b>: secondary "Cancel" + danger "Yes, delete". <b>Save/discard</b>: positive-phrased "No, don't save" + primary "Yes, save" — never "OK / Cancel". Destructive action always on the right.</dd>
+      <dt>color</dt><dd>Danger button is <b>SL Red 600</b>, filled, only for permanent or hard-impact actions. For soft-delete + 30-day undo, danger is still appropriate but the body text must mention the recovery window.</dd>
+      <dt>type-to-confirm</dt><dd>Required when action is <b>permanent</b> (env deletion, org delete, force-merge) <i>or</i> affects ≥5 users / ≥10 pipelines. User types the exact object name; confirm button stays disabled until match. Show a small impact summary (count of dependents) above the input.</dd>
+      <dt>focus</dt><dd>Modal opens with focus on the <b>safest</b> action (Cancel) — never the destructive button. <code>Esc</code> closes the modal as cancel (same behavior as the X in the corner). <code>Enter</code> activates Cancel by default.</dd>
+      <dt>after</dt><dd>Show a toast confirming the action ("Pipeline moved to Recycle Bin · Undo") with a 10s undo window when soft-delete. For permanent actions, no undo — show a confirmation toast only.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

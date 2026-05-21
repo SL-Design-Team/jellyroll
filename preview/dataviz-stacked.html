@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Stacked area</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .demo { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .demo .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .demo .desc { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-top: 10px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .area-wrap { padding: 20px 22px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .area-wrap .t { font: 800 14px/18px var(--font-sans); color: var(--sl-indigo-900); margin-bottom: 14px; }
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Stacked area</span><span class="meta">composition over time · 4 series stacked</span></div>
+    <div class="area-wrap">
+      <div class="t">Runs by status · last 14 days</div>
+      <svg width="100%" height="300" viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <!-- gridlines + y labels -->
+        <line x1="60" y1="30" x2="980" y2="30" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="80" x2="980" y2="80" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="130" x2="980" y2="130" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="180" x2="980" y2="180" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="230" x2="980" y2="230" class="axis" stroke-dasharray=""/>
+        <text x="48" y="34" text-anchor="end" class="axis-text">400</text><text x="48" y="84" text-anchor="end" class="axis-text">300</text><text x="48" y="134" text-anchor="end" class="axis-text">200</text><text x="48" y="184" text-anchor="end" class="axis-text">100</text><text x="48" y="234" text-anchor="end" class="axis-text">0</text>
+        <!-- x labels -->
+        <text x="130.76923076923077" y="252" text-anchor="middle" class="axis-text">Apr 1</text><text x="343.0769230769231" y="252" text-anchor="middle" class="axis-text">Apr 4</text><text x="555.3846153846154" y="252" text-anchor="middle" class="axis-text">Apr 7</text><text x="767.6923076923077" y="252" text-anchor="middle" class="axis-text">Apr 10</text><text x="980" y="252" text-anchor="middle" class="axis-text">Apr 13</text>
+        <!-- Stacked areas: total at each x = bottom (succeeded) → fail → warn → running -->
+        <!-- Cumulative band tops (y-coord, smaller = taller stack): -->
+        <!-- Succeeded: 180-200 area  Failed: above by ~30 Warning: above by ~25 Running: above by ~20 -->
+
+        <!-- Succeeded (green) bottom -->
+        <path d="M60,230 L120,225 L180,222 L240,215 L300,218 L360,210 L420,205 L480,200 L540,202 L600,195 L660,190 L720,180 L780,182 L840,170 L900,165 L960,160 L960,230 L60,230 Z" fill="#017D1B"/>
+        <!-- Failed (red) -->
+        <path d="M60,210 L120,200 L180,195 L240,185 L300,190 L360,178 L420,170 L480,165 L540,168 L600,158 L660,152 L720,138 L780,140 L840,128 L900,120 L960,115 L960,160 L900,165 L840,170 L780,182 L720,180 L660,190 L600,195 L540,202 L480,200 L420,205 L360,210 L300,218 L240,215 L180,222 L120,225 L60,230 Z" fill="#B61631"/>
+        <!-- Warning (orange) -->
+        <path d="M60,180 L120,170 L180,165 L240,152 L300,158 L360,145 L420,135 L480,128 L540,130 L600,118 L660,110 L720,90 L780,92 L840,75 L900,68 L960,62 L960,115 L900,120 L840,128 L780,140 L720,138 L660,152 L600,158 L540,168 L480,165 L420,170 L360,178 L300,190 L240,185 L180,195 L120,200 L60,210 Z" fill="#F9660B"/>
+        <!-- Running (blue) -->
+        <path d="M60,155 L120,140 L180,132 L240,118 L300,122 L360,108 L420,95 L480,85 L540,88 L600,72 L660,62 L720,42 L780,45 L840,28 L900,20 L960,12 L960,62 L900,68 L840,75 L780,92 L720,90 L660,110 L600,118 L540,130 L480,128 L420,135 L360,145 L300,158 L240,152 L180,165 L120,170 L60,180 Z" fill="#0841B4"/>
+      </svg>
+      <div class="legend">
+        <div class="lg-item"><span class="lg-dot" style="background:#0841B4"></span>Running</div>
+        <div class="lg-item"><span class="lg-dot" style="background:#F9660B"></span>Warning</div>
+        <div class="lg-item"><span class="lg-dot" style="background:#B61631"></span>Failed</div>
+        <div class="lg-item"><span class="lg-dot" style="background:#017D1B"></span>Succeeded</div>
+      </div>
+    </div>
+  </div>
+</body></html>

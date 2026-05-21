@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Tabs</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .tabs { display: flex; gap: 28px; border-bottom: 1px solid var(--sl-grey-500); }
+  .tab {
+    padding: 8px 0;
+    font: 800 14px/20px var(--font-sans);
+    color: var(--color-text-body);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .tab.selected {
+    color: var(--sl-blue-600);
+    border-bottom-color: var(--sl-blue-600);
+  }
+  .tab.unselected { font-weight: 500; color: var(--color-text-body); }
+  .tab.unselected:hover { color: var(--sl-blue-600); }
+  .v-tabs { display: flex; }
+  .v-tabs .col { display: flex; flex-direction: column; }
+  .v-tab {
+    padding: 8px 12px; font: 800 14px/20px var(--font-sans);
+    color: var(--color-text-body); cursor: pointer;
+    border-left: 2px solid transparent;
+  }
+  .v-tab.selected { color: var(--sl-blue-600); border-left-color: var(--sl-blue-600); }
+  .v-tab.unselected { font-weight: 500; }
+  .pane { padding: 16px; background: var(--sl-grey-100); flex: 1; font-size: 12px; color: var(--color-text-subtle); border-radius: 4px; margin-left: 16px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Tabs · horizontal</span><span class="meta">selected: text-accent-blue · 2px underline</span></div>
+    <div class="tabs">
+      <div class="tab selected">IP allowlists</div>
+      <div class="tab unselected">CORs allowlists</div>
+      <div class="tab unselected">Groundplex allowlists</div>
+    </div>
+    <div class="row-label" style="margin-top: 10px"><span class="name">Tabs · vertical (rare)</span><span class="meta">2px left rule</span></div>
+    <div class="v-tabs">
+      <div class="col">
+        <div class="v-tab selected">Selected</div>
+        <div class="v-tab unselected">Unselected</div>
+        <div class="v-tab unselected">Another</div>
+      </div>
+      <div class="pane">Selected tab content. Use horizontal tabs by default; vertical only for deep settings.</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Global header</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { max-width: 1240px; width: 100%; gap: 8px; padding: 24px; background: var(--sl-grey-100); box-sizing: border-box; }
+
+  .gh {
+    height: 56px;
+    background: var(--sl-blue-900);
+    display: flex; align-items: center; padding: 0 16px;
+    gap: 12px; color: var(--sl-white);
+    border-radius: var(--radius-sm);
+    position: relative;
+    min-width: 0;
+  }
+  .gh::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+    background: linear-gradient(90deg, #0B9D9B 0%, #2BE3A0 50%, #0841B4 100%);
+    border-bottom-left-radius: var(--radius-sm);
+    border-bottom-right-radius: var(--radius-sm);
+  }
+
+  .gh .brand { display: flex; align-items: center; gap: 12px; min-width: 0; flex-shrink: 0; }
+  .gh .brand .logo-mark {
+    width: 28px; height: 28px;
+    flex-shrink: 0;
+    background: url("../assets/logo-mark-white.png?v=2") center / contain no-repeat;
+  }
+  .gh .brand .app-name { font: 800 16px/20px var(--font-sans); color: var(--sl-white); letter-spacing: -0.005em; white-space: nowrap; }
+
+  .gh .env-pick {
+    display: flex; align-items: center; gap: 8px;
+    font: 500 13px/18px var(--font-sans); color: rgba(255,255,255,0.92);
+    padding: 6px 10px; border-radius: var(--radius-sm); cursor: pointer;
+    margin-left: 12px;
+    min-width: 0;
+  }
+  .gh .env-pick span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .gh .env-pick:hover { background: rgba(255,255,255,0.08); }
+  .gh .env-pick .env-cube { color: var(--sl-yellow-500); }
+  .gh .env-pick .chev { color: rgba(255,255,255,0.6); }
+
+  .gh .spacer { flex: 1; min-width: 0; }
+  .gh .snapgpt { font: 800 14px/18px var(--font-sans); padding: 6px 10px; border-radius: var(--radius-sm); cursor: pointer; letter-spacing: 0.01em; flex-shrink: 0; white-space: nowrap; }
+  .gh .icon-btn, .gh .avatar, .gh .waffle-btn { flex-shrink: 0; }
+  /* Narrow viewports — hide the SnapGPT label and env-name text first */
+  @media (max-width: 720px) {
+    .gh .env-pick span:not(.env-cube) { display: none; }
+  }
+  @media (max-width: 560px) {
+    .gh .snapgpt { display: none; }
+  }
+  .gh .snapgpt .gpt {
+    background: linear-gradient(112.63deg, #0B9D9B 12.38%, #0841B4 137.46%);
+    background-clip: text; -webkit-background-clip: text; color: transparent;
+  }
+  .gh .icon-btn {
+    width: 32px; height: 32px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.92); cursor: pointer; position: relative;
+  }
+  .gh .icon-btn:hover { background: rgba(255,255,255,0.10); }
+  .gh .icon-btn svg { width: 18px; height: 18px; }
+  .gh .icon-btn .dot {
+    position: absolute; top: 5px; right: 6px;
+    width: 7px; height: 7px; border-radius: 999px;
+    background: var(--sl-red-600); border: 1.5px solid var(--sl-blue-900);
+  }
+  .gh .avatar {
+    width: 28px; height: 28px; border-radius: 999px;
+    background: transparent; color: var(--sl-white);
+    border: 1.5px solid var(--sl-white);
+    display: flex; align-items: center; justify-content: center;
+    font: 800 11px/16px var(--font-sans); cursor: pointer;
+    box-sizing: border-box;
+  }
+  .gh .avatar:hover { background: rgba(255,255,255,0.10); }
+  .gh .waffle-btn {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
+    padding: 8px; cursor: pointer; border-radius: var(--radius-sm);
+  }
+  .gh .waffle-btn:hover { background: rgba(255,255,255,0.10); }
+  .gh .waffle-btn span { width: 4px; height: 4px; background: rgba(255,255,255,0.85); border-radius: 999px; }
+
+  .anatomy { font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); padding: 14px 0 0; display: flex; flex-direction: column; gap: 4px; }
+  .anatomy strong { color: var(--sl-indigo-900); font-weight: 800; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Global header</span><span class="meta">56px · blue-900 · teal→blue hairline on bottom</span></div>
+    <header class="gh">
+      <div class="brand">
+        <span class="logo-mark"></span>
+        <span class="app-name">App Name</span>
+      </div>
+      <div class="env-pick">
+        <i data-lucide="box" class="env-cube" style="width:14px;height:14px"></i>
+        <span>environment_name</span>
+        <i data-lucide="chevron-down" class="chev" style="width:14px;height:14px"></i>
+      </div>
+      <div class="spacer"></div>
+      <div class="snapgpt">Snap<span class="gpt">GPT</span></div>
+      <div class="icon-btn"><i data-lucide="search"></i></div>
+      <div class="icon-btn"><i data-lucide="bell"></i><span class="dot"></span></div>
+      <div class="avatar">M</div>
+      <div class="waffle-btn">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </header>
+    <div class="anatomy">
+      <span><strong>Anchors</strong> — each affordance opens a separate component:</span>
+      <span>environment_name → <strong>Environment picker</strong></span>
+      <span>search icon → <strong>Search overlay</strong></span>
+      <span>bell icon → <strong>Notifications panel</strong></span>
+      <span>avatar → <strong>User menu</strong></span>
+      <span>waffle (3×3 dots) → <strong>Product launcher</strong></span>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

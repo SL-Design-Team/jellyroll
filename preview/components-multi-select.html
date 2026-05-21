@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Multi-select</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  .sl-multi {
+    min-height: var(--field-height-md);
+    padding: 4px 4px 4px var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    display: flex; align-items: center; gap: 6px;
+    flex-wrap: wrap;
+    cursor: text;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .sl-multi:hover { border-color: var(--field-border-hover); }
+  .sl-multi.focus, .sl-multi.open { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+
+  .sl-multi__token {
+    display: inline-flex; align-items: center; gap: 4px;
+    height: 24px;
+    padding: 0 4px 0 8px;
+    border-radius: var(--radius-xs);
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    font: 500 12px/16px var(--font-sans);
+    white-space: nowrap;
+  }
+  .sl-multi__token .x {
+    width: 16px; height: 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 0; background: transparent;
+    border-radius: 999px;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+  }
+  .sl-multi__token .x:hover { opacity: 1; background: rgba(0,0,0,0.1); }
+  .sl-multi__token .x svg { width: 11px; height: 11px; stroke-width: 2.5; }
+  .sl-multi__input {
+    border: 0; outline: 0; background: transparent;
+    flex: 1; min-width: 80px;
+    padding: 6px 0;
+    font: 400 14px/22px var(--font-sans);
+    color: var(--field-text-default);
+  }
+  .sl-multi__input::placeholder { color: var(--field-text-placeholder); font-style: italic; font-weight: 300; }
+  .sl-multi .caret {
+    flex: none; color: var(--color-text-subtle);
+    display: inline-flex; padding: 4px;
+  }
+  .sl-multi .caret svg { width: 16px; height: 16px; }
+
+  /* Menu */
+  .sl-multi-wrap { position: relative; }
+  .sl-menu {
+    position: absolute;
+    top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    box-shadow: var(--shadow-overlay);
+    z-index: 10;
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 4px 0;
+  }
+  .sl-menu__item {
+    padding: 8px 12px;
+    font: 400 14px/22px var(--font-sans);
+    color: var(--sl-indigo-900);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sl-menu__item:hover { background: var(--sl-grey-100); }
+  .sl-menu__item input[type="checkbox"] {
+    width: 16px; height: 16px; flex: none;
+    accent-color: var(--sl-blue-600);
+  }
+  .sl-menu__action {
+    padding: 6px 12px;
+    border-top: 1px solid var(--sl-grey-200);
+    display: flex; justify-content: space-between;
+    font: 800 12px/16px var(--font-sans);
+    color: var(--sl-blue-600);
+    background: var(--sl-grey-100);
+  }
+  .sl-menu__action a { color: inherit; cursor: pointer; text-decoration: none; }
+  .sl-menu__action a:hover { text-decoration: underline; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .stage { min-height: 340px; padding-top: 8px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Multi-select</span><span class="meta">chip-token rendering · checkbox menu · select-all</span></div>
+
+    <div>
+      <div class="section-h">Closed states</div>
+      <div class="row">
+        <div class="sl-field"><label class="sl-field__label">Empty</label><div class="sl-multi"><input class="sl-multi__input" placeholder="Choose environments" /><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">1 selected</label><div class="sl-multi"><span class="sl-multi__token">prod-east-1<button class="x" aria-label="Remove"><i data-lucide="x"></i></button></span><input class="sl-multi__input" /><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Several selected</label><div class="sl-multi focus"><span class="sl-multi__token">prod-east-1<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">prod-west-1<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">staging-shared<button class="x"><i data-lucide="x"></i></button></span><input class="sl-multi__input" /><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Many · overflow wraps</label><div class="sl-multi"><span class="sl-multi__token">prod-east-1<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">prod-east-2<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">prod-west-1<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">staging-shared<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">dev-shared<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">my-laptop<button class="x"><i data-lucide="x"></i></button></span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Open · checkbox menu</div>
+      <div class="row stage">
+        <div class="sl-field">
+          <label class="sl-field__label">Snaplexes</label>
+          <div class="sl-multi-wrap">
+            <div class="sl-multi open"><span class="sl-multi__token">prod-east-1<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">prod-west-1<button class="x"><i data-lucide="x"></i></button></span><input class="sl-multi__input" placeholder="Search…" /><span class="caret"><i data-lucide="chevron-up"></i></span></div>
+            <div class="sl-menu">
+              <div class="sl-menu__item"><input type="checkbox" checked />prod-east-1</div>
+              <div class="sl-menu__item"><input type="checkbox" />prod-east-2</div>
+              <div class="sl-menu__item"><input type="checkbox" checked />prod-west-1</div>
+              <div class="sl-menu__item"><input type="checkbox" />staging-east-1</div>
+              <div class="sl-menu__item"><input type="checkbox" />staging-shared</div>
+              <div class="sl-menu__item"><input type="checkbox" />dev-shared</div>
+              <div class="sl-menu__item"><input type="checkbox" />my-local-laptop</div>
+              <div class="sl-menu__action"><a>Select all</a><a>Clear</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Filtered</label>
+          <div class="sl-multi-wrap">
+            <div class="sl-multi open"><input class="sl-multi__input" value="prod" /><span class="caret"><i data-lucide="chevron-up"></i></span></div>
+            <div class="sl-menu">
+              <div class="sl-menu__item"><input type="checkbox" /><span><b>prod</b>-east-1</span></div>
+              <div class="sl-menu__item"><input type="checkbox" /><span><b>prod</b>-east-2</span></div>
+              <div class="sl-menu__item"><input type="checkbox" /><span><b>prod</b>-west-1</span></div>
+              <div class="sl-menu__action"><a>Select 3 matching</a><a>Clear</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>tokens</dt><dd>Selected values render inside the control as removable chip-tokens (Blue-100 / Blue-700, X to remove). Tokens wrap to multiple lines as needed — the control grows in height.</dd>
+      <dt>menu</dt><dd>Each row is a checkbox. Multiple selections allowed. Footer action bar: "Select all" + "Clear" (or "Select N matching" when filtered).</dd>
+      <dt>search</dt><dd>Typing in the input filters the menu in-place. Matching substrings bolded. Backspace removes the last token when the input is empty.</dd>
+      <dt>keyboard</dt><dd><code>↑/↓</code> navigate options · <code>Space</code> toggle · <code>Enter</code> close · <code>Esc</code> close without changes · <code>Backspace</code> in empty input removes last token.</dd>
+      <dt>a11y</dt><dd><code>role="combobox" aria-multiselectable="true"</code>. Menu: <code>role="listbox" aria-multiselectable="true"</code>. Each option: <code>role="option" aria-selected</code>. Token X: <code>aria-label="Remove {value}"</code>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

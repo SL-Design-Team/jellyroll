@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Bulk selection</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .frame {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+
+  /* Bulk action bar */
+  .bulkbar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px;
+    background: var(--sl-blue-100);
+    border-bottom: 1px solid var(--sl-blue-300);
+    font: 400 13px/20px var(--font-sans);
+    color: var(--sl-blue-900);
+  }
+  .bulkbar__count { font-weight: 800; }
+  .bulkbar__sep { width: 1px; height: 18px; background: var(--sl-blue-300); }
+  .bulkbar__spacer { flex: 1; }
+  .bulkbar a.clear { color: var(--color-text-link); font-weight: 800; text-decoration: underline; cursor: pointer; }
+
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl thead th {
+    text-align: left;
+    font: 800 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 10px 14px;
+    background: var(--sl-grey-100);
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .tbl thead th:first-child { width: 36px; padding-right: 0; }
+  .tbl tbody td {
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-body);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .tbl tbody td:first-child { width: 36px; padding-right: 0; }
+  .tbl tbody tr:last-child td { border-bottom: 0; }
+  .tbl tbody tr.sel { background: var(--sl-blue-50); }
+
+  /* Checkboxes (match design system) */
+  .cb {
+    width: 16px; height: 16px;
+    border-radius: 3px;
+    border: 1.5px solid var(--sl-grey-500);
+    background: var(--sl-white);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: transparent;
+    vertical-align: middle;
+  }
+  .cb.checked { background: var(--sl-blue-600); border-color: var(--sl-blue-600); color: var(--sl-white); }
+  .cb.indeterminate { background: var(--sl-blue-600); border-color: var(--sl-blue-600); color: var(--sl-white); }
+  .cb i { width: 12px; height: 12px; }
+  .cb.indeterminate::after {
+    content: ""; width: 8px; height: 2px; background: var(--sl-white); border-radius: 1px;
+  }
+  .cb.indeterminate i { display: none; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 3px 8px; border-radius: 999px;
+  }
+  .pill--ok { background: var(--sl-green-100); color: var(--sl-green-800); }
+  .pill--ok::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sl-green-600); }
+  .pill--paused { background: var(--sl-grey-200); color: var(--sl-grey-800); }
+  .pill--paused::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sl-grey-600); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 10px;
+    font: 800 12px/18px var(--font-sans);
+    border-radius: var(--field-radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    background: transparent;
+    color: var(--sl-blue-900);
+    white-space: nowrap;
+  }
+  .btn:hover { background: rgba(8, 65, 180, 0.08); }
+  .btn--danger { color: var(--sl-red-700); }
+  .btn--danger:hover { background: var(--sl-red-100); }
+  .btn i { width: 14px; height: 14px; }
+
+  /* Select-all banner (when filtered selection exists) */
+  .selectall-row {
+    text-align: center;
+    padding: 8px 12px;
+    background: var(--sl-blue-50);
+    border-bottom: 1px solid var(--sl-blue-200);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--sl-blue-900);
+  }
+  .selectall-row a { color: var(--color-text-link); font-weight: 800; text-decoration: underline; cursor: pointer; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Bulk selection</span><span class="meta">checkbox column · contextual action bar · select-all-on-page</span></div>
+
+    <div>
+      <div class="section-h">Resting <span class="meta">no rows selected · header checkbox empty</span></div>
+      <div class="frame">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th><span class="cb" role="checkbox" aria-checked="false"></span></th>
+              <th>Pipeline</th>
+              <th style="width: 24%;">Project</th>
+              <th style="width: 18%;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cb"></span></td>
+              <td>sf-to-snowflake-nightly</td>
+              <td>Sales analytics</td>
+              <td><span class="pill pill--ok">Active</span></td>
+            </tr>
+            <tr>
+              <td><span class="cb"></span></td>
+              <td>orders-to-warehouse</td>
+              <td>Ops</td>
+              <td><span class="pill pill--ok">Active</span></td>
+            </tr>
+            <tr>
+              <td><span class="cb"></span></td>
+              <td>users-cdc-stream</td>
+              <td>Identity</td>
+              <td><span class="pill pill--paused">Paused</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Selection active <span class="meta">2 of 50 selected · contextual bar replaces nothing — it docks above</span></div>
+      <div class="frame">
+        <div class="bulkbar">
+          <span class="cb indeterminate" aria-checked="mixed"></span>
+          <span><span class="bulkbar__count">2 pipelines selected</span> · 50 in view</span>
+          <span class="bulkbar__sep"></span>
+          <button class="btn"><i data-lucide="play"></i>Enable</button>
+          <button class="btn"><i data-lucide="pause"></i>Pause</button>
+          <button class="btn"><i data-lucide="tag"></i>Add tag</button>
+          <button class="btn"><i data-lucide="folder-input"></i>Move</button>
+          <button class="btn btn--danger"><i data-lucide="trash-2"></i>Delete</button>
+          <span class="bulkbar__spacer"></span>
+          <a class="clear">Clear selection</a>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th><span class="cb indeterminate"></span></th>
+              <th>Pipeline</th>
+              <th style="width: 24%;">Project</th>
+              <th style="width: 18%;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="sel">
+              <td><span class="cb checked"><i data-lucide="check"></i></span></td>
+              <td>sf-to-snowflake-nightly</td>
+              <td>Sales analytics</td>
+              <td><span class="pill pill--ok">Active</span></td>
+            </tr>
+            <tr>
+              <td><span class="cb"></span></td>
+              <td>orders-to-warehouse</td>
+              <td>Ops</td>
+              <td><span class="pill pill--ok">Active</span></td>
+            </tr>
+            <tr class="sel">
+              <td><span class="cb checked"><i data-lucide="check"></i></span></td>
+              <td>users-cdc-stream</td>
+              <td>Identity</td>
+              <td><span class="pill pill--paused">Paused</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Select all on page → all matching <span class="meta">page select promotes to filter-wide select</span></div>
+      <div class="frame">
+        <div class="bulkbar">
+          <span class="cb checked"><i data-lucide="check"></i></span>
+          <span><span class="bulkbar__count">50 pipelines selected on this page</span></span>
+          <span class="bulkbar__sep"></span>
+          <button class="btn"><i data-lucide="play"></i>Enable</button>
+          <button class="btn btn--danger"><i data-lucide="trash-2"></i>Delete</button>
+          <span class="bulkbar__spacer"></span>
+          <a class="clear">Clear selection</a>
+        </div>
+        <div class="selectall-row">
+          All 50 pipelines on this page are selected. <a>Select all 1,240 pipelines matching your filters</a>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>checkbox col</dt><dd><b>36px-wide</b> first column. Header checkbox state: empty · indeterminate (mid-rule bar) · checked. Clicking header toggles all <b>rows currently in view</b>, never the full filter set.</dd>
+      <dt>action bar</dt><dd>Appears <b>above the table</b> when ≥1 row is selected (don't replace the header — both stay visible). Bar uses <code>SL Blue 100</code> background with <code>Blue 300</code> bottom border. Pinned, scrolls with table head.</dd>
+      <dt>selected row</dt><dd>Background tint <code>SL Blue 50</code>; checkbox stays checked. No left stripe — the background tint, checkbox state, and bulk-action bar above are sufficient signal. Don't bold the row text — color shift is enough.</dd>
+      <dt>actions</dt><dd>Most common bulk actions first (enable/pause/tag). Destructive actions (delete, archive) live last with <b>red border + icon</b>. Disabled actions show a tooltip explaining why ("Cannot delete — 3 selected are running").</dd>
+      <dt>select all</dt><dd>Header checkbox selects only <b>visible rows</b>. After that, show a banner offering to <i>"Select all N matching your filters"</i>. Two-step prevents accidental org-wide actions.</dd>
+      <dt>clear</dt><dd>Always a <b>"Clear selection"</b> text link on the bar's right side. <code>Esc</code> clears. Switching tabs / filters preserves selection if rows still match; otherwise clears.</dd>
+      <dt>shift-click</dt><dd>Shift-click selects a range from the last-clicked checkbox. <code>⌘A</code> selects all in view.</dd>
+      <dt>a11y</dt><dd>Checkboxes are real <code>&lt;input type="checkbox"&gt;</code> with <code>aria-label</code>. Header uses <code>aria-checked="mixed"</code> when indeterminate. Bar count is announced via <code>aria-live="polite"</code>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

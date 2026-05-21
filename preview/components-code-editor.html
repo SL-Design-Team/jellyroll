@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Advanced editors · Code editor</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); display: flex; align-items: center; }
+  .right { margin-left: auto; }
+
+  .ce {
+    border: 1px solid var(--field-border-default);
+    border-radius: var(--field-radius);
+    background: var(--sl-blue-1000);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    min-height: 320px;
+  }
+  .ce__head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px;
+    background: #0E1A33;
+    border-bottom: 1px solid #1B2C50;
+    color: #B7C4E0;
+  }
+  .ce__lang {
+    font: 800 11px/14px var(--font-mono);
+    padding: 2px 8px;
+    background: #1B2C50;
+    color: var(--sl-teal-300);
+    border-radius: var(--radius-xs);
+  }
+  .ce__path { font: 400 11px/14px var(--font-mono); color: #8B98B8; flex: 1; }
+  .ce__head button {
+    width: 24px; height: 24px;
+    background: transparent; border: 0;
+    border-radius: var(--radius-xs);
+    color: #B7C4E0;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .ce__head button:hover { background: #1B2C50; }
+  .ce__head button svg { width: 14px; height: 14px; }
+
+  .ce__body {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    flex: 1;
+    font: 400 13px/20px var(--font-mono);
+  }
+  .ce__gutter {
+    background: #0A1228;
+    color: #4A5878;
+    text-align: right;
+    padding: 12px 8px;
+    user-select: none;
+  }
+  .ce__gutter .ln { display: block; }
+  .ce__code { padding: 12px 14px; color: #D8E1F0; white-space: pre; overflow-x: auto; }
+  .ce__code .kw  { color: #79B8FF; }
+  .ce__code .fn  { color: #B392F0; }
+  .ce__code .str { color: #9ECBFF; }
+  .ce__code .num { color: #F97583; }
+  .ce__code .com { color: #6A7A9A; font-style: italic; }
+  .ce__code .var { color: #E1E4E8; }
+  .ce__code .punc { color: #8B98A8; }
+
+  .ce__foot {
+    display: flex; align-items: center; gap: 12px;
+    padding: 4px 10px;
+    background: #0E1A33;
+    border-top: 1px solid #1B2C50;
+    color: #8B98B8;
+    font: 400 11px/14px var(--font-mono);
+  }
+  .ce__foot .pill { padding: 1px 6px; background: var(--sl-green-700); color: white; border-radius: var(--radius-xs); font-weight: 800; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Code editor</span><span class="meta">Monaco/CodeMirror wrapper · transform snap · scripting</span></div>
+
+    <div class="sl-field">
+      <label class="sl-field__label">Transform script <span class="right" style="font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle);">28 lines</span></label>
+      <div class="ce">
+        <div class="ce__head">
+          <span class="ce__lang">JavaScript</span>
+          <span class="ce__path">snap://transform.js</span>
+          <button aria-label="Find"><i data-lucide="search"></i></button>
+          <button aria-label="Format"><i data-lucide="wand-2"></i></button>
+          <button aria-label="SnapGPT"><i data-lucide="sparkles"></i></button>
+          <button aria-label="Maximize"><i data-lucide="maximize-2"></i></button>
+        </div>
+        <div class="ce__body">
+          <div class="ce__gutter">
+            <span class="ln">1</span><span class="ln">2</span><span class="ln">3</span><span class="ln">4</span><span class="ln">5</span><span class="ln">6</span><span class="ln">7</span><span class="ln">8</span><span class="ln">9</span><span class="ln">10</span><span class="ln">11</span><span class="ln">12</span><span class="ln">13</span><span class="ln">14</span>
+          </div>
+          <div class="ce__code"><span class="com">// Transform incoming accounts to Snowflake-friendly rows</span>
+<span class="kw">function</span> <span class="fn">transform</span><span class="punc">(</span><span class="var">$input</span><span class="punc">)</span> <span class="punc">{</span>
+  <span class="kw">const</span> <span class="var">name</span> <span class="punc">=</span> <span class="var">$input</span><span class="punc">.</span><span class="var">name</span><span class="punc">.</span><span class="fn">trim</span><span class="punc">()</span><span class="punc">.</span><span class="fn">toUpperCase</span><span class="punc">();</span>
+  <span class="kw">const</span> <span class="var">tier</span> <span class="punc">=</span> <span class="var">$input</span><span class="punc">.</span><span class="var">revenue</span> <span class="punc">&gt;</span> <span class="num">1000000</span>
+    <span class="punc">?</span> <span class="str">"enterprise"</span>
+    <span class="punc">:</span> <span class="str">"smb"</span><span class="punc">;</span>
+
+  <span class="kw">return</span> <span class="punc">{</span>
+    <span class="var">account_id</span><span class="punc">:</span> <span class="var">$input</span><span class="punc">.</span><span class="var">id</span><span class="punc">,</span>
+    <span class="var">account_name</span><span class="punc">:</span> <span class="var">name</span><span class="punc">,</span>
+    <span class="var">revenue_usd</span><span class="punc">:</span> <span class="fn">round</span><span class="punc">(</span><span class="var">$input</span><span class="punc">.</span><span class="var">revenue</span><span class="punc">,</span> <span class="num">2</span><span class="punc">)</span><span class="punc">,</span>
+    <span class="var">tier</span><span class="punc">,</span>
+    <span class="var">loaded_at</span><span class="punc">:</span> <span class="var">$now</span><span class="punc">,</span>
+  <span class="punc">};</span>
+<span class="punc">}</span></div>
+        </div>
+        <div class="ce__foot">
+          <span class="pill">No errors</span>
+          <span>JavaScript ES2022 · tab spaces 2 · UTF-8 · Ln 4, Col 28</span>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>renderer</dt><dd>Wraps Monaco (preferred) or CodeMirror. Provides syntax highlighting, autocomplete, error squiggles, find-replace, multi-cursor.</dd>
+      <dt>theme</dt><dd>Custom dark theme keyed to Blue-1000 / 700 / 600 (matches the SnapLogic dark canvas). Light theme available for light-mode contexts.</dd>
+      <dt>head</dt><dd>Language badge · file path · toolbar (find · format · SnapGPT generate · maximize). Maximize opens the editor in a full Drawer.</dd>
+      <dt>foot</dt><dd>Status pill (No errors / N errors / N warnings) · language version · cursor position. Click pill to jump to the next problem.</dd>
+      <dt>SnapGPT</dt><dd>Inline AI: highlight code → ask SnapGPT to explain, refactor, or generate tests. Wave 3 will document AI states.</dd>
+      <dt>languages</dt><dd>JavaScript (transforms · scripting) · JSONPath (filtering) · SQL (database snaps) · Python (custom snaps) · Groovy (legacy).</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

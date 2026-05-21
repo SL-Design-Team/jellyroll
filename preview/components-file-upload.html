@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · File upload</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  /* Inline button style upload */
+  .sl-upload-inline {
+    display: flex; align-items: center; gap: 12px;
+    padding: 4px;
+    border: 1px solid var(--field-border-default);
+    border-radius: var(--field-radius);
+    background: var(--field-bg-default);
+  }
+  .sl-upload-inline .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--sl-blue-600); color: var(--sl-white);
+    border: 0;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    font: 800 13px/16px var(--font-sans);
+    cursor: pointer;
+    flex: none;
+  }
+  .sl-upload-inline .btn svg { width: 14px; height: 14px; }
+  .sl-upload-inline .hint { font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); flex: 1; }
+
+  /* Drop zone */
+  .sl-dropzone {
+    border: 2px dashed var(--sl-grey-400);
+    border-radius: var(--field-radius);
+    background: var(--sl-grey-100);
+    padding: 32px 24px;
+    text-align: center;
+    transition: border-color 150ms, background 150ms;
+  }
+  .sl-dropzone:hover, .sl-dropzone.dragover {
+    border-color: var(--sl-blue-600);
+    background: var(--sl-blue-100);
+  }
+  .sl-dropzone__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px;
+    border-radius: 999px;
+    background: var(--sl-white);
+    color: var(--sl-blue-600);
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-raised);
+  }
+  .sl-dropzone__icon svg { width: 24px; height: 24px; }
+  .sl-dropzone__title {
+    font: 800 14px/20px var(--font-sans);
+    color: var(--sl-indigo-900);
+    margin-bottom: 4px;
+  }
+  .sl-dropzone__title a { color: var(--sl-blue-600); text-decoration: underline; cursor: pointer; }
+  .sl-dropzone__hint {
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+
+  /* File list */
+  .sl-filelist { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .sl-file {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+  }
+  .sl-file.uploading { border-color: var(--sl-blue-600); }
+  .sl-file.error { border-color: var(--sl-red-600); background: var(--sl-red-100); }
+  .sl-file.success { border-color: var(--sl-green-600); }
+  .sl-file__icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-200);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--color-text-subtle);
+  }
+  .sl-file__icon svg { width: 16px; height: 16px; }
+  .sl-file.error .sl-file__icon { background: var(--sl-red-200); color: var(--sl-red-700); }
+  .sl-file.success .sl-file__icon { background: var(--sl-green-200); color: var(--sl-green-800); }
+  .sl-file__body { min-width: 0; }
+  .sl-file__name {
+    font: 800 13px/18px var(--font-sans);
+    color: var(--sl-indigo-900);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .sl-file__meta { font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); margin-top: 2px; }
+  .sl-file.error .sl-file__meta { color: var(--sl-red-700); }
+  .sl-file__progress {
+    height: 4px; border-radius: 2px;
+    background: var(--sl-grey-200);
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .sl-file__progress > span {
+    display: block; height: 100%;
+    background: var(--sl-blue-600);
+    transition: width 200ms;
+  }
+  .sl-file__action {
+    width: 28px; height: 28px;
+    border: 0; background: transparent;
+    border-radius: var(--radius-xs);
+    color: var(--color-text-subtle);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sl-file__action:hover { background: var(--sl-grey-100); color: var(--color-text-body); }
+  .sl-file__action svg { width: 16px; height: 16px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">File upload</span><span class="meta">inline · drop zone · progress · validation</span></div>
+
+    <div>
+      <div class="section-h">Inline upload <span class="meta">button + hint · for single small uploads</span></div>
+      <div class="sl-field">
+        <label class="sl-field__label">Avatar image</label>
+        <div class="sl-upload-inline">
+          <button class="btn"><i data-lucide="upload"></i>Choose file</button>
+          <span class="hint">PNG or JPG · max 2 MB · square recommended</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Drop zone <span class="meta">default · for files, schemas, pipeline imports</span></div>
+      <div class="sl-field">
+        <label class="sl-field__label">Pipeline file</label>
+        <div class="sl-dropzone">
+          <div class="sl-dropzone__icon"><i data-lucide="upload-cloud"></i></div>
+          <div class="sl-dropzone__title">Drop a file here or <a>browse</a></div>
+          <div class="sl-dropzone__hint">JSON, YAML, or .slp · up to 50 MB · multiple files allowed</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-h">Drop zone · active drag</div>
+      <div class="sl-dropzone dragover">
+        <div class="sl-dropzone__icon"><i data-lucide="upload-cloud"></i></div>
+        <div class="sl-dropzone__title">Release to upload 3 files</div>
+        <div class="sl-dropzone__hint">JSON, YAML, or .slp · up to 50 MB</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Uploaded file list <span class="meta">progress · success · error</span></div>
+      <div class="sl-filelist">
+
+        <div class="sl-file success">
+          <div class="sl-file__icon"><i data-lucide="file-check"></i></div>
+          <div class="sl-file__body">
+            <div class="sl-file__name">salesforce-accounts-nightly.slp</div>
+            <div class="sl-file__meta">12.4 KB · uploaded</div>
+          </div>
+          <button class="sl-file__action" aria-label="Remove"><i data-lucide="x"></i></button>
+        </div>
+
+        <div class="sl-file uploading">
+          <div class="sl-file__icon"><i data-lucide="file"></i></div>
+          <div class="sl-file__body">
+            <div class="sl-file__name">snowflake-loader-v2.json</div>
+            <div class="sl-file__meta">8.1 MB of 24.3 MB · 33 %</div>
+            <div class="sl-file__progress"><span style="width: 33%"></span></div>
+          </div>
+          <button class="sl-file__action" aria-label="Cancel upload"><i data-lucide="x"></i></button>
+        </div>
+
+        <div class="sl-file error">
+          <div class="sl-file__icon"><i data-lucide="file-x"></i></div>
+          <div class="sl-file__body">
+            <div class="sl-file__name">huge-schema.json</div>
+            <div class="sl-file__meta">68 MB · exceeds 50 MB limit</div>
+          </div>
+          <button class="sl-file__action" aria-label="Remove"><i data-lucide="x"></i></button>
+        </div>
+
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>variants</dt><dd><b>Inline</b> for small, single-file uploads (avatar, signature). <b>Drop zone</b> for primary upload moments (pipeline import, schema load, asset upload).</dd>
+      <dt>accept</dt><dd>Hint string ("JSON, YAML, or .slp · up to 50 MB") is always visible. Mirror it as <code>accept</code> attribute on the input + enforced client-side validation.</dd>
+      <dt>drag states</dt><dd>Default border Grey-400 dashed. On <code>dragover</code>: border + background shift to Blue-100. Title updates to "Release to upload N files".</dd>
+      <dt>file list</dt><dd>Each file is a row with icon · name · meta · cancel/remove. States: <b>uploading</b> (blue border + progress bar), <b>success</b> (green border + check), <b>error</b> (red border + tint + reason).</dd>
+      <dt>progress</dt><dd>4px bar inside the file row. Shows percent + size pair ("8.1 MB of 24.3 MB · 33%"). Cancel button is the same X.</dd>
+      <dt>a11y</dt><dd>Drop zone has a focusable button inside ("browse"). The dropzone itself is <code>role="region" aria-label="Upload files"</code>. Announce progress via <code>aria-live="polite"</code>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

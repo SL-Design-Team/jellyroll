@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Status colors</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .panel { padding: 16px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .panel .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .panel .desc { font: 400 12px/17px var(--font-sans); color: var(--color-text-body); margin-top: 10px; }
+  .status-row { display: grid; grid-template-columns: 24px 110px 1fr; align-items: center; gap: 12px; padding: 6px 0; font: 500 13px/16px var(--font-sans); }
+  .status-row .sw { width: 18px; height: 18px; border-radius: 4px; }
+  .status-row .tk { font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
+  .rule-good, .rule-bad { padding: 6px 10px; border-radius: var(--radius-sm); font: 500 12px/17px var(--font-sans); margin-bottom: 6px; }
+  .rule-good { background: var(--sl-green-100); color: var(--sl-green-800); border-left: 3px solid var(--sl-green-600); }
+  .rule-bad { background: var(--sl-red-100); color: var(--sl-red-900); border-left: 3px solid var(--sl-red-600); }
+</style></head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Status in data viz</span><span class="meta">when a chart encodes status, pull from semantic tokens — not the vibrant categorical</span></div>
+    <div class="grid">
+      <div class="panel">
+        <div class="lbl">Semantic mapping</div>
+        <div class="status-row"><span class="sw" style="background:var(--sl-green-600)"></span><span>Succeeded</span><span class="tk">--sl-green-600</span></div>
+        <div class="status-row"><span class="sw" style="background:var(--sl-red-600)"></span><span>Failed</span><span class="tk">--sl-red-600</span></div>
+        <div class="status-row"><span class="sw" style="background:var(--sl-yellow-600)"></span><span>Warning</span><span class="tk">--sl-yellow-600</span></div>
+        <div class="status-row"><span class="sw" style="background:var(--sl-blue-600)"></span><span>Running</span><span class="tk">--sl-blue-600</span></div>
+        <div class="status-row"><span class="sw" style="background:var(--sl-grey-500)"></span><span>Queued / Idle</span><span class="tk">--sl-grey-500</span></div>
+        <div class="desc">These are the same tokens used by the Status tag component. A chart of "pipeline runs by status" pulls from this set, not the vibrant categorical palette.</div>
+      </div>
+      <div class="panel">
+        <div class="lbl">Decision rules</div>
+        <div class="rule-good">✓ Chart encodes status → use semantic tokens</div>
+        <div class="rule-good">✓ Chart shows unordered categories (regions, teams, snap types) → use vibrant categorical</div>
+        <div class="rule-good">✓ Chart shows magnitude / one variable → use vibrant sequential</div>
+        <div class="rule-good">✓ Chart shows ± a baseline → use diverging</div>
+        <div class="rule-bad">✗ Don't mix palettes in one chart (a single red series in a categorical-palette chart reads as "broken")</div>
+        <div class="rule-bad">✗ Don't reuse semantic tokens for non-status data (red doesn't mean "category 7")</div>
+      </div>
+    </div>
+  </div>
+</body></html>

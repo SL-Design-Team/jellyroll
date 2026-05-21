@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Atoms · Status</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .row { display:flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .status { display:inline-flex; align-items: center; gap: 6px; font: 800 12px/16px var(--font-sans); }
+  .status .dot { width: 10px; height: 10px; border-radius: 999px; }
+  .s-running   { color: var(--sl-blue-700); }   .s-running .dot   { background: var(--sl-blue-600); }
+  .s-success   { color: var(--sl-green-800); }  .s-success .dot   { background: var(--sl-green-600); }
+  .s-failed    { color: var(--sl-red-700); }    .s-failed .dot    { background: var(--sl-red-600); }
+  .s-warning   { color: var(--sl-yellow-900); } .s-warning .dot   { background: var(--sl-yellow-600); }
+  .s-pending   { color: var(--sl-grey-700); }   .s-pending .dot   { background: var(--sl-grey-500); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Status</span><span class="meta">dot + label · pipeline run states</span></div>
+    <div class="row">
+      <span class="status s-running"><span class="dot"></span>Running</span>
+      <span class="status s-success"><span class="dot"></span>Succeeded</span>
+      <span class="status s-failed"><span class="dot"></span>Failed</span>
+      <span class="status s-warning"><span class="dot"></span>Warning</span>
+      <span class="status s-pending"><span class="dot"></span>Queued</span>
+    </div>
+  </div>
+</body>
+</html>

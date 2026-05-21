@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Toggle</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .grid { display: grid; grid-template-columns: 110px 1fr 1fr; gap: 10px 24px; align-items: center; }
+  .tag { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
+  .opt { display: flex; align-items: center; gap: 10px; font: 400 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+  .opt.disabled { color: var(--color-text-disabled); }
+  .tg { width: 32px; height: 18px; background: var(--sl-grey-600); border-radius: 999px; position: relative; flex-shrink: 0; transition: background 150ms; }
+  .tg::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 999px; background: white; transition: left 150ms; }
+  .tg.selected { background: var(--sl-blue-600); }
+  .tg.selected::after { left: 16px; }
+  .tg.hover { background: var(--sl-grey-700); }
+  .tg.selected.hover { background: linear-gradient(112.63deg, #0B9D9B 12.38%, #0841B4 137.46%); }
+  .tg.disabled { background: var(--sl-grey-300); }
+  .tg.disabled.selected { background: var(--sl-blue-200); }
+
+  /* sizes */
+  .tg.sm { width: 26px; height: 14px; }
+  .tg.sm::after { width: 10px; height: 10px; }
+  .tg.sm.selected::after { left: 14px; }
+  .tg.lg { width: 40px; height: 22px; }
+  .tg.lg::after { width: 18px; height: 18px; }
+  .tg.lg.selected::after { left: 20px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Toggle</span><span class="meta">small · medium · large</span></div>
+    <div class="grid">
+      <div></div><span class="tag">Enabled</span><span class="tag">Disabled</span>
+      <span class="tag">Off</span>
+      <span class="opt"><span class="tg"></span>Label</span>
+      <span class="opt disabled"><span class="tg disabled"></span>Label</span>
+      <span class="tag">On</span>
+      <span class="opt"><span class="tg selected"></span>Label</span>
+      <span class="opt disabled"><span class="tg disabled selected"></span>Label</span>
+      <span class="tag">On · hover</span>
+      <span class="opt"><span class="tg selected hover"></span>Label</span>
+      <span></span>
+    </div>
+    <div class="row-label" style="margin-top: 8px"><span class="name">Sizes</span><span class="meta"></span></div>
+    <div style="display: flex; gap: 28px; align-items: center;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap: 6px"><span class="tg sm selected"></span><span class="tag">Small</span></div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap: 6px"><span class="tg selected"></span><span class="tag">Medium</span></div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap: 6px"><span class="tg lg selected"></span><span class="tag">Large</span></div>
+    </div>
+  </div>
+</body>
+</html>

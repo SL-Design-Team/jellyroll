@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Forms · Dynamic repeater</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); display: flex; align-items: baseline; }
+  .sl-field__label .count { margin-left: auto; font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
+  .sl-input {
+    height: var(--field-height-md);
+    padding: var(--field-padding-y-md) var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    font: var(--field-font); color: var(--field-text-default);
+    width: 100%;
+    outline: none;
+  }
+  .sl-input:focus { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+
+  /* Repeater container */
+  .sl-rep {
+    display: flex; flex-direction: column;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+  .sl-rep__head {
+    display: grid;
+    gap: 12px;
+    padding: 8px 12px 8px 40px;
+    background: var(--sl-grey-100);
+    border-bottom: 1px solid var(--sl-grey-200);
+    font: 800 10px/14px var(--font-mono);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+  }
+  .sl-rep__row {
+    display: grid;
+    gap: 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--sl-grey-100);
+    align-items: start;
+    grid-template-columns: 24px 1fr 1fr 32px;
+  }
+  .sl-rep__head { grid-template-columns: 1fr 1fr 32px; padding-left: 48px; }
+  .sl-rep__row:last-child { border-bottom: 0; }
+  .sl-rep__row:hover { background: var(--sl-grey-100); }
+  .sl-rep__handle {
+    width: 24px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--color-text-subtle);
+    cursor: grab;
+    border-radius: var(--radius-xs);
+  }
+  .sl-rep__handle:hover { background: var(--sl-grey-200); color: var(--color-text-body); }
+  .sl-rep__handle svg { width: 14px; height: 14px; }
+  .sl-rep__del {
+    width: 32px; height: 32px;
+    border: 0; background: transparent;
+    border-radius: var(--radius-xs);
+    color: var(--color-text-subtle);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sl-rep__del:hover { background: var(--sl-red-100); color: var(--sl-red-700); }
+  .sl-rep__del svg { width: 16px; height: 16px; }
+
+  .sl-rep__add {
+    padding: 10px 12px;
+    background: var(--sl-grey-100);
+    border-top: 1px solid var(--sl-grey-200);
+    display: flex; gap: 8px;
+  }
+  .sl-rep__add button {
+    display: inline-flex; align-items: center; gap: 6px;
+    font: 800 13px/18px var(--font-sans);
+    color: var(--sl-blue-600);
+    background: transparent; border: 0;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+  .sl-rep__add button:hover { background: var(--sl-blue-100); }
+  .sl-rep__add button svg { width: 14px; height: 14px; }
+
+  .sl-rep__empty {
+    padding: 24px;
+    text-align: center;
+    color: var(--color-text-subtle);
+    font: 400 13px/20px var(--font-sans);
+  }
+
+  /* 3-col variant: key/value/source */
+  .sl-rep--3 .sl-rep__row { grid-template-columns: 24px 1fr 1fr 1fr 32px; }
+  .sl-rep--3 .sl-rep__head { grid-template-columns: 1fr 1fr 1fr 32px; padding-left: 48px; }
+
+  /* Small affordance for "dragging" state */
+  .sl-rep__row.dragging { opacity: 0.7; background: var(--sl-blue-100); }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Dynamic repeater</span><span class="meta">N-row parameter list · add / remove / drag-reorder</span></div>
+
+    <div>
+      <div class="section-h">Two-column · HTTP headers</div>
+      <div class="sl-field">
+        <label class="sl-field__label">Request headers <span class="count">3 of unlimited</span></label>
+        <div class="sl-rep">
+          <div class="sl-rep__head">
+            <span>Name</span>
+            <span>Value</span>
+            <span></span>
+          </div>
+          <div class="sl-rep__row">
+            <span class="sl-rep__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="Authorization" />
+            <input class="sl-input" value="Bearer $env.api_token" />
+            <button class="sl-rep__del" aria-label="Remove header"><i data-lucide="trash-2"></i></button>
+          </div>
+          <div class="sl-rep__row dragging">
+            <span class="sl-rep__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="Content-Type" />
+            <input class="sl-input" value="application/json" />
+            <button class="sl-rep__del" aria-label="Remove header"><i data-lucide="trash-2"></i></button>
+          </div>
+          <div class="sl-rep__row">
+            <span class="sl-rep__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="X-Request-Id" />
+            <input class="sl-input" value="$execution_id" />
+            <button class="sl-rep__del" aria-label="Remove header"><i data-lucide="trash-2"></i></button>
+          </div>
+          <div class="sl-rep__add">
+            <button><i data-lucide="plus"></i>Add header</button>
+            <button><i data-lucide="copy-plus"></i>Add from clipboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Three-column · field mapping</div>
+      <div class="sl-field">
+        <label class="sl-field__label">Source → target mapping <span class="count">4 of 32 max</span></label>
+        <div class="sl-rep sl-rep--3">
+          <div class="sl-rep__head">
+            <span>Source field</span>
+            <span>Target column</span>
+            <span>Transform</span>
+            <span></span>
+          </div>
+          <div class="sl-rep__row">
+            <span class="sl-rep__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="$input.id" />
+            <input class="sl-input" value="account_id" />
+            <input class="sl-input" value="" placeholder="(none)" />
+            <button class="sl-rep__del"><i data-lucide="trash-2"></i></button>
+          </div>
+          <div class="sl-rep__row">
+            <span class="sl-rep__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="$input.name" />
+            <input class="sl-input" value="account_name" />
+            <input class="sl-input" value="trim() · upper()" />
+            <button class="sl-rep__del"><i data-lucide="trash-2"></i></button>
+          </div>
+          <div class="sl-rep__row">
+            <span class="sl-rep__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="$input.revenue" />
+            <input class="sl-input" value="revenue_usd" />
+            <input class="sl-input" value="round(2)" />
+            <button class="sl-rep__del"><i data-lucide="trash-2"></i></button>
+          </div>
+          <div class="sl-rep__row">
+            <span class="sl-rep__handle"><i data-lucide="grip-vertical"></i></span>
+            <input class="sl-input" value="$input.is_active" />
+            <input class="sl-input" value="status" />
+            <input class="sl-input" value="if(true, 'active', 'inactive')" />
+            <button class="sl-rep__del"><i data-lucide="trash-2"></i></button>
+          </div>
+          <div class="sl-rep__add">
+            <button><i data-lucide="plus"></i>Add mapping</button>
+            <button><i data-lucide="zap"></i>Auto-map by name</button>
+            <button><i data-lucide="sparkles"></i>SnapGPT map</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Empty state</div>
+      <div class="sl-field">
+        <label class="sl-field__label">Custom labels</label>
+        <div class="sl-rep">
+          <div class="sl-rep__empty">
+            No labels yet. <a style="color: var(--sl-blue-600); font-weight: 800; cursor: pointer;">Add one</a> to tag this pipeline.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>structure</dt><dd>Header row · N data rows · footer with <b>Add</b> button(s). Each data row has a left grab handle and a right trash icon.</dd>
+      <dt>add</dt><dd>Primary add button is always visible. Multiple add variants are allowed: <b>Add header</b> · <b>Add from clipboard</b> (parses pasted key:value pairs) · <b>Auto-map by name</b> · <b>SnapGPT map</b>.</dd>
+      <dt>reorder</dt><dd>Drag handle (<code>grip-vertical</code>) on the left. Dragging row gets <code>opacity: 0.7</code> + Blue-100 background. Drop indicator (1px Blue-600 line) between rows.</dd>
+      <dt>remove</dt><dd>Trash icon on hover. Confirm only for rows that have non-empty input or are referenced downstream — empty rows delete silently.</dd>
+      <dt>empty state</dt><dd>Single message + inline "Add one" link. Don't show the header row when empty.</dd>
+      <dt>counter</dt><dd>Right-aligned in the label: <code>3 of unlimited</code> · <code>4 of 32 max</code>. Turns red over the cap.</dd>
+      <dt>a11y</dt><dd>Each row should be focusable as a unit. Handle: <code>role="button" aria-label="Drag to reorder"</code>. Use <code>aria-live="polite"</code> when announcing add/remove.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Advanced editors · Schema builder</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  /* Header tabs */
+  .sb-tabs {
+    display: flex; gap: 4px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    padding: 0 4px;
+  }
+  .sb-tab {
+    padding: 8px 14px;
+    font: 800 13px/16px var(--font-sans);
+    color: var(--color-text-subtle);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .sb-tab.active { color: var(--sl-blue-600); border-bottom-color: var(--sl-blue-600); }
+  .sb-tab svg { width: 14px; height: 14px; }
+  .sb-tab .count { font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
+
+  /* Toolbar */
+  .sb-toolbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px;
+    background: var(--sl-grey-100);
+    border-radius: var(--field-radius);
+  }
+  .sb-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 28px; padding: 0 12px;
+    border-radius: var(--radius-sm);
+    font: 800 12px/16px var(--font-sans);
+    background: var(--sl-white); color: var(--sl-blue-600);
+    border: 1px solid var(--sl-grey-300);
+    cursor: pointer;
+  }
+  .sb-btn:hover { border-color: var(--sl-blue-600); }
+  .sb-btn--primary { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .sb-btn svg { width: 12px; height: 12px; }
+
+  /* Schema tree */
+  .sb-tree {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+  .sb-tree__head {
+    display: grid;
+    grid-template-columns: 1fr 140px 100px 70px 80px;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--sl-grey-100);
+    border-bottom: 1px solid var(--sl-grey-200);
+    font: 800 10px/14px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+  }
+  .sb-row {
+    display: grid;
+    grid-template-columns: 1fr 140px 100px 70px 80px;
+    gap: 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--sl-grey-100);
+    align-items: center;
+    font: 400 13px/20px var(--font-sans);
+    cursor: pointer;
+  }
+  .sb-row:hover { background: var(--sl-blue-100); }
+  .sb-row.selected { background: var(--sl-blue-100); }
+  .sb-row:last-child { border-bottom: 0; }
+  .sb-row__name {
+    display: flex; align-items: center; gap: 4px;
+    font-family: var(--font-mono);
+    color: var(--sl-indigo-900);
+    font-weight: 800;
+    min-width: 0;
+  }
+  .sb-row__name .indent { display: inline-block; flex: none; }
+  .sb-row__name .indent--1 { width: 16px; }
+  .sb-row__name .indent--2 { width: 32px; }
+  .sb-row__name .indent--3 { width: 48px; }
+  .sb-row__chevron {
+    width: 14px; flex: none; color: var(--color-text-subtle);
+    display: inline-flex; align-items: center;
+  }
+  .sb-row__chevron svg { width: 12px; height: 12px; }
+  .sb-row__chevron.collapsed svg { transform: rotate(-90deg); }
+  .sb-row__icon {
+    width: 16px; height: 16px;
+    border-radius: var(--radius-xs);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white;
+    flex: none;
+  }
+  .sb-row__icon svg { width: 11px; height: 11px; }
+  .sb-row__icon.s-string  { background: var(--sl-green-600); }
+  .sb-row__icon.s-number  { background: var(--sl-orange-600); }
+  .sb-row__icon.s-bool    { background: var(--sl-purple-600); }
+  .sb-row__icon.s-object  { background: var(--sl-blue-600); }
+  .sb-row__icon.s-array   { background: var(--sl-teal-600); }
+  .sb-row__type-pill {
+    display: inline-flex; align-items: center;
+    font: 400 11px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    padding: 2px 8px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+    width: max-content;
+  }
+  .sb-row__flag {
+    font: 800 10px/14px var(--font-mono);
+    text-align: center;
+    padding: 2px 4px;
+    border-radius: var(--radius-xs);
+  }
+  .sb-row__flag.req { background: var(--sl-red-100); color: var(--sl-red-700); }
+  .sb-row__flag.opt { background: var(--sl-grey-200); color: var(--color-text-subtle); }
+  .sb-row__actions {
+    display: flex; gap: 2px; justify-content: flex-end;
+    opacity: 0;
+  }
+  .sb-row:hover .sb-row__actions { opacity: 1; }
+  .sb-row__actions button {
+    width: 22px; height: 22px;
+    border: 0; background: transparent;
+    border-radius: var(--radius-xs);
+    color: var(--color-text-subtle);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sb-row__actions button:hover { background: var(--sl-grey-200); color: var(--color-text-body); }
+  .sb-row__actions svg { width: 12px; height: 12px; }
+  .sb-row__desc {
+    font: 400 11px/14px var(--font-sans);
+    color: var(--color-text-subtle);
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Schema builder</span><span class="meta">SnapLogic input/output schema editor · hierarchical types</span></div>
+
+    <div class="sb-tabs">
+      <div class="sb-tab"><i data-lucide="log-in"></i>Input <span class="count">8 fields</span></div>
+      <div class="sb-tab active"><i data-lucide="log-out"></i>Output <span class="count">12 fields</span></div>
+      <div class="sb-tab"><i data-lucide="settings"></i>Settings</div>
+    </div>
+
+    <div class="sb-toolbar">
+      <button class="sb-btn sb-btn--primary"><i data-lucide="plus"></i>Add field</button>
+      <button class="sb-btn"><i data-lucide="upload"></i>Import schema</button>
+      <button class="sb-btn"><i data-lucide="zap"></i>Infer from sample</button>
+      <button class="sb-btn"><i data-lucide="sparkles"></i>SnapGPT suggest</button>
+      <span style="flex: 1;"></span>
+      <button class="sb-btn"><i data-lucide="download"></i>Export JSON</button>
+    </div>
+
+    <div class="sb-tree">
+      <div class="sb-tree__head">
+        <span>Field</span>
+        <span>Type</span>
+        <span>Format</span>
+        <span style="text-align: center;">Required</span>
+        <span style="text-align: right;">Actions</span>
+      </div>
+
+      <div class="sb-row">
+        <div class="sb-row__name">
+          <span class="sb-row__chevron"><i data-lucide="chevron-down"></i></span>
+          <span class="sb-row__icon s-object"><i data-lucide="braces"></i></span>
+          <span>account</span>
+        </div>
+        <span class="sb-row__type-pill">object</span>
+        <span></span>
+        <span class="sb-row__flag req">REQ</span>
+        <div class="sb-row__actions"><button><i data-lucide="copy"></i></button><button><i data-lucide="trash-2"></i></button></div>
+      </div>
+
+      <div class="sb-row">
+        <div class="sb-row__name">
+          <span class="indent indent--1"></span>
+          <span class="sb-row__chevron" style="visibility: hidden;"></span>
+          <span class="sb-row__icon s-string"><i data-lucide="hash"></i></span>
+          <span>id</span>
+        </div>
+        <span class="sb-row__type-pill">string</span>
+        <span class="sb-row__type-pill">uuid</span>
+        <span class="sb-row__flag req">REQ</span>
+        <div class="sb-row__actions"><button><i data-lucide="copy"></i></button><button><i data-lucide="trash-2"></i></button></div>
+      </div>
+
+      <div class="sb-row selected">
+        <div class="sb-row__name">
+          <span class="indent indent--1"></span>
+          <span class="sb-row__chevron" style="visibility: hidden;"></span>
+          <span class="sb-row__icon s-string"><i data-lucide="hash"></i></span>
+          <span>name</span>
+        </div>
+        <span class="sb-row__type-pill">string</span>
+        <span class="sb-row__type-pill">1–255 chars</span>
+        <span class="sb-row__flag req">REQ</span>
+        <div class="sb-row__actions"><button><i data-lucide="copy"></i></button><button><i data-lucide="trash-2"></i></button></div>
+      </div>
+
+      <div class="sb-row">
+        <div class="sb-row__name">
+          <span class="indent indent--1"></span>
+          <span class="sb-row__chevron"><i data-lucide="chevron-down"></i></span>
+          <span class="sb-row__icon s-object"><i data-lucide="braces"></i></span>
+          <span>address</span>
+        </div>
+        <span class="sb-row__type-pill">object</span>
+        <span></span>
+        <span class="sb-row__flag opt">opt</span>
+        <div class="sb-row__actions"><button><i data-lucide="copy"></i></button><button><i data-lucide="trash-2"></i></button></div>
+      </div>
+
+      <div class="sb-row">
+        <div class="sb-row__name">
+          <span class="indent indent--2"></span>
+          <span class="sb-row__chevron" style="visibility: hidden;"></span>
+          <span class="sb-row__icon s-string"><i data-lucide="hash"></i></span>
+          <span>street</span>
+        </div>
+        <span class="sb-row__type-pill">string</span>
+        <span></span>
+        <span class="sb-row__flag opt">opt</span>
+        <div class="sb-row__actions"><button><i data-lucide="copy"></i></button><button><i data-lucide="trash-2"></i></button></div>
+      </div>
+
+      <div class="sb-row">
+        <div class="sb-row__name">
+          <span class="indent indent--2"></span>
+          <span class="sb-row__chevron" style="visibility: hidden;"></span>
+          <span class="sb-row__icon s-string"><i data-lucide="hash"></i></span>
+          <span>city</span>
+        </div>
+        <span class="sb-row__type-pill">string</span>
+        <span></span>
+        <span class="sb-row__flag opt">opt</span>
+        <div class="sb-row__actions"><button><i data-lucide="copy"></i></button><button><i data-lucide="trash-2"></i></button></div>
+      </div>
+
+      <div class="sb-row">
+        <div class="sb-row__name">
+          <span class="indent indent--2"></span>
+          <span class="sb-row__chevron" style="visibility: hidden;"></span>
+          <span class="sb-row__icon s-string"><i data-lucide="hash"></i></span>
+          <span>country</span>
+        </div>
+        <span class="sb-row__type-pill">enum</span>
+        <span class="sb-row__type-pill">US/CA/MX</span>
+        <span class="sb-row__flag req">REQ</span>
+        <div class="sb-row__actions"><button><i data-lucide="copy"></i></button><button><i data-lucide="trash-2"></i></button></div>
+      </div>
+
+      <div class="sb-row">
+        <div class="sb-row__name">
+          <span class="indent indent--1"></span>
+          <span class="sb-row__chevron collapsed"><i data-lucide="chevron-down"></i></span>
+          <span class="sb-row__icon s-array"><i data-lucide="brackets"></i></span>
+          <span>tags</span>
+        </div>
+        <span class="sb-row__type-pill">array&lt;string&gt;</span>
+        <span></span>
+        <span class="sb-row__flag opt">opt</span>
+        <div class="sb-row__actions"><button><i data-lucide="copy"></i></button><button><i data-lucide="trash-2"></i></button></div>
+      </div>
+
+      <div class="sb-row">
+        <div class="sb-row__name">
+          <span class="indent indent--1"></span>
+          <span class="sb-row__chevron" style="visibility: hidden;"></span>
+          <span class="sb-row__icon s-number"><i data-lucide="hash"></i></span>
+          <span>revenue</span>
+        </div>
+        <span class="sb-row__type-pill">number</span>
+        <span class="sb-row__type-pill">≥ 0 · USD</span>
+        <span class="sb-row__flag opt">opt</span>
+        <div class="sb-row__actions"><button><i data-lucide="copy"></i></button><button><i data-lucide="trash-2"></i></button></div>
+      </div>
+
+      <div class="sb-row">
+        <div class="sb-row__name">
+          <span class="indent indent--1"></span>
+          <span class="sb-row__chevron" style="visibility: hidden;"></span>
+          <span class="sb-row__icon s-bool"><i data-lucide="check-square"></i></span>
+          <span>is_active</span>
+        </div>
+        <span class="sb-row__type-pill">boolean</span>
+        <span></span>
+        <span class="sb-row__flag req">REQ</span>
+        <div class="sb-row__actions"><button><i data-lucide="copy"></i></button><button><i data-lucide="trash-2"></i></button></div>
+      </div>
+
+    </div>
+
+    <dl class="spec">
+      <dt>tabs</dt><dd><b>Input</b> · <b>Output</b> · <b>Settings</b>. Input/output show their own schemas. Settings holds version, draft mode, etc.</dd>
+      <dt>toolbar</dt><dd><b>Add field</b> · <b>Import schema</b> (JSON Schema / Avro / Protobuf paste-or-upload) · <b>Infer from sample</b> (paste a JSON payload, system inspects types) · <b>SnapGPT suggest</b> · <b>Export JSON</b>.</dd>
+      <dt>type chips</dt><dd>Each row shows: name (mono ExtraBold) · type pill · format pill (uuid, email, regex, range) · required flag · row actions.</dd>
+      <dt>colors</dt><dd><span style="color: var(--sl-green-600); font-weight: 800;">string</span> · <span style="color: var(--sl-orange-600); font-weight: 800;">number</span> · <span style="color: var(--sl-purple-600); font-weight: 800;">boolean</span> · <span style="color: var(--sl-blue-600); font-weight: 800;">object</span> · <span style="color: var(--sl-teal-600); font-weight: 800;">array</span>.</dd>
+      <dt>nesting</dt><dd>Tree-style indentation (16px per level). Objects/arrays expand via chevron. Drag-reorder via grab handle (hover state).</dd>
+      <dt>selection</dt><dd>Click a row to select; right panel (not shown — see Drawer integration) opens the field's detail editor with format/validation rules.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

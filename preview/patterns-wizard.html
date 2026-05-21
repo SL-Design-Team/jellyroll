@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Wizard / multi-step flow</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .wiz {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+  .wiz__head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-100);
+  }
+  .wiz__head h3 {
+    margin: 0;
+    font: 800 14px/20px var(--font-sans);
+    color: var(--color-text-heading);
+  }
+  .wiz__head h3 small { font-weight: 400; color: var(--color-text-subtle); margin-left: 4px; }
+  .wiz__close {
+    border: 0; background: transparent; color: var(--color-text-subtle);
+    width: 28px; height: 28px; border-radius: var(--radius-xs);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .wiz__close i { width: 16px; height: 16px; }
+
+  /* Stepper (top) */
+  .stepper {
+    display: flex; align-items: center;
+    padding: 18px 18px 6px;
+    gap: 0;
+  }
+  .step {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--color-text-subtle);
+    font: 400 13px/20px var(--font-sans);
+    flex: none;
+  }
+  .step__dot {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--sl-white);
+    border: 1.5px solid var(--sl-grey-400);
+    color: var(--color-text-subtle);
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 800 12px/16px var(--font-mono);
+    flex: none;
+  }
+  .step__label { font-weight: 800; color: var(--color-text-body); }
+  .step__label small { display: block; font-weight: 400; font-size: 11px; color: var(--color-text-subtle); }
+  .step__connector {
+    flex: 1;
+    height: 2px;
+    background: var(--sl-grey-300);
+    margin: 0 12px;
+    border-radius: 2px;
+  }
+  .step--done .step__dot { background: var(--sl-blue-600); border-color: var(--sl-blue-600); color: var(--sl-white); }
+  .step--done .step__dot i { width: 14px; height: 14px; }
+  .step--done .step__label { color: var(--color-text-body); }
+  .step--done + .step__connector { background: var(--sl-blue-600); }
+  .step--current .step__dot { background: var(--sl-white); border: 2px solid var(--sl-blue-600); color: var(--sl-blue-600); }
+  .step--current .step__label { color: var(--sl-blue-900); }
+  .step--current .step__dot.with-num { font-weight: 800; }
+
+  /* Body */
+  .wiz__body { padding: 24px 18px; min-height: 220px; }
+  .wiz__body h4 {
+    margin: 0 0 4px;
+    font: 800 18px/26px var(--font-sans);
+    color: var(--color-text-heading);
+  }
+  .wiz__body p { margin: 0 0 18px; font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); }
+
+  .field { display: flex; flex-direction: column; gap: 4px; max-width: 420px; margin-bottom: 14px; }
+  .field label { font: 800 13px/20px var(--font-sans); color: var(--color-text-body); }
+  .field input, .field select {
+    height: var(--field-height-md);
+    padding: 8px 12px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    font: var(--field-font); color: var(--field-text-default);
+    outline: none;
+  }
+  .field input:focus { border-color: var(--sl-teal-600); box-shadow: var(--shadow-focus-ring); }
+  .field .hint { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+
+  /* Footer */
+  .wiz__foot {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 18px;
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-white);
+  }
+  .wiz__foot .spacer { flex: 1; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 18px;
+    font: 800 14px/22px var(--font-sans);
+    border-radius: var(--field-radius);
+    border: 1.5px solid;
+    cursor: pointer;
+  }
+  .btn--primary  { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .btn--ghost { background: transparent; color: var(--color-text-body); border-color: transparent; }
+  .btn--ghost:hover { background: var(--sl-grey-100); }
+  .btn:disabled { background: var(--sl-blue-200); color: var(--sl-white); border-color: var(--sl-blue-200); cursor: not-allowed; }
+  .btn i { width: 14px; height: 14px; }
+
+  /* Vertical-stepper variant */
+  .vstep {
+    display: flex; gap: 14px;
+    padding: 18px;
+  }
+  .vstep__rail {
+    width: 240px;
+    flex: none;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .vrow {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-xs);
+    color: var(--color-text-subtle);
+    font: 400 13px/20px var(--font-sans);
+    position: relative;
+  }
+  .vrow__dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--sl-white);
+    border: 1.5px solid var(--sl-grey-400);
+    color: var(--color-text-subtle);
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 800 11px/16px var(--font-mono);
+    flex: none;
+  }
+  .vrow__lbl { font-weight: 800; color: var(--color-text-body); }
+  .vrow__lbl small { display: block; font-weight: 400; font-size: 11px; color: var(--color-text-subtle); }
+  .vrow.done .vrow__dot { background: var(--sl-blue-600); border-color: var(--sl-blue-600); color: var(--sl-white); }
+  .vrow.done .vrow__dot i { width: 12px; height: 12px; }
+  .vrow.cur { background: var(--sl-blue-50); }
+  .vrow.cur .vrow__dot { border: 2px solid var(--sl-blue-600); color: var(--sl-blue-600); }
+  .vrow.cur .vrow__lbl { color: var(--sl-blue-900); }
+  .vrow:not(:last-child)::after {
+    content: ""; position: absolute; left: 22px; top: 32px; width: 2px; height: calc(100% - 18px);
+    background: var(--sl-grey-300);
+  }
+  .vrow.done:not(:last-child)::after { background: var(--sl-blue-600); }
+  .vstep__pane {
+    flex: 1;
+    padding: 6px 6px 6px 18px;
+    border-left: 1px solid var(--sl-grey-200);
+  }
+  .vstep__pane h4 { margin: 0 0 4px; font: 800 16px/24px var(--font-sans); color: var(--color-text-heading); }
+  .vstep__pane p { margin: 0 0 14px; font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Wizard / multi-step flow</span><span class="meta">horizontal stepper · vertical stepper · footer nav</span></div>
+
+    <div>
+      <div class="section-h">Horizontal stepper <span class="meta">3–5 sequential steps · modal/page wizard</span></div>
+      <div class="wiz">
+        <div class="wiz__head">
+          <h3>Set up AutoSync <small>· Salesforce → Snowflake</small></h3>
+          <button class="wiz__close" aria-label="Close"><i data-lucide="x"></i></button>
+        </div>
+        <div class="stepper">
+          <div class="step step--done"><span class="step__dot"><i data-lucide="check"></i></span><span class="step__label">Source<small>Salesforce</small></span></div>
+          <span class="step__connector"></span>
+          <div class="step step--done"><span class="step__dot"><i data-lucide="check"></i></span><span class="step__label">Destination<small>Snowflake</small></span></div>
+          <span class="step__connector"></span>
+          <div class="step step--current"><span class="step__dot with-num">3</span><span class="step__label">Schedule<small>How often</small></span></div>
+          <span class="step__connector"></span>
+          <div class="step"><span class="step__dot">4</span><span class="step__label">Review<small>Confirm</small></span></div>
+        </div>
+        <div class="wiz__body">
+          <h4>How often should this sync run?</h4>
+          <p>You can change this later from the AutoSync detail page.</p>
+          <div class="field">
+            <label>Frequency</label>
+            <select>
+              <option>Every 15 minutes</option>
+              <option>Every hour</option>
+              <option>Daily at 02:00 UTC</option>
+              <option>Custom schedule</option>
+            </select>
+            <span class="hint">Snowflake credits are billed per sync run.</span>
+          </div>
+          <div class="field">
+            <label>Start time</label>
+            <input value="2026-05-20 02:00 UTC" />
+          </div>
+        </div>
+        <div class="wiz__foot">
+          <button class="btn btn--ghost">Cancel</button>
+          <span class="spacer"></span>
+          <button class="btn btn--secondary"><i data-lucide="chevron-left"></i>Back</button>
+          <button class="btn btn--primary">Next<i data-lucide="chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Vertical stepper <span class="meta">7+ steps · branching · review-able sections</span></div>
+      <div class="wiz">
+        <div class="wiz__head">
+          <h3>Configure pipeline task <small>· hourly-orders-rollup</small></h3>
+          <button class="wiz__close" aria-label="Close"><i data-lucide="x"></i></button>
+        </div>
+        <div class="vstep">
+          <div class="vstep__rail">
+            <div class="vrow done"><span class="vrow__dot"><i data-lucide="check"></i></span><span class="vrow__lbl">Choose pipeline<small>hourly-orders-rollup</small></span></div>
+            <div class="vrow done"><span class="vrow__dot"><i data-lucide="check"></i></span><span class="vrow__lbl">Snaplex<small>prod-us-west-2</small></span></div>
+            <div class="vrow cur"><span class="vrow__dot">3</span><span class="vrow__lbl">Schedule<small>Cron or trigger</small></span></div>
+            <div class="vrow"><span class="vrow__dot">4</span><span class="vrow__lbl">Parameters<small>Runtime overrides</small></span></div>
+            <div class="vrow"><span class="vrow__dot">5</span><span class="vrow__lbl">Notifications<small>Email · webhook</small></span></div>
+            <div class="vrow"><span class="vrow__dot">6</span><span class="vrow__lbl">Review<small>Confirm and create</small></span></div>
+          </div>
+          <div class="vstep__pane">
+            <h4>Schedule</h4>
+            <p>When should this task run?</p>
+            <div class="field">
+              <label>Cron expression</label>
+              <input value="0 * * * *" />
+              <span class="hint">Every hour, on the hour, UTC.</span>
+            </div>
+          </div>
+        </div>
+        <div class="wiz__foot">
+          <button class="btn btn--ghost">Cancel</button>
+          <span class="spacer"></span>
+          <button class="btn btn--secondary"><i data-lucide="chevron-left"></i>Back</button>
+          <button class="btn btn--primary">Next<i data-lucide="chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>when to use</dt><dd>Long sequential tasks: AutoSync setup · creating a Task · connection setup · first-time org config. Don't use a wizard for &lt;3 steps — a single form is fine. Don't use for non-linear flows — use sections + save.</dd>
+      <dt>horizontal</dt><dd>3–5 steps. Each step has a short label and a one-line sublabel. Done steps fill blue with a check; current uses a ringed dot; future is grey. Connectors fill blue as you progress.</dd>
+      <dt>vertical</dt><dd>≥6 steps, or steps with substantive content. Rail on the left with the current pane on the right. Active step has a <code>Blue 50</code> background. Connectors are vertical lines between dots.</dd>
+      <dt>nav</dt><dd>Footer always shows <b>Cancel</b> (ghost, left) and <b>Back / Next</b> (right). Final step's primary turns into "Create" / "Start sync" — verb-led. Disable Next until current step validates. Don't auto-advance.</dd>
+      <dt>jumping</dt><dd>Allow clicking back to a <b>completed</b> step (badge shows check). Don't allow jumping forward over uncompleted steps. Don't reset downstream state when going back — preserve user input.</dd>
+      <dt>review step</dt><dd>Always end with a Review step listing all inputs as label/value pairs and a "Create" CTA. Each section has an inline <b>"Edit"</b> link that jumps back to that step.</dd>
+      <dt>save & exit</dt><dd>Long wizards (5+ steps) include a "Save draft" option in the header. Draft persists for 14 days. Reopening resumes at the last completed step.</dd>
+      <dt>a11y</dt><dd>Stepper is <code>&lt;nav aria-label="Steps"&gt;</code> with each step having <code>aria-current="step"</code> when current. Disabled forward steps are <code>aria-disabled</code>, not removed.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

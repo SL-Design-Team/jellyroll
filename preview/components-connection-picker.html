@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Advanced editors · Connection picker</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; position: relative; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  /* Closed picker trigger */
+  .sl-cp-trigger {
+    height: var(--field-height-md);
+    padding: 6px 10px 6px 12px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .sl-cp-trigger:hover { border-color: var(--field-border-hover); }
+  .sl-cp-trigger.open { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .sl-cp-trigger .ico {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-100);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: none;
+  }
+  .sl-cp-trigger .ico img, .sl-cp-trigger .ico svg { width: 18px; height: 18px; }
+  .sl-cp-trigger .ico.salesforce { background: #00A1E0; color: white; }
+  .sl-cp-trigger .ico.snowflake  { background: #29B5E8; color: white; }
+  .sl-cp-trigger .info { flex: 1; min-width: 0; }
+  .sl-cp-trigger .name { font: 800 14px/18px var(--font-sans); color: var(--sl-indigo-900); }
+  .sl-cp-trigger .meta { font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); margin-top: 2px; }
+  .sl-cp-trigger .health {
+    flex: none;
+    display: inline-flex; align-items: center; gap: 4px;
+    font: 800 11px/14px var(--font-sans);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .sl-cp-trigger .health.ok { background: var(--sl-green-100); color: var(--sl-green-800); }
+  .sl-cp-trigger .health.ok::before { content: ""; width: 6px; height: 6px; background: var(--sl-green-600); border-radius: 999px; }
+  .sl-cp-trigger .caret { color: var(--color-text-subtle); display: inline-flex; flex: none; }
+  .sl-cp-trigger .caret svg { width: 16px; height: 16px; }
+
+  /* Picker menu */
+  .sl-cp-menu {
+    position: absolute;
+    top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    box-shadow: var(--shadow-overlay);
+    z-index: 10;
+    overflow: hidden;
+  }
+  .sl-cp-menu__head {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sl-cp-menu__head svg { width: 14px; height: 14px; color: var(--color-text-subtle); }
+  .sl-cp-menu__head input {
+    border: 0; outline: 0; background: transparent;
+    flex: 1; font: 400 14px/22px var(--font-sans);
+  }
+  .sl-cp-menu__list { max-height: 280px; overflow-y: auto; padding: 4px 0; }
+  .sl-cp-menu__group {
+    padding: 8px 12px 4px;
+    font: 800 10px/14px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-subtle);
+  }
+  .sl-cp-menu__item {
+    padding: 8px 12px;
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+  }
+  .sl-cp-menu__item:hover, .sl-cp-menu__item.active { background: var(--sl-blue-100); }
+  .sl-cp-menu__item .ico {
+    width: 24px; height: 24px;
+    border-radius: var(--radius-sm);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white;
+    flex: none;
+  }
+  .sl-cp-menu__item .ico svg { width: 14px; height: 14px; }
+  .sl-cp-menu__item .ico.salesforce { background: #00A1E0; }
+  .sl-cp-menu__item .ico.snowflake { background: #29B5E8; }
+  .sl-cp-menu__item .ico.aws { background: #FF9900; }
+  .sl-cp-menu__item .ico.kafka { background: #231F20; }
+  .sl-cp-menu__item .ico.shop { background: #95BF47; }
+  .sl-cp-menu__item .info { flex: 1; min-width: 0; }
+  .sl-cp-menu__item .name { font: 800 13px/16px var(--font-sans); color: var(--sl-indigo-900); }
+  .sl-cp-menu__item .meta { font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); margin-top: 2px; }
+  .sl-cp-menu__item .badge {
+    font: 800 10px/14px var(--font-sans);
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-green-100);
+    color: var(--sl-green-800);
+  }
+  .sl-cp-menu__item .badge.warn { background: var(--sl-red-100); color: var(--sl-red-700); }
+
+  .sl-cp-menu__footer {
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-100);
+    padding: 8px 12px;
+    display: flex; align-items: center; gap: 8px;
+    font: 800 13px/18px var(--font-sans);
+    color: var(--sl-blue-600);
+    cursor: pointer;
+  }
+  .sl-cp-menu__footer:hover { background: var(--sl-blue-100); }
+  .sl-cp-menu__footer svg { width: 14px; height: 14px; }
+
+  .relative { position: relative; }
+  .stack { display: flex; flex-direction: column; gap: 12px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .stage { min-height: 460px; padding-top: 8px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Connection picker</span><span class="meta">SnapLogic Account/Snaplex selector · grouped · health · create-new</span></div>
+
+    <div>
+      <div class="section-h">Closed states</div>
+      <div class="stack">
+
+        <div class="sl-field">
+          <label class="sl-field__label">Salesforce account</label>
+          <div class="sl-cp-trigger">
+            <span class="ico salesforce"><i data-lucide="cloud"></i></span>
+            <div class="info">
+              <div class="name">Acme Prod (OAuth)</div>
+              <div class="meta">salesforce · prod-east-1 · created by anita.brown</div>
+            </div>
+            <span class="health ok">Connected</span>
+            <span class="caret"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">No connection selected</label>
+          <div class="sl-cp-trigger">
+            <span class="ico" style="background: var(--sl-grey-200); color: var(--color-text-subtle);"><i data-lucide="link"></i></span>
+            <div class="info">
+              <div class="name" style="color: var(--color-text-subtle); font-style: italic; font-weight: 300;">Choose a connection…</div>
+            </div>
+            <span class="caret"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Open · grouped by type</div>
+      <div class="stage">
+        <div class="sl-field">
+          <label class="sl-field__label">Source connection</label>
+          <div class="relative">
+            <div class="sl-cp-trigger open">
+              <span class="ico salesforce"><i data-lucide="cloud"></i></span>
+              <div class="info">
+                <div class="name">Acme Prod (OAuth)</div>
+                <div class="meta">salesforce · prod-east-1</div>
+              </div>
+              <span class="caret"><i data-lucide="chevron-up"></i></span>
+            </div>
+            <div class="sl-cp-menu">
+              <div class="sl-cp-menu__head">
+                <i data-lucide="search"></i>
+                <input value="" placeholder="Search connections…" />
+              </div>
+              <div class="sl-cp-menu__list">
+
+                <div class="sl-cp-menu__group">Salesforce</div>
+                <div class="sl-cp-menu__item active">
+                  <span class="ico salesforce"><i data-lucide="cloud"></i></span>
+                  <div class="info"><div class="name">Acme Prod (OAuth)</div><div class="meta">salesforce · prod-east-1</div></div>
+                  <span class="badge">Connected</span>
+                </div>
+                <div class="sl-cp-menu__item">
+                  <span class="ico salesforce"><i data-lucide="cloud"></i></span>
+                  <div class="info"><div class="name">Acme Sandbox (Basic)</div><div class="meta">salesforce · staging-shared</div></div>
+                  <span class="badge">Connected</span>
+                </div>
+                <div class="sl-cp-menu__item">
+                  <span class="ico salesforce"><i data-lucide="cloud"></i></span>
+                  <div class="info"><div class="name">Acme UAT</div><div class="meta">salesforce · dev-shared</div></div>
+                  <span class="badge warn">Auth failed</span>
+                </div>
+
+                <div class="sl-cp-menu__group">Snowflake</div>
+                <div class="sl-cp-menu__item">
+                  <span class="ico snowflake"><i data-lucide="database"></i></span>
+                  <div class="info"><div class="name">Snowflake Analytics</div><div class="meta">snowflake · prod-east-1</div></div>
+                  <span class="badge">Connected</span>
+                </div>
+
+                <div class="sl-cp-menu__group">Other</div>
+                <div class="sl-cp-menu__item">
+                  <span class="ico aws"><i data-lucide="cloud"></i></span>
+                  <div class="info"><div class="name">AWS Data Lake</div><div class="meta">s3 · cross-region</div></div>
+                  <span class="badge">Connected</span>
+                </div>
+                <div class="sl-cp-menu__item">
+                  <span class="ico kafka"><i data-lucide="activity"></i></span>
+                  <div class="info"><div class="name">Kafka Events</div><div class="meta">kafka · prod-east-1</div></div>
+                  <span class="badge">Connected</span>
+                </div>
+
+              </div>
+              <div class="sl-cp-menu__footer">
+                <i data-lucide="plus"></i>Create new connection…
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>row anatomy</dt><dd>Vendor icon · Name (ExtraBold) · meta line (type · snaplex · creator) · health badge · chevron. Health pill: <b>Connected</b> green · <b>Auth failed</b> red · <b>Untested</b> grey.</dd>
+      <dt>grouping</dt><dd>Connections grouped by snap/vendor type. Most-recent and most-used surface first within each group.</dd>
+      <dt>create-new</dt><dd>Sticky footer row "<b>+ Create new connection…</b>" — opens a Drawer with the connection-creation form for that snap type. Always available, never hidden.</dd>
+      <dt>health</dt><dd>Background-tested every N minutes; badge reflects last result. Click a failed connection to re-test or open its config.</dd>
+      <dt>scope</dt><dd>Picker filters to connections that are <i>valid for the current snap type</i> by default. "Show all" toggle in the search header to override.</dd>
+      <dt>a11y</dt><dd><code>role="combobox" aria-haspopup="listbox"</code>. Menu rows: <code>role="option"</code>. Vendor icons are decorative (<code>aria-hidden</code>).</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

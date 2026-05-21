@@ -1,0 +1,405 @@
+/* ============================================================
+   SnapLogic Design System — Colors & Type
+   Source: JellyRoll Figma (Tokens, Color Ramps, Typography pages).
+   Pair with fonts.css for @font-face declarations.
+   ============================================================ */
+
+@import url("./fonts.css");
+
+:root {
+  /* ─── Color Ramps ────────────────────────────────────────────
+     The full SnapLogic color system. 10 ramps × 10 steps (100–1000).
+     The 600 step is the "default" for each hue.
+  */
+
+  /* Blue — primary brand & action color */
+  --sl-blue-50:  #F2F6FC;
+  --sl-blue-100: #E6ECF8;
+  --sl-blue-200: #CED9F0;
+  --sl-blue-300: #9CB3E1;
+  --sl-blue-400: #6B8DD2;
+  --sl-blue-500: #3967C3;
+  --sl-blue-600: #0841B4;
+  --sl-blue-700: #063490;
+  --sl-blue-800: #05276C;
+  --sl-blue-900: #031A48;
+  --sl-blue-1000: #020D24;
+
+  /* Teal — primary hover/secondary accent (most hover states pull from teal) */
+  --sl-teal-50:  #F2F8F8;
+  --sl-teal-100: #E6F2F2;
+  --sl-teal-200: #CEE6E5;
+  --sl-teal-300: #9DCDCC;
+  --sl-teal-400: #6BB3B2;
+  --sl-teal-500: #3A9A99;
+  --sl-teal-600: #09817F;
+  --sl-teal-700: #076766;
+  --sl-teal-800: #054D4C;
+  --sl-teal-900: #043433;
+  --sl-teal-1000: #021A19;
+
+  /* Indigo — dark navigation chrome */
+  --sl-indigo-50:  #F4F6F9;
+  --sl-indigo-100: #EAEDF3;
+  --sl-indigo-200: #D6DAE6;
+  --sl-indigo-300: #ACB5CE;
+  --sl-indigo-400: #8390B5;
+  --sl-indigo-500: #596B9D;
+  --sl-indigo-600: #304684;
+  --sl-indigo-700: #26386A;
+  --sl-indigo-800: #1D2A4F;
+  --sl-indigo-900: #131C35;
+  --sl-indigo-1000: #0A0E1A;
+
+  /* Orange */
+  --sl-orange-50:  #FEF7F3;
+  --sl-orange-100: #FEF0E7;
+  --sl-orange-200: #FEE0CE;
+  --sl-orange-300: #FDC29D;
+  --sl-orange-400: #FBA36D;
+  --sl-orange-500: #FA853C;
+  --sl-orange-600: #F9660B;
+  --sl-orange-700: #C75209;
+  --sl-orange-800: #953D07;
+  --sl-orange-900: #642904;
+  --sl-orange-1000: #321402;
+
+  /* Yellow / Gold (warning) */
+  --sl-yellow-50:  #FFFBF2;
+  --sl-yellow-100: #FFF8E6;
+  --sl-yellow-200: #FEF2CD;
+  --sl-yellow-300: #FDE49B;
+  --sl-yellow-400: #FDD768;
+  --sl-yellow-500: #FCC936;
+  --sl-yellow-600: #FBBC04;
+  --sl-yellow-700: #C99603;
+  --sl-yellow-800: #977102;
+  --sl-yellow-900: #644B02;
+  --sl-yellow-1000: #322601;
+
+  /* Purple — "discovery" / AI accents */
+  --sl-purple-50:  #F7F5F9;
+  --sl-purple-100: #EFEBF3;
+  --sl-purple-200: #E0D7E6;
+  --sl-purple-300: #C0AFCE;
+  --sl-purple-400: #A186B5;
+  --sl-purple-500: #815E9D;
+  --sl-purple-600: #623684;
+  --sl-purple-700: #4E2B6A;
+  --sl-purple-800: #3B204F;
+  --sl-purple-900: #271635;
+  --sl-purple-1000: #140B1A;
+
+  /* Green — success */
+  --sl-green-50:  #F2F8F3;
+  --sl-green-100: #E6F2E8;
+  --sl-green-200: #CCE5D1;
+  --sl-green-300: #99CBA4;
+  --sl-green-400: #67B176;
+  --sl-green-500: #349749;
+  --sl-green-600: #017D1B;
+  --sl-green-700: #016416;
+  --sl-green-800: #014B10;
+  --sl-green-900: #00320B;
+  --sl-green-1000: #001905;
+
+  /* Red — alert / destructive */
+  --sl-red-50:  #FDF3F5;
+  --sl-red-100: #FCE8EC;
+  --sl-red-200: #F9D2D8;
+  --sl-red-300: #F4A4B1;
+  --sl-red-400: #EE778B;
+  --sl-red-500: #E94964;
+  --sl-red-600: #E31C3D;
+  --sl-red-700: #B61631;
+  --sl-red-800: #881125;
+  --sl-red-900: #5B0B18;
+  --sl-red-1000: #2D060C;
+
+  /* Pink — promotion / secondary accent */
+  --sl-pink-50:  #FDF3F8;
+  --sl-pink-100: #FCE8F1;
+  --sl-pink-200: #F9D2E3;
+  --sl-pink-300: #F4A5C7;
+  --sl-pink-400: #EE78AB;
+  --sl-pink-500: #E94B8F;
+  --sl-pink-600: #E31C73;
+  --sl-pink-700: #B6165C;
+  --sl-pink-800: #881145;
+  --sl-pink-900: #5B0B2E;
+  --sl-pink-1000: #2D0617;
+
+  /* Grey — neutrals (use for surfaces, dividers, text muting) */
+  --sl-grey-50:  #FAFAFB;
+  --sl-grey-100: #F5F6F8;
+  --sl-grey-200: #EBEDF1;
+  --sl-grey-300: #D7DCE3;
+  --sl-grey-400: #C4CAD6;
+  --sl-grey-500: #B0B9C8;
+  --sl-grey-600: #9CA7BA;
+  --sl-grey-700: #7D8695;
+  --sl-grey-800: #5E6470;
+  --sl-grey-900: #3E434A;
+  --sl-grey-1000: #1F2125;
+
+  /* AI — purplish-blue ramp for SnapGPT / AI-generated content. Distinct
+     from Blue (action) and Purple (discovery). Default: ai-500. */
+  --sl-ai-50:   #F6F8FF;
+  --sl-ai-100:  #EEF1FF;
+  --sl-ai-200:  #D7DCFF;
+  --sl-ai-300:  #B3BCFF;
+  --sl-ai-400:  #8B97F2;
+  --sl-ai-500:  #6672D8;
+  --sl-ai-600:  #545FC4;
+  --sl-ai-700:  #434AA3;
+  --sl-ai-800:  #313777;
+  --sl-ai-900:  #222652;
+  --sl-ai-1000: #111329;
+
+  /* Base neutrals */
+  --sl-white: #FFFFFF;
+  --sl-black: #000000;
+
+  /* ─── Semantic / Token mapping ──────────────────────────────
+     These mirror the published Confluence token library
+     ("color.background.*", "color.text.*", "color.surface.*", etc.).
+  */
+
+  /* Surfaces & elevations (Jellyroll defines five surfaces) */
+  --color-surface-primary: var(--sl-white);     /* the canvas (main workspace) */
+  --color-surface-raised: var(--sl-white);      /* cards, drawers — floats above canvas */
+  --color-surface-sunken: var(--sl-grey-100);   /* pressed-in, anchored sections */
+  --color-surface-overlay: var(--sl-white);     /* modals, popovers — highest plane */
+  --color-surface-navbar: var(--sl-blue-900);   /* global nav — dark navy, always */
+
+  /* Background tokens */
+  --color-background-primary: var(--sl-blue-600);
+  --color-background-primary-hover: linear-gradient(112.63deg, #0B9D9B 12.38%, #0841B4 137.46%);
+  --color-background-primary-pressed: var(--sl-teal-400);
+  --color-background-secondary: var(--sl-white);
+  --color-background-secondary-hover: var(--sl-white);
+  --color-background-secondary-pressed: var(--sl-teal-200);
+  --color-background-input: var(--sl-grey-100);
+  --color-background-disabled: var(--sl-grey-200);
+  --color-background-subtle: var(--sl-grey-100);
+  --color-background-alert: var(--sl-red-100);
+  --color-background-success: var(--sl-green-100);
+  --color-background-discovery: var(--sl-purple-100);
+  --color-background-information: var(--sl-indigo-100);
+
+  /* Text tokens */
+  --color-text-body: var(--sl-indigo-900);      /* default body text */
+  --color-text-heading: var(--sl-indigo-900);   /* same family, used in headings */
+  --color-text-subtle: var(--sl-grey-700);      /* secondary copy, captions */
+  --color-text-disabled: var(--sl-grey-500);
+  --color-text-inverse: var(--sl-white);
+  --color-text-selected: var(--sl-blue-600);
+  --color-text-link: var(--sl-blue-600);
+  --color-text-link-hover: var(--sl-teal-600);
+  --color-text-link-pressed: var(--sl-teal-400);
+  --color-text-alert: var(--sl-red-700);
+  --color-text-warning: var(--sl-gold-900);
+  --color-text-success: var(--sl-green-800);
+  --color-text-discovery: var(--sl-purple-700);
+  --color-text-information: var(--sl-indigo-700);
+  --color-text-accent-blue: var(--sl-blue-600);
+  --color-text-accent-teal: var(--sl-teal-600);
+  --color-text-accent-indigo: var(--sl-indigo-600);
+  --color-text-accent-orange: var(--sl-orange-600);
+  --color-text-accent-yellow: var(--sl-yellow-500);
+  --color-text-accent-purple: var(--sl-purple-600);
+  --color-text-accent-green: var(--sl-green-600);
+  --color-text-accent-red: var(--sl-red-600);
+  --color-text-accent-pink: var(--sl-pink-600);
+  --color-text-accent-grey: var(--sl-grey-600);
+
+  /* Borders & strokes */
+  --color-border-default: var(--sl-grey-400);   /* card default — 1px Grey-3/68768A approximated */
+  --color-border-subtle: var(--sl-grey-300);
+  --color-border-strong: var(--sl-indigo-900);
+  --color-border-focus: var(--sl-teal-600);     /* focus ring — high-contrast teal */
+  --color-border-selected: var(--sl-blue-600);
+  --color-border-hover: var(--sl-blue-600);
+  --color-border-error: var(--sl-red-600);
+
+  /* Interaction (hover/pressed overlays for clickable rows) */
+  --color-interaction-hovered: var(--sl-blue-200);
+  --color-interaction-pressed: var(--sl-blue-300);
+  --color-interaction-selected: var(--sl-blue-100);
+
+  /* Scrim (modal/overlay backdrop) */
+  --color-scrim: rgba(9, 30, 66, 0.54);
+
+  /* ─── Gradients ─────────────────────────────────────────────
+     The system is flat by default; gradients are reserved for
+     branded moments (product launcher marks, primary-button hover,
+     hero/marketing surfaces, SnapGPT accents).
+  */
+
+  /* Brand gradient — teal → blue, horizontal sweep.
+     Stops: #008380 at 29%, #0841B4 at 100%.
+     Use for hero surfaces, launcher backgrounds, brand moments. */
+  --gradient-brand: linear-gradient(90deg, #008380 29%, #0841B4 100%);
+
+  /* Stop colors as standalone tokens (in case you need them
+     for icons / strokes that sit on top of the gradient). */
+  --gradient-brand-stop-1: #008380;
+  --gradient-brand-stop-2: #0841B4;
+
+  /* ─── Typography ────────────────────────────────────────────
+     Sans: Acherus Grotesque, system-ui fallback.
+     Mono: SF Mono (system).
+  */
+  --font-sans: "Acherus Grotesque", system-ui, "SF Pro", "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Typescale (from /Typography/Fonts-Typograpy) */
+  --type-title-size: 32px;
+  --type-title-line: 38px;
+  --type-title-weight: 800;            /* "850 / Extra bold" in Figma */
+
+  --type-heading-size: 24px;
+  --type-heading-line: 36px;
+  --type-heading-weight: 800;
+
+  --type-subheading-size: 20px;
+  --type-subheading-line: 32px;
+  --type-subheading-weight: 800;
+
+  --type-cardtitle-size: 18px;
+  --type-cardtitle-line: 28px;
+  --type-cardtitle-weight: 800;
+
+  --type-label-size: 14px;
+  --type-label-line: 22px;
+  --type-label-weight: 800;
+
+  --type-body-size: 14px;
+  --type-body-line: 22px;
+  --type-body-weight: 400;
+
+  --type-placeholder-size: 14px;
+  --type-placeholder-line: 22px;
+  --type-placeholder-weight: 300;
+  --type-placeholder-style: italic;
+
+  --type-small-size: 12px;
+  --type-small-line: 18px;
+  --type-small-weight: 400;
+
+  --type-micro-size: 10px;
+  --type-micro-line: 14px;
+  --type-micro-weight: 800;
+
+  --type-pill-size: 10px;
+  --type-pill-line: 14px;
+  --type-pill-weight: 800;
+  --type-pill-tracking: 0.06em;
+
+  --type-display-size: 56px;
+  --type-display-line: 64px;
+  --type-display-weight: 400;
+
+  /* ─── Spacing scale (4-pt grid) ─────────────────────────── */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* ─── Radius ─────────────────────────────────────────────── */
+  --radius-xs: 2px;
+  --radius-sm: 4px;     /* cards, buttons */
+  --radius-md: 6px;
+  --radius-lg: 8px;     /* large surfaces, modals */
+  --radius-pill: 999px;
+
+  /* ─── Elevation / Shadows ───────────────────────────────────
+     Five surfaces in Jellyroll: Navbar (lowest), Canvas, Sunken, Raised, Overlay.
+     Shadows below are derived from observed Figma shadows (rgba(38,40,44,0.x), Blue-shadow 206,217,240).
+  */
+  --shadow-raised: 0px 2px 4px rgba(206, 217, 240, 0.8);     /* card resting */
+  --shadow-raised-hover: 0px 4px 8px rgba(206, 217, 240, 1);
+  --shadow-overlay: 0px 8px 24px rgba(38, 40, 44, 0.18);     /* modal / popover */
+  --shadow-overlay-strong: 0px 12px 32px rgba(38, 40, 44, 0.28);
+  --shadow-focus-ring: 0 0 0 3px rgba(9, 129, 127, 0.35);    /* teal-600 focus halo */
+  --shadow-inset-sunken: inset 0 1px 2px rgba(38, 40, 44, 0.08);
+
+  /* ─── Form field tokens ─────────────────────────────────────
+     Adopted in Wave 1 of the Form System rollout. Use in every
+     input/select/combobox/date primitive so disabled, focus,
+     error and AI states stay consistent across the system.
+  */
+  --field-height-sm: 32px;
+  --field-height-md: 40px;       /* default */
+  --field-height-lg: 48px;
+  --field-padding-x: 12px;
+  --field-padding-y-md: 8px;
+  --field-radius: var(--radius-sm);
+  --field-font: 400 14px/22px var(--font-sans);
+
+  --field-bg-default: var(--sl-white);
+  --field-bg-hover:   var(--sl-white);
+  --field-bg-disabled:var(--sl-blue-100);
+  --field-bg-readonly:var(--sl-grey-100);
+  --field-bg-error:   var(--sl-red-100);
+
+  --field-border-default:  var(--sl-grey-400);
+  --field-border-hover:    var(--sl-blue-600);
+  --field-border-focus:    var(--sl-teal-600);
+  --field-border-error:    var(--sl-red-600);
+  --field-border-warning:  var(--sl-yellow-700);
+  --field-border-success:  var(--sl-green-600);
+  --field-border-disabled: var(--sl-blue-200);
+  --field-border-readonly: var(--sl-grey-300);
+
+  --field-text-default:  var(--sl-indigo-900);
+  --field-text-disabled: var(--sl-blue-300);
+  --field-text-readonly: var(--sl-grey-800);
+  --field-text-placeholder: var(--sl-grey-700);
+
+  /* Standardized focus halo — use on every focusable control */
+  --ring-focus: 0 0 0 2px rgba(9, 129, 127, 0.25);
+
+  /* AI-state tokens — distinct semantic from "discovery" (purple) and
+     "action" (blue). Uses the dedicated purplish-blue AI ramp. */
+  --ai-tint:   var(--sl-ai-100);
+  --ai-accent: var(--sl-ai-500);
+  --ai-confidence-high: var(--sl-green-600);
+  --ai-confidence-med:  var(--sl-yellow-600);
+  --ai-confidence-low:  var(--sl-orange-600);
+
+  /* Validation timing */
+  --validate-debounce: 350ms;
+}
+
+/* ─── Base type recipes ────────────────────────────────────── */
+
+.sl-display,
+h1.sl-display { font: var(--type-display-weight) var(--type-display-size)/var(--type-display-line) var(--font-sans); color: var(--color-text-heading); margin: 0; }
+.sl-title,
+h1 { font: var(--type-title-weight) var(--type-title-size)/var(--type-title-line) var(--font-sans); color: var(--color-text-heading); margin: 0; }
+.sl-heading,
+h2 { font: var(--type-heading-weight) var(--type-heading-size)/var(--type-heading-line) var(--font-sans); color: var(--color-text-heading); margin: 0; }
+.sl-subheading,
+h3 { font: var(--type-subheading-weight) var(--type-subheading-size)/var(--type-subheading-line) var(--font-sans); color: var(--color-text-heading); margin: 0; }
+.sl-cardtitle,
+h4 { font: var(--type-cardtitle-weight) var(--type-cardtitle-size)/var(--type-cardtitle-line) var(--font-sans); color: var(--color-text-heading); margin: 0; }
+.sl-label { font: var(--type-label-weight) var(--type-label-size)/var(--type-label-line) var(--font-sans); color: var(--color-text-body); }
+.sl-body,
+p { font: var(--type-body-weight) var(--type-body-size)/var(--type-body-line) var(--font-sans); color: var(--color-text-body); margin: 0; }
+.sl-placeholder { font: var(--type-placeholder-style) var(--type-placeholder-weight) var(--type-placeholder-size)/var(--type-placeholder-line) var(--font-sans); color: var(--color-text-subtle); }
+.sl-small,
+small { font: var(--type-small-weight) var(--type-small-size)/var(--type-small-line) var(--font-sans); color: var(--color-text-subtle); }
+.sl-micro { font: var(--type-micro-weight) var(--type-micro-size)/var(--type-micro-line) var(--font-sans); color: var(--color-text-subtle); }
+.sl-pill { font: var(--type-pill-weight) var(--type-pill-size)/var(--type-pill-line) var(--font-sans); color: var(--color-text-body); text-transform: uppercase; letter-spacing: var(--type-pill-tracking); }
+code, .sl-code { font: var(--type-small-weight) var(--type-small-size)/var(--type-small-line) var(--font-mono); background: rgba(9, 30, 66, 0.06); padding: 1px 6px; border-radius: var(--radius-xs); color: var(--color-text-body); }
+
+body { font-family: var(--font-sans); color: var(--color-text-body); background: var(--color-surface-primary); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }

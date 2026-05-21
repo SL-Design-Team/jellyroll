@@ -1,0 +1,60 @@
+/* Shared styles for preview cards.
+   Every card is 700px wide. Cards inherit colors_and_type.css. */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text-body);
+  background: var(--sl-white);
+}
+
+.card {
+  width: 700px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--sl-white);
+}
+
+.swatch-row {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.swatch {
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.swatch .step { font-size: 11px; }
+.swatch .hex { font-size: 9px; font-weight: 400; opacity: 0.85; font-family: var(--font-mono); letter-spacing: 0; }
+.swatch.light { color: var(--sl-indigo-900); }
+.swatch.dark { color: var(--sl-white); }
+
+.row-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.row-label .name {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--color-text-heading);
+}
+.row-label .meta {
+  font-size: 11px;
+  color: var(--color-text-subtle);
+  font-family: var(--font-mono);
+}

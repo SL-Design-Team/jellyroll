@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Segmented control</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 22px; width: 760px; }
+
+  /* ─── Segmented control · inverted-track ────────────────────────
+     A sunken pill track. The whole control has an outer border with
+     a small inset pad; the selected segment is a Blue 600 pill that
+     sits *inside* the track with its own rounded corners.
+     Adapts to surface via `.sc--inverse` for dark backgrounds.
+  */
+  .sc {
+    --sc-h: 30px;
+    --sc-pad: 3px;
+    --sc-icon: 14px;
+    --sc-border: var(--sl-grey-300);
+    --sc-text: var(--sl-indigo-900);
+    --sc-text-muted: var(--sl-grey-700);
+    --sc-hover-bg: rgba(8, 65, 180, 0.06);
+    display: inline-flex;
+    align-items: stretch;
+    padding: var(--sc-pad);
+    border: 1px solid var(--sc-border);
+    border-radius: 4px;
+    background: transparent;
+    font: 800 13px/20px var(--font-sans);
+  }
+  .sc__item {
+    height: calc(var(--sc-h) - var(--sc-pad) * 2 - 2px);
+    padding: 0 14px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--sc-text-muted);
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: background-color 150ms ease-out, color 150ms ease-out;
+    font: inherit;
+    white-space: nowrap;
+  }
+  .sc__item:hover { color: var(--sc-text); background: var(--sc-hover-bg); }
+  .sc__item.selected { background: var(--sl-blue-600); color: var(--sl-white); }
+  .sc__item.selected:hover { background: var(--sl-blue-700); color: var(--sl-white); }
+  .sc__item:disabled,
+  .sc__item.disabled { color: var(--sl-grey-400); cursor: not-allowed; }
+  .sc__item:disabled:hover { background: transparent; }
+  .sc__item:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--sl-teal-600); }
+  .sc__item i, .sc__item svg { width: var(--sc-icon); height: var(--sc-icon); flex: none; stroke-width: 2; }
+
+  /* Dark-surface variant — same shape, different palette */
+  .sc--inverse {
+    --sc-border: rgba(156, 179, 225, 0.25);
+    --sc-text: var(--sl-white);
+    --sc-text-muted: var(--sl-grey-400);
+    --sc-hover-bg: rgba(255,255,255,0.06);
+  }
+
+  /* Sizes */
+  .sc--sm { --sc-h: 24px; --sc-pad: 2px; --sc-icon: 12px; font: 800 12px/16px var(--font-sans); }
+  .sc--sm .sc__item { padding: 0 10px; gap: 4px; }
+  .sc--icon-only .sc__item { padding: 0; width: calc(var(--sc-h) - var(--sc-pad) * 2 - 2px); }
+
+  /* ─── Stages ───────────────────────────────────────────────── */
+  .light-stage {
+    padding: 24px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .dark-stage {
+    background: #020D24;
+    padding: 24px;
+    border-radius: var(--field-radius);
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .dark-stage .lbl,
+  .dark-stage .lbl-section { color: rgba(255,255,255,0.65); }
+
+  .lbl {
+    font: 400 14px/22px var(--font-sans);
+    color: var(--color-text-body);
+    margin-bottom: 8px;
+  }
+  .lbl-section {
+    font: 800 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Segmented control</span><span class="meta">sunken pill track · light + dark surfaces · md / sm · icon / label variants</span></div>
+
+    <!-- ───────────── On LIGHT ───────────── -->
+    <div>
+      <div class="section-h">On light surfaces <span class="meta">page · toolbar · form</span></div>
+      <div class="light-stage">
+        <div>
+          <div class="lbl">Default · medium</div>
+          <div class="sc" role="radiogroup" aria-label="Default segmented control">
+            <button class="sc__item selected" role="radio" aria-checked="true"><i data-lucide="sun"></i>Option</button>
+            <button class="sc__item" role="radio" aria-checked="false"><i data-lucide="cloud"></i>Option</button>
+            <button class="sc__item" role="radio" aria-checked="false"><i data-lucide="cloud-rain"></i>Option</button>
+            <button class="sc__item" role="radio" aria-checked="false"><i data-lucide="cloud-lightning"></i>Option</button>
+            <button class="sc__item" role="radio" aria-checked="false"><i data-lucide="snowflake"></i>Option</button>
+          </div>
+        </div>
+        <div>
+          <div class="lbl">Small</div>
+          <div class="sc sc--sm" role="radiogroup" aria-label="Small segmented control">
+            <button class="sc__item selected" role="radio" aria-checked="true">Type</button>
+            <button class="sc__item" role="radio" aria-checked="false">Snap pack</button>
+            <button class="sc__item" role="radio" aria-checked="false">None</button>
+          </div>
+        </div>
+        <div>
+          <div class="lbl">Labels only · icons only</div>
+          <div style="display: flex; gap: 16px; align-items: center;">
+            <div class="sc" role="radiogroup" aria-label="Labels only">
+              <button class="sc__item selected" role="radio" aria-checked="true">Item 1</button>
+              <button class="sc__item" role="radio" aria-checked="false">Item 2</button>
+              <button class="sc__item" role="radio" aria-checked="false">Item 3</button>
+            </div>
+            <div class="sc sc--icon-only" role="radiogroup" aria-label="Icons only">
+              <button class="sc__item selected" role="radio" aria-checked="true" aria-label="Sun"><i data-lucide="sun"></i></button>
+              <button class="sc__item" role="radio" aria-checked="false" aria-label="Cloud"><i data-lucide="cloud"></i></button>
+              <button class="sc__item" role="radio" aria-checked="false" aria-label="Rain"><i data-lucide="cloud-rain"></i></button>
+              <button class="sc__item" role="radio" aria-checked="false" aria-label="Storm"><i data-lucide="cloud-lightning"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ───────────── On DARK ───────────── -->
+    <div>
+      <div class="section-h">On dark surfaces <span class="meta">add <code>sc--inverse</code> · Designer rail · SnapGPT panel</span></div>
+      <div class="dark-stage">
+        <div>
+          <div class="lbl-section">Snaps</div>
+          <div class="sc sc--inverse sc--sm" role="radiogroup" aria-label="Snap filter">
+            <button class="sc__item selected" role="radio" aria-checked="true">Type</button>
+            <button class="sc__item" role="radio" aria-checked="false">Snap pack</button>
+            <button class="sc__item" role="radio" aria-checked="false">None</button>
+          </div>
+        </div>
+        <div>
+          <div class="lbl" style="margin-bottom: 10px;">Default · medium · with icons</div>
+          <div class="sc sc--inverse" role="radiogroup" aria-label="Default inverse">
+            <button class="sc__item selected" role="radio" aria-checked="true"><i data-lucide="sun"></i>Option</button>
+            <button class="sc__item" role="radio" aria-checked="false"><i data-lucide="cloud"></i>Option</button>
+            <button class="sc__item" role="radio" aria-checked="false"><i data-lucide="cloud-rain"></i>Option</button>
+            <button class="sc__item" role="radio" aria-checked="false"><i data-lucide="cloud-lightning"></i>Option</button>
+            <button class="sc__item" role="radio" aria-checked="false"><i data-lucide="snowflake"></i>Option</button>
+          </div>
+        </div>
+        <div>
+          <div class="lbl" style="margin-bottom: 10px;">Icons only</div>
+          <div class="sc sc--inverse sc--icon-only" role="radiogroup" aria-label="Icons only inverse">
+            <button class="sc__item selected" role="radio" aria-checked="true" aria-label="Sun"><i data-lucide="sun"></i></button>
+            <button class="sc__item" role="radio" aria-checked="false" aria-label="Cloud"><i data-lucide="cloud"></i></button>
+            <button class="sc__item" role="radio" aria-checked="false" aria-label="Rain"><i data-lucide="cloud-rain"></i></button>
+            <button class="sc__item" role="radio" aria-checked="false" aria-label="Storm"><i data-lucide="cloud-lightning"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>shape</dt><dd>Sunken track with a <b>3px inset pad</b> and 1px outer border. Outer corners use <b>4px radius</b>; the selected pill nested inside also uses <b>4px radius</b>. Selected = Blue 600 pill; unselected = transparent.</dd>
+      <dt>surfaces</dt><dd>The track stays transparent on either surface; only the border, idle text, and hover fill swap. Add <b>sc--inverse</b> on dark surfaces (Designer rail, SnapGPT panel, Indigo 1000 nav). The selected Blue 600 pill is identical in both modes.</dd>
+      <dt>states</dt><dd><b>Idle</b>: Grey 700 (light) / Grey 400 (dark). <b>Hover</b>: text darkens / brightens with a subtle fill (Blue 6% on light · white 6% on dark). <b>Selected</b>: Blue 600 fill, white text. <b>Disabled</b>: Grey 400, no hover. <b>Focus</b>: 2px teal outline on the segment only.</dd>
+      <dt>sizes</dt><dd><b>md</b> (default) · <b>30px</b> tall, 13px ExtraBold, 14px icon, 14px segment padding. <b>sm</b> · <b>24px</b> tall, 12px ExtraBold, 12px icon, 10px padding. Toolbar = sm; page-level filter = md.</dd>
+      <dt>content</dt><dd>Icon + label, label only, or icon only. <b>Always show labels</b> when space allows. Icon-only is reserved for dense rails — give every segment an <code>aria-label</code> and a tooltip.</dd>
+      <dt>when</dt><dd>2–5 mutually-exclusive options the user toggles frequently and wants visible at all times (view modes, time ranges, density, filter modes). Not for one-off pickers (use <b>Select</b>) or multi-select (use <b>Multi-select</b>).</dd>
+      <dt>vs. tabs</dt><dd>Use <b>Tabs</b> to switch content panels at the page or section level. Use <b>Segmented control</b> to filter/transform an existing view. Tabs change <i>what</i>; segments change <i>how</i>.</dd>
+      <dt>keyboard</dt><dd><kbd>Tab</kbd> enters the group, focus lands on the selected item. <kbd>←/→</kbd> moves selection (commits immediately, single tab-stop per WAI-ARIA radio pattern). <kbd>Home/End</kbd> jumps to first/last.</dd>
+      <dt>a11y</dt><dd>Outer container <code>role="radiogroup"</code> with an <code>aria-label</code>. Each item <code>role="radio" aria-checked</code>. Disabled segments use <code>aria-disabled="true"</code> so they remain focusable.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

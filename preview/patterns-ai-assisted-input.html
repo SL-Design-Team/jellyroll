@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · AI-assisted input</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  .sl-input {
+    height: var(--field-height-md);
+    padding: 8px 12px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    font: var(--field-font);
+    display: flex; align-items: center; gap: 8px;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .sl-input.focus { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .sl-input input { flex: 1; border: 0; outline: 0; background: transparent; font: inherit; color: var(--field-text-default); padding: 0; }
+  .sl-input input::placeholder { color: var(--field-text-placeholder); font-style: italic; font-weight: 300; }
+
+  /* AI generate trigger button (inside field, trailing) */
+  .ai-gen {
+    flex: none;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 8px;
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-xs);
+    color: var(--ai-accent);
+    font: 800 11px/14px var(--font-sans);
+    cursor: pointer;
+  }
+  .ai-gen:hover { background: var(--ai-tint); }
+  .ai-gen svg { width: 12px; height: 12px; }
+
+  /* Generating state — purple sweep + spinner */
+  .sl-input.generating {
+    border-color: var(--ai-accent);
+    background: linear-gradient(90deg, var(--sl-white) 0%, var(--ai-tint) 50%, var(--sl-white) 100%);
+    background-size: 200% 100%;
+    animation: ai-sweep 2.4s ease-in-out infinite;
+  }
+  @keyframes ai-sweep { 0%,100% { background-position: 100% 0; } 50% { background-position: 0 0; } }
+  .sl-input.generating .ai-spinner { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Review state — AI value awaiting human accept */
+  .sl-input.review {
+    border-color: var(--ai-accent);
+    background: var(--ai-tint);
+  }
+  .sl-input.review .actions { display: flex; gap: 2px; flex: none; }
+  .sl-input.review .actions button {
+    height: 24px; padding: 0 8px;
+    font: 800 11px/14px var(--font-sans);
+    border-radius: var(--radius-xs);
+    border: 0;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .sl-input.review .actions .accept { background: var(--ai-accent); color: var(--sl-white); }
+  .sl-input.review .actions .accept:hover { background: var(--sl-blue-700); }
+  .sl-input.review .actions .revise { background: transparent; color: var(--ai-accent); }
+  .sl-input.review .actions .revise:hover { background: var(--sl-blue-200); }
+  .sl-input.review .actions svg { width: 12px; height: 12px; }
+
+  /* Prompt-the-AI affordance */
+  .ai-prompt {
+    position: absolute;
+    top: calc(100% + 6px); left: 0; right: 0;
+    background: var(--sl-white);
+    border: 1px solid var(--ai-accent);
+    border-radius: var(--field-radius);
+    box-shadow: var(--shadow-overlay);
+    padding: 10px 12px;
+    z-index: 5;
+  }
+  .ai-prompt__head { display: flex; align-items: center; gap: 6px; font: 800 12px/16px var(--font-mono); color: var(--ai-accent); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ai-prompt__head svg { width: 14px; height: 14px; }
+  .ai-prompt textarea {
+    width: 100%; min-height: 60px;
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    padding: 8px 10px;
+    font: 400 13px/20px var(--font-sans);
+    outline: none;
+    resize: vertical;
+  }
+  .ai-prompt .row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .ai-prompt .chips { display: flex; gap: 4px; }
+  .ai-prompt .chip {
+    padding: 2px 8px; font: 500 11px/14px var(--font-sans);
+    color: var(--ai-accent); background: var(--ai-tint);
+    border-radius: 999px; cursor: pointer;
+  }
+  .ai-prompt .btn {
+    background: var(--ai-accent); color: var(--sl-white);
+    border: 0; padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font: 800 12px/16px var(--font-sans);
+    cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .ai-prompt .btn svg { width: 12px; height: 12px; }
+
+  .relative { position: relative; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .stage { min-height: 240px; padding-top: 8px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">AI-assisted input</span><span class="meta">magic-wand affordance · generate / review / accept</span></div>
+
+    <div>
+      <div class="section-h">States <span class="meta">idle → generating → review → accepted</span></div>
+
+      <div class="row">
+
+        <div class="sl-field">
+          <label class="sl-field__label">Idle <span style="color: var(--color-text-subtle); font-weight: 400; font-size: 11px; font-family: var(--font-mono);">"Generate" affordance trailing</span></label>
+          <div class="sl-input">
+            <input value="" placeholder="Describe what this pipeline does…" />
+            <button class="ai-gen"><i data-lucide="sparkles"></i>Generate</button>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">Filled <span style="color: var(--color-text-subtle); font-weight: 400; font-size: 11px; font-family: var(--font-mono);">"Improve" replaces Generate</span></label>
+          <div class="sl-input">
+            <input value="Loads Salesforce accounts to Snowflake nightly." />
+            <button class="ai-gen"><i data-lucide="wand-2"></i>Improve</button>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">Generating <span style="color: var(--ai-accent); font-weight: 800; font-size: 11px; font-family: var(--font-mono);">SnapGPT writing…</span></label>
+          <div class="sl-input generating">
+            <span class="ai-spinner" style="color: var(--ai-accent); display: inline-flex;"><i data-lucide="loader"></i></span>
+            <input value="Loads Salesforce accounts" placeholder="" />
+            <button class="ai-gen" disabled>Cancel</button>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">Review · awaiting accept <span style="color: var(--ai-accent); font-weight: 800; font-size: 11px; font-family: var(--font-mono);">human in the loop</span></label>
+          <div class="sl-input review">
+            <span style="color: var(--ai-accent); flex: none; display: inline-flex;"><i data-lucide="sparkle"></i></span>
+            <input value="Loads Salesforce accounts to Snowflake nightly, transforming case and rounding revenue." />
+            <div class="actions">
+              <button class="revise" title="Revise"><i data-lucide="rotate-cw"></i></button>
+              <button class="accept"><i data-lucide="check"></i>Accept</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Prompt-the-AI popover <span class="meta">trigger Generate when field is empty · gather intent before writing</span></div>
+      <div class="stage">
+        <div class="sl-field">
+          <label class="sl-field__label">Pipeline description</label>
+          <div class="relative">
+            <div class="sl-input focus">
+              <input value="" placeholder="Describe what this pipeline does…" />
+              <button class="ai-gen"><i data-lucide="sparkles"></i>Generate</button>
+            </div>
+            <div class="ai-prompt">
+              <div class="ai-prompt__head"><img src="../assets/snapgpt-icon.svg" width="14" height="14" alt="" />SnapGPT</div>
+              <textarea placeholder="What should this description say?">Generate a one-sentence summary based on the snaps in this pipeline.</textarea>
+              <div class="row">
+                <div class="chips">
+                  <span class="chip">Use technical tone</span>
+                  <span class="chip">Mention frequency</span>
+                  <span class="chip">Include source &amp; target</span>
+                </div>
+                <button class="btn"><i data-lucide="arrow-right"></i>Generate</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>states</dt><dd><b>Idle</b> (empty) · <b>Filled</b> (manually written — "Improve" replaces "Generate") · <b>Generating</b> (purple sweep + spinner + Cancel) · <b>Review</b> (purple tint + Accept/Revise buttons) · <b>Accepted</b> (returns to Filled, history preserved).</dd>
+      <dt>placement</dt><dd>Generate button sits trailing inside the field. For multi-line fields (textarea), button moves to top-right of the field. Always purple text on transparent background.</dd>
+      <dt>prompt popover</dt><dd>Optional intent-gathering step before generation. Shows when user wants to give a custom prompt. Skip by default — most fields have enough context.</dd>
+      <dt>review</dt><dd>Generated values <b>always</b> require explicit Accept. Never auto-write final values without confirmation. <b>Revise</b> reruns generation with the same context.</dd>
+      <dt>tokens</dt><dd>Uses <code>--ai-tint</code> (Blue-100 bg), <code>--ai-accent</code> (Blue-500 text/border). Matches Field states "AI generating" / "AI review" rows.</dd>
+      <dt>a11y</dt><dd>Generate button has <code>aria-label="Generate with SnapGPT"</code>. Field announces state changes via <code>aria-live="polite"</code> ("Generating", "Review the generated value").</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

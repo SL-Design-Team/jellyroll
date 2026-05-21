@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Sankey</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .panel { padding: 20px 22px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .panel .t { font: 800 14px/18px var(--font-sans); color: var(--sl-indigo-900); margin-bottom: 4px; }
+  .panel .sub { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-bottom: 14px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Sankey diagram</span><span class="meta">record flow from sources → pipelines → destinations · width = volume</span></div>
+    <div class="panel">
+      <div class="t">Records flow · last 24h</div>
+      <div class="sub">node height + link width scale by record count</div>
+      <svg width="100%" height="340" viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg">
+        <!-- ── Column 1: Sources ── -->
+        <rect x="20" y="20"  width="14" height="80" fill="#008DFF" rx="2"/>
+        <rect x="20" y="115" width="14" height="120" fill="#008DFF" rx="2"/>
+        <rect x="20" y="250" width="14" height="70" fill="#008DFF" rx="2"/>
+        <text x="40" y="55"  font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Salesforce</text>
+        <text x="40" y="68"  font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">820k</text>
+        <text x="40" y="170" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Kafka stream</text>
+        <text x="40" y="183" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">1.20M</text>
+        <text x="40" y="280" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Stripe webhook</text>
+        <text x="40" y="293" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">412k</text>
+
+        <!-- ── Column 2: Pipelines ── -->
+        <rect x="490" y="40"  width="14" height="80" fill="#FF73B6" rx="2"/>
+        <rect x="490" y="130" width="14" height="120" fill="#FF73B6" rx="2"/>
+        <rect x="490" y="260" width="14" height="65" fill="#FF73B6" rx="2"/>
+        <text x="510" y="76"  font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">SF → Snowflake</text>
+        <text x="510" y="89"  font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">820k</text>
+        <text x="510" y="186" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Kafka → BigQuery</text>
+        <text x="510" y="199" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">1.20M</text>
+        <text x="510" y="289" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Stripe → Postgres</text>
+        <text x="510" y="302" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">412k</text>
+
+        <!-- ── Column 3: Destinations ── -->
+        <rect x="960" y="40"  width="14" height="100" fill="#4ECB8D" rx="2"/>
+        <rect x="960" y="155" width="14" height="120" fill="#4ECB8D" rx="2"/>
+        <rect x="800" y="280" width="14" height="55" fill="#4ECB8D" rx="2"/>
+        <!-- Right column labels (anchor right) -->
+        <text x="954" y="80" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Snowflake</text>
+        <text x="954" y="93" text-anchor="end" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">820k</text>
+        <text x="954" y="205" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">BigQuery</text>
+        <text x="954" y="218" text-anchor="end" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">1.20M</text>
+        <text x="794" y="298" text-anchor="end" font-family="Acherus Grotesque, sans-serif" font-size="12" font-weight="500" fill="#031A48">Postgres</text>
+        <text x="794" y="311" text-anchor="end" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">412k</text>
+
+        <!-- ── Flow ribbons (bezier paths) ── -->
+        <!-- Sources → pipelines -->
+        <path d="M34,20 C260,20 260,40 490,40 L490,120 C260,120 260,100 34,100 Z" fill="#008DFF" opacity="0.35"/>
+        <path d="M34,115 C260,115 260,130 490,130 L490,250 C260,250 260,235 34,235 Z" fill="#008DFF" opacity="0.35"/>
+        <path d="M34,250 C260,250 260,260 490,260 L490,325 C260,325 260,320 34,320 Z" fill="#008DFF" opacity="0.35"/>
+
+        <!-- Pipelines → destinations -->
+        <path d="M504,40 C730,40 730,40 960,40 L960,140 C730,140 730,120 504,120 Z" fill="#FF73B6" opacity="0.35"/>
+        <path d="M504,130 C730,130 730,155 960,155 L960,275 C730,275 730,250 504,250 Z" fill="#FF73B6" opacity="0.35"/>
+        <path d="M504,260 C650,260 650,280 800,280 L800,335 C650,335 650,325 504,325 Z" fill="#FF73B6" opacity="0.35"/>
+
+        <!-- Column headers -->
+        <text x="27" y="335" text-anchor="middle" font-family="Acherus Grotesque, sans-serif" font-size="10" font-weight="800" fill="#7D8695" letter-spacing="0.06em">SOURCES</text>
+        <text x="497" y="20"  text-anchor="middle" font-family="Acherus Grotesque, sans-serif" font-size="10" font-weight="800" fill="#7D8695" letter-spacing="0.06em">PIPELINES</text>
+        <text x="900" y="20" text-anchor="middle" font-family="Acherus Grotesque, sans-serif" font-size="10" font-weight="800" fill="#7D8695" letter-spacing="0.06em">DESTINATIONS</text>
+      </svg>
+    </div>
+  </div>
+</body></html>

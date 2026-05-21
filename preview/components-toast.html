@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Toast</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .toasts { display: flex; flex-direction: column; gap: 10px; }
+  .toast {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font: 400 13px/18px var(--font-sans);
+    color: var(--sl-indigo-900);
+    box-shadow: var(--shadow-raised);
+    border: 1px solid transparent;
+  }
+  .toast .icon-w {
+    width: 24px; height: 24px; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; flex-shrink: 0;
+  }
+  .toast .x { color: var(--color-text-subtle); cursor: pointer; margin-left: auto; width: 18px; height: 18px; display: inline-flex; }
+  .toast-alert    { background: var(--sl-red-100);    border-color: var(--sl-red-300); }
+  .toast-alert    .icon-w { background: var(--sl-red-600); }
+  .toast-warning  { background: var(--sl-yellow-100); border-color: var(--sl-yellow-300); }
+  .toast-warning  .icon-w { background: var(--sl-yellow-600); color: var(--sl-yellow-1000); }
+  .toast-success  { background: var(--sl-green-100);  border-color: var(--sl-green-300); }
+  .toast-success  .icon-w { background: var(--sl-green-600); }
+  .toast-info     { background: var(--sl-blue-100);   border-color: var(--sl-blue-300); }
+  .toast-info     .icon-w { background: var(--sl-blue-600); }
+
+  .toast-loading {
+    background: var(--sl-grey-1000); color: var(--sl-white);
+    align-items: center;
+  }
+  .spin { width: 16px; height: 16px; border-radius: 999px; border: 2px solid rgba(255,255,255,0.3); border-top-color: var(--sl-white); animation: sp 0.8s linear infinite; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Toast</span><span class="meta">bottom-center \u00b7 disappears in 3s or dismissed with \u00d7</span></div>
+    <div class="toasts">
+      <div class="toast toast-alert">
+        <span class="icon-w"><i data-lucide="alert-circle" style="width:14px;height:14px"></i></span>
+        <span>The complete account creation link has expired.</span>
+        <span class="x"><i data-lucide="x" style="width:16px;height:16px"></i></span>
+      </div>
+      <div class="toast toast-warning">
+        <span class="icon-w"><i data-lucide="alert-triangle" style="width:14px;height:14px"></i></span>
+        <span>The complete account creation link has expired.</span>
+        <span class="x"><i data-lucide="x" style="width:16px;height:16px"></i></span>
+      </div>
+      <div class="toast toast-success">
+        <span class="icon-w"><i data-lucide="check" style="width:14px;height:14px"></i></span>
+        <span>The complete account creation link has expired.</span>
+        <span class="x"><i data-lucide="x" style="width:16px;height:16px"></i></span>
+      </div>
+      <div class="toast toast-info">
+        <span class="icon-w"><i data-lucide="info" style="width:14px;height:14px"></i></span>
+        <span>The complete account creation link has expired.</span>
+        <span class="x"><i data-lucide="x" style="width:16px;height:16px"></i></span>
+      </div>
+      <div class="toast toast-loading">
+        <span class="spin"></span>
+        <span>Just a second. The system is updating the user settings\u2026</span>
+      </div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

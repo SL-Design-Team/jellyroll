@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Left nav</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { width: 1080px; padding: 28px; background: var(--sl-grey-100); gap: 0; }
+
+  .nav-stage {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    display: flex; gap: 32px; align-items: flex-start;
+  }
+
+  .lbl-stack { display: flex; flex-direction: column; gap: 12px; }
+  .lbl-stack .state-label {
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--color-text-subtle);
+  }
+
+  /* ── Nav itself ── */
+  .ln {
+    width: 240px;
+    background: var(--sl-blue-1000);
+    color: var(--sl-white);
+    border-radius: var(--radius-sm);
+    padding: 16px 0 12px;
+    display: flex; flex-direction: column;
+    min-height: 540px;
+    position: relative;
+  }
+  .ln.minimized { width: 56px; }
+
+  .ln-section { padding: 8px 0 4px; }
+  .ln.minimized .ln-section { padding: 8px 0 4px; text-align: center; }
+  .ln-section .section-label {
+    font: 800 11px/14px var(--font-sans);
+    text-transform: uppercase; letter-spacing: 0.10em;
+    color: #6F8BC6;
+    padding: 6px 20px 8px;
+  }
+  .ln.minimized .ln-section .section-label {
+    display: none;
+  }
+  .ln.minimized .ln-section + .ln-section::before {
+    content: ''; display: block;
+    width: 24px; height: 1px; margin: 12px auto 6px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .ln-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 16px;
+    font: 500 14px/18px var(--font-sans);
+    color: rgba(255,255,255,0.92);
+    cursor: pointer;
+    border-radius: 0;
+    user-select: none;
+  }
+  .ln-item:hover { background: rgba(255,255,255,0.10); color: var(--sl-white); }
+  .ln-item.selected {
+    background: var(--sl-blue-500);
+    color: var(--sl-white);
+  }
+  .ln-item.selected:hover { background: var(--sl-blue-500); }
+  .ln-item svg {
+    width: 20px; height: 20px;
+    stroke-width: 1.75;
+    flex-shrink: 0;
+    color: currentColor;
+  }
+  .ln-item .label {
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 120ms ease;
+  }
+  .ln.minimized .ln-item {
+    justify-content: center;
+    padding: 10px 0;
+  }
+  .ln.minimized .ln-item .label { display: none; }
+
+  /* Minimize chevron at bottom */
+  .ln-toggle {
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 12px 16px;
+    display: flex; justify-content: flex-end;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+  }
+  .ln.minimized .ln-toggle { justify-content: center; padding: 12px 0; }
+  .ln-toggle:hover { color: var(--sl-white); }
+  .ln-toggle svg { width: 18px; height: 18px; stroke-width: 2; }
+
+  /* Annotation labels next to the nav */
+  .annotations {
+    display: flex; flex-direction: column; gap: 14px;
+    font: 400 12px/16px var(--font-sans);
+    color: var(--color-text-subtle);
+    padding-top: 28px;
+  }
+  .annotations .ann { display: flex; align-items: center; gap: 8px; }
+  .annotations .swatch {
+    width: 14px; height: 14px; border-radius: 3px;
+    flex-shrink: 0;
+    border: 1px solid var(--sl-grey-300);
+  }
+  .annotations .swatch.default { background: var(--sl-blue-1000); border-color: var(--sl-blue-1000); }
+  .annotations .swatch.hover { background: var(--sl-blue-1000); border-color: var(--sl-blue-1000); position: relative; }
+  .annotations .swatch.hover::after { content:''; position: absolute; inset: 0; background: rgba(255,255,255,0.10); }
+  .annotations .swatch.selected { background: var(--sl-blue-500); border-color: var(--sl-blue-500); }
+  .annotations strong { color: var(--sl-indigo-900); font-weight: 800; }
+  .annotations .note {
+    margin-top: 14px; padding: 12px 14px;
+    background: var(--sl-yellow-100);
+    border-left: 3px solid var(--sl-yellow-600);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font: 400 12px/17px var(--font-sans);
+    color: var(--sl-indigo-900);
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label" style="margin-bottom: 14px"><span class="name">Left nav</span><span class="meta">240px expanded · 56px minimized · blue-500 selected (edge-to-edge) · 0.10 white hover</span></div>
+    <div class="nav-stage">
+      <!-- Expanded -->
+      <div class="lbl-stack">
+        <div class="state-label">Expanded</div>
+        <nav class="ln">
+          <div class="ln-section">
+            <div class="section-label">Analyze</div>
+            <div class="ln-item"><i data-lucide="line-chart"></i><span class="label">Insights</span></div>
+            <div class="ln-item selected"><i data-lucide="layout-dashboard"></i><span class="label">Executions</span></div>
+            <div class="ln-item"><i data-lucide="hexagon"></i><span class="label">Infrastructure</span></div>
+            <div class="ln-item"><i data-lucide="bar-chart-3"></i><span class="label">Metrics</span></div>
+          </div>
+          <div class="ln-section">
+            <div class="section-label">Observe</div>
+            <div class="ln-item"><i data-lucide="activity"></i><span class="label">API Dashboard</span></div>
+          </div>
+          <div class="ln-section">
+            <div class="section-label">Review</div>
+            <div class="ln-item"><i data-lucide="clipboard-list"></i><span class="label">Alert history</span></div>
+            <div class="ln-item"><i data-lucide="atom"></i><span class="label">Activity logs</span></div>
+          </div>
+          <div class="ln-section">
+            <div class="section-label">Audit</div>
+            <div class="ln-item"><i data-lucide="list-tree"></i><span class="label">Integration catalog</span></div>
+          </div>
+          <div class="ln-toggle" title="Collapse">
+            <i data-lucide="chevrons-left"></i>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Minimized -->
+      <div class="lbl-stack">
+        <div class="state-label">Minimized</div>
+        <nav class="ln minimized">
+          <div class="ln-section">
+            <div class="ln-item"><i data-lucide="line-chart"></i></div>
+            <div class="ln-item selected"><i data-lucide="layout-dashboard"></i></div>
+            <div class="ln-item"><i data-lucide="hexagon"></i></div>
+            <div class="ln-item"><i data-lucide="bar-chart-3"></i></div>
+          </div>
+          <div class="ln-section">
+            <div class="ln-item"><i data-lucide="activity"></i></div>
+          </div>
+          <div class="ln-section">
+            <div class="ln-item"><i data-lucide="clipboard-list"></i></div>
+            <div class="ln-item"><i data-lucide="atom"></i></div>
+          </div>
+          <div class="ln-section">
+            <div class="ln-item"><i data-lucide="list-tree"></i></div>
+          </div>
+          <div class="ln-toggle" title="Expand">
+            <i data-lucide="chevrons-right"></i>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Annotations -->
+      <div class="annotations">
+        <div class="state-label">Item states</div>
+        <div class="ann"><span class="swatch default"></span><span><strong>Default</strong> — 14/18 medium · white@92%</span></div>
+        <div class="ann"><span class="swatch hover"></span><span><strong>Hover</strong> — white@10% overlay</span></div>
+        <div class="ann"><span class="swatch selected"></span><span><strong>Selected</strong> — blue-500 fill · edge-to-edge</span></div>
+        <div class="state-label" style="margin-top: 10px">Behavior</div>
+        <div class="ann" style="display:block">• Section labels hide when minimized; thin dividers take their place</div>
+        <div class="ann" style="display:block">• Selected highlight spans the full nav width on both states</div>
+        <div class="ann" style="display:block">• Icons are 20px / 1.75 stroke (Lucide → Untitled UI)</div>
+        <div class="note">
+          <strong>Note:</strong> Sections, items, and icons shown here are a sample. Each application (Designer, Manager, Monitor, AutoSync, APIM, etc.) supplies its own nav model.
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

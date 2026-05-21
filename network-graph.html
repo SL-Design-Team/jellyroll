@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>SnapLogic platform — network graph</title>
+<link rel="stylesheet" href="colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #FAFAFA; }
+  #app {
+    position: fixed; inset: 0;
+    font-family: "Acherus Grotesque", system-ui, "SF Pro", "Segoe UI", sans-serif;
+    color: #1F2125;
+  }
+
+  svg.graph { width: 100%; height: 100%; cursor: grab; display: block; }
+  svg.graph.dragging { cursor: grabbing; }
+
+  .node-circle {
+    cursor: pointer;
+    transition: stroke-width 250ms ease-out, opacity 250ms ease-out;
+  }
+  .node-label {
+    font: 600 12px/14px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif);
+    fill: #1F2125;
+    text-anchor: middle;
+    pointer-events: none;
+    transition: opacity 250ms ease-out;
+    paint-order: stroke;
+    stroke: rgba(250, 250, 250, 0.92);
+    stroke-width: 3px;
+  }
+  .link {
+    stroke-linecap: round;
+    fill: none;
+    transition: opacity 250ms ease-out, stroke-width 250ms ease-out;
+  }
+  .dimmed { opacity: 0.15 !important; }
+  .highlighted .node-circle { stroke-width: 3px; }
+  .highlighted .link { stroke-opacity: 1; }
+
+  /* ── Top bar — search + title ── */
+  .topbar {
+    position: absolute; top: 20px; left: 20px; right: 20px;
+    display: flex; align-items: center; gap: 16px;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .topbar .title {
+    font: 800 18px/24px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif);
+    color: #031A48;
+    letter-spacing: -0.005em;
+  }
+  .topbar .sub {
+    font: 400 12px/18px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif);
+    color: #7D8695;
+    margin-top: 2px;
+  }
+  .topbar .stack { display: flex; flex-direction: column; }
+  .topbar .grow { flex: 1; }
+  .search {
+    pointer-events: auto;
+    display: flex; align-items: center; gap: 8px;
+    width: 280px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid #D7DCE3;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  }
+  .search input {
+    background: none; border: none; outline: none;
+    color: #1F2125;
+    font: 500 13px/16px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif);
+    flex: 1; width: 100%;
+  }
+  .search input::placeholder { color: #9CA7BA; font-style: italic; font-weight: 300; }
+  .search-icon, .clear-icon { color: #7D8695; cursor: pointer; flex-shrink: 0; }
+  .clear-icon { display: none; }
+  .search.has-value .clear-icon { display: inline-flex; }
+
+  /* ── Legend ── */
+  .legend {
+    position: absolute; bottom: 20px; left: 20px; z-index: 5;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #D7DCE3;
+    border-radius: 10px;
+    padding: 14px 16px;
+    backdrop-filter: blur(8px);
+    pointer-events: auto;
+    min-width: 200px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  }
+  .legend .lbl {
+    font: 800 10px/14px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: #7D8695;
+    margin-bottom: 10px;
+  }
+  .legend .row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 4px 0;
+    font: 500 13px/18px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif);
+    color: #1F2125;
+    cursor: pointer;
+  }
+  .legend .row:hover { color: #031A48; }
+  .legend .row .dot {
+    width: 12px; height: 12px; border-radius: 999px;
+    box-shadow: inset 0 -3px 6px rgba(0,0,0,0.18), 0 0 0 1px rgba(15,23,42,0.06);
+    flex-shrink: 0;
+  }
+  .legend .row .count { margin-left: auto; font: 400 11px/14px ui-monospace, Menlo, monospace; color: #9CA7BA; }
+
+  /* ── Side panel ── */
+  .panel {
+    position: absolute; top: 80px; right: 20px; bottom: 20px;
+    width: 320px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #D7DCE3;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    padding: 22px 22px 18px;
+    transform: translateX(calc(100% + 40px));
+    visibility: hidden;
+    transition: transform 280ms cubic-bezier(0.32, 0.72, 0, 1), visibility 0s linear 280ms;
+    z-index: 5;
+    display: flex; flex-direction: column; gap: 14px;
+    pointer-events: auto;
+    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+  }
+  .panel.open { transform: translateX(0); visibility: visible; transition: transform 280ms cubic-bezier(0.32, 0.72, 0, 1), visibility 0s; }
+  .panel-head { display: flex; align-items: flex-start; gap: 12px; }
+  .panel-bubble {
+    width: 40px; height: 40px; border-radius: 999px;
+    flex-shrink: 0;
+    box-shadow: inset 0 -6px 10px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.10);
+  }
+  .panel-titles { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+  .panel-titles .ttl { font: 800 16px/20px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif); color: #031A48; }
+  .panel-titles .cat { font: 800 10px/14px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif); text-transform: uppercase; letter-spacing: 0.08em; color: #7D8695; }
+  .panel .x {
+    width: 28px; height: 28px; border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #7D8695;
+    background: #F5F6F8;
+  }
+  .panel .x:hover { background: #EBEDF1; color: #031A48; }
+  .panel-body { display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field .k { font: 800 10px/14px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif); text-transform: uppercase; letter-spacing: 0.08em; color: #9CA7BA; }
+  .field .v { font: 500 14px/20px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif); color: #1F2125; }
+  .neighbors {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .neighbors .nb {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font: 500 13px/18px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif);
+    color: #1F2125;
+  }
+  .neighbors .nb:hover { background: #F5F6F8; }
+  .neighbors .nb .dot { width: 10px; height: 10px; border-radius: 999px; flex-shrink: 0; }
+  .neighbors .nb .dir {
+    font: 800 9px/12px var(--font-sans, "Acherus Grotesque", system-ui, sans-serif);
+    text-transform: uppercase; letter-spacing: 0.06em; color: #9CA7BA;
+    margin-left: auto; flex-shrink: 0;
+  }
+
+  /* ── Controls bottom-right ── */
+  .controls {
+    position: absolute; bottom: 20px; right: 20px; z-index: 5;
+    display: flex; flex-direction: column; gap: 4px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #D7DCE3;
+    border-radius: 8px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  }
+  .controls button {
+    width: 32px; height: 32px;
+    background: transparent; border: none;
+    color: #5E6470; cursor: pointer;
+    border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .controls button:hover { background: #F5F6F8; color: #031A48; }
+  .controls button svg { width: 16px; height: 16px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <svg class="graph" id="graph">
+    <defs>
+      <marker id="arrow" viewBox="0 -5 10 10" refX="9" refY="0" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M0,-4 L8,0 L0,4 z" fill="#9CA7BA" />
+      </marker>
+    </defs>
+    <g class="zoom-wrap">
+      <g class="links"></g>
+      <g class="nodes"></g>
+    </g>
+  </svg>
+
+  <div class="topbar">
+    <div class="stack">
+      <span class="title">SnapLogic platform · data flow</span>
+      <span class="sub">5 sources · 5 pipelines · 3 snaplexes · 4 destinations · 4 owners</span>
+    </div>
+    <div class="grow"></div>
+    <div class="search" id="searchWrap">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" placeholder="Search nodes…" />
+      <svg class="clear-icon" id="clearSearch" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </div>
+  </div>
+
+  <div class="legend" id="legend">
+    <div class="lbl">Categories</div>
+  </div>
+
+  <div class="controls">
+    <button id="zoomIn" title="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+    <button id="zoomOut" title="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+    <button id="zoomFit" title="Fit to screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/></svg></button>
+  </div>
+
+  <div class="panel" id="panel">
+    <div class="panel-head">
+      <div class="panel-bubble" id="panelBubble"></div>
+      <div class="panel-titles">
+        <div class="cat" id="panelCat"></div>
+        <div class="ttl" id="panelTitle"></div>
+      </div>
+      <div class="x" id="panelClose">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="field">
+        <span class="k">Description</span>
+        <span class="v" id="panelDesc"></span>
+      </div>
+      <div class="field">
+        <span class="k">Importance score</span>
+        <span class="v" id="panelImportance"></span>
+      </div>
+      <div class="field">
+        <span class="k">Connected to</span>
+        <div class="neighbors" id="panelNeighbors"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/d3@7/dist/d3.min.js"></script>
+<script>
+  // ── Data ─────────────────────────────────────────────────────────────────
+  const CATEGORIES = {
+    source:      { label: 'Source systems', color: '#008DFF', desc: 'External data systems that feed into SnapLogic.' },
+    pipeline:    { label: 'Pipelines',      color: '#FF73B6', desc: 'Integration workflows that transform and move data.' },
+    snaplex:     { label: 'Snaplexes',      color: '#C701FF', desc: 'Compute clusters that execute pipelines.' },
+    destination: { label: 'Destinations',   color: '#4ECB8D', desc: 'Data warehouses and stores receiving the output.' },
+    owner:       { label: 'Owners',         color: '#FF9D3A', desc: 'People responsible for pipelines and snaplexes.' },
+  };
+
+  const NODES = [
+    { id: 'salesforce', label: 'Salesforce',  category: 'source', description: 'CRM with contacts, accounts, opportunities. ~2M records.' },
+    { id: 'hubspot',    label: 'HubSpot',     category: 'source', description: 'Marketing CRM. Contacts + email engagement data.' },
+    { id: 'kafka',      label: 'Kafka',       category: 'source', description: 'Event stream — clickstream and IoT telemetry topics.' },
+    { id: 'stripe',     label: 'Stripe API',  category: 'source', description: 'Payment events webhook. Charges, refunds, disputes.' },
+    { id: 'workday',    label: 'Workday',     category: 'source', description: 'HRIS — employee records and org structure.' },
+
+    { id: 'pipe1', label: 'SF → Snowflake daily',     category: 'pipeline', description: 'Nightly full refresh of Salesforce → Snowflake.' },
+    { id: 'pipe2', label: 'Kafka → BigQuery RT',      category: 'pipeline', description: 'Real-time streaming. Avg 1.2M records/hour.' },
+    { id: 'pipe3', label: 'Stripe → Postgres',        category: 'pipeline', description: 'Payment webhooks materialized into Postgres.' },
+    { id: 'pipe4', label: 'HubSpot contacts',         category: 'pipeline', description: 'Nightly contacts pull, deduped against Salesforce.' },
+    { id: 'pipe5', label: 'Workday HR sync',          category: 'pipeline', description: 'Hourly employee + org sync to downstream systems.' },
+
+    { id: 'snap1', label: 'prod-snaplex-01', category: 'snaplex', description: '8-node production cluster · us-east-1.' },
+    { id: 'snap2', label: 'prod-snaplex-02', category: 'snaplex', description: '6-node production cluster · us-west-2.' },
+    { id: 'snap3', label: 'dev-snaplex-02',  category: 'snaplex', description: '2-node development cluster · staging environment.' },
+
+    { id: 'snowflake', label: 'Snowflake', category: 'destination', description: 'Primary data warehouse. ANALYTICS schema.' },
+    { id: 'bigquery',  label: 'BigQuery',  category: 'destination', description: 'Streaming sink for realtime data. EVENTS dataset.' },
+    { id: 'postgres',  label: 'Postgres',  category: 'destination', description: 'Operational store for payments and transactional data.' },
+    { id: 's3',        label: 'S3 archive',category: 'destination', description: 'Long-term cold storage. Parquet format.' },
+
+    { id: 'mg', label: 'Maddie Golbaz', category: 'owner', description: 'Platform engineering lead. Owns CRM + HR pipelines.' },
+    { id: 'nd', label: 'Noah Davis',    category: 'owner', description: 'Data infrastructure. Owns realtime + payments.' },
+    { id: 'jk', label: 'Jordan Kim',    category: 'owner', description: 'Marketing analytics. Owns HubSpot integration.' },
+    { id: 'rc', label: 'Riley Chen',    category: 'owner', description: 'Observability + on-call rotation for realtime.' },
+  ];
+
+  const LINKS = [
+    // sources → pipelines
+    { source: 'salesforce', target: 'pipe1', weight: 3, directed: true },
+    { source: 'kafka',      target: 'pipe2', weight: 4, directed: true },
+    { source: 'stripe',     target: 'pipe3', weight: 2, directed: true },
+    { source: 'hubspot',    target: 'pipe4', weight: 2, directed: true },
+    { source: 'workday',    target: 'pipe5', weight: 2, directed: true },
+    // pipelines → snaplexes (run on)
+    { source: 'pipe1', target: 'snap1', weight: 3, directed: true },
+    { source: 'pipe2', target: 'snap1', weight: 4, directed: true },
+    { source: 'pipe3', target: 'snap2', weight: 2, directed: true },
+    { source: 'pipe4', target: 'snap1', weight: 2, directed: true },
+    { source: 'pipe5', target: 'snap3', weight: 1, directed: true },
+    // snaplexes → destinations
+    { source: 'snap1', target: 'snowflake', weight: 3, directed: true },
+    { source: 'snap1', target: 'bigquery',  weight: 3, directed: true },
+    { source: 'snap2', target: 'postgres',  weight: 2, directed: true },
+    { source: 'snap3', target: 's3',        weight: 1, directed: true },
+    // cross-pipeline merges
+    { source: 'pipe4', target: 'snowflake', weight: 1, directed: true },
+    // owners ↔ pipelines (undirected — responsibility)
+    { source: 'mg', target: 'pipe1', weight: 2, directed: false },
+    { source: 'mg', target: 'pipe5', weight: 1, directed: false },
+    { source: 'nd', target: 'pipe2', weight: 2, directed: false },
+    { source: 'nd', target: 'pipe3', weight: 2, directed: false },
+    { source: 'jk', target: 'pipe4', weight: 2, directed: false },
+    { source: 'rc', target: 'pipe2', weight: 1, directed: false },
+  ];
+
+  // ── Compute degree → importance ──────────────────────────────────────────
+  const degreeMap = new Map(NODES.map(n => [n.id, 0]));
+  LINKS.forEach(l => {
+    degreeMap.set(l.source, (degreeMap.get(l.source) || 0) + 1);
+    degreeMap.set(l.target, (degreeMap.get(l.target) || 0) + 1);
+  });
+  NODES.forEach(n => { n.degree = degreeMap.get(n.id); });
+  const maxDeg = d3.max(NODES, n => n.degree);
+  const radius = d => 14 + (d.degree / maxDeg) * 16;       // 14 → 30
+  const labelOffset = d => radius(d) + 14;
+
+  // ── Build legend ─────────────────────────────────────────────────────────
+  const legendEl = document.getElementById('legend');
+  const catCounts = {};
+  NODES.forEach(n => catCounts[n.category] = (catCounts[n.category] || 0) + 1);
+  Object.entries(CATEGORIES).forEach(([k, v]) => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.dataset.category = k;
+    row.innerHTML = `<span class="dot" style="background:${v.color}"></span><span>${v.label}</span><span class="count">${catCounts[k] || 0}</span>`;
+    row.addEventListener('mouseenter', () => filterByCategory(k));
+    row.addEventListener('mouseleave', () => clearHover());
+    legendEl.appendChild(row);
+  });
+
+  // ── d3-force setup ──────────────────────────────────────────────────────
+  const svg = d3.select('#graph');
+  const zoomWrap = svg.select('.zoom-wrap');
+  const linkLayer = zoomWrap.select('.links');
+  const nodeLayer = zoomWrap.select('.nodes');
+
+  let width = window.innerWidth, height = window.innerHeight;
+
+  const simulation = d3.forceSimulation(NODES)
+    .force('link', d3.forceLink(LINKS).id(d => d.id).distance(l => 90 + (5 - l.weight) * 8).strength(0.5))
+    .force('charge', d3.forceManyBody().strength(-380))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collide', d3.forceCollide().radius(d => radius(d) + 8).iterations(2))
+    .force('x', d3.forceX(width / 2).strength(0.04))
+    .force('y', d3.forceY(height / 2).strength(0.04));
+
+  // Edge gradients per source category — gives links a directional tint
+  const defs = svg.select('defs');
+  Object.entries(CATEGORIES).forEach(([k, v]) => {
+    defs.append('linearGradient')
+      .attr('id', `grad-${k}`)
+      .attr('gradientUnits', 'userSpaceOnUse')
+      .selectAll('stop').data([
+        { offset: '0%',   color: v.color, opacity: 0.65 },
+        { offset: '100%', color: v.color, opacity: 0.15 },
+      ]).join('stop')
+      .attr('offset', d => d.offset)
+      .attr('stop-color', d => d.color)
+      .attr('stop-opacity', d => d.opacity);
+  });
+
+  // Per-node radial gradient
+  NODES.forEach(n => {
+    const g = defs.append('radialGradient')
+      .attr('id', `node-grad-${n.id}`)
+      .attr('cx', '35%').attr('cy', '30%').attr('r', '70%');
+    const c = CATEGORIES[n.category].color;
+    g.append('stop').attr('offset', '0%').attr('stop-color', lighten(c, 0.35));
+    g.append('stop').attr('offset', '100%').attr('stop-color', c);
+  });
+
+  function lighten(hex, amt) {
+    const num = parseInt(hex.slice(1), 16);
+    let r = (num >> 16) + Math.round(255 * amt);
+    let g = ((num >> 8) & 0xFF) + Math.round(255 * amt);
+    let b = (num & 0xFF) + Math.round(255 * amt);
+    r = Math.min(255, r); g = Math.min(255, g); b = Math.min(255, b);
+    return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+  }
+
+  // Build links (as bezier paths)
+  const link = linkLayer.selectAll('path.link')
+    .data(LINKS, d => `${d.source.id || d.source}-${d.target.id || d.target}`)
+    .join('path')
+    .attr('class', 'link')
+    .attr('stroke', d => `url(#grad-${typeof d.source === 'object' ? d.source.category : NODES.find(n => n.id === d.source).category})`)
+    .attr('stroke-width', d => 1 + d.weight * 0.6)
+    .attr('stroke-opacity', 0.55)
+    .attr('marker-end', d => d.directed ? 'url(#arrow)' : null);
+
+  // Build nodes
+  const node = nodeLayer.selectAll('g.node')
+    .data(NODES, d => d.id)
+    .join('g')
+    .attr('class', 'node')
+    .call(d3.drag()
+      .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; svg.classed('dragging', true); })
+      .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
+      .on('end',   (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; svg.classed('dragging', false); })
+    );
+
+  node.append('circle')
+    .attr('class', 'node-circle')
+    .attr('r', d => radius(d))
+    .attr('fill', d => CATEGORIES[d.category].color)
+    .attr('stroke', d => CATEGORIES[d.category].color)
+    .attr('stroke-width', 1.5)
+    .attr('stroke-opacity', 1);
+
+  node.append('text')
+    .attr('class', 'node-label')
+    .attr('dy', d => labelOffset(d))
+    .text(d => d.label);
+
+  node.on('mouseenter', (e, d) => highlightNode(d));
+  node.on('mouseleave', () => clearHover());
+  node.on('click', (e, d) => openPanel(d));
+
+  // ── Tick ────────────────────────────────────────────────────────────────
+  simulation.on('tick', () => {
+    link.attr('d', d => {
+      const dx = d.target.x - d.source.x;
+      const dy = d.target.y - d.source.y;
+      const dr = Math.sqrt(dx * dx + dy * dy);
+      // bezier control point offset perpendicular to line for soft curve
+      const mx = (d.source.x + d.target.x) / 2;
+      const my = (d.source.y + d.target.y) / 2;
+      const nx = -dy / (dr || 1);
+      const ny =  dx / (dr || 1);
+      const k = 0.12 * dr;
+      const cx = mx + nx * k;
+      const cy = my + ny * k;
+      // shorten end by target radius so arrowhead sits at node edge
+      const tr = radius(d.target) + 3;
+      const ux = (d.target.x - cx);
+      const uy = (d.target.y - cy);
+      const ul = Math.sqrt(ux * ux + uy * uy) || 1;
+      const ex = d.target.x - (ux / ul) * tr;
+      const ey = d.target.y - (uy / ul) * tr;
+      return `M${d.source.x},${d.source.y} Q${cx},${cy} ${ex},${ey}`;
+    });
+    node.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+
+  // ── Zoom + pan ──────────────────────────────────────────────────────────
+  const zoom = d3.zoom()
+    .scaleExtent([0.25, 4])
+    .on('zoom', (e) => {
+      zoomWrap.attr('transform', e.transform);
+      // Fade labels out at low zoom (overview)
+      const labelOp = Math.max(0, Math.min(1, (e.transform.k - 0.45) / 0.35));
+      nodeLayer.selectAll('.node-label').style('opacity', labelOp);
+    });
+  svg.call(zoom);
+
+  document.getElementById('zoomIn').onclick = () => svg.transition().duration(250).call(zoom.scaleBy, 1.4);
+  document.getElementById('zoomOut').onclick = () => svg.transition().duration(250).call(zoom.scaleBy, 0.7);
+  document.getElementById('zoomFit').onclick = () => svg.transition().duration(450).call(zoom.transform, d3.zoomIdentity);
+
+  // Resize
+  window.addEventListener('resize', () => {
+    width = window.innerWidth; height = window.innerHeight;
+    simulation.force('center', d3.forceCenter(width / 2, height / 2));
+    simulation.alpha(0.3).restart();
+  });
+
+  // ── Highlight logic ─────────────────────────────────────────────────────
+  const neighbors = new Map();
+  NODES.forEach(n => neighbors.set(n.id, new Set([n.id])));
+  LINKS.forEach(l => {
+    neighbors.get(l.source.id || l.source).add(l.target.id || l.target);
+    neighbors.get(l.target.id || l.target).add(l.source.id || l.source);
+  });
+
+  function highlightNode(d) {
+    const ns = neighbors.get(d.id);
+    node.classed('dimmed', n => !ns.has(n.id));
+    node.classed('highlighted', n => n.id === d.id);
+    link.classed('dimmed', l => !(ns.has(l.source.id) && ns.has(l.target.id)) || (l.source.id !== d.id && l.target.id !== d.id));
+  }
+
+  function filterByCategory(cat) {
+    node.classed('dimmed', n => n.category !== cat);
+    link.classed('dimmed', l => l.source.category !== cat && l.target.category !== cat);
+  }
+
+  function clearHover() {
+    node.classed('dimmed', false).classed('highlighted', false);
+    link.classed('dimmed', false);
+    // Re-apply search filter if active
+    applySearch();
+  }
+
+  // ── Search ──────────────────────────────────────────────────────────────
+  const searchInput = document.getElementById('search');
+  const searchWrap  = document.getElementById('searchWrap');
+  const clearBtn    = document.getElementById('clearSearch');
+
+  function applySearch() {
+    const q = searchInput.value.trim().toLowerCase();
+    searchWrap.classList.toggle('has-value', q.length > 0);
+    if (!q) { node.classed('dimmed', false); link.classed('dimmed', false); return; }
+    const matches = new Set(NODES.filter(n => n.label.toLowerCase().includes(q) || n.category.includes(q)).map(n => n.id));
+    node.classed('dimmed', n => !matches.has(n.id));
+    link.classed('dimmed', l => !(matches.has(l.source.id) && matches.has(l.target.id)));
+  }
+  searchInput.addEventListener('input', applySearch);
+  clearBtn.addEventListener('click', () => { searchInput.value = ''; applySearch(); });
+
+  // ── Side panel ──────────────────────────────────────────────────────────
+  const panel    = document.getElementById('panel');
+  const pTitle   = document.getElementById('panelTitle');
+  const pCat     = document.getElementById('panelCat');
+  const pBubble  = document.getElementById('panelBubble');
+  const pDesc    = document.getElementById('panelDesc');
+  const pImp     = document.getElementById('panelImportance');
+  const pNeigh   = document.getElementById('panelNeighbors');
+  document.getElementById('panelClose').onclick = () => { panel.classList.remove('open'); clearHover(); };
+
+  function openPanel(d) {
+    highlightNode(d);
+    pTitle.textContent = d.label;
+    pCat.textContent   = CATEGORIES[d.category].label;
+    pBubble.style.background = CATEGORIES[d.category].color;
+    pDesc.textContent  = d.description;
+    pImp.textContent   = `${d.degree} connection${d.degree === 1 ? '' : 's'}`;
+    pNeigh.innerHTML   = '';
+    const nbs = LINKS
+      .filter(l => l.source.id === d.id || l.target.id === d.id)
+      .map(l => {
+        const other = l.source.id === d.id ? l.target : l.source;
+        const dir = l.directed ? (l.source.id === d.id ? 'OUT' : 'IN') : 'PEER';
+        return { other, dir };
+      });
+    nbs.forEach(({ other, dir }) => {
+      const row = document.createElement('div');
+      row.className = 'nb';
+      row.innerHTML = `<span class="dot" style="background:${CATEGORIES[other.category].color}"></span><span>${other.label}</span><span class="dir">${dir}</span>`;
+      row.onclick = () => openPanel(other);
+      pNeigh.appendChild(row);
+    });
+    panel.classList.add('open');
+  }
+
+  // Click empty space → close panel + clear
+  svg.on('click', (e) => {
+    if (e.target.closest('g.node')) return;
+    panel.classList.remove('open');
+    clearHover();
+  });
+</script>
+</body>
+</html>

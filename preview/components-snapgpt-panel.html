@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Application Shell · SnapGPT panel</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; width: 880px; }
+
+  /* ─── SNAPGPT PANEL ────────────────────────────────────────
+     Persistent chat panel for SnapGPT. Slides in from the
+     right and PUSHES the workspace content left — it occupies
+     real estate alongside the main UI rather than overlaying
+     it. No scrim. Persists across navigation. Resizable.
+
+     Width  — 400px default · resizable 320–600
+     Persists across pages · toggled from global header
+  */
+
+  /* Full-scale panel chrome for the anatomy view */
+  .panel-frame {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+  }
+  .panel-frame .ws {
+    background: var(--sl-white);
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    grid-template-rows: 56px 1fr;
+  }
+  .panel-frame .ws__header { grid-column: 1 / -1; background: var(--sl-blue-900); }
+  .panel-frame .ws__rail   { background: var(--sl-blue-900); }
+  .panel-frame .ws__body   { display: flex; align-items: center; justify-content: center; color: var(--color-text-subtle); font: 400 13px/22px var(--font-sans); }
+  .panel-frame .ws__divider {
+    position: absolute;
+    top: 56px; bottom: 0;
+    right: 400px;
+    width: 1px;
+    background: linear-gradient(180deg, var(--sl-teal-400) 0%, var(--sl-blue-600) 100%);   /* SnapGPT accent edge */
+    z-index: 1;
+  }
+
+  /* The panel itself */
+  .snapgpt {
+    background: var(--sl-white);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.04);
+    position: relative;
+    z-index: 2;
+  }
+  .snapgpt__head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 16px;
+    background: var(--sl-blue-900);
+    color: var(--sl-white);
+    flex: none;
+  }
+  .snapgpt__title {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 28px;
+    flex: 1;
+  }
+  .snapgpt__title span { font-weight: 400; }
+  .snapgpt__title b    { font-weight: 800; background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .snapgpt__head .icon {
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; border: 0;
+    border-radius: var(--radius-xs);
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+  }
+  .snapgpt__head .icon:hover { background: rgba(255,255,255,0.08); }
+  .snapgpt__head .icon svg { width: 16px; height: 16px; }
+
+  .snapgpt__body {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-subtle);
+    font: 400 13px/20px var(--font-sans);
+    text-align: center;
+  }
+
+  .snapgpt__foot {
+    padding: 12px 16px 16px;
+    border-top: 1px solid var(--sl-grey-200);
+    flex: none;
+  }
+  .snapgpt__improve {
+    display: flex; justify-content: flex-end;
+    font: 400 12px/16px var(--font-sans);
+    color: var(--sl-teal-700);
+    margin-bottom: 8px;
+    gap: 4px;
+    align-items: center;
+  }
+  .snapgpt__improve svg { width: 12px; height: 12px; }
+  .snapgpt__input {
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    background: var(--sl-white);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .snapgpt__placeholder { font: 400 14px/22px var(--font-sans); color: var(--color-text-subtle); font-style: italic; }
+  .snapgpt__actions { display: flex; align-items: center; gap: 6px; }
+  .snapgpt__actions .ic-btn {
+    width: 24px; height: 24px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 0; background: transparent;
+    border-radius: var(--radius-xs);
+    color: var(--color-text-subtle);
+    cursor: pointer;
+  }
+  .snapgpt__actions .ic-btn:hover { background: var(--sl-grey-100); color: var(--color-text-body); }
+  .snapgpt__actions .ic-btn svg { width: 14px; height: 14px; }
+  .snapgpt__project {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font: 400 12px/16px var(--font-sans);
+    color: var(--sl-teal-700);
+    border: 1px solid var(--sl-grey-300);
+  }
+  .snapgpt__project svg { width: 12px; height: 12px; }
+  .snapgpt__send {
+    margin-left: auto;
+    width: 28px; height: 28px;
+    border-radius: 999px;
+    background: var(--gradient-brand);
+    color: var(--sl-white);
+    border: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .snapgpt__send svg { width: 14px; height: 14px; }
+
+  /* Mini-app diagrams */
+  .mini {
+    width: 100%;
+    height: 200px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    grid-template-rows: 28px 1fr;
+  }
+  .mini--with-gpt { grid-template-columns: 32px 1fr 160px; }
+  .mini__header { grid-column: 1 / -1; background: var(--sl-blue-900); display: flex; align-items: center; padding: 0 10px; gap: 6px; }
+  .mini__header .logo { width: 14px; height: 14px; border-radius: 50%; background: var(--sl-teal-400); }
+  .mini__header .title { font: 800 9px/14px var(--font-sans); color: var(--sl-white); letter-spacing: 0.05em; }
+  .mini__rail { background: var(--sl-blue-900); }
+  .mini__body { background: var(--sl-grey-100); padding: 12px; display: flex; align-items: center; justify-content: center; }
+  .mini__body .ws-text { font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); }
+  .mini__gpt {
+    background: var(--sl-white);
+    border-left: 1px solid var(--sl-grey-200);
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mini__gpt .gh { font: 800 9px/12px var(--font-sans); color: var(--sl-indigo-900); }
+  .mini__gpt .gh b { background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .mini__gpt .line { height: 5px; background: var(--sl-grey-200); border-radius: 2px; }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .compare > div { display: flex; flex-direction: column; gap: 8px; }
+  .compare .cap { font: 800 11px/14px var(--font-sans); color: var(--color-text-body); }
+  .compare .cap small { display: block; font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); margin-top: 2px; }
+
+  /* Layout helpers */
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 4px 16px;
+    font: 400 11px/16px var(--font-sans);
+    padding: 10px 12px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+  }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label">
+      <span class="name">SnapGPT panel</span>
+      <span class="meta">persistent chat · pushes content · no scrim</span>
+    </div>
+
+    <!-- ─── ANATOMY ──────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Anatomy <span class="meta">workspace shrinks · panel anchored right</span></div>
+      <div class="panel-frame">
+        <div class="ws">
+          <div class="ws__header"></div>
+          <div class="ws__rail"></div>
+          <div class="ws__body">workspace (resized when panel is open)</div>
+        </div>
+        <div class="ws__divider"></div>
+        <div class="snapgpt">
+          <div class="snapgpt__head">
+            <span class="snapgpt__title"><span>Snap</span><b>GPT</b></span>
+            <button class="icon" aria-label="New chat"><i data-lucide="edit-3"></i></button>
+            <button class="icon" aria-label="Suggestions"><i data-lucide="zap"></i></button>
+            <button class="icon" aria-label="History"><i data-lucide="history"></i></button>
+            <button class="icon" aria-label="More"><i data-lucide="more-horizontal"></i></button>
+            <button class="icon" aria-label="Collapse panel"><i data-lucide="chevrons-right"></i></button>
+          </div>
+          <div class="snapgpt__body">empty thread</div>
+          <div class="snapgpt__foot">
+            <div class="snapgpt__improve"><i data-lucide="sparkle"></i>Improve prompt</div>
+            <div class="snapgpt__input">
+              <div class="snapgpt__placeholder">What would you like to build today?</div>
+              <div class="snapgpt__actions">
+                <button class="ic-btn" aria-label="Attach image"><i data-lucide="image"></i></button>
+                <button class="ic-btn" aria-label="Suggestions"><i data-lucide="lightbulb"></i></button>
+                <span class="snapgpt__project"><i data-lucide="folder"></i>Select project<i data-lucide="chevron-down"></i></span>
+                <button class="snapgpt__send" aria-label="Send"><i data-lucide="arrow-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── STATES ───────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Open / closed <span class="meta">panel pushes content · workspace resizes responsively</span></div>
+      <div class="compare">
+        <div>
+          <div class="cap">Closed<small>workspace fills viewport</small></div>
+          <div class="mini">
+            <div class="mini__header">
+              <span class="logo"></span><span class="title">DESIGNER</span>
+              <span style="margin-left: auto; font: 400 8px/14px var(--font-mono); color: rgba(255,255,255,0.4);">SnapGPT  ⌥</span>
+            </div>
+            <div class="mini__rail"></div>
+            <div class="mini__body"><span class="ws-text">workspace</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="cap">Open<small>workspace shrinks · panel takes 25–30% width</small></div>
+          <div class="mini mini--with-gpt">
+            <div class="mini__header"><span class="logo"></span><span class="title">DESIGNER</span></div>
+            <div class="mini__rail"></div>
+            <div class="mini__body"><span class="ws-text">workspace</span></div>
+            <div class="mini__gpt">
+              <div class="gh">Snap<b>GPT</b></div>
+              <div class="line"></div>
+              <div class="line" style="width: 70%"></div>
+              <div style="flex: 1"></div>
+              <div class="line" style="height: 16px; background: var(--sl-grey-100); border: 1px solid var(--sl-grey-300);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SPEC ─────────────────────────────────────────────── -->
+    <dl class="spec">
+      <dt>width</dt>
+      <dd><b>400px</b> default · resizable <b>320–600px</b> by dragging the left edge. State persists per user.</dd>
+      <dt>behavior</dt>
+      <dd>Pushes workspace content left — does <b>not</b> overlay. <b>No scrim</b>. Persists across navigation; the chat thread stays alive. Toggled from the global header pill or via keyboard shortcut.</dd>
+      <dt>chrome</dt>
+      <dd>Header: <b>56px</b> (matches the global application header) · Blue-900 dark band with "SnapGPT" wordmark (gradient on "GPT"), new-chat / suggestions / history / more / collapse icons. Footer: prompt input with attach, suggestions, project selector, send button.</dd>
+      <dt>edge</dt>
+      <dd>1px gradient edge (Teal-400 → Blue-600) on the panel's left side — the SnapGPT brand accent, separating panel from workspace.</dd>
+      <dt>motion</dt>
+      <dd>Slide-in <b>280ms</b> cubic-bezier(0.2, 0, 0, 1). Workspace reflows at the same rate (uses CSS grid, not absolute positioning).</dd>
+      <dt>a11y</dt>
+      <dd>Not a modal — does not trap focus. <code>aria-label="SnapGPT chat panel"</code> on the region. Toggle button has <code>aria-expanded</code> and <code>aria-controls</code>.</dd>
+      <dt>with Drawer</dt>
+      <dd>A config Drawer opens <i>inside the workspace area</i>, anchored to this panel's left edge. The scrim covers only the workspace — SnapGPT remains uncovered and fully interactive, so users can keep chatting while configuring. See <b>Drawer + SnapGPT</b> pattern card.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Usage rules</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; }
+  .rules { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .rule { padding: 16px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .rule h4 { font: 800 13px/18px var(--font-sans); color: var(--sl-indigo-900); margin: 0 0 8px; }
+  .rule p { font: 400 12px/17px var(--font-sans); color: var(--color-text-body); margin: 0 0 8px; }
+  .rule .num { color: #FF1FA0; font-weight: 800; margin-right: 6px; }
+  .swatch-row { display: flex; gap: 0; height: 18px; border-radius: 3px; overflow: hidden; margin: 6px 0; }
+  .swatch-row .sw { flex: 1; }
+</style></head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Data-viz usage rules</span><span class="meta">order · pairings · accessibility · fallbacks</span></div>
+    <div class="rules">
+      <div class="rule">
+        <h4><span class="num">01</span>Use the categorical palette in order</h4>
+        <p>Always start at position 1 and add hues sequentially. The order is engineered for distinguishability — positions 1 + 2 are maximally distinct, 1 + 3 next, and so on. Skipping or reordering compromises clarity.</p>
+        <div class="swatch-row">
+          <div class="sw" style="background:#5E5BFF"></div>
+          <div class="sw" style="background:#FF1FA0"></div>
+          <div class="sw" style="background:#2BE3A0"></div>
+          <div class="sw" style="background:#FFB951"></div>
+          <div class="sw" style="background:#B936D4"></div>
+          <div class="sw" style="background:#2BAEFF"></div>
+          <div class="sw" style="background:#FF7B91"></div>
+          <div class="sw" style="background:#FFD957"></div>
+        </div>
+      </div>
+      <div class="rule">
+        <h4><span class="num">02</span>Cap categorical at 8 series</h4>
+        <p>Beyond 8 series, even the best palette starts to blur. If you have more than 8 categories, group the smallest into "Other", switch to a small-multiples layout, or use a different chart type (e.g. a bar chart sorted by value instead of legend-heavy stacked).</p>
+      </div>
+      <div class="rule">
+        <h4><span class="num">03</span>Pair only with neutral chrome</h4>
+        <p>Axes, gridlines, tick labels, and tooltips use the <strong>grey</strong> ramp — never one of the categorical hues. The vibrant palette pops because the chrome around it stays quiet. Axis text is <code>--sl-grey-700</code>; gridlines are <code>--sl-grey-200</code>; chart background is white or <code>--sl-grey-100</code> for sunken regions.</p>
+      </div>
+      <div class="rule">
+        <h4><span class="num">04</span>Add a redundant encoding</h4>
+        <p>Color alone is not enough. Pair color with a second encoding — direct labels on lines, patterns/dashes on overlapping series, or icons in legends. This handles colorblind users and B&W printing without rework.</p>
+      </div>
+      <div class="rule">
+        <h4><span class="num">05</span>Don't mix palettes</h4>
+        <p>One palette per chart. A vibrant-categorical chart with one semantic-red series reads as "this one failed". If you need to highlight one series, use weight or annotation, not a different palette.</p>
+      </div>
+      <div class="rule">
+        <h4><span class="num">06</span>Same identity, same color across views</h4>
+        <p>If "Snaplex A" is position 1 (electric indigo) in one chart, it must be electric indigo in every chart on the page. Bind color to identity, not to chart order. This mirrors the avatar-color rule in the table spec.</p>
+      </div>
+    </div>
+  </div>
+</body></html>

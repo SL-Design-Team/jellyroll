@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Advanced editors · JSON editor</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .je { border: 1px solid var(--field-border-default); border-radius: var(--field-radius); background: var(--sl-blue-1000); overflow: hidden; display: flex; flex-direction: column; min-height: 360px; }
+  .je__head { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: #0E1A33; border-bottom: 1px solid #1B2C50; color: #B7C4E0; }
+  .je__tabs { display: flex; gap: 2px; }
+  .je__tab { padding: 4px 10px; font: 800 11px/14px var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; color: #8B98B8; cursor: pointer; border-radius: var(--radius-xs); }
+  .je__tab.active { background: #1B2C50; color: var(--sl-teal-300); }
+  .je__right { margin-left: auto; display: flex; gap: 2px; }
+  .je__right button { width: 24px; height: 24px; background: transparent; border: 0; border-radius: var(--radius-xs); color: #B7C4E0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+  .je__right button:hover { background: #1B2C50; }
+  .je__right svg { width: 14px; height: 14px; }
+  .je__body { padding: 12px 14px; color: #D8E1F0; font: 400 13px/20px var(--font-mono); white-space: pre; overflow-x: auto; flex: 1; }
+  .je__body .key { color: #79B8FF; }
+  .je__body .str { color: #9ECBFF; }
+  .je__body .num { color: #F97583; }
+  .je__body .bool { color: #B392F0; }
+  .je__body .nul { color: #6A7A9A; }
+  .je__body .punc { color: #8B98A8; }
+
+  /* Tree view */
+  .je__tree { padding: 8px 4px; color: #D8E1F0; font: 400 13px/20px var(--font-mono); flex: 1; overflow-x: auto; }
+  .je-row { display: flex; align-items: center; gap: 4px; padding: 2px 8px; cursor: pointer; }
+  .je-row:hover { background: #1B2C50; }
+  .je-row .chev { width: 14px; color: #6A7A9A; display: inline-flex; }
+  .je-row .chev svg { width: 12px; height: 12px; }
+  .je-row .chev.empty { visibility: hidden; }
+  .je-row .chev.collapsed svg { transform: rotate(-90deg); }
+  .je-row .key { color: #79B8FF; }
+  .je-row .str { color: #9ECBFF; }
+  .je-row .num { color: #F97583; }
+  .je-row .bool { color: #B392F0; }
+  .je-row .type { color: #6A7A9A; margin-left: 6px; font-size: 11px; }
+  .indent { width: 16px; flex: none; }
+
+  .je__foot { padding: 4px 10px; background: #0E1A33; border-top: 1px solid #1B2C50; color: #8B98B8; font: 400 11px/14px var(--font-mono); display: flex; gap: 12px; }
+  .je__foot .pill { padding: 1px 6px; background: var(--sl-green-700); color: white; border-radius: var(--radius-xs); font-weight: 800; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">JSON editor</span><span class="meta">text mode · tree mode · schema-aware</span></div>
+
+    <div class="row">
+      <!-- Text mode -->
+      <div>
+        <div class="section-h">Text mode <span class="meta">syntax-highlighted JSON</span></div>
+        <div class="je">
+          <div class="je__head">
+            <div class="je__tabs"><div class="je__tab active">Text</div><div class="je__tab">Tree</div></div>
+            <div class="je__right">
+              <button aria-label="Format"><i data-lucide="wand-2"></i></button>
+              <button aria-label="Copy"><i data-lucide="copy"></i></button>
+              <button aria-label="Expand"><i data-lucide="maximize-2"></i></button>
+            </div>
+          </div>
+          <div class="je__body">{
+  <span class="key">"account"</span><span class="punc">:</span> {
+    <span class="key">"id"</span><span class="punc">:</span> <span class="str">"acc_7e3f8d"</span><span class="punc">,</span>
+    <span class="key">"name"</span><span class="punc">:</span> <span class="str">"Acme Corp"</span><span class="punc">,</span>
+    <span class="key">"address"</span><span class="punc">:</span> {
+      <span class="key">"city"</span><span class="punc">:</span> <span class="str">"San Mateo"</span><span class="punc">,</span>
+      <span class="key">"country"</span><span class="punc">:</span> <span class="str">"US"</span>
+    }<span class="punc">,</span>
+    <span class="key">"tags"</span><span class="punc">:</span> [<span class="str">"enterprise"</span><span class="punc">,</span> <span class="str">"us-west"</span>]<span class="punc">,</span>
+    <span class="key">"revenue"</span><span class="punc">:</span> <span class="num">125000</span><span class="punc">,</span>
+    <span class="key">"is_active"</span><span class="punc">:</span> <span class="bool">true</span><span class="punc">,</span>
+    <span class="key">"deleted_at"</span><span class="punc">:</span> <span class="nul">null</span>
+  }
+}</div>
+          <div class="je__foot"><span class="pill">Valid</span><span>JSON · 142 chars · 12 lines</span></div>
+        </div>
+      </div>
+
+      <!-- Tree mode -->
+      <div>
+        <div class="section-h">Tree mode <span class="meta">collapsible · inline edit</span></div>
+        <div class="je">
+          <div class="je__head">
+            <div class="je__tabs"><div class="je__tab">Text</div><div class="je__tab active">Tree</div></div>
+            <div class="je__right">
+              <button aria-label="Expand all"><i data-lucide="chevrons-down"></i></button>
+              <button aria-label="Search"><i data-lucide="search"></i></button>
+              <button aria-label="Maximize"><i data-lucide="maximize-2"></i></button>
+            </div>
+          </div>
+          <div class="je__tree">
+            <div class="je-row"><span class="chev"><i data-lucide="chevron-down"></i></span><span class="key">root</span><span class="type">{ 1 }</span></div>
+            <div class="je-row"><span class="indent"></span><span class="chev"><i data-lucide="chevron-down"></i></span><span class="key">account</span><span class="type">{ 7 }</span></div>
+            <div class="je-row"><span class="indent"></span><span class="indent"></span><span class="chev empty"></span><span class="key">id</span><span class="punc">:</span><span class="str">"acc_7e3f8d"</span></div>
+            <div class="je-row"><span class="indent"></span><span class="indent"></span><span class="chev empty"></span><span class="key">name</span><span class="punc">:</span><span class="str">"Acme Corp"</span></div>
+            <div class="je-row"><span class="indent"></span><span class="indent"></span><span class="chev"><i data-lucide="chevron-down"></i></span><span class="key">address</span><span class="type">{ 2 }</span></div>
+            <div class="je-row"><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="chev empty"></span><span class="key">city</span><span class="punc">:</span><span class="str">"San Mateo"</span></div>
+            <div class="je-row"><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="chev empty"></span><span class="key">country</span><span class="punc">:</span><span class="str">"US"</span></div>
+            <div class="je-row"><span class="indent"></span><span class="indent"></span><span class="chev collapsed"><i data-lucide="chevron-down"></i></span><span class="key">tags</span><span class="type">[ 2 ]</span></div>
+            <div class="je-row"><span class="indent"></span><span class="indent"></span><span class="chev empty"></span><span class="key">revenue</span><span class="punc">:</span><span class="num">125000</span></div>
+            <div class="je-row"><span class="indent"></span><span class="indent"></span><span class="chev empty"></span><span class="key">is_active</span><span class="punc">:</span><span class="bool">true</span></div>
+            <div class="je-row"><span class="indent"></span><span class="indent"></span><span class="chev empty"></span><span class="key">deleted_at</span><span class="punc">:</span><span class="nul">null</span></div>
+          </div>
+          <div class="je__foot"><span class="pill">Valid</span><span>12 nodes · 3 levels deep</span></div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>modes</dt><dd><b>Text</b> · raw JSON with syntax highlight, lint, format. <b>Tree</b> · collapsible hierarchical view, click-to-edit values, type chips on objects/arrays.</dd>
+      <dt>validation</dt><dd>Live: invalid JSON shows red squiggle + status pill turns to error count. Schema-aware: load JSON Schema → fields outside schema highlighted in orange.</dd>
+      <dt>foot pill</dt><dd>Green "Valid" · Red "N errors" · Orange "N warnings". Click to jump to the first issue.</dd>
+      <dt>use cases</dt><dd>Snap payload inspection · pipeline import/export · expression debugging · sample data for schema inference.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

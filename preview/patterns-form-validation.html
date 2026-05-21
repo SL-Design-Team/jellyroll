@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Form validation</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .frame {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    padding: 20px;
+  }
+  .frame h3 { font: 800 16px/24px var(--font-sans); color: var(--color-text-heading); margin: 0 0 12px; }
+
+  /* Field states (anatomy reused) */
+  .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; max-width: 460px; }
+  .field label { font: 800 13px/20px var(--font-sans); color: var(--color-text-body); }
+  .field label .opt { font-weight: 400; color: var(--color-text-subtle); margin-left: 4px; }
+  .field .desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); margin-top: -2px; margin-bottom: 4px; }
+  .field input, .field select, .field textarea {
+    height: var(--field-height-md);
+    padding: 8px 12px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    font: var(--field-font); color: var(--field-text-default);
+    outline: none;
+  }
+  .field textarea { height: auto; min-height: 80px; resize: vertical; }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--sl-teal-600); box-shadow: var(--shadow-focus-ring); }
+  .field .help { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); display: flex; gap: 4px; align-items: center; }
+  .field .help i, .field .help svg { width: 12px; height: 12px; flex: none; }
+  .field .hint-end { display: flex; justify-content: space-between; }
+  .field .count { font: 400 11px/16px var(--font-mono); color: var(--color-text-subtle); }
+
+  /* Error */
+  .field--err input, .field--err select, .field--err textarea {
+    border-color: var(--field-border-error);
+    background: var(--field-bg-error);
+  }
+  .field--err .help { color: var(--color-text-alert); font-weight: 800; }
+  .field--err .help i, .field--err .help svg { color: var(--color-text-alert); }
+  .field--err label::after { content: ""; }
+
+  /* Warning */
+  .field--warn input { border-color: var(--field-border-warning); }
+  .field--warn .help { color: var(--sl-yellow-1000); font-weight: 800; }
+
+  /* Success / async ok */
+  .field--ok input { border-color: var(--field-border-success); }
+  .field--ok .help { color: var(--color-text-success); font-weight: 800; }
+  .field--ok .help i, .field--ok .help svg { color: var(--color-text-success); }
+
+  /* Async checking */
+  .field--checking input { border-color: var(--sl-teal-400); }
+  .field--checking .help { color: var(--sl-teal-800); }
+  .field--checking .help i, .field--checking .help svg { animation: spinr 0.9s linear infinite; color: var(--sl-teal-600); }
+  @keyframes spinr { to { transform: rotate(360deg); } }
+
+  .field--req label::after { content: " *"; color: var(--sl-red-600); }
+
+  /* Summary banner */
+  .summary {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 14px;
+    background: var(--sl-red-100);
+    border: 1px solid var(--sl-red-300);
+    border-radius: var(--field-radius);
+    margin-bottom: 18px;
+  }
+  .summary__icon { flex: none; color: var(--sl-red-700); }
+  .summary__icon i, .summary__icon svg { width: 18px; height: 18px; }
+  .summary h4 { font: 800 14px/22px var(--font-sans); color: var(--sl-red-1000); margin: 0 0 4px; }
+  .summary p { font: 400 13px/20px var(--font-sans); color: var(--sl-red-900); margin: 0 0 6px; }
+  .summary ul { margin: 0; padding-left: 16px; }
+  .summary ul li {
+    font: 400 13px/20px var(--font-sans);
+    color: var(--sl-red-900);
+  }
+  .summary ul li a {
+    color: var(--color-text-link);
+    text-decoration: underline;
+    font-weight: 800;
+  }
+
+  /* Strength meter */
+  .strength {
+    display: flex; gap: 4px; margin-top: 4px;
+  }
+  .strength__seg {
+    flex: 1; height: 4px; border-radius: 2px;
+    background: var(--sl-grey-200);
+  }
+  .strength__seg.on-1 { background: var(--sl-red-500); }
+  .strength__seg.on-2 { background: var(--sl-yellow-500); }
+  .strength__seg.on-3 { background: var(--sl-green-500); }
+  .strength__lbl {
+    font: 800 11px/16px var(--font-sans);
+    margin-top: 4px;
+  }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Form validation</span><span class="meta">field-level · async · summary · timing</span></div>
+
+    <div>
+      <div class="section-h">Field-level states <span class="meta">live as user types or commits</span></div>
+      <div class="frame">
+        <h3>New connection</h3>
+
+        <div class="field field--req field--ok">
+          <label>Connection name</label>
+          <div class="desc">Used to reference this connection in pipelines. Lowercase, dashes, no spaces.</div>
+          <input value="prod-snowflake-east" />
+          <span class="help"><i data-lucide="check"></i>Available</span>
+        </div>
+
+        <div class="field field--req field--checking">
+          <label>Account URL</label>
+          <input value="prod.us-east-1.snowflakecomputing.com" />
+          <span class="help"><i data-lucide="loader"></i>Checking reachability…</span>
+        </div>
+
+        <div class="field field--req field--err">
+          <label>Username</label>
+          <input value="$%bad-user" />
+          <span class="help"><i data-lucide="alert-circle"></i>Only letters, numbers, and underscores allowed. (Got: <b>$</b>, <b>%</b>)</span>
+        </div>
+
+        <div class="field field--warn">
+          <label>Warehouse <span class="opt">(optional)</span></label>
+          <input value="ETL_LARGE_XL" />
+          <span class="help"><i data-lucide="alert-triangle"></i>Large warehouses are billed at 16× the credit rate.</span>
+        </div>
+
+        <div class="field">
+          <label>Description <span class="opt">(optional)</span></label>
+          <textarea>Snowflake account for the production data warehouse — owned by data-platform.</textarea>
+          <div class="hint-end">
+            <span class="help">Markdown supported.</span>
+            <span class="count">82 / 240</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Summary banner <span class="meta">on submit · groups all errors · jump-to-field</span></div>
+      <div class="frame">
+        <div class="summary" role="alert">
+          <div class="summary__icon"><i data-lucide="alert-octagon"></i></div>
+          <div>
+            <h4>3 fields need attention before you can save</h4>
+            <p>Fix the issues below, then try Save again.</p>
+            <ul>
+              <li><a href="#">Username</a> — only letters, numbers, and underscores allowed</li>
+              <li><a href="#">Account URL</a> — host doesn't match the <b>*.snowflakecomputing.com</b> pattern</li>
+              <li><a href="#">Role</a> — required</li>
+            </ul>
+          </div>
+        </div>
+        <div class="field field--req field--err" style="margin-bottom: 0;">
+          <label>Username</label>
+          <input value="$%bad-user" />
+          <span class="help"><i data-lucide="alert-circle"></i>Only letters, numbers, and underscores allowed.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Strength meter <span class="meta">complex client-side validation</span></div>
+      <div class="frame">
+        <div class="field field--req">
+          <label>API key passphrase</label>
+          <input type="password" value="hunter2" />
+          <div class="strength">
+            <span class="strength__seg on-1"></span>
+            <span class="strength__seg on-1"></span>
+            <span class="strength__seg"></span>
+            <span class="strength__seg"></span>
+          </div>
+          <span class="strength__lbl" style="color: var(--sl-red-700);">Weak — add a number, symbol, and 4 more characters.</span>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>when to validate</dt><dd><b>On blur</b> for required + format checks · <b>on commit</b> (Save / Next) for cross-field rules · <b>on debounced change</b> (<code>--validate-debounce</code>) for async checks like name-availability. Never validate <i>while</i> the user is typing — flashing errors mid-keystroke is hostile.</dd>
+      <dt>required marker</dt><dd>Red asterisk <code>*</code> after the label, with <code>aria-required="true"</code>. <b>Optional</b> fields show a muted "(optional)" — never mark every required field <i>and</i> every optional one; pick one convention per form. SnapLogic convention: mark required.</dd>
+      <dt>error</dt><dd>Border <code>--field-border-error</code>, background <code>--field-bg-error</code>. Help text turns red ExtraBold with an alert-circle icon. Message is <b>specific and actionable</b> — never "Invalid input." Cite the offending characters when possible.</dd>
+      <dt>warning</dt><dd>Yellow border + yellow ExtraBold help text. For non-blocking concerns (cost implications, deprecations, unusual values). Doesn't prevent save.</dd>
+      <dt>async / checking</dt><dd>Teal border + spinning loader icon while the check runs ("Checking reachability…"). Resolves to <b>success</b> (green check, "Available") or <b>error</b> (red, specific failure). Debounce 300ms after last keystroke.</dd>
+      <dt>summary banner</dt><dd>On <b>submit failure</b>, render a red banner at the top of the form listing all errored fields as anchor links to the field. Headline counts errors ("3 fields need attention"). Focus moves to the banner, then the user can tab into links.</dd>
+      <dt>strength meter</dt><dd>Reserved for password / passphrase / API-key fields. 4 segments, colored Red → Yellow → Green. Label states the rule that would advance to the next level — never just "weak / strong" without guidance.</dd>
+      <dt>positioning</dt><dd>Help / error text always <b>beneath</b> the field, never beside it (alignment breaks at narrow widths). Character counters go bottom-right of the field, opposite the help.</dd>
+      <dt>save guards</dt><dd>Save button stays enabled until clicked — disabled-on-error pattern hides why the form can't submit. On click, validate everything, show errors, focus the first.</dd>
+      <dt>a11y</dt><dd>Each field uses <code>aria-describedby</code> pointing to its help/error node. Errored field gets <code>aria-invalid="true"</code>. Banner is <code>role="alert"</code>. Async-checking states use <code>aria-live="polite"</code>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

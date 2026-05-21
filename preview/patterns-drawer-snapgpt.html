@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Drawer + SnapGPT</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; width: 880px; }
+
+  /* ─── Mini-app diagrams ──────────────────────────────────── */
+  .mini {
+    width: 100%;
+    height: 220px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    grid-template-rows: 28px 1fr;
+  }
+  .mini--with-gpt { grid-template-columns: 32px 1fr 140px; }
+  .mini__header { grid-column: 1 / -1; background: var(--sl-blue-900); display: flex; align-items: center; padding: 0 10px; gap: 6px; }
+  .mini__header .logo { width: 14px; height: 14px; border-radius: 50%; background: var(--sl-teal-400); }
+  .mini__header .title { font: 800 9px/14px var(--font-sans); color: var(--sl-white); letter-spacing: 0.05em; }
+  .mini__rail { background: var(--sl-blue-900); }
+  .mini__body { background: var(--sl-grey-100); padding: 12px; display: flex; align-items: center; justify-content: center; }
+  .mini__body .ws-text { font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); }
+  .mini__gpt {
+    background: var(--sl-white);
+    border-left: 1px solid var(--sl-grey-200);
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+  }
+  .mini__gpt::before {
+    content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 1px;
+    background: linear-gradient(180deg, var(--sl-teal-400) 0%, var(--sl-blue-600) 100%);
+  }
+  .mini__gpt .gh { font: 800 9px/12px var(--font-sans); color: var(--sl-indigo-900); }
+  .mini__gpt .gh b { background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .mini__gpt .line { height: 5px; background: var(--sl-grey-200); border-radius: 2px; }
+
+  .mini__scrim {
+    position: absolute;
+    top: 28px; left: 0; bottom: 0; right: 0;
+    background: var(--color-scrim);
+    z-index: 1;
+  }
+  .mini__drawer {
+    position: absolute;
+    top: 28px; right: 0; bottom: 0;
+    width: 200px;
+    background: var(--sl-white);
+    box-shadow: var(--shadow-overlay);
+    padding: 10px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mini__drawer .dh { font: 800 11px/16px var(--font-sans); color: var(--sl-indigo-900); display: flex; align-items: center; justify-content: space-between; }
+  .mini__drawer .dh-close { font: 400 14px/12px var(--font-mono); color: var(--color-text-subtle); }
+  .mini__drawer .line { height: 5px; background: var(--sl-grey-200); border-radius: 2px; }
+
+  /* State grid */
+  .states {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .state { display: flex; flex-direction: column; gap: 8px; }
+  .state .lbl {
+    font: 800 11px/14px var(--font-sans);
+    color: var(--color-text-body);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .state .lbl .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px;
+    border-radius: 999px;
+    background: var(--sl-indigo-900);
+    color: var(--sl-white);
+    font-size: 9px;
+    font-weight: 800;
+  }
+  .state .lbl small {
+    font: 400 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: auto;
+  }
+
+  /* Transition flow */
+  .flow {
+    display: grid;
+    grid-template-columns: 1fr 24px 1fr 24px 1fr;
+    align-items: center;
+    gap: 8px;
+  }
+  .flow .arrow {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sl-blue-600);
+  }
+  .flow .arrow svg { width: 20px; height: 20px; }
+  .flow__cap {
+    text-align: center;
+    font: 400 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    margin-top: 4px;
+  }
+
+  /* Rule card */
+  .rule {
+    background: var(--sl-blue-100);
+    border-left: 3px solid var(--sl-blue-600);
+    padding: 14px 16px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .rule b { color: var(--sl-blue-700); }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 4px 16px;
+    font: 400 11px/16px var(--font-sans);
+    padding: 10px 12px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+  }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label">
+      <span class="name">Drawer + SnapGPT</span>
+      <span class="meta">interaction rules · 4 states</span>
+    </div>
+
+    <!-- ─── RULE STATEMENT ───────────────────────────────────── -->
+    <div class="rule">
+      <b>Both stay interactive at the same time.</b> The Drawer slides in over the workspace, but anchors to the <i>left edge of the SnapGPT panel</i> — not the viewport edge. The scrim dims only the workspace area; SnapGPT remains uncovered and fully interactive so the user can keep chatting while configuring. Users often need to ask SnapGPT about what to put in the Drawer.
+    </div>
+
+    <!-- ─── FOUR STATES ──────────────────────────────────────── -->
+    <div>
+      <div class="section-h">The four valid states</div>
+      <div class="states">
+
+        <!-- State 1: Both closed -->
+        <div class="state">
+          <div class="lbl"><span class="num">1</span>Neither open <small>baseline workspace</small></div>
+          <div class="mini">
+            <div class="mini__header"><span class="logo"></span><span class="title">DESIGNER</span></div>
+            <div class="mini__rail"></div>
+            <div class="mini__body"><span class="ws-text">workspace fills viewport</span></div>
+          </div>
+        </div>
+
+        <!-- State 2: SnapGPT open -->
+        <div class="state">
+          <div class="lbl"><span class="num">2</span>SnapGPT open <small>persistent · pushes content</small></div>
+          <div class="mini mini--with-gpt">
+            <div class="mini__header"><span class="logo"></span><span class="title">DESIGNER</span></div>
+            <div class="mini__rail"></div>
+            <div class="mini__body"><span class="ws-text">workspace (resized)</span></div>
+            <div class="mini__gpt">
+              <div class="gh">Snap<b>GPT</b></div>
+              <div class="line"></div><div class="line" style="width: 70%"></div>
+              <div style="flex: 1"></div>
+              <div class="line" style="height: 16px; background: var(--sl-grey-100); border: 1px solid var(--sl-grey-300);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- State 3: Drawer open -->
+        <div class="state">
+          <div class="lbl"><span class="num">3</span>Drawer open <small>modal · overlays · scrim</small></div>
+          <div class="mini">
+            <div class="mini__header"><span class="logo"></span><span class="title">DESIGNER</span></div>
+            <div class="mini__rail"></div>
+            <div class="mini__body"></div>
+            <div class="mini__scrim" style="right: 200px;"></div>
+            <div class="mini__drawer">
+              <div class="dh">Build new pipeline<span class="dh-close">×</span></div>
+              <div class="line"></div><div class="line" style="width: 70%"></div><div class="line" style="width: 60%"></div>
+              <div style="flex: 1"></div>
+              <div style="display: flex; gap: 4px; justify-content: flex-end;">
+                <div style="width: 40px; height: 18px; border: 1px solid var(--sl-blue-600); border-radius: 2px;"></div>
+                <div style="width: 50px; height: 18px; background: var(--sl-blue-200); border-radius: 2px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- State 4: Both open -->
+        <div class="state">
+          <div class="lbl"><span class="num">4</span>Both open <small>drawer in workspace · SnapGPT stays interactive</small></div>
+          <div class="mini mini--with-gpt">
+            <div class="mini__header"><span class="logo"></span><span class="title">DESIGNER</span></div>
+            <div class="mini__rail"></div>
+            <div class="mini__body"></div>
+            <div class="mini__gpt">
+              <div class="gh">Snap<b>GPT</b></div>
+              <div class="line"></div><div class="line" style="width: 70%"></div>
+              <div style="flex: 1"></div>
+              <div class="line" style="height: 14px; background: var(--sl-grey-100); border: 1px solid var(--sl-grey-300);"></div>
+            </div>
+            <div class="mini__scrim" style="right: 280px;"></div>
+            <div class="mini__drawer" style="right: 140px; width: 140px;">
+              <div class="dh">Build new pipeline<span class="dh-close">×</span></div>
+              <div class="line"></div><div class="line" style="width: 70%"></div><div class="line" style="width: 60%"></div>
+              <div style="flex: 1"></div>
+              <div style="display: flex; gap: 4px; justify-content: flex-end;">
+                <div style="width: 30px; height: 14px; border: 1px solid var(--sl-blue-600); border-radius: 2px;"></div>
+                <div style="width: 40px; height: 14px; background: var(--sl-blue-200); border-radius: 2px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── TRANSITIONS ──────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Transitions <span class="meta">Drawer over SnapGPT preserves the chat thread</span></div>
+      <div class="flow">
+        <div>
+          <div class="mini mini--with-gpt" style="height: 140px;">
+            <div class="mini__header"><span class="logo"></span></div>
+            <div class="mini__rail"></div>
+            <div class="mini__body"></div>
+            <div class="mini__gpt"><div class="gh">Snap<b>GPT</b></div><div class="line"></div><div class="line" style="width: 70%"></div></div>
+          </div>
+          <div class="flow__cap">State 2 — SnapGPT open</div>
+        </div>
+        <div class="arrow"><i data-lucide="arrow-right"></i></div>
+        <div>
+          <div class="mini mini--with-gpt" style="height: 140px;">
+            <div class="mini__header"><span class="logo"></span></div>
+            <div class="mini__rail"></div>
+            <div class="mini__body"></div>
+            <div class="mini__gpt"><div class="gh">Snap<b>GPT</b></div><div class="line"></div></div>
+            <div class="mini__scrim" style="right: 280px; top: 16px;"></div>
+            <div class="mini__drawer" style="top: 16px; right: 140px; width: 140px; padding: 8px;">
+              <div class="dh" style="font-size: 9px;">Configure snap<span class="dh-close">×</span></div>
+              <div class="line"></div><div class="line" style="width: 70%"></div>
+            </div>
+          </div>
+          <div class="flow__cap">State 4 — Drawer in workspace · chat still live</div>
+        </div>
+        <div class="arrow"><i data-lucide="arrow-right"></i></div>
+        <div>
+          <div class="mini mini--with-gpt" style="height: 140px;">
+            <div class="mini__header"><span class="logo"></span></div>
+            <div class="mini__rail"></div>
+            <div class="mini__body"></div>
+            <div class="mini__gpt"><div class="gh">Snap<b>GPT</b></div><div class="line"></div><div class="line" style="width: 70%"></div></div>
+          </div>
+          <div class="flow__cap">State 2 — Drawer dismissed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── RULES ────────────────────────────────────────────── -->
+    <dl class="spec">
+      <dt>anchor</dt>
+      <dd>When SnapGPT is open, the Drawer's right edge anchors to the <b>left edge of the SnapGPT panel</b>, not the viewport. The Drawer sits inside the workspace column.</dd>
+      <dt>scrim</dt>
+      <dd>Scrim covers <b>only the workspace area</b> (between the left rail and the Drawer's left edge). SnapGPT is never scrimmed.</dd>
+      <dt>focus</dt>
+      <dd>Drawer traps focus within itself (X / form fields / footer buttons). SnapGPT remains a separate live region — clicking into the chat input shifts focus there without dismissing the Drawer. <kbd>Esc</kbd> closes the Drawer regardless of which region has focus.</dd>
+      <dt>state preservation</dt>
+      <dd>SnapGPT's chat thread, scroll position, draft prompt, and history persist across the Drawer open/close cycle. <b>Never</b> reset the panel when a Drawer opens.</dd>
+      <dt>responsive</dt>
+      <dd>At narrow viewport widths where Drawer + SnapGPT + min-workspace can't all fit (≤1280px), the Drawer takes precedence: SnapGPT auto-collapses to its toggle pill and restores when the Drawer closes.</dd>
+      <dt>do</dt>
+      <dd>Let users ask SnapGPT for help <i>while</i> a Drawer is open — that's the whole point of this pattern. Reference values from chat inside the Drawer form (copy/paste, drag-drop).</dd>
+      <dt>don't</dt>
+      <dd>Auto-close SnapGPT when a Drawer opens. Don't scrim SnapGPT — it implies the panel is inactive, which it isn't. Don't allow stacked Drawers on top of each other.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

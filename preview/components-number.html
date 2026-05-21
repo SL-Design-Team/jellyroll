@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Number input</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+  .sl-field__meta { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+
+  .sl-number {
+    height: var(--field-height-md);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    display: inline-flex; align-items: stretch;
+    transition: border-color 150ms, box-shadow 150ms;
+    width: 100%;
+  }
+  .sl-number:hover { border-color: var(--field-border-hover); }
+  .sl-number.focus { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .sl-number.error { border-color: var(--field-border-error); }
+
+  .sl-number .affix {
+    display: inline-flex; align-items: center;
+    padding: 0 12px;
+    background: var(--sl-grey-100);
+    color: var(--color-text-subtle);
+    font: 400 14px/22px var(--font-sans);
+    flex: none;
+    border-right: 1px solid var(--sl-grey-200);
+  }
+  .sl-number .affix.suffix { border-right: 0; border-left: 1px solid var(--sl-grey-200); }
+  .sl-number input {
+    border: 0; outline: 0; background: transparent;
+    padding: 0 var(--field-padding-x);
+    flex: 1; min-width: 0;
+    font: 400 14px/22px var(--font-mono);
+    color: var(--field-text-default);
+    text-align: right;
+  }
+  .sl-number--left input { text-align: left; }
+
+  .sl-number .stepper {
+    display: flex; flex-direction: column;
+    border-left: 1px solid var(--sl-grey-200);
+    flex: none;
+  }
+  .sl-number .stepper button {
+    width: 24px; height: 50%;
+    border: 0; background: transparent;
+    color: var(--color-text-body);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0;
+  }
+  .sl-number .stepper button:hover { background: var(--sl-grey-100); }
+  .sl-number .stepper button:first-child { border-bottom: 1px solid var(--sl-grey-200); }
+  .sl-number .stepper svg { width: 10px; height: 10px; }
+
+  .sl-field__error { color: var(--sl-red-700); display: inline-flex; align-items: center; gap: 4px; }
+  .sl-field__error svg { width: 12px; height: 12px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Number input</span><span class="meta">steppers · prefix/suffix · clamping</span></div>
+
+    <div>
+      <div class="section-h">Variants</div>
+      <div class="row">
+
+        <div class="sl-field">
+          <label class="sl-field__label">Plain</label>
+          <div class="sl-number">
+            <input type="number" value="60" />
+            <div class="stepper">
+              <button aria-label="Increment"><i data-lucide="chevron-up"></i></button>
+              <button aria-label="Decrement"><i data-lucide="chevron-down"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">With suffix · units</label>
+          <div class="sl-number">
+            <input type="number" value="60" />
+            <span class="affix suffix">seconds</span>
+            <div class="stepper">
+              <button aria-label="Increment"><i data-lucide="chevron-up"></i></button>
+              <button aria-label="Decrement"><i data-lucide="chevron-down"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">With prefix · currency</label>
+          <div class="sl-number sl-number--left">
+            <span class="affix">$</span>
+            <input type="number" value="1250.00" />
+            <div class="stepper">
+              <button aria-label="Increment"><i data-lucide="chevron-up"></i></button>
+              <button aria-label="Decrement"><i data-lucide="chevron-down"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">With prefix + suffix</label>
+          <div class="sl-number sl-number--left">
+            <span class="affix">±</span>
+            <input type="number" value="0.05" />
+            <span class="affix suffix">%</span>
+            <div class="stepper">
+              <button aria-label="Increment"><i data-lucide="chevron-up"></i></button>
+              <button aria-label="Decrement"><i data-lucide="chevron-down"></i></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">States</div>
+      <div class="row">
+
+        <div class="sl-field">
+          <label class="sl-field__label">Focus</label>
+          <div class="sl-number focus">
+            <input type="number" value="60" />
+            <div class="stepper"><button><i data-lucide="chevron-up"></i></button><button><i data-lucide="chevron-down"></i></button></div>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">Error · over max</label>
+          <div class="sl-number error">
+            <input type="number" value="9999" />
+            <span class="affix suffix">seconds</span>
+            <div class="stepper"><button><i data-lucide="chevron-up"></i></button><button><i data-lucide="chevron-down"></i></button></div>
+          </div>
+          <div class="sl-field__meta"><span class="sl-field__error"><i data-lucide="alert-circle"></i>Must be between 1 and 3600.</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>type</dt><dd><code>type="number"</code> · also set <code>inputmode="numeric"</code> for mobile keyboards. Use <code>step</code>, <code>min</code>, <code>max</code> for native clamping.</dd>
+      <dt>steppers</dt><dd>24px wide column on the right. Hover-elevate, click increments by <code>step</code> (default 1). Hold for repeat. Hidden if <code>readonly</code>.</dd>
+      <dt>alignment</dt><dd>Numbers <b>right-aligned</b> by default (units / currency reads cleanly). With prefix, switch to left-aligned (<code>.sl-number--left</code>).</dd>
+      <dt>monospace</dt><dd>Input text uses <code>var(--font-mono)</code> so digits line up in tables and series.</dd>
+      <dt>clamping</dt><dd>On blur, snap to <code>min</code>/<code>max</code> and show inline error if invalid. Don't silently rewrite the user's typed value while they're typing.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

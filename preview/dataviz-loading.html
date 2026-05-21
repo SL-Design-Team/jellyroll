@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Chart loading</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .demo { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .demo .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .demo .desc { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-top: 10px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .sk { background-color: var(--sl-grey-300); border-radius: var(--radius-sm); animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .panel { padding: 20px 22px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .panel .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .head-row { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; }
+  .axis-stub { position: relative; height: 200px; padding: 0 0 28px 60px; }
+  .axis-stub::after { content: ''; position: absolute; left: 60px; right: 0; bottom: 28px; height: 1px; background: var(--sl-grey-200); }
+  .axis-stub::before { content: ''; position: absolute; left: 60px; top: 0; bottom: 28px; width: 1px; background: var(--sl-grey-200); }
+  .y-stub { position: absolute; left: 16px; top: 0; bottom: 28px; display: flex; flex-direction: column; justify-content: space-between; }
+  .x-stub { position: absolute; left: 60px; right: 0; bottom: 0; display: flex; justify-content: space-between; }
+  .lines-area { position: absolute; left: 60px; right: 0; top: 4px; bottom: 32px; display: flex; flex-direction: column; gap: 18px; justify-content: center; }
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Chart loading</span><span class="meta">grayscale skeleton · axis stubs + animated content area</span></div>
+    <div class="grid">
+      <div class="panel">
+        <div class="lbl">Line chart skeleton</div>
+        <div class="head-row">
+          <div class="sk" style="width: 160px; height: 14px"></div>
+          <div style="flex: 1"></div>
+          <div class="sk" style="width: 80px; height: 24px"></div>
+        </div>
+        <div class="axis-stub">
+          <div class="y-stub">
+            <div class="sk" style="width: 32px; height: 8px"></div>
+            <div class="sk" style="width: 32px; height: 8px"></div>
+            <div class="sk" style="width: 32px; height: 8px"></div>
+            <div class="sk" style="width: 32px; height: 8px"></div>
+          </div>
+          <div class="lines-area">
+            <div class="sk" style="height: 3px; width: 100%; border-radius: 2px;"></div>
+            <div class="sk" style="height: 3px; width: 92%; border-radius: 2px;"></div>
+            <div class="sk" style="height: 3px; width: 78%; border-radius: 2px;"></div>
+          </div>
+          <div class="x-stub">
+            <div class="sk" style="width: 36px; height: 8px"></div>
+            <div class="sk" style="width: 36px; height: 8px"></div>
+            <div class="sk" style="width: 36px; height: 8px"></div>
+            <div class="sk" style="width: 36px; height: 8px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="lbl">Bar chart skeleton</div>
+        <div class="head-row">
+          <div class="sk" style="width: 200px; height: 14px"></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 0 0 0 60px; position: relative;">
+          <div class="sk" style="width: 90%; height: 18px"></div>
+          <div class="sk" style="width: 70%; height: 18px"></div>
+          <div class="sk" style="width: 60%; height: 18px"></div>
+          <div class="sk" style="width: 50%; height: 18px"></div>
+          <div class="sk" style="width: 40%; height: 18px"></div>
+          <div class="sk" style="width: 30%; height: 18px"></div>
+          <div class="sk" style="width: 22%; height: 18px"></div>
+          <div class="sk" style="width: 12%; height: 18px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body></html>

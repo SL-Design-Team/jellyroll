@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Broadcast banner</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { max-width: 1240px; width: 100%; gap: 10px; box-sizing: border-box; }
+
+  /* Broadcast banner — page-level, full-width.
+     Sits at the top of the product chrome below the global header.
+     Severities: info (Blue) · warn (Yellow/Gold) · alert (Red).
+     Dismissible via trailing X. Optional CTA before the dismiss. */
+  .bcast {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-left: 3px solid;            /* full-height stripe */
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font: 400 14px/22px var(--font-sans);
+    color: var(--color-text-body);
+    min-width: 0;
+  }
+  .bcast .ic { display: inline-flex; align-items: center; justify-content: center; flex: none; align-self: start; padding-top: 1px; }
+  .bcast .ic svg { width: 20px; height: 20px; stroke-width: 2; }
+
+  .bcast .msg { min-width: 0; word-wrap: break-word; overflow-wrap: anywhere; }
+  .bcast .msg a {
+    color: inherit;
+    font-weight: 400;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
+  .bcast .msg code {
+    background: rgba(0,0,0,0.06);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font: 400 12px/18px var(--font-mono);
+    color: inherit;
+  }
+
+  .bcast .actions { display: flex; align-items: center; gap: 4px; flex: none; align-self: start; }
+
+  /* Narrow container — stack the CTA below the message so the close stays in the row. */
+  @media (max-width: 560px) {
+    .bcast { grid-template-columns: auto 1fr auto; }
+    .bcast .actions { flex-wrap: wrap; justify-content: flex-end; }
+    .bcast .cta { font-size: 12px; padding: 4px 10px; }
+  }
+  .bcast .cta {
+    font: 800 13px/16px var(--font-sans);
+    color: inherit;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid currentColor;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .bcast .cta:hover { background: rgba(0,0,0,0.05); }
+  .bcast button.close {
+    width: 28px; height: 28px;
+    background: transparent; border: 0;
+    border-radius: var(--radius-xs);
+    color: inherit; cursor: pointer; opacity: 0.75;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .bcast button.close:hover { opacity: 1; background: rgba(0,0,0,0.06); }
+  .bcast button.close svg { width: 16px; height: 16px; stroke-width: 2.25; }
+
+  /* Severities — set bg, stripe (border-left), and accent (icon + link) color. */
+  .bcast.info  { background: var(--sl-blue-100);   border-left-color: var(--sl-blue-600); }
+  .bcast.info  .ic, .bcast.info  .msg a { color: var(--sl-blue-700); }
+  .bcast.info  .cta { color: var(--sl-blue-700); }
+
+  .bcast.warn  { background: var(--sl-yellow-100); border-left-color: var(--sl-yellow-700); }
+  .bcast.warn  .ic, .bcast.warn  .msg a { color: var(--sl-yellow-900); }
+  .bcast.warn  .cta { color: var(--sl-yellow-900); }
+
+  .bcast.alert { background: var(--sl-red-100);    border-left-color: var(--sl-red-600); }
+  .bcast.alert .ic, .bcast.alert .msg a { color: var(--sl-red-700); }
+  .bcast.alert .cta { color: var(--sl-red-700); }
+
+  .stack { display: flex; flex-direction: column; gap: 10px; }
+
+  /* spec block */
+  .spec {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 4px 16px;
+    font: 400 11px/16px var(--font-sans);
+    padding: 10px 12px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+    margin-top: 4px;
+  }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label">
+      <span class="name">Broadcast banner</span>
+      <span class="meta">page-level · 3 severities · optional CTA · dismissible</span>
+    </div>
+
+    <div class="stack">
+      <!-- INFO -->
+      <div class="bcast info" role="status">
+        <span class="ic"><i data-lucide="info"></i></span>
+        <div class="msg">This page is being deprecated. Start using the new <a href="#">Monitor application</a> to view your metrics — contact <a href="mailto:support@snaplogic.com">support@snaplogic.com</a> for help transitioning.</div>
+        <div class="actions"><button class="close" aria-label="Dismiss"><i data-lucide="x"></i></button></div>
+      </div>
+
+      <!-- WARN -->
+      <div class="bcast warn" role="status">
+        <span class="ic"><i data-lucide="alert-triangle"></i></span>
+        <div class="msg">Your SnapPack catalog is deprecated. <a href="#">Upgrade snaplexes</a> to the current distribution.</div>
+        <div class="actions">
+          <a class="cta" href="#">Upgrade now</a>
+          <button class="close" aria-label="Dismiss"><i data-lucide="x"></i></button>
+        </div>
+      </div>
+
+      <!-- ALERT -->
+      <div class="bcast alert" role="alert">
+        <span class="ic"><i data-lucide="alert-octagon"></i></span>
+        <div class="msg">Snaplex <code>prod-east-1</code> is unreachable. Pipelines targeting this snaplex will fail until connectivity is restored.</div>
+        <div class="actions"><button class="close" aria-label="Dismiss"><i data-lucide="x"></i></button></div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>placement</dt><dd>top of product chrome, below global header, full width</dd>
+      <dt>stripe</dt><dd>3px left border in severity color (full height) · right side 4px radius</dd>
+      <dt>type</dt><dd>14/22 Regular · indigo-900 body · inline links regular-weight underlined in severity color</dd>
+      <dt>icons</dt><dd>info · alert-triangle · alert-octagon · x</dd>
+      <dt>cta</dt><dd>optional · ghost (1.5px border in severity color, ExtraBold 13/16)</dd>
+      <dt>tokens</dt><dd>blue-100 / 600 / 700 · yellow-100 / 700 / 900 · red-100 / 600 / 700</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

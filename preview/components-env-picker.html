@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Environment picker</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<link rel="stylesheet" href="dropdown.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .ep {
+    width: 280px;
+    padding: 8px 0;
+  }
+  .e-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font: 500 14px/18px var(--font-sans);
+    color: rgba(255,255,255,0.92);
+  }
+  .e-item:hover { background: rgba(255,255,255,0.04); }
+  .e-item:hover .e-ic { color: var(--sl-yellow-400); }
+  .e-item .e-ic { width: 18px; height: 18px; color: var(--sl-yellow-500); stroke-width: 1.75; flex-shrink: 0; }
+  .e-item.current .check { margin-left: auto; color: var(--sl-teal-400); }
+  .e-item .e-sub { font: 400 12px/14px var(--font-sans); color: rgba(255,255,255,0.45); display: block; margin-top: 2px; }
+  .e-item .name-stack { display: flex; flex-direction: column; flex: 1; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Environment picker</span><span class="meta">anchored to env_name pill in global header</span></div>
+    <div class="dropdown-stage">
+      <div class="dropdown ep">
+        <div class="e-item current">
+          <i data-lucide="box" class="e-ic"></i>
+          <div class="name-stack">
+            <span>environment_name</span>
+            <span class="e-sub">Current environment</span>
+          </div>
+          <i data-lucide="check" class="check" style="width:16px;height:16px"></i>
+        </div>
+        <div class="e-item">
+          <i data-lucide="box" class="e-ic"></i>
+          <div class="name-stack">
+            <span>Development</span>
+            <span class="e-sub">dev.snaplogic.com</span>
+          </div>
+        </div>
+        <div class="dd-divider" style="margin: 6px 16px;"></div>
+        <div class="e-item">
+          <i data-lucide="settings" style="width:18px;height:18px;color:rgba(255,255,255,0.55);stroke-width:1.75" class="e-ic"></i>
+          <span>Settings</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

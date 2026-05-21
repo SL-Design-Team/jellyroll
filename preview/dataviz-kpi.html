@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · KPI card</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .demo { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .demo .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .demo .desc { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-top: 10px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .kpi {
+    padding: 18px 20px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .kpi .label { font: 800 11px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; }
+  .kpi .value { font: 800 32px/36px var(--font-sans); color: var(--sl-indigo-900); font-variant-numeric: tabular-nums; }
+  .kpi .delta { display: inline-flex; align-items: center; gap: 4px; font: 800 12px/14px var(--font-sans); }
+  .kpi .delta.up { color: #017D1B; }
+  .kpi .delta.down { color: #B61631; }
+  .kpi .delta.flat { color: #7D8695; }
+  .kpi .compare { font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .kpi .spark { margin-top: 4px; }
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">KPI card</span><span class="meta">big number + trend delta + period · the unit of a dashboard</span></div>
+    <div class="kpi-row">
+      <div class="kpi">
+        <span class="label">Records processed</span>
+        <span class="value">1.24M</span>
+        <span class="delta up">▲ 12.4%</span>
+        <span class="compare">vs. last 7 days</span>
+        <svg class="spark" width="100%" height="32" viewBox="0 0 200 32" preserveAspectRatio="none">
+          <polyline points="0,22 25,20 50,17 75,18 100,14 125,12 150,8 175,10 200,4" fill="none" stroke="#008DFF" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="kpi">
+        <span class="label">Failed runs</span>
+        <span class="value">38</span>
+        <span class="delta down">▲ 4 (11.8%)</span>
+        <span class="compare">vs. last 7 days</span>
+        <svg class="spark" width="100%" height="32" viewBox="0 0 200 32" preserveAspectRatio="none">
+          <polyline points="0,18 25,16 50,20 75,14 100,18 125,20 150,12 175,8 200,6" fill="none" stroke="#D83034" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="kpi">
+        <span class="label">Avg duration</span>
+        <span class="value">02:14</span>
+        <span class="delta flat">— 0.0%</span>
+        <span class="compare">vs. last 7 days</span>
+        <svg class="spark" width="100%" height="32" viewBox="0 0 200 32" preserveAspectRatio="none">
+          <polyline points="0,16 25,18 50,15 75,17 100,16 125,17 150,15 175,16 200,16" fill="none" stroke="#7D8695" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="kpi">
+        <span class="label">Active snaplexes</span>
+        <span class="value">12 / 14</span>
+        <span class="delta up">▲ 1</span>
+        <span class="compare">vs. last 7 days</span>
+        <svg class="spark" width="100%" height="32" viewBox="0 0 200 32" preserveAspectRatio="none">
+          <polyline points="0,24 25,24 50,20 75,20 100,16 125,16 150,12 175,12 200,8" fill="none" stroke="#4ECB8D" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</body></html>

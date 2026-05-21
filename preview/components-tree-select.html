@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Tree select</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; width: 880px; }
+
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  /* ─── Field trigger (matches Select) ───────────────────────────── */
+  .ts-trigger {
+    min-height: var(--field-height-md);
+    padding: 4px 4px 4px var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    display: flex; align-items: center; gap: 6px;
+    flex-wrap: wrap;
+    cursor: pointer;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .ts-trigger:hover { border-color: var(--field-border-hover); }
+  .ts-trigger.open { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .ts-trigger__placeholder {
+    flex: 1;
+    color: var(--field-text-placeholder);
+    font: 300 italic 14px/22px var(--font-sans);
+    padding: 6px 0;
+  }
+  .ts-trigger__value {
+    flex: 1;
+    color: var(--field-text-default);
+    font: 400 14px/22px var(--font-sans);
+    padding: 6px 0;
+  }
+  .ts-trigger .caret {
+    flex: none; color: var(--color-text-subtle);
+    display: inline-flex; padding: 4px;
+  }
+  .ts-trigger .caret i, .ts-trigger .caret svg { width: 16px; height: 16px; }
+
+  /* Chip tokens (when displaying selections in the field) */
+  .ts-token {
+    display: inline-flex; align-items: center; gap: 4px;
+    height: 24px;
+    padding: 0 4px 0 8px;
+    border-radius: var(--radius-xs);
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    font: 500 12px/16px var(--font-sans);
+    white-space: nowrap;
+  }
+  .ts-token .x {
+    width: 16px; height: 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 0; background: transparent;
+    border-radius: 999px; cursor: pointer; color: inherit; opacity: 0.7;
+  }
+  .ts-token .x:hover { opacity: 1; background: rgba(0,0,0,0.1); }
+  .ts-token .x i, .ts-token .x svg { width: 11px; height: 11px; }
+
+  /* ─── Popover ───────────────────────────────────────────────────── */
+  .ts-wrap { position: relative; }
+  .ts-pop {
+    position: absolute;
+    top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    box-shadow: var(--shadow-overlay);
+    z-index: 10;
+    overflow: hidden;
+  }
+  .ts-pop__search {
+    padding: 8px;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .ts-pop__search-inner {
+    display: flex; align-items: center; gap: 6px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+  }
+  .ts-pop__search-inner i, .ts-pop__search-inner svg { width: 14px; height: 14px; color: var(--color-text-subtle); flex: none; }
+  .ts-pop__search-inner input {
+    flex: 1; border: 0; outline: 0; background: transparent;
+    font: 300 italic 14px/22px var(--font-sans);
+    color: var(--field-text-default);
+  }
+  .ts-pop__search-inner input::placeholder { color: var(--field-text-placeholder); }
+  .ts-pop__search-inner input.has-value { font: 400 14px/22px var(--font-sans); font-style: normal; }
+
+  .ts-pop__body {
+    max-height: 360px;
+    overflow-y: auto;
+    padding: 4px 0;
+  }
+
+  /* Row */
+  .ts-row {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    font: 400 14px/22px var(--font-sans);
+    color: var(--sl-indigo-900);
+    cursor: pointer;
+    user-select: none;
+  }
+  .ts-row:hover { background: var(--sl-blue-50); }
+  .ts-row.active { background: var(--sl-blue-100); }
+  .ts-row__chev {
+    width: 16px; height: 16px; flex: none;
+    color: var(--color-text-body);
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 2px;
+  }
+  .ts-row__chev:hover { background: var(--sl-blue-100); }
+  .ts-row__chev i, .ts-row__chev svg { width: 14px; height: 14px; }
+  .ts-row__chev.empty { visibility: hidden; }
+  .ts-row__chev.open i, .ts-row__chev.open svg { transform: rotate(0deg); }
+
+  /* Checkbox (matches design system) */
+  .ts-cb {
+    width: 16px; height: 16px; flex: none;
+    border-radius: 3px;
+    border: 1.5px solid var(--sl-grey-500);
+    background: var(--sl-white);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--sl-white);
+  }
+  .ts-cb.checked { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .ts-cb.checked i, .ts-cb.checked svg { width: 12px; height: 12px; }
+  .ts-cb.indeterminate { background: var(--sl-blue-600); border-color: var(--sl-blue-600); position: relative; }
+  .ts-cb.indeterminate::after {
+    content: ""; width: 8px; height: 2px; background: var(--sl-white); border-radius: 1px;
+  }
+  .ts-cb.indeterminate i, .ts-cb.indeterminate svg { display: none; }
+
+  /* Radio (single-select variant) */
+  .ts-radio {
+    width: 16px; height: 16px; flex: none;
+    border-radius: 50%;
+    border: 1.5px solid var(--sl-grey-500);
+    background: var(--sl-white);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .ts-radio.checked { border-color: var(--sl-blue-600); }
+  .ts-radio.checked::after {
+    content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sl-blue-600);
+  }
+
+  /* Indent + branch icon */
+  .ts-row__label { flex: 1; display: inline-flex; align-items: center; gap: 6px; }
+  .ts-row__label i, .ts-row__label svg { width: 14px; height: 14px; color: var(--color-text-subtle); flex: none; }
+  .ts-row__count {
+    font: 400 11px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    margin-left: 4px;
+  }
+  .ts-row b { font-weight: 800; color: var(--sl-blue-900); }
+
+  /* Select-all header row */
+  .ts-row--all {
+    border-bottom: 1px dashed var(--sl-grey-200);
+    margin-bottom: 2px;
+  }
+  .ts-row--all .ts-row__label { font-weight: 800; }
+
+  /* Footer */
+  .ts-pop__foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px;
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-100);
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+  .ts-pop__foot .clear {
+    background: none; border: 0;
+    color: var(--color-text-link);
+    font: 800 13px/20px var(--font-sans);
+    cursor: pointer; padding: 0;
+  }
+  .ts-pop__foot .clear:hover { text-decoration: underline; }
+  .ts-pop__foot .clear:disabled { color: var(--sl-grey-400); cursor: not-allowed; text-decoration: none; }
+
+  /* Loading / empty states */
+  .ts-state {
+    padding: 28px 12px;
+    text-align: center;
+    color: var(--color-text-subtle);
+    font: 400 13px/20px var(--font-sans);
+  }
+  .ts-state b { color: var(--color-text-body); font-weight: 800; display: block; }
+  .ts-state .spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--sl-teal-600);
+    border-top-color: transparent;
+    animation: tsspin 0.9s linear infinite;
+    vertical-align: -3px; margin-right: 8px;
+  }
+  @keyframes tsspin { to { transform: rotate(360deg); } }
+
+  /* Layout helpers */
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .stage { min-height: 460px; padding-top: 8px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Tree select</span><span class="meta">hierarchical picker · multi or single · search · select-all per branch</span></div>
+
+    <div>
+      <div class="section-h">Closed states</div>
+      <div class="row">
+        <div class="sl-field">
+          <label class="sl-field__label">Empty</label>
+          <div class="ts-trigger">
+            <span class="ts-trigger__placeholder">Choose pipelines</span>
+            <span class="caret"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Single value</label>
+          <div class="ts-trigger">
+            <span class="ts-trigger__value">Sales analytics / Daily / orders-rollup</span>
+            <span class="caret"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">A few selected</label>
+          <div class="ts-trigger">
+            <span class="ts-token">orders-rollup<button class="x" aria-label="Remove"><i data-lucide="x"></i></button></span>
+            <span class="ts-token">sf-to-snowflake-nightly<button class="x"><i data-lucide="x"></i></button></span>
+            <span class="ts-token">users-cdc-stream<button class="x"><i data-lucide="x"></i></button></span>
+            <span class="caret"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Many · summarized</label>
+          <div class="ts-trigger">
+            <span class="ts-trigger__value"><b style="font-weight:800; color: var(--sl-indigo-900);">14 pipelines</b> across 3 projects</span>
+            <span class="caret"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Open · multi-select tree <span class="meta">canonical · checkbox per row · expand each branch</span></div>
+      <div class="row stage">
+        <div class="sl-field">
+          <label class="sl-field__label">Filter pipelines</label>
+          <div class="ts-wrap">
+            <div class="ts-trigger open">
+              <span class="ts-token">orders-rollup<button class="x"><i data-lucide="x"></i></button></span>
+              <span class="ts-token">sf-to-snowflake-nightly<button class="x"><i data-lucide="x"></i></button></span>
+              <span class="ts-trigger__placeholder" style="flex: 1; min-width: 0;"></span>
+              <span class="caret"><i data-lucide="chevron-up"></i></span>
+            </div>
+            <div class="ts-pop">
+              <div class="ts-pop__search">
+                <div class="ts-pop__search-inner">
+                  <i data-lucide="search"></i>
+                  <input placeholder="Search pipelines" />
+                </div>
+              </div>
+              <div class="ts-pop__body">
+                <!-- Select All -->
+                <div class="ts-row ts-row--all">
+                  <span class="ts-row__chev empty"></span>
+                  <span class="ts-cb indeterminate"></span>
+                  <span class="ts-row__label">Select all</span>
+                  <span class="ts-row__count">2 / 49</span>
+                </div>
+
+                <!-- Sales analytics (parent) -->
+                <div class="ts-row" style="padding-left: 12px;">
+                  <span class="ts-row__chev open"><i data-lucide="chevron-down"></i></span>
+                  <span class="ts-cb indeterminate"></span>
+                  <span class="ts-row__label"><i data-lucide="folder-open"></i>Sales analytics</span>
+                  <span class="ts-row__count">2 / 12</span>
+                </div>
+                <div class="ts-row" style="padding-left: 38px;">
+                  <span class="ts-row__chev empty"></span>
+                  <span class="ts-cb checked"><i data-lucide="check"></i></span>
+                  <span class="ts-row__label"><i data-lucide="git-branch"></i>orders-rollup</span>
+                </div>
+                <div class="ts-row" style="padding-left: 38px;">
+                  <span class="ts-row__chev empty"></span>
+                  <span class="ts-cb checked"><i data-lucide="check"></i></span>
+                  <span class="ts-row__label"><i data-lucide="git-branch"></i>sf-to-snowflake-nightly</span>
+                </div>
+                <div class="ts-row" style="padding-left: 38px;">
+                  <span class="ts-row__chev empty"></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="git-branch"></i>billing-monthly-export</span>
+                </div>
+
+                <!-- Identity (collapsed parent) -->
+                <div class="ts-row" style="padding-left: 12px;">
+                  <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="folder"></i>Identity</span>
+                  <span class="ts-row__count">8</span>
+                </div>
+
+                <!-- Ops (collapsed parent) -->
+                <div class="ts-row" style="padding-left: 12px;">
+                  <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="folder"></i>Ops</span>
+                  <span class="ts-row__count">14</span>
+                </div>
+
+                <!-- Marketing (expanded with grandchildren) -->
+                <div class="ts-row" style="padding-left: 12px;">
+                  <span class="ts-row__chev open"><i data-lucide="chevron-down"></i></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="folder-open"></i>Marketing</span>
+                  <span class="ts-row__count">0 / 15</span>
+                </div>
+                <div class="ts-row" style="padding-left: 38px;">
+                  <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="folder"></i>Campaigns</span>
+                  <span class="ts-row__count">7</span>
+                </div>
+                <div class="ts-row" style="padding-left: 38px;">
+                  <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="folder"></i>Attribution</span>
+                  <span class="ts-row__count">8</span>
+                </div>
+              </div>
+              <div class="ts-pop__foot">
+                <button class="clear">Clear selection</button>
+                <span><b style="font-weight: 800; color: var(--color-text-body);">2</b> / 49 selected</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">Filtered <span style="font-weight: 400; color: var(--color-text-subtle); font-size: 12px;">— matches under their branches</span></label>
+          <div class="ts-wrap">
+            <div class="ts-trigger open">
+              <span class="ts-trigger__value" style="color: var(--field-text-placeholder); font-style: italic;">Choose pipelines</span>
+              <span class="caret"><i data-lucide="chevron-up"></i></span>
+            </div>
+            <div class="ts-pop">
+              <div class="ts-pop__search">
+                <div class="ts-pop__search-inner">
+                  <i data-lucide="search"></i>
+                  <input class="has-value" value="orders" />
+                </div>
+              </div>
+              <div class="ts-pop__body">
+                <div class="ts-row" style="padding-left: 12px;">
+                  <span class="ts-row__chev open"><i data-lucide="chevron-down"></i></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="folder-open"></i>Sales analytics</span>
+                  <span class="ts-row__count">2 matches</span>
+                </div>
+                <div class="ts-row" style="padding-left: 38px;">
+                  <span class="ts-row__chev empty"></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="git-branch"></i><b>orders</b>-rollup</span>
+                </div>
+                <div class="ts-row" style="padding-left: 38px;">
+                  <span class="ts-row__chev empty"></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="git-branch"></i>hourly-<b>orders</b>-snapshot</span>
+                </div>
+
+                <div class="ts-row" style="padding-left: 12px;">
+                  <span class="ts-row__chev open"><i data-lucide="chevron-down"></i></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="folder-open"></i>Ops</span>
+                  <span class="ts-row__count">1 match</span>
+                </div>
+                <div class="ts-row" style="padding-left: 38px;">
+                  <span class="ts-row__chev empty"></span>
+                  <span class="ts-cb"></span>
+                  <span class="ts-row__label"><i data-lucide="git-branch"></i><b>orders</b>-to-warehouse</span>
+                </div>
+              </div>
+              <div class="ts-pop__foot">
+                <button class="clear" disabled>Clear selection</button>
+                <span>3 matches · <a style="color: var(--color-text-link); font-weight: 800; cursor: pointer;">Select all matching</a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Open · single-select tree <span class="meta">radio per row · pick one leaf</span></div>
+      <div class="row stage" style="min-height: 360px;">
+        <div class="sl-field">
+          <label class="sl-field__label">Move to folder</label>
+          <div class="ts-wrap">
+            <div class="ts-trigger open">
+              <span class="ts-trigger__value">Sales analytics / Daily</span>
+              <span class="caret"><i data-lucide="chevron-up"></i></span>
+            </div>
+            <div class="ts-pop">
+              <div class="ts-pop__search">
+                <div class="ts-pop__search-inner">
+                  <i data-lucide="search"></i>
+                  <input placeholder="Search folders" />
+                </div>
+              </div>
+              <div class="ts-pop__body">
+                <div class="ts-row" style="padding-left: 12px;">
+                  <span class="ts-row__chev open"><i data-lucide="chevron-down"></i></span>
+                  <span class="ts-radio"></span>
+                  <span class="ts-row__label"><i data-lucide="folder-open"></i>Sales analytics</span>
+                </div>
+                <div class="ts-row active" style="padding-left: 38px;">
+                  <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
+                  <span class="ts-radio checked"></span>
+                  <span class="ts-row__label"><i data-lucide="folder"></i>Daily</span>
+                </div>
+                <div class="ts-row" style="padding-left: 38px;">
+                  <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
+                  <span class="ts-radio"></span>
+                  <span class="ts-row__label"><i data-lucide="folder"></i>Weekly</span>
+                </div>
+                <div class="ts-row" style="padding-left: 12px;">
+                  <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
+                  <span class="ts-radio"></span>
+                  <span class="ts-row__label"><i data-lucide="folder"></i>Identity</span>
+                </div>
+                <div class="ts-row" style="padding-left: 12px;">
+                  <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
+                  <span class="ts-radio"></span>
+                  <span class="ts-row__label"><i data-lucide="folder"></i>Ops</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">Loading <span style="font-weight: 400; color: var(--color-text-subtle); font-size: 12px;">— async tree</span></label>
+          <div class="ts-wrap">
+            <div class="ts-trigger open">
+              <span class="ts-trigger__placeholder">Choose snaplex</span>
+              <span class="caret"><i data-lucide="chevron-up"></i></span>
+            </div>
+            <div class="ts-pop">
+              <div class="ts-pop__search">
+                <div class="ts-pop__search-inner">
+                  <i data-lucide="search"></i>
+                  <input placeholder="Search snaplexes" />
+                </div>
+              </div>
+              <div class="ts-pop__body">
+                <div class="ts-state">
+                  <span class="spinner"></span>Loading snaplex hierarchy…
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">No results</label>
+          <div class="ts-wrap">
+            <div class="ts-trigger open">
+              <span class="ts-trigger__placeholder">Choose pipelines</span>
+              <span class="caret"><i data-lucide="chevron-up"></i></span>
+            </div>
+            <div class="ts-pop">
+              <div class="ts-pop__search">
+                <div class="ts-pop__search-inner">
+                  <i data-lucide="search"></i>
+                  <input class="has-value" value="xyz-no-match" />
+                </div>
+              </div>
+              <div class="ts-pop__body">
+                <div class="ts-state">
+                  <b>No matches</b>
+                  Try a shorter term, or clear the search.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>variants</dt><dd><b>Multi-select</b> (checkbox rows · tri-state parents · Select all header) — used for filtering by N pipelines / projects / snaplexes. <b>Single-select</b> (radio rows · click-to-pick · no Select all) — used for "move to folder", "pick parent", "choose snaplex".</dd>
+      <dt>row</dt><dd>Three slots in a fixed-width gutter: <b>chevron</b> (expand · hidden for leaves) · <b>checkbox/radio</b> · <b>label</b> (folder/branch icon + name). Trailing slot: optional count chip showing <code>N / M</code> selected or total.</dd>
+      <dt>indent</dt><dd>Each tree level adds <b>26px</b> of left padding. Connector lines are not drawn — indentation + chevron carry hierarchy. Match the dom-shape: a child sits flush with its parent's label, not the chevron.</dd>
+      <dt>tri-state</dt><dd>Parent checkbox state is derived: <b>checked</b> if all descendants are selected · <b>indeterminate</b> if some are · <b>empty</b> if none. Clicking a parent's checkbox toggles <i>all descendants</i> together. Clicking the chevron only expands.</dd>
+      <dt>select all</dt><dd>Top "Select all" row (dashed bottom border) toggles every leaf in the tree. Inherits the same tri-state styling. Hidden in single-select mode.</dd>
+      <dt>search</dt><dd>Filters leaves and auto-expands ancestors that contain matches. Matching substrings bolded. Parent counts switch to <b>"N matches"</b>. Footer offers <b>"Select all matching"</b> when results &gt; 0.</dd>
+      <dt>footer</dt><dd>Left: <b>Clear selection</b> link (disabled when nothing selected). Right: live count <b>"X / Y selected"</b>, or match summary when filtered. No Apply/Cancel — changes commit immediately like Multi-select.</dd>
+      <dt>field display</dt><dd>0 selected → placeholder. 1 selected → full path ("Sales analytics / Daily / orders-rollup"). 2–4 → individual chip tokens. 5+ → summary ("14 pipelines across 3 projects").</dd>
+      <dt>keyboard</dt><dd><kbd>↑/↓</kbd> traverse visible rows · <kbd>→</kbd> expand collapsed branch · <kbd>←</kbd> collapse (or jump to parent if already collapsed) · <kbd>Space</kbd> toggle the row's checkbox/radio · <kbd>Enter</kbd> commit on single-select · <kbd>Esc</kbd> close. Typing focuses the search input.</dd>
+      <dt>perf</dt><dd>Virtualize after <b>~200 visible rows</b>. Async branches load on first expand and cache; show inline spinner row beneath the parent while loading. Never load the full tree eagerly when it can have thousands of leaves.</dd>
+      <dt>a11y</dt><dd>Pop is <code>role="tree" aria-multiselectable="true"</code> (false for single). Each row: <code>role="treeitem" aria-expanded aria-level aria-checked</code>. Search input <code>aria-controls</code> the tree. Tri-state announces as "mixed".</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

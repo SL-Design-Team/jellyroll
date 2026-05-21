@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Gauge</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .demo { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .demo .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .demo .desc { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-top: 10px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .gauge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .panel { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .panel .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; }
+  .panel .desc { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .gauge-val { font: 800 28px/30px var(--font-sans); color: var(--sl-indigo-900); margin-top: -52px; }
+  .gauge-target { font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+
+  .bar-meter { width: 100%; }
+  .bar-meter .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font: 500 12px/16px var(--font-sans); color: var(--sl-indigo-900); }
+  .bar-meter .row .v { font-variant-numeric: tabular-nums; font-weight: 800; }
+  .bar-meter .track { width: 100%; height: 10px; background: var(--sl-grey-200); border-radius: 999px; overflow: hidden; }
+  .bar-meter .fill { height: 100%; border-radius: 999px; }
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Gauge / progress meter</span><span class="meta">single metric vs. target · arc + bar variants</span></div>
+    <div class="gauge-grid">
+      <!-- Arc 1: license utilization -->
+      <div class="panel">
+        <span class="lbl">License utilization</span>
+        <svg width="200" height="120" viewBox="0 0 200 120">
+          <!-- background arc -->
+          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#EBEDF1" stroke-width="14" stroke-linecap="round"/>
+          <!-- value arc 72% of 180° -->
+          <path d="M 20 100 A 80 80 0 0 1 158.7 47.2" fill="none" stroke="#008DFF" stroke-width="14" stroke-linecap="round"/>
+        </svg>
+        <div class="gauge-val">72%</div>
+        <div class="gauge-target">36 / 50 connections</div>
+      </div>
+
+      <!-- Arc 2: SLA -->
+      <div class="panel">
+        <span class="lbl">Monthly SLA</span>
+        <svg width="200" height="120" viewBox="0 0 200 120">
+          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#EBEDF1" stroke-width="14" stroke-linecap="round"/>
+          <!-- 96.8% of 180° -->
+          <path d="M 20 100 A 80 80 0 0 1 178.5 96.0" fill="none" stroke="#017D1B" stroke-width="14" stroke-linecap="round"/>
+          <!-- target tick at 95% -->
+          <line x1="100" y1="100" x2="100" y2="100" stroke="none"/>
+        </svg>
+        <div class="gauge-val">96.8%</div>
+        <div class="gauge-target">target 95.0%</div>
+      </div>
+
+      <!-- Arc 3: cpu -->
+      <div class="panel">
+        <span class="lbl">Snaplex CPU</span>
+        <svg width="200" height="120" viewBox="0 0 200 120">
+          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#EBEDF1" stroke-width="14" stroke-linecap="round"/>
+          <!-- 88% of 180° -->
+          <path d="M 20 100 A 80 80 0 0 1 174.7 73.8" fill="none" stroke="#F9660B" stroke-width="14" stroke-linecap="round"/>
+        </svg>
+        <div class="gauge-val">88%</div>
+        <div class="gauge-target">peak 5m · warning</div>
+      </div>
+    </div>
+
+    <div class="demo" style="margin-top: 0">
+      <div class="lbl">Bar meter variant — for stacked horizontal layouts</div>
+      <div class="bar-meter">
+        <div class="row"><span>prod-snaplex-01</span><span class="v">72%</span></div>
+        <div class="track"><div class="fill" style="width:72%; background: #008DFF"></div></div>
+      </div>
+      <div class="bar-meter" style="margin-top: 14px">
+        <div class="row"><span>prod-snaplex-02</span><span class="v">54%</span></div>
+        <div class="track"><div class="fill" style="width:54%; background: #008DFF"></div></div>
+      </div>
+      <div class="bar-meter" style="margin-top: 14px">
+        <div class="row"><span>prod-snaplex-03</span><span class="v" style="color: var(--sl-orange-700)">91%</span></div>
+        <div class="track"><div class="fill" style="width:91%; background: #F9660B"></div></div>
+      </div>
+    </div>
+  </div>
+</body></html>

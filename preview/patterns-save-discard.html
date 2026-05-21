@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Save / discard</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  /* Sticky action bar (a re-usable bar that pins to the bottom of a form/drawer) */
+  .sab {
+    position: relative;
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    padding-bottom: 64px;     /* room for the docked bar */
+    min-height: 200px;
+  }
+  .sab__placeholder {
+    padding: 28px 24px;
+    font: 400 13px/22px var(--font-sans);
+    color: var(--color-text-subtle);
+    border-bottom: 1px dashed var(--sl-grey-200);
+  }
+  .sab__bar {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 20px;
+    background: var(--sl-white);
+    border-top: 1px solid var(--sl-grey-200);
+  }
+  .sab__bar.dirty { border-top-color: var(--sl-yellow-700); background: var(--sl-yellow-100); }
+  .sab__bar.dirty::before {
+    content: ""; position: absolute; left: 0; top: -1px; width: 4px; height: calc(100% + 1px);
+    background: var(--sl-yellow-700);
+  }
+  .sab__status { font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); display: flex; align-items: center; gap: 6px; flex: 1; }
+  .sab__status svg { width: 14px; height: 14px; }
+  .sab__status.dirty { color: var(--sl-yellow-1000); font-weight: 800; }
+  .sab__status.saving svg { animation: spin 1s linear infinite; color: var(--sl-teal-600); }
+  .sab__status.saved { color: var(--sl-green-800); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 18px;
+    font: 800 14px/22px var(--font-sans);
+    border-radius: var(--field-radius);
+    border: 1.5px solid;
+    cursor: pointer;
+  }
+  .btn--primary  { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .btn:disabled  { background: var(--sl-blue-200); color: var(--sl-white); border-color: var(--sl-blue-200); cursor: not-allowed; }
+
+  /* Confirm dialog (leaving with unsaved changes) */
+  .confirm-stage {
+    position: relative;
+    background: var(--color-scrim);
+    padding: 24px;
+    border-radius: var(--field-radius);
+    display: flex; justify-content: center;
+  }
+  .confirm {
+    width: 440px;
+    background: var(--sl-white);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-overlay-strong);
+  }
+  .confirm h3 { font: 800 18px/26px var(--font-sans); color: var(--sl-indigo-900); margin: 0 0 8px; }
+  .confirm p { font: 400 14px/22px var(--font-sans); color: var(--color-text-body); margin: 0 0 20px; }
+  .confirm p b { font-weight: 800; }
+  .confirm__actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Save / discard</span><span class="meta">form state · sticky action bar · unsaved-changes confirm</span></div>
+
+    <div>
+      <div class="section-h">Sticky action bar states</div>
+
+      <div class="sab">
+        <div class="sab__placeholder">— Form content scrolls here. Long config form. —</div>
+        <div class="sab__bar">
+          <span class="sab__status"><i data-lucide="check"></i>All changes saved.</span>
+          <button class="btn btn--secondary" disabled>Discard</button>
+          <button class="btn btn--primary" disabled>Save</button>
+        </div>
+      </div>
+
+      <div class="sab" style="margin-top: 12px;">
+        <div class="sab__placeholder">— Form content (user has edited a field) —</div>
+        <div class="sab__bar dirty">
+          <span class="sab__status dirty"><i data-lucide="alert-circle"></i>You have unsaved changes.</span>
+          <button class="btn btn--secondary">Discard</button>
+          <button class="btn btn--primary">Save</button>
+        </div>
+      </div>
+
+      <div class="sab" style="margin-top: 12px;">
+        <div class="sab__placeholder">— Saving in progress —</div>
+        <div class="sab__bar">
+          <span class="sab__status saving"><i data-lucide="loader"></i>Saving…</span>
+          <button class="btn btn--secondary" disabled>Discard</button>
+          <button class="btn btn--primary" disabled>Save</button>
+        </div>
+      </div>
+
+      <div class="sab" style="margin-top: 12px;">
+        <div class="sab__placeholder">— Just saved · auto-clear in 3s —</div>
+        <div class="sab__bar">
+          <span class="sab__status saved"><i data-lucide="check-circle"></i>Saved.</span>
+          <button class="btn btn--secondary" disabled>Discard</button>
+          <button class="btn btn--primary" disabled>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Leave-with-unsaved-changes confirm</div>
+      <div class="confirm-stage">
+        <div class="confirm">
+          <h3>Do you want to save your changes before you leave this page?</h3>
+          <p>Your changes to <b>sf-to-snowflake-nightly</b> haven't been saved. If you leave now, your edits will be lost.</p>
+          <div class="confirm__actions">
+            <button class="btn btn--secondary">No, don't save</button>
+            <button class="btn btn--primary">Yes, save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>bar states</dt><dd><b>Clean</b> (grey · disabled buttons · "All changes saved") · <b>Dirty</b> (yellow tint + left stripe · enabled buttons · "You have unsaved changes") · <b>Saving</b> (spinner · disabled) · <b>Saved</b> (green check · auto-clears in 3s back to clean).</dd>
+      <dt>placement</dt><dd>Bottom of the form area. In a Drawer: bottom of the drawer body. In a full page: pins to the viewport bottom while form is scrolled. Always inside the form container, not floating over content.</dd>
+      <dt>confirm</dt><dd>Triggered when user tries to navigate away with unsaved changes (route change · close drawer · ⌘W). Headline phrased as a question. <b>Buttons use positive phrasing</b> — "Yes, save" / "No, don't save" — never "OK / Cancel".</dd>
+      <dt>autosave</dt><dd>For long-form editors, replace the bar with an autosave indicator ("Saved 2 min ago"). Sticky bar still appears when validation errors block save.</dd>
+      <dt>a11y</dt><dd>Bar state changes use <code>aria-live="polite"</code>. The confirm dialog traps focus, default-focuses the safest action ("Yes, save"), <code>Esc</code> dismisses to "stay on page".</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

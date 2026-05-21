@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Type · Typescale</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .scale-row { display: grid; grid-template-columns: 100px 1fr 110px; align-items: baseline; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--sl-grey-200); }
+  .scale-row:last-child { border-bottom: none; }
+  .scale-row .tag { font-size: 11px; color: var(--color-text-subtle); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .scale-row .meta { font-size: 11px; color: var(--color-text-subtle); font-family: var(--font-mono); text-align: right; }
+  .scale-row .sample { color: var(--color-text-heading); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Typescale</span><span class="meta">Acherus Grotesque</span></div>
+    <div>
+      <div class="scale-row"><span class="tag">Title</span><span class="sample" style="font:800 32px/38px var(--font-sans)">The quick brown fox</span><span class="meta">32 / 38 · 800</span></div>
+      <div class="scale-row"><span class="tag">Heading</span><span class="sample" style="font:800 24px/36px var(--font-sans)">The quick brown fox</span><span class="meta">24 / 36 · 800</span></div>
+      <div class="scale-row"><span class="tag">Subheading</span><span class="sample" style="font:800 20px/32px var(--font-sans)">The quick brown fox</span><span class="meta">20 / 32 · 800</span></div>
+      <div class="scale-row"><span class="tag">Card title</span><span class="sample" style="font:800 18px/28px var(--font-sans)">The quick brown fox</span><span class="meta">18 / 28 · 800</span></div>
+      <div class="scale-row"><span class="tag">Label</span><span class="sample" style="font:800 14px/22px var(--font-sans)">The quick brown fox jumps over the lazy dog</span><span class="meta">14 / 22 · 800</span></div>
+      <div class="scale-row"><span class="tag">Body</span><span class="sample" style="font:400 14px/22px var(--font-sans)">The quick brown fox jumps over the lazy dog</span><span class="meta">14 / 22 · 400</span></div>
+      <div class="scale-row"><span class="tag">Placeholder</span><span class="sample" style="font:italic 300 14px/22px var(--font-sans); color: var(--color-text-subtle)">The quick brown fox jumps over the lazy dog</span><span class="meta">14 / 22 · 300i</span></div>
+      <div class="scale-row"><span class="tag">Small</span><span class="sample" style="font:400 12px/18px var(--font-sans); color: var(--color-text-subtle)">The quick brown fox jumps over the lazy dog</span><span class="meta">12 / 18 · 400</span></div>
+      <div class="scale-row"><span class="tag">Pill</span><span class="sample" style="font:800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em">THE QUICK BROWN FOX</span><span class="meta">10 / 14 · 800</span></div>
+    </div>
+  </div>
+</body>
+</html>

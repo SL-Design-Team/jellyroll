@@ -1,0 +1,2989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JellyRoll · SnapLogic Design System 2.0</title>
+<link rel="stylesheet" href="./colors_and_type.css" />
+<!-- Font Awesome is loaded here at the top-level so its @font-face declarations
+     are document-wide. (Loading FA inside a shadow root scopes the fonts to that
+     root in some browsers, which is why FA icons render as empty squares.) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --topbar-h: 72px;
+    --sidebar-w: 300px;
+    --cat-foundations:    var(--sl-indigo-600);
+    --cat-color:          var(--sl-pink-600);
+    --cat-brand:          var(--sl-purple-600);
+    --cat-primitives:     var(--sl-blue-600);
+    --cat-components:     var(--sl-teal-600);
+    --cat-editors:        var(--sl-indigo-700, #26386A);
+    --cat-patterns:       var(--sl-orange-600);
+    --cat-templates:      var(--sl-yellow-700, #C99603);
+    --cat-data-viz:       var(--sl-green-600);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-text-body);
+    background: var(--sl-grey-100);
+    min-height: 100vh;
+  }
+
+  /* ── Top bar ─────────────────────────────────────────────── */
+  .topbar {
+    background: var(--sl-indigo-1000, #031A48);
+    color: var(--sl-white);
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    height: var(--topbar-h);
+  }
+  .topbar .brand { display: flex; align-items: center; gap: 16px; cursor: pointer; text-decoration: none; color: inherit; }
+  .topbar .brand img { height: 48px; width: auto; display: block; }
+  .topbar .brand .sub {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sl-blue-200, #B7D6FF);
+    opacity: 0.85;
+  }
+  .topbar .spacer { flex: 1; }
+  .topbar .count {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: rgba(255,255,255,0.6);
+  }
+  .back-btn {
+    appearance: none;
+    background: rgba(255,255,255,0.08);
+    border: 0;
+    color: var(--sl-white);
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 6px 12px 6px 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 150ms ease-out;
+  }
+  .back-btn svg { width: 14px; height: 14px; stroke-width: 2; }
+  .back-btn:hover { background: rgba(255,255,255,0.16); }
+  body[data-view="detail"] .back-btn { display: inline-flex; }
+
+  .nav-btns { display: none; align-items: center; gap: 6px; }
+  body[data-view="detail"] .nav-btns { display: inline-flex; }
+  .nav-btns button {
+    appearance: none;
+    background: rgba(255,255,255,0.08);
+    border: 0;
+    color: var(--sl-white);
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 150ms ease-out;
+  }
+  .nav-btns button svg { width: 14px; height: 14px; stroke-width: 2; }
+  .nav-btns button:hover { background: rgba(255,255,255,0.16); }
+  .nav-btns button:disabled { opacity: 0.3; cursor: default; }
+  .nav-btns button:disabled:hover { background: rgba(255,255,255,0.08); }
+  .nav-position {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: rgba(255,255,255,0.55);
+    min-width: 50px;
+    text-align: center;
+  }
+
+  /* ── Layout ──────────────────────────────────────────────── */
+  .layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+    gap: 0;
+    /* Sidebar flush against the viewport's left edge — match the rest of the
+       design system sites we're modeling on. Content keeps its own max-width below. */
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+
+  /* ── Sidebar ─────────────────────────────────────────────── */
+  .sidebar {
+    position: sticky;
+    top: var(--topbar-h);
+    align-self: start;
+    height: calc(100vh - var(--topbar-h));
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border-right: 1px solid var(--sl-grey-300, #D7DCE3);
+    background: var(--sl-white);
+  }
+  .sidebar-search {
+    padding: 14px 16px 8px 24px;
+    border-bottom: 1px solid var(--sl-grey-200, #E5E8EE);
+    background: var(--sl-white);
+  }
+  .sidebar-search .field {
+    position: relative;
+  }
+  .sidebar-search input {
+    width: 100%;
+    height: 32px;
+    border: 1px solid var(--sl-grey-300, #D7DCE3);
+    border-radius: var(--radius-sm);
+    padding: 0 28px 0 32px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--color-text-body);
+    background: var(--sl-grey-50, #FAFBFC);
+    outline: none;
+    transition: border-color 120ms ease-out, background-color 120ms ease-out;
+  }
+  .sidebar-search input::placeholder { color: var(--color-text-subtle); font-style: italic; }
+  .sidebar-search input:focus {
+    border-color: var(--sl-blue-600);
+    background: var(--sl-white);
+    box-shadow: 0 0 0 3px rgba(11, 157, 155, 0.35);
+  }
+  .sidebar-search .icon {
+    position: absolute;
+    left: 9px; top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px;
+    color: var(--color-text-subtle);
+    stroke-width: 2;
+    pointer-events: none;
+  }
+  .sidebar-search .clear {
+    position: absolute;
+    right: 6px; top: 50%;
+    transform: translateY(-50%);
+    appearance: none;
+    background: transparent;
+    border: 0;
+    width: 20px; height: 20px;
+    border-radius: 999px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-subtle);
+    cursor: pointer;
+  }
+  .sidebar-search .clear:hover { background: var(--sl-grey-200); color: var(--color-text-heading); }
+  .sidebar-search .clear svg { width: 12px; height: 12px; stroke-width: 2.25; }
+  .sidebar-search[data-has-query="true"] .clear { display: inline-flex; }
+
+  .sidebar-nav {
+    overflow-y: auto;
+    padding: 10px 12px 24px 24px;
+  }
+  /* Match the .sec-header layout (14px icon col + 1fr label + auto trailing) so the
+     Getting Started row sits at the exact same indent as the category headers. */
+  .sidebar-nav .top-link {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 14px 1fr auto;
+    column-gap: 6px;
+    align-items: center;
+    padding: 8px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-heading);
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 12px;
+    line-height: 16px;
+    margin-bottom: 2px;
+  }
+  .sidebar-nav .top-link svg {
+    width: 12px;
+    height: 12px;
+    stroke-width: 2.25;
+    color: var(--color-text-subtle);
+  }
+  .sidebar-nav .top-link:hover {
+    background: var(--sl-blue-100, #E8F0FF);
+    color: var(--sl-blue-700);
+  }
+  .sidebar-nav .top-link:hover svg { color: var(--sl-blue-700); }
+  .sidebar-nav .top-link[data-active="true"] {
+    background: var(--sl-blue-100, #E8F0FF);
+    color: var(--sl-blue-700);
+  }
+  .sidebar-nav .nav-divider {
+    height: 1px;
+    background: var(--sl-grey-200, #E5E8EE);
+    margin: 6px 8px 8px;
+  }
+  .sidebar-nav .sec { margin-bottom: 2px; }
+  .sidebar-nav .sec-header {
+    appearance: none;
+    width: 100%;
+    background: transparent;
+    border: 0;
+    padding: 8px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-heading);
+    text-align: left;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 14px 1fr auto;
+    column-gap: 6px;
+    align-items: center;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 12px;
+    line-height: 16px;
+  }
+  .sidebar-nav .sec-header:hover { background: var(--sl-blue-100, #E8F0FF); color: var(--sl-blue-700); }
+  .sidebar-nav .sec-header svg.chev {
+    width: 12px;
+    height: 12px;
+    stroke-width: 2.25;
+    color: var(--color-text-subtle);
+    transition: transform 150ms ease-out;
+  }
+  .sidebar-nav .sec[data-open="true"] .sec-header svg.chev { transform: rotate(90deg); }
+  .sidebar-nav .count-pill {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-subtle);
+    font-weight: 400;
+  }
+  .sidebar-nav .sec-items {
+    display: none;
+    padding: 2px 0 6px 22px;
+  }
+  .sidebar-nav .sec[data-open="true"] .sec-items { display: block; }
+  .sidebar-nav .item-link {
+    display: block;
+    padding: 5px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-body);
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 16px;
+    border-left: 2px solid transparent;
+  }
+  .sidebar-nav .item-link:hover { background: var(--sl-blue-100, #E8F0FF); color: var(--sl-blue-700); }
+  .sidebar-nav .item-link[data-active="true"] {
+    background: var(--sl-blue-100, #E8F0FF);
+    color: var(--sl-blue-700);
+    font-weight: 800;
+    border-left-color: var(--sl-blue-600, #0841B4);
+  }
+  .sidebar-nav .item-link[data-hide="true"] { display: none; }
+  .sidebar-nav .sec[data-hide="true"] { display: none; }
+
+  /* Inline icon-search results inside the sidebar */
+  .sidebar-icons {
+    display: none;
+    margin: 6px 0 4px;
+    padding: 10px 8px 8px;
+    border: 1px dashed var(--sl-grey-300, #D7DCE3);
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-50, #FAFBFC);
+  }
+  .sidebar-icons[data-active="true"] { display: block; }
+  .sidebar-icons .si-label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font: 800 10px/14px var(--font-sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    margin-bottom: 6px;
+    padding: 0 2px;
+  }
+  .sidebar-icons .si-count { font-family: var(--font-mono); font-weight: 400; color: var(--sl-grey-500, #B0B9C8); }
+  .sidebar-icons .si-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .sidebar-icons .si-row {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px;
+    border-radius: 2px;
+    text-decoration: none;
+    color: var(--color-text-body);
+    font: 400 11px/14px var(--font-mono);
+  }
+  .sidebar-icons .si-row:hover { background: var(--sl-blue-100, #E8F0FF); color: var(--sl-blue-700); }
+  .sidebar-icons .si-row svg { width: 14px; height: 14px; stroke-width: 1.5; color: var(--color-text-subtle); }
+  .sidebar-icons .si-row .si-tag {
+    font: 800 8px/10px var(--font-sans);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 1px 4px;
+    border-radius: 2px;
+    background: var(--sl-grey-200, #E5E8EE);
+    color: var(--sl-grey-700, #7D8695);
+  }
+  .sidebar-icons .si-row[data-set="fa"] .si-tag { background: var(--sl-purple-100); color: var(--sl-purple-700); }
+
+  /* Highlight matched text in search */
+  .hl { background: var(--sl-yellow-200, #FEF2CD); padding: 0 1px; border-radius: 2px; }
+
+  /* ── Main ────────────────────────────────────────────────── */
+  main {
+    padding: 32px 40px 80px;
+    min-width: 0;
+    max-width: 1320px; /* content stays comfortable on ultra-wide screens */
+  }
+  body[data-view="detail"] main { padding: 0; max-width: 1320px; }
+
+  /* Gallery */
+  body[data-view="detail"] .gallery { display: none; }
+  body[data-view="grid"] .detail { display: none; }
+
+  /* ── Hero ────────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    background: linear-gradient(135deg, var(--sl-indigo-1000, #031A48) 0%, var(--sl-indigo-900, #131C35) 60%, #1F2A52 100%);
+    color: var(--sl-white);
+    border-radius: var(--radius-lg, 8px);
+    margin: 0 0 40px;
+    padding: 56px 48px 64px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(8, 65, 180, 0.08);
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #008380 29%, #0841B4 100%);
+  }
+  /* Subtle dot grid in the background, masked on the right side. */
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 60%; height: 100%;
+    background-image: radial-gradient(rgba(107,179,178,0.16) 1.2px, transparent 1.2px);
+    background-size: 18px 18px;
+    pointer-events: none;
+    mask-image: linear-gradient(to left, black 20%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to left, black 20%, transparent 100%);
+  }
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--sl-teal-300, #9DCDCC);
+    margin-bottom: 16px;
+  }
+  .hero-eyebrow::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: var(--sl-teal-400, #6BB3B2);
+  }
+  .hero h1 {
+    font-size: 56px;
+    line-height: 60px;
+    font-weight: 800;
+    color: var(--sl-white);
+    margin: 0 0 16px;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(90deg, #6BB3B2 0%, #B7D6FF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-lead {
+    font-size: 17px;
+    line-height: 26px;
+    color: var(--sl-blue-200, #B7D6FF);
+    margin: 0 0 28px;
+    max-width: 56ch;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 10px 22px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background-color 150ms ease-out, transform 100ms ease-out, box-shadow 150ms ease-out;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+  }
+  .hero-btn svg { width: 16px; height: 16px; stroke-width: 2; }
+  .hero-btn.primary {
+    background: var(--sl-white);
+    color: var(--sl-indigo-1000, #031A48);
+  }
+  .hero-btn.primary:hover { background: var(--sl-teal-100, #E6F2F2); color: var(--sl-teal-1000, #021A19); }
+  .hero-btn.secondary {
+    background: transparent;
+    color: var(--sl-white);
+    border-color: rgba(255,255,255,0.30);
+  }
+  .hero-btn.secondary:hover { border-color: var(--sl-teal-300, #9DCDCC); color: var(--sl-teal-300, #9DCDCC); }
+
+  /* Hero visual composition — real JellyRoll bits floating on the right */
+  .hero-visual {
+    position: relative;
+    width: 360px;
+    height: 320px;
+  }
+  .hv {
+    position: absolute;
+    background: var(--sl-white);
+    border-radius: var(--radius-md, 6px);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.28), 0 2px 4px rgba(0,0,0,0.16);
+  }
+  .hv-card {
+    width: 240px;
+    padding: 14px 16px;
+    top: 24px;
+    left: 0;
+    transform: rotate(-2deg);
+    transform-origin: center;
+  }
+  .hv-card .hv-card-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .hv-card .hv-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #6BB3B2, #0841B4);
+    color: var(--sl-white);
+    font-size: 11px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hv-card .hv-card-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+  }
+  .hv-card .hv-card-sub {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--color-text-subtle);
+  }
+  .hv-card .hv-card-line {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--sl-grey-200, #E5E8EE);
+    margin: 6px 0;
+  }
+  .hv-card .hv-card-line.short { width: 60%; }
+  .hv-card .hv-badge {
+    display: inline-block;
+    margin-top: 8px;
+    background: var(--sl-green-100, #E6F2E8);
+    color: var(--sl-green-700, #016416);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .hv-ramp {
+    width: 220px;
+    padding: 12px 14px;
+    top: 200px;
+    left: 40px;
+    transform: rotate(1.5deg);
+  }
+  .hv-ramp .hv-ramp-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    margin-bottom: 6px;
+  }
+  .hv-ramp .hv-ramp-row {
+    display: flex;
+    gap: 0;
+    height: 18px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .hv-ramp .hv-ramp-row > div { flex: 1; }
+  .hv-chart {
+    width: 160px;
+    height: 70px;
+    padding: 10px 12px;
+    top: 0;
+    right: -20px;
+    transform: rotate(3deg);
+  }
+  .hv-chart .hv-chart-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    margin-bottom: 4px;
+  }
+  .hv-chart svg { width: 100%; height: 36px; color: var(--sl-blue-600, #0841B4); }
+  .hv-button {
+    width: 140px;
+    padding: 0;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(112.63deg, #0B9D9B 12.38%, #0841B4 137.46%);
+    color: var(--sl-white);
+    top: 140px;
+    right: -30px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 36px;
+    transform: rotate(-1deg);
+    box-shadow: 0 10px 24px rgba(8,65,180,0.32), 0 2px 4px rgba(0,0,0,0.16);
+  }
+  .hv-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    width: auto;
+    top: 256px;
+    right: 10px;
+    transform: rotate(-2.5deg);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+  }
+  .hv-status .dot {
+    width: 8px; height: 8px;
+    border-radius: 999px;
+    background: var(--sl-green-600, #017D1B);
+    box-shadow: 0 0 0 3px rgba(1,125,27,0.15);
+  }
+
+  /* ── Getting Started ─────────────────────────────────────── */
+  .getting-started {
+    background: var(--sl-white);
+    color: var(--color-text-body);
+    border: 1px solid var(--sl-grey-300, #D7DCE3);
+    border-radius: var(--radius-lg, 8px);
+    padding: 48px 40px 40px;
+    margin: 0 0 48px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(206, 217, 240, 0.6);
+  }
+  .getting-started::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #008380 29%, #0841B4 100%);
+  }
+
+  .gs-hero { margin-bottom: 36px; }
+  .gs-hero h2 {
+    font-size: 40px;
+    line-height: 48px;
+    font-weight: 800;
+    margin: 0 0 8px;
+    color: var(--color-text-heading);
+    letter-spacing: -0.01em;
+  }
+  .gs-hero .lead {
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--color-text-subtle);
+    max-width: 60ch;
+    margin: 0 0 24px;
+  }
+  .gs-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    max-width: 720px;
+  }
+  .stat {
+    background: var(--sl-grey-50, #FAFBFC);
+    border: 1px solid var(--sl-grey-200, #E5E8EE);
+    border-radius: var(--radius-md, 6px);
+    padding: 14px 16px;
+  }
+  .stat-num {
+    font-size: 32px;
+    line-height: 36px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    letter-spacing: -0.02em;
+  }
+  .stat-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sl-teal-700, #076766);
+    margin-top: 4px;
+  }
+
+  /* Shared section heading used by every block inside the Getting Started card
+     (Get started · Principles · What's in the system). One style, consistent rhythm. */
+  .gs-heading {
+    max-width: 64ch;
+    margin: 40px 0 20px;
+  }
+  .gs-heading:first-child { margin-top: 0; }
+  .gs-heading h3 {
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .gs-heading p {
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--color-text-subtle);
+    margin: 0;
+  }
+
+  /* ── Principles — diagrammatic ───────────────────────────── */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .principle {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200, #E5E8EE);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .principle .visual {
+    height: 210px;
+    background: var(--p-tint, var(--sl-grey-50));
+    border-bottom: 1px solid var(--sl-grey-200, #E5E8EE);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    position: relative;
+  }
+  .principle .text {
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .principle .p-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+  }
+  .principle .p-name::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--p-color, var(--sl-teal-700));
+    flex: none;
+  }
+  .principle .p-body {
+    font-size: 12px;
+    line-height: 17px;
+    color: var(--color-text-subtle);
+    margin: 0;
+  }
+  .principle .p-body code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: var(--sl-grey-100, #F5F6F8);
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: var(--color-text-body);
+  }
+
+  /* Shared visual primitives */
+  .diag {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .diag .row-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .diag .row-label.good { color: var(--p-color, var(--sl-teal-700)); }
+  .diag .row-label.bad { color: var(--sl-grey-500, #B0B9C8); }
+  .diag .strike { text-decoration: line-through; text-decoration-color: var(--sl-red-400, #EE778B); text-decoration-thickness: 1.5px; opacity: 0.55; }
+
+  /* 01 Calm and technical — message panels */
+  .diag-calm { gap: 10px; }
+  .diag-calm .msg {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200, #E5E8EE);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 16px;
+    color: var(--color-text-body);
+  }
+  .diag-calm .msg.good { border-left: 3px solid var(--sl-green-600, #017D1B); }
+  .diag-calm .msg .dot {
+    width: 14px; height: 14px;
+    border-radius: 999px;
+    background: var(--sl-green-100, #E6F2E8);
+    color: var(--sl-green-700, #016416);
+    font-size: 10px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .diag-calm .msg.bad .dot { background: var(--sl-grey-100); color: var(--sl-grey-700); }
+
+  /* 02 Density before whitespace — sparse vs dense tables */
+  .diag-density {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 10px;
+    align-items: end;
+  }
+  .diag-density .col { display: flex; flex-direction: column; gap: 4px; }
+  .diag-density .col .row-label { margin-bottom: 2px; }
+  .diag-density .tbl {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200, #E5E8EE);
+    border-radius: 4px;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .diag-density .tbl.good { border-color: var(--p-color, var(--sl-blue-700)); border-width: 1.5px; }
+  .diag-density .tbl .r {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    border-radius: 2px;
+  }
+  .diag-density .tbl.sparse .r { padding: 10px 6px; }
+  .diag-density .tbl.sparse .r + .r { border-top: 1px solid var(--sl-grey-100); }
+  .diag-density .tbl.dense .r + .r { border-top: 1px solid var(--sl-grey-100); }
+  .diag-density .tbl .r .d { width: 6px; height: 6px; border-radius: 999px; background: var(--sl-green-600); flex: none; }
+  .diag-density .tbl .r .b { height: 4px; border-radius: 2px; background: var(--sl-grey-200); flex: 1; }
+  .diag-density .tbl .r .ts { font: 800 8px/10px var(--font-mono); color: var(--sl-grey-700); flex: none; }
+  .diag-density .tbl.sparse .r .b { height: 8px; }
+
+  /* 03 Restraint — noisy vs clean panels */
+  .diag-restraint { gap: 10px; }
+  .diag-restraint .panel {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200, #E5E8EE);
+    border-radius: 6px;
+    padding: 8px 10px;
+    position: relative;
+    overflow: hidden;
+    min-height: 44px;
+  }
+  .diag-restraint .panel.noisy {
+    background: linear-gradient(135deg, #FCC936 0%, #E31C73 100%);
+    color: var(--sl-white);
+  }
+  .diag-restraint .panel.noisy .blob {
+    position: absolute;
+    width: 60px; height: 60px;
+    right: -10px; top: -10px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 999px;
+    filter: blur(8px);
+  }
+  .diag-restraint .panel.noisy .arrow {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 800;
+    position: relative;
+    z-index: 1;
+  }
+  .diag-restraint .panel.noisy::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    background: linear-gradient(135deg, transparent calc(50% - 1px), rgba(227, 28, 61, 0.7) 50%, transparent calc(50% + 1px)),
+                linear-gradient(45deg, transparent calc(50% - 1px), rgba(227, 28, 61, 0.7) 50%, transparent calc(50% + 1px));
+    pointer-events: none;
+    border-radius: 4px;
+  }
+  .diag-restraint .panel.clean { border: 1.5px solid var(--p-color, var(--sl-yellow-700)); }
+  .diag-restraint .panel.clean .l { height: 4px; border-radius: 2px; background: var(--sl-grey-200); margin: 4px 0; }
+  .diag-restraint .panel.clean .l.short { width: 60%; }
+
+  /* 04 Verb-led, sentence case — button rows */
+  .diag-buttons { gap: 12px; }
+  .diag-buttons .row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .diag-buttons .btn {
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 14px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background: var(--sl-white);
+    border: 1.5px solid var(--p-color, var(--sl-orange-700));
+    color: var(--p-color, var(--sl-orange-700));
+  }
+  .diag-buttons .btn.bad {
+    border-color: var(--sl-grey-300, #D7DCE3);
+    color: var(--sl-grey-700, #7D8695);
+  }
+
+  /* 01 Clarity — 3-step focus flow */
+  .diag-clarity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+  }
+  .diag-clarity .step {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    background: var(--sl-white);
+    border: 1.5px solid var(--sl-grey-300, #D7DCE3);
+    flex: none;
+  }
+  .diag-clarity .step.focus {
+    background: var(--p-color, var(--sl-indigo-700));
+    border-color: var(--p-color, var(--sl-indigo-700));
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 0 0 4px var(--p-tint, var(--sl-indigo-100));
+    position: relative;
+  }
+  .diag-clarity .step.focus::after {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: 999px;
+    background: var(--sl-white);
+    opacity: 0.95;
+  }
+  .diag-clarity .step.focus::before {
+    content: "";
+    position: absolute;
+    inset: 11px;
+    border-radius: 999px;
+    background: var(--p-color, var(--sl-indigo-700));
+    z-index: 1;
+  }
+  .diag-clarity .connector {
+    height: 2px;
+    width: 36px;
+    background: var(--sl-grey-300, #D7DCE3);
+  }
+  .diag-clarity .connector.active { background: var(--p-color, var(--sl-indigo-700)); }
+
+  /* 05 Real icons — outlined good row vs mixed bad row */
+  .diag-icons { gap: 12px; align-items: stretch; }
+  .diag-icons .row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: flex-start;
+  }
+  .diag-icons .row svg { width: 22px; height: 22px; stroke-width: 1.5; flex: none; }
+  .diag-icons .row.good svg { color: var(--p-color, var(--sl-purple-700)); }
+  .diag-icons .row.bad .badico {
+    width: 22px; height: 22px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: none;
+  }
+  .diag-icons .row.bad .badico.b1 { background: var(--sl-red-500); border-radius: 4px; }
+  .diag-icons .row.bad .badico.b2 { background: var(--sl-yellow-500); border-radius: 999px; }
+  .diag-icons .row.bad .badico.b3 { color: var(--sl-pink-600); font-size: 18px; font-weight: 800; }
+  .diag-icons .row.bad .badico.b4 { background: linear-gradient(135deg, var(--sl-orange-500), var(--sl-purple-500)); border-radius: 4px; }
+  .diag-icons .row.bad .badico.b5 { color: var(--sl-green-500); font-size: 18px; font-weight: 800; }
+
+  .category-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+  }
+  .cs-row {
+    display: grid;
+    grid-template-columns: 10px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200, #E5E8EE);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+  }
+  .cs-row:hover {
+    border-color: var(--cs-color, var(--sl-blue-600));
+    box-shadow: 0 1px 4px rgba(15,23,42,0.06);
+  }
+  .cs-row .dot {
+    width: 10px; height: 10px;
+    border-radius: 999px;
+    background: var(--cs-color, var(--sl-blue-600));
+  }
+  .cs-row .cs-name {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+  }
+  .cs-row .cs-count {
+    font-size: 10px;
+    line-height: 14px;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+  }
+
+  .gs-roles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .gs-role {
+    background: linear-gradient(180deg, var(--sl-indigo-1000, #031A48) 0%, var(--sl-indigo-900, #131C35) 100%);
+    border: 1px solid var(--sl-indigo-800, #1D2A4F);
+    border-radius: var(--radius-md, 6px);
+    padding: 22px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    color: var(--sl-white);
+  }
+  .gs-role h3 {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--sl-white);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .gs-role h3 .r-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: rgba(11, 157, 155, 0.18);
+    border: 1px solid rgba(107, 179, 178, 0.30);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gs-role h3 .r-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+    color: var(--sl-teal-300, #9DCDCC);
+  }
+  .gs-role .r-intro {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--sl-blue-200, #B7D6FF);
+    opacity: 0.85;
+    margin: 0;
+  }
+  .gs-role .code-block {
+    background: rgba(0, 0, 0, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 17px;
+    color: rgba(255, 255, 255, 0.92);
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0;
+  }
+  .gs-role .code-block .tk-var   { color: #9DCDCC; }
+  .gs-role .code-block .tk-prop  { color: #B7D6FF; }
+  .gs-role .code-block .tk-tag   { color: #FBBC04; }
+  .gs-role .code-block .tk-attr  { color: #6BB3B2; }
+  .gs-role .code-block .tk-str   { color: #F4A5C7; }
+  .gs-role .code-block .tk-comment { color: rgba(255, 255, 255, 0.45); font-style: italic; }
+  .gs-role .r-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .gs-role .r-list li {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    align-items: start;
+    gap: 10px;
+    font-size: 12px;
+    line-height: 17px;
+    color: rgba(255, 255, 255, 0.78);
+  }
+  .gs-role .r-list li svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2;
+    color: var(--sl-teal-300, #9DCDCC);
+    margin-top: 2px;
+  }
+  .gs-role .r-list li strong {
+    color: var(--sl-white);
+    font-weight: 800;
+  }
+  .gs-role a {
+    color: var(--sl-blue-200, #B7D6FF);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .gs-role a:hover { color: var(--sl-white); }
+
+  .section { margin-top: 44px; scroll-margin-top: calc(var(--topbar-h) + 16px); }
+  .section[data-hide="true"] { display: none; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--sl-grey-300, #D7DCE3);
+  }
+  .section-head h2 {
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+  .section-head .label-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-subtle);
+  }
+  .section-head .label-count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-subtle);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .tile {
+    display: flex;
+    flex-direction: column;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300, #D7DCE3);
+    border-radius: var(--radius-md, 6px);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+    box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+  }
+  .tile[data-hide="true"] { display: none; }
+  .tile:hover {
+    border-color: var(--tile-color, var(--sl-blue-600));
+    box-shadow: 0 6px 18px rgba(15,23,42,0.10);
+  }
+  /* Top visual block — category-tinted background + per-card icon or custom mark */
+  .tile-visual {
+    height: 110px;
+    background: var(--tile-tint, var(--sl-blue-50));
+    border-bottom: 1px solid var(--sl-grey-200, #E5E8EE);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .tile-visual::after {
+    /* a 3px accent at the top edge so the colored category reads at a glance */
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--tile-color, var(--sl-blue-600));
+    opacity: 0.7;
+  }
+  .tile-visual > svg.lucide-mark {
+    width: 52px;
+    height: 52px;
+    stroke-width: 1.5;
+    color: var(--tile-color, var(--sl-blue-600));
+  }
+  /* Custom visuals */
+  .visual-aa {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--tile-color, var(--sl-blue-600));
+    letter-spacing: -0.02em;
+  }
+  .visual-aa em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-text-subtle);
+    margin-left: 4px;
+  }
+  .visual-ramp-row {
+    display: flex;
+    gap: 0;
+    width: 80%;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.10);
+  }
+  .visual-ramp-row > div { flex: 1; }
+  .visual-ramp-stack {
+    display: grid;
+    grid-template-rows: repeat(10, 6px);
+    gap: 2px;
+    width: 80%;
+  }
+  .visual-ramp-stack > div { border-radius: 1px; }
+  .visual-swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 28px);
+    gap: 6px;
+  }
+  .visual-swatch-grid > div {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(15,23,42,0.10);
+  }
+  .visual-surfaces {
+    position: relative;
+    width: 110px;
+    height: 76px;
+  }
+  .visual-surfaces > div {
+    position: absolute;
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    background: var(--sl-white);
+  }
+  .visual-surfaces .s1 { left: 0;  top: 16px; width: 80px; height: 50px; background: var(--sl-grey-100); }
+  .visual-surfaces .s2 { left: 14px; top: 8px; width: 80px; height: 50px; box-shadow: 0 2px 4px rgba(206,217,240,0.8); }
+  .visual-surfaces .s3 { left: 28px; top: 0;  width: 80px; height: 50px; box-shadow: 0 8px 16px rgba(38,40,44,0.18); }
+  .visual-gradient-band {
+    width: 80%;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(90deg, #008380 29%, #0841B4 100%);
+    box-shadow: 0 1px 3px rgba(15,23,42,0.10);
+  }
+  .visual-spacing {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 60px;
+  }
+  .visual-spacing > div {
+    width: 6px;
+    background: var(--tile-color, var(--sl-blue-600));
+    border-radius: 1px;
+  }
+  .visual-radius {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .visual-radius > div {
+    width: 28px;
+    height: 28px;
+    border: 2px solid var(--tile-color, var(--sl-blue-600));
+    background: var(--tile-tint-strong, var(--sl-blue-100));
+  }
+  .visual-shadows {
+    display: flex;
+    gap: 14px;
+  }
+  .visual-shadows > div {
+    width: 24px;
+    height: 24px;
+    background: var(--sl-white);
+    border-radius: var(--radius-sm);
+  }
+  .visual-shadows .sh1 { box-shadow: 0 1px 2px rgba(15,23,42,0.06); }
+  .visual-shadows .sh2 { box-shadow: 0 2px 4px rgba(206,217,240,0.8); }
+  .visual-shadows .sh3 { box-shadow: 0 8px 16px rgba(38,40,44,0.18); }
+  .visual-logo-mark {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--tile-color, var(--sl-blue-700));
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .visual-launcher-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 22px);
+    gap: 8px;
+  }
+  .visual-launcher-grid > div {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+  }
+  .visual-status-dots {
+    display: flex;
+    gap: 8px;
+  }
+  .visual-status-dots > div {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+  }
+  .visual-chart-bars {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 50px;
+  }
+  .visual-chart-bars > div {
+    width: 8px;
+    background: var(--tile-color, var(--sl-blue-600));
+    border-radius: 1px 1px 0 0;
+  }
+  .visual-chart-line {
+    width: 70%;
+    height: 50px;
+    color: var(--tile-color, var(--sl-blue-600));
+  }
+  .visual-chart-line svg { width: 100%; height: 100%; }
+
+  .tile-body {
+    padding: 12px 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  .tile-body .name {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+  }
+  .tile-body .tagline {
+    font-size: 12px;
+    line-height: 17px;
+    color: var(--color-text-subtle);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .tile-body .meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 6px;
+  }
+  .tile-body .cat-chip {
+    font-size: 9px;
+    line-height: 14px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tile-color, var(--sl-blue-600));
+    background: var(--tile-tint, var(--sl-blue-50));
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+  .tile-body .file-name {
+    font-size: 10px;
+    line-height: 14px;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Empty filter state */
+  .empty-filter {
+    grid-column: 1 / -1;
+    padding: 48px 0;
+    text-align: center;
+    color: var(--color-text-subtle);
+    font-size: 13px;
+  }
+
+  /* ── Detail view ─────────────────────────────────────────── */
+  .detail {
+    background: var(--sl-white);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    column-gap: 40px;
+    padding: 32px 40px 96px;
+    align-items: start;
+  }
+  @media (max-width: 1100px) {
+    .detail { grid-template-columns: 1fr; }
+    .detail-toc { display: none; }
+  }
+  .detail-main { min-width: 0; }
+  .detail-meta-strip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--color-text-subtle);
+    margin-bottom: 8px;
+  }
+  .detail-meta-strip .cat-chip {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tile-color, var(--sl-blue-600));
+    background: var(--tile-tint, var(--sl-blue-50));
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .detail-meta-strip a {
+    color: var(--sl-blue-600);
+    text-decoration: none;
+  }
+  .detail-meta-strip a:hover { text-decoration: underline; }
+  .detail-meta-strip .crumb-sep { color: var(--color-text-subtle); }
+
+  .detail-title {
+    font-size: 32px;
+    line-height: 38px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    margin: 0 0 6px;
+  }
+  .detail-tagline {
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--color-text-body);
+    margin: 0 0 18px;
+    max-width: 70ch;
+  }
+  .detail-tagline { padding-bottom: 12px; border-bottom: 1px solid var(--sl-grey-200, #E5E8EE); }
+
+  .doc-section { padding-top: 40px; scroll-margin-top: calc(var(--topbar-h) + 16px); }
+  .doc-section[data-hide="true"] { display: none; }
+  .doc-section h2 {
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--sl-grey-200, #E5E8EE);
+  }
+  .doc-section p, .doc-section .doc-body {
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--color-text-body);
+    margin: 0 0 12px;
+    max-width: 75ch;
+  }
+  .doc-section .doc-body code, .doc-section p code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--sl-grey-100, #F5F6F8);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  /* Structured doc output produced by renderMarkdownLite */
+  .doc-body p { margin: 0 0 8px; }
+  .doc-body p:last-child { margin-bottom: 0; }
+  .doc-body ul.doc-list {
+    margin: 0; padding: 0; list-style: none;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .doc-body ul.doc-list li {
+    position: relative; padding-left: 18px;
+  }
+  .doc-body ul.doc-list li::before {
+    content: ''; position: absolute; left: 4px; top: 9px;
+    width: 5px; height: 5px; border-radius: 999px;
+    background: var(--sl-blue-600, #0841B4);
+  }
+  .doc-body dl.doc-dl { margin: 0; display: grid; gap: 4px 12px; grid-template-columns: max-content 1fr; }
+  .doc-body dl.doc-dl dt {
+    font-weight: 800; color: var(--color-text-body);
+    white-space: nowrap;
+  }
+  .doc-body dl.doc-dl dd { margin: 0; color: var(--color-text-body); }
+  .doc-empty {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--color-text-subtle);
+    font-style: italic;
+  }
+  .doc-empty a { color: var(--sl-blue-600); font-style: normal; text-decoration: none; }
+  .doc-empty a:hover { text-decoration: underline; }
+
+  /* Tokens table */
+  .token-list {
+    display: grid;
+    grid-template-columns: minmax(180px, 1.4fr) 24px minmax(120px, 1fr) minmax(140px, 1.4fr);
+    column-gap: 16px;
+    row-gap: 0;
+    border: 1px solid var(--sl-grey-200, #E5E8EE);
+    border-radius: var(--radius-md, 6px);
+    overflow: hidden;
+    background: var(--sl-white);
+  }
+  .token-list .token-head {
+    background: var(--sl-grey-50, #FAFBFC);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .token-list .token-row {
+    display: contents;
+  }
+  .token-list .token-row > div {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--sl-grey-100, #F5F6F8);
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--color-text-body);
+  }
+  .token-list .token-row:last-child > div { border-bottom: 0; }
+  .token-list .token-name {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-heading);
+    overflow-wrap: anywhere;
+  }
+  .token-list .token-swatch {
+    padding: 10px 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .token-list .token-swatch .sw {
+    width: 18px; height: 18px;
+    border-radius: 3px;
+    border: 1px solid var(--sl-grey-300, #D7DCE3);
+    display: block;
+  }
+  .token-list .token-value {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-subtle);
+    overflow-wrap: anywhere;
+  }
+  .token-list .token-role {
+    font-size: 12px;
+    color: var(--color-text-body);
+  }
+  @media (max-width: 760px) {
+    .token-list { grid-template-columns: 1fr; }
+    .token-list .token-head { display: none; }
+    .token-list .token-row > div { padding: 6px 12px; border-bottom: 0; }
+    .token-list .token-row { padding-bottom: 6px; border-bottom: 1px solid var(--sl-grey-100); }
+  }
+
+  /* Inline preview host (replaces iframe) */
+  .preview-host {
+    margin-top: 12px;
+    padding: 24px;
+    background: var(--sl-grey-100);
+    border: 1px solid var(--sl-grey-300, #D7DCE3);
+    border-radius: var(--radius-md, 6px);
+    overflow-x: auto;
+  }
+  .preview-host iframe.fallback {
+    display: block;
+    width: 100%;
+    min-height: 480px;
+    border: 0;
+    background: var(--sl-white);
+    border-radius: var(--radius-sm);
+  }
+  .file-protocol-banner {
+    display: none;
+    margin: 0 0 20px;
+    padding: 12px 16px;
+    background: var(--sl-yellow-100, #FFF8E6);
+    border: 1px solid var(--sl-yellow-300, #FDE49B);
+    border-left: 3px solid var(--sl-yellow-600, #FBBC04);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--color-text-body);
+  }
+  .file-protocol-banner code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--sl-yellow-50, #FFFBF2);
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+  body[data-file-protocol="true"] .file-protocol-banner { display: block; }
+  .preview-host[data-loading="true"] {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-subtle);
+    font-size: 12px;
+  }
+  .preview-host .preview-render {
+    /* Host element for the Shadow DOM-rendered preview. */
+    display: block;
+  }
+  .preview-host .preview-error {
+    color: var(--sl-red-700);
+    font-size: 13px;
+    font-family: var(--font-mono);
+  }
+
+  /* On-page TOC */
+  .detail-toc {
+    position: sticky;
+    top: calc(var(--topbar-h) + 32px);
+    align-self: start;
+    padding-left: 16px;
+    border-left: 1px solid var(--sl-grey-200, #E5E8EE);
+  }
+  .detail-toc h3 {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    margin: 0 0 10px;
+  }
+  .detail-toc a {
+    display: block;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--color-text-body);
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    border-left: 2px solid transparent;
+    margin-left: -10px;
+  }
+  .detail-toc a:hover { background: var(--sl-blue-100, #E8F0FF); color: var(--sl-blue-700); }
+  .detail-toc a[data-active="true"] {
+    color: var(--sl-blue-700);
+    font-weight: 800;
+    border-left-color: var(--sl-blue-600);
+  }
+  .detail-toc a[data-hide="true"] { display: none; }
+
+  /* Gallery footer */
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--sl-grey-300, #D7DCE3);
+    font-size: 12px;
+    color: var(--color-text-subtle);
+    line-height: 18px;
+    max-width: 760px;
+  }
+  footer a { color: var(--sl-blue-600); }
+  body[data-view="detail"] footer { display: none; }
+</style>
+</head>
+<body data-view="grid">
+
+<header class="topbar">
+  <a class="brand" href="#" data-action="home">
+    <img src="./assets/logo-white.png" alt="SnapLogic" />
+    <span class="sub">JellyRoll Design System 2.0</span>
+  </a>
+  <button class="back-btn" type="button" data-action="back">
+    <i data-lucide="arrow-left"></i>Back to gallery
+  </button>
+  <div class="nav-btns" aria-label="Navigate between assets">
+    <button type="button" data-action="prev" aria-label="Previous asset"><i data-lucide="chevron-left"></i></button>
+    <span class="nav-position" id="navPosition"></span>
+    <button type="button" data-action="next" aria-label="Next asset"><i data-lucide="chevron-right"></i></button>
+  </div>
+  <div class="spacer"></div>
+  <span class="count" id="totalCount">— assets</span>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-search" id="sidebarSearch">
+      <div class="field">
+        <i data-lucide="search" class="icon"></i>
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="Search 106 assets"
+          aria-label="Search the design system"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="clear" type="button" id="searchClear" aria-label="Clear search">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebar"></nav>
+  </aside>
+
+  <main>
+    <div class="gallery">
+      <section class="hero" id="hero">
+        <div class="hero-grid">
+          <div class="hero-text">
+            <div class="hero-eyebrow">SnapLogic Design System</div>
+            <h1>Build with <span class="accent">JellyRoll</span></h1>
+            <p class="hero-lead">A token system, a component vocabulary, and a content style — the source of truth for every SnapLogic surface, from Designer to Monitor.</p>
+            <div class="hero-actions">
+              <a class="hero-btn primary" href="#getting-started">
+                Get started
+                <i data-lucide="arrow-right"></i>
+              </a>
+              <a class="hero-btn secondary" href="#section-components">
+                Browse components
+              </a>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hv hv-card">
+              <div class="hv-card-head">
+                <div class="hv-avatar">JR</div>
+                <div>
+                  <div class="hv-card-title">orders-rollup</div>
+                  <div class="hv-card-sub">pipeline</div>
+                </div>
+              </div>
+              <div class="hv-card-line"></div>
+              <div class="hv-card-line short"></div>
+              <span class="hv-badge">Running</span>
+            </div>
+            <div class="hv hv-chart">
+              <div class="hv-chart-label">Throughput</div>
+              <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+                <path d="M0 28 L14 18 L26 24 L38 8 L52 20 L66 6 L80 14 L100 4"
+                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="hv hv-button">Save changes</div>
+            <div class="hv hv-ramp">
+              <div class="hv-ramp-label">SL Blue · 600 default</div>
+              <div class="hv-ramp-row">
+                <div style="background:#F2F6FC"></div>
+                <div style="background:#E6ECF8"></div>
+                <div style="background:#CED9F0"></div>
+                <div style="background:#9CB3E1"></div>
+                <div style="background:#6B8DD2"></div>
+                <div style="background:#3967C3"></div>
+                <div style="background:#0841B4"></div>
+                <div style="background:#063490"></div>
+                <div style="background:#05276C"></div>
+                <div style="background:#031A48"></div>
+              </div>
+            </div>
+            <div class="hv hv-status">
+              <span class="dot"></span>
+              <span>106 assets · live</span>
+            </div>
+          </div>
+        </div>
+        <div class="file-protocol-banner" style="margin-top: 24px; margin-bottom: 0;">
+          <strong>You're viewing this from <code>file://</code>.</strong> Inline previews are loading in fallback (iframe) mode because browsers block <code>fetch()</code> on local files. For the integrated experience, run a small local server in this directory: <code>python3 -m http.server 8000</code> and visit <code>http://localhost:8000</code>.
+        </div>
+      </section>
+
+      <section class="getting-started" id="getting-started">
+
+        <div class="gs-heading">
+          <h3>Get started</h3>
+          <p>Three paths into JellyRoll, depending on who's doing the building.</p>
+        </div>
+        <div class="gs-roles">
+          <div class="gs-role">
+            <h3><span class="r-icon"><i data-lucide="code-2"></i></span>Developers</h3>
+            <p class="r-intro">Drop in the tokens and reach for variables.</p>
+<pre class="code-block"><span class="tk-tag">&lt;link</span> <span class="tk-attr">rel</span>=<span class="tk-str">"stylesheet"</span> <span class="tk-attr">href</span>=<span class="tk-str">"colors_and_type.css"</span><span class="tk-tag">&gt;</span>
+
+<span class="tk-comment">/* Then in your CSS: */</span>
+<span class="tk-prop">.btn</span> {
+  <span class="tk-prop">background</span>: <span class="tk-var">var(--color-background-primary)</span>;
+  <span class="tk-prop">color</span>: <span class="tk-var">var(--color-text-inverse)</span>;
+  <span class="tk-prop">border-radius</span>: <span class="tk-var">var(--radius-sm)</span>;
+  <span class="tk-prop">padding</span>: <span class="tk-var">var(--space-2) var(--space-6)</span>;
+}</pre>
+          </div>
+          <div class="gs-role">
+            <h3><span class="r-icon"><i data-lucide="palette"></i></span>Designers</h3>
+            <p class="r-intro">This site is the most recent version of JellyRoll — the source of truth, not Figma or Confluence.</p>
+            <ul class="r-list">
+              <li><i data-lucide="layout-grid"></i><span><strong>Component library</strong> — ready-made elements for new projects and refactors</span></li>
+              <li><i data-lucide="palette"></i><span><strong>Style guide</strong> — colors, type, spacing for visual consistency</span></li>
+              <li><i data-lucide="compass"></i><span><strong>Design principles</strong> — guidance for interaction and user flows</span></li>
+              <li><i data-lucide="git-branch"></i><span>Streamline your workflow; smoother handoff to developers</span></li>
+            </ul>
+          </div>
+          <div class="gs-role">
+            <h3><span class="r-icon"><i data-lucide="cpu"></i></span>AI coding agents</h3>
+            <p class="r-intro">Point your agent at the design bundle.</p>
+<pre class="code-block"><span class="tk-comment"># Paste into Claude Code or any agent that fetches URLs</span>
+Fetch this design file, read its readme, and
+implement the relevant aspects of the design.
+
+<span class="tk-str">https://api.anthropic.com/v1/design/h/90dHojavnV1kmls0JNSLlA</span>
+
+Implement: <span class="tk-var">&lt;what you want built&gt;</span></pre>
+          </div>
+        </div>
+
+        <div class="gs-heading">
+          <h3>Principles</h3>
+          <p>The rules that keep JellyRoll clear, consistent, and usable across complex product surfaces.</p>
+        </div>
+        <div class="principles">
+
+          <!-- 01 Clarity — focus flow -->
+          <div class="principle" style="--p-color: var(--sl-indigo-700); --p-tint: var(--sl-indigo-50);">
+            <div class="visual">
+              <div class="diag diag-clarity">
+                <span class="step"></span>
+                <span class="connector active"></span>
+                <span class="step focus"></span>
+                <span class="connector"></span>
+                <span class="step"></span>
+              </div>
+            </div>
+            <div class="text">
+              <div class="p-name">Clarity</div>
+              <p class="p-body">Simplicity drives momentum.</p>
+            </div>
+          </div>
+
+          <!-- 02 Calm and technical — message panels -->
+          <div class="principle" style="--p-color: var(--sl-teal-700); --p-tint: var(--sl-teal-50);">
+            <div class="visual">
+              <div class="diag diag-calm">
+                <div class="msg good">
+                  <span class="dot">✓</span>
+                  <span>Pipeline validated.</span>
+                </div>
+                <div class="msg bad strike">
+                  <span class="dot">!</span>
+                  <span>Great job! Your pipeline is amazing!</span>
+                </div>
+              </div>
+            </div>
+            <div class="text">
+              <div class="p-name">Calm and technical</div>
+              <p class="p-body">Declarative, never apologetic. No hype.</p>
+            </div>
+          </div>
+
+          <!-- 02 Density before whitespace — sparse vs dense table -->
+          <div class="principle" style="--p-color: var(--sl-blue-700); --p-tint: var(--sl-blue-50);">
+            <div class="visual">
+              <div class="diag diag-density">
+                <div class="col">
+                  <div class="row-label bad">Sparse</div>
+                  <div class="tbl sparse">
+                    <div class="r"><span class="d" style="background:var(--sl-grey-400)"></span><span class="b"></span></div>
+                    <div class="r"><span class="d" style="background:var(--sl-grey-400)"></span><span class="b"></span></div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="row-label good">Dense</div>
+                  <div class="tbl dense good">
+                    <div class="r"><span class="d"></span><span class="b"></span><span class="ts">10:23</span></div>
+                    <div class="r"><span class="d" style="background:var(--sl-blue-600)"></span><span class="b"></span><span class="ts">10:24</span></div>
+                    <div class="r"><span class="d"></span><span class="b"></span><span class="ts">10:24</span></div>
+                    <div class="r"><span class="d" style="background:var(--sl-red-600)"></span><span class="b"></span><span class="ts">10:25</span></div>
+                    <div class="r"><span class="d"></span><span class="b"></span><span class="ts">10:25</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text">
+              <div class="p-name">Density before whitespace</div>
+              <p class="p-body">Operators scan — tables, rows, timestamps.</p>
+            </div>
+          </div>
+
+          <!-- 03 Restraint — noisy vs clean panel -->
+          <div class="principle" style="--p-color: var(--sl-yellow-700); --p-tint: var(--sl-yellow-50);">
+            <div class="visual">
+              <div class="diag diag-restraint">
+                <div class="row-label bad strike" style="text-decoration: none;">Noisy</div>
+                <div class="panel noisy">
+                  <div class="blob"></div>
+                  <div class="arrow">Action ↗</div>
+                </div>
+                <div class="row-label good">Clean</div>
+                <div class="panel clean">
+                  <div class="l"></div>
+                  <div class="l short"></div>
+                </div>
+              </div>
+            </div>
+            <div class="text">
+              <div class="p-name">Restraint</div>
+              <p class="p-body">No gradients in normal UI. No backdrop blur. No bounce.</p>
+            </div>
+          </div>
+
+          <!-- 04 Verb-led, sentence case — button row contrast -->
+          <div class="principle" style="--p-color: var(--sl-orange-700); --p-tint: var(--sl-orange-50);">
+            <div class="visual">
+              <div class="diag diag-buttons">
+                <div>
+                  <div class="row-label good" style="margin-bottom:6px;">Use</div>
+                  <div class="row">
+                    <span class="btn">Save</span>
+                    <span class="btn">Validate</span>
+                    <span class="btn">Execute</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="row-label bad" style="margin-bottom:6px;">Avoid</div>
+                  <div class="row">
+                    <span class="btn bad strike">OK</span>
+                    <span class="btn bad strike">Submit form</span>
+                    <span class="btn bad strike">Click here</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text">
+              <div class="p-name">Verb-led, sentence case</div>
+              <p class="p-body">"Save". "Validate". Never "OK" or "Submit form".</p>
+            </div>
+          </div>
+
+          <!-- 05 Real icons — outlined good row vs mixed bad row -->
+          <div class="principle" style="--p-color: var(--sl-purple-700); --p-tint: var(--sl-purple-50);">
+            <div class="visual">
+              <div class="diag diag-icons">
+                <div>
+                  <div class="row-label good" style="margin-bottom:6px;">Use</div>
+                  <div class="row good">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12L9 17L20 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="M20 20L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M12 3C8.5 3 6 5.5 6 9V13L4 16H20L18 13V9C18 5.5 15.5 3 12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 19A2 2 0 0014 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M12 2V5M12 19V22M2 12H5M19 12H22M4.93 4.93L7.05 7.05M16.95 16.95L19.07 19.07M4.93 19.07L7.05 16.95M16.95 7.05L19.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20C4 16 7.5 14 12 14C16.5 14 20 16 20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </div>
+                </div>
+                <div>
+                  <div class="row-label bad" style="margin-bottom:6px;">Avoid</div>
+                  <div class="row bad strike" style="text-decoration: none;">
+                    <span class="badico b1"></span>
+                    <span class="badico b2"></span>
+                    <span class="badico b3">★</span>
+                    <span class="badico b4"></span>
+                    <span class="badico b5">♥</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text">
+              <div class="p-name">Real icons</div>
+              <p class="p-body">Outlined glyphs in <code>currentColor</code>. Never emoji or random fills.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="gs-heading">
+          <h3>What's in the system</h3>
+          <p>Every foundation, primitive, component, pattern, template, and chart that ships with JellyRoll — grouped by category.</p>
+        </div>
+        <div class="category-strip" id="gsCategoryStrip"></div>
+      </section>
+
+      <div id="sections"></div>
+      <div class="empty-filter" id="emptyFilter" style="display:none;">No matches.</div>
+
+      <footer>
+        <p>See <a href="./README.md">README</a> for token usage, brand notes, and how to feed this design bundle to an AI coding agent.</p>
+      </footer>
+    </div>
+
+    <div class="detail">
+      <div class="detail-main">
+        <div class="detail-meta-strip" id="detailMetaStrip"></div>
+        <h1 class="detail-title" id="detailTitle"></h1>
+        <p class="detail-tagline" id="detailTagline"></p>
+
+        <section class="doc-section" id="doc-examples">
+          <h2>Examples</h2>
+          <div class="preview-host" id="previewHost" data-loading="false">
+            <div class="preview-render" id="previewRender"></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="doc-anatomy">
+          <h2>Anatomy</h2>
+          <div class="doc-body" id="docAnatomy"></div>
+        </section>
+
+        <section class="doc-section" id="doc-options">
+          <h2>Options</h2>
+          <div class="doc-body" id="docOptions"></div>
+        </section>
+
+        <section class="doc-section" id="doc-usage">
+          <h2>Usage guidelines</h2>
+          <div class="doc-body" id="docUsage"></div>
+        </section>
+
+        <section class="doc-section" id="doc-behaviors">
+          <h2>Behaviors</h2>
+          <div class="doc-body" id="docBehaviors"></div>
+        </section>
+
+        <section class="doc-section" id="doc-tokens">
+          <h2>Tokens</h2>
+          <div id="docTokens"></div>
+        </section>
+      </div>
+
+      <nav class="detail-toc" aria-label="On this page">
+        <h3>On this page</h3>
+        <a href="#doc-examples"   data-toc="doc-examples">Examples</a>
+        <a href="#doc-anatomy"    data-toc="doc-anatomy">Anatomy</a>
+        <a href="#doc-options"    data-toc="doc-options">Options</a>
+        <a href="#doc-usage"      data-toc="doc-usage">Usage guidelines</a>
+        <a href="#doc-behaviors"  data-toc="doc-behaviors">Behaviors</a>
+        <a href="#doc-tokens"     data-toc="doc-tokens">Tokens</a>
+      </nav>
+    </div>
+  </main>
+</div>
+
+<script src="./_data/items.js"></script>
+<script src="./_data/tokens.js"></script>
+<script src="./_data/icons.js"></script>
+<script>
+(() => {
+  const data = window.JELLYROLL_DATA;
+  const sections = data.sections;
+  const onFileProtocol = location.protocol === "file:";
+  if (onFileProtocol) document.body.setAttribute("data-file-protocol", "true");
+
+  // Flatten for prev/next navigation
+  const flat = [];
+  for (const sec of sections) {
+    for (const it of sec.items) {
+      flat.push({ ...it, section: sec });
+    }
+  }
+  const byFile = new Map(flat.map(it => [it.file, it]));
+
+  // ── Helpers ──────────────────────────────────────────────────────────
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+  function fileLabel(file) {
+    return decodeURIComponent(file).replace(/^preview\//, "").replace(/\.html$/, "");
+  }
+  // Render plain text with backtick-fenced inline code → <code>
+  // Render a doc field with format awareness. The items.js source uses a few
+  // light conventions that we promote into real structure here:
+  //   · separator   → bullet list  (works well for anatomy + options)
+  //   "Label: text" → definition list (works well for behaviors with named cases
+  //                   like "Sort: …  Filter: …  Selection: …")
+  //   . sentence    → paragraph break (for usage prose)
+  // The field name tells the renderer which conventions to apply. Anything that
+  // doesn't match a structured pattern falls back to the existing plain paragraph
+  // with backtick-code support.
+  function inlineFmt(s) {
+    return escapeHtml(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+  }
+  function renderBulletList(s) {
+    const items = s.split(/\s+·\s+/).map(p => p.trim()).filter(Boolean);
+    if (items.length < 2) return null;
+    return '<ul class="doc-list">' + items.map(p => `<li>${inlineFmt(p)}</li>`).join('') + '</ul>';
+  }
+  // Detect labeled sections like "Sort: foo. Filter: bar." — labels are short
+  // capitalized phrases (1-3 words) at the start of the string or after a period.
+  function renderDefinitionList(s) {
+    const re = /(?:^|(?<=\.\s))([A-Z][A-Za-z\-]+(?:\s+[A-Za-z\-]+){0,2}):\s+/g;
+    const matches = [...s.matchAll(re)];
+    if (matches.length < 2) return null;
+    const items = [];
+    for (let i = 0; i < matches.length; i++) {
+      const start = matches[i].index + matches[i][0].length;
+      const end   = (i + 1 < matches.length) ? matches[i + 1].index : s.length;
+      const text  = s.slice(start, end).trim().replace(/\.\s*$/, '');
+      items.push({ label: matches[i][1], text });
+    }
+    return '<dl class="doc-dl">' + items.map(it =>
+      `<dt>${inlineFmt(it.label)}</dt><dd>${inlineFmt(it.text)}</dd>`
+    ).join('') + '</dl>';
+  }
+  function renderParagraphs(s) {
+    // Split on sentence terminators followed by whitespace. Leaves the period
+    // attached to each chunk so it reads naturally.
+    const parts = s.split(/(?<=[.!?])\s+(?=[A-Z])/).map(p => p.trim()).filter(Boolean);
+    if (parts.length < 2) return `<p>${inlineFmt(s)}</p>`;
+    return parts.map(p => `<p>${inlineFmt(p)}</p>`).join('');
+  }
+  function renderMarkdownLite(s, field) {
+    if (!s) return "";
+    if (field === 'anatomy' || field === 'options') {
+      return renderBulletList(s) || renderParagraphs(s);
+    }
+    if (field === 'behaviors') {
+      return renderDefinitionList(s) || renderParagraphs(s);
+    }
+    if (field === 'usage') {
+      return renderParagraphs(s);
+    }
+    return `<p>${inlineFmt(s)}</p>`;
+  }
+  function highlightMatch(text, query) {
+    if (!query) return escapeHtml(text);
+    const i = text.toLowerCase().indexOf(query.toLowerCase());
+    if (i < 0) return escapeHtml(text);
+    return escapeHtml(text.slice(0, i))
+      + '<span class="hl">' + escapeHtml(text.slice(i, i + query.length)) + '</span>'
+      + escapeHtml(text.slice(i + query.length));
+  }
+
+  // ── Render gallery ──────────────────────────────────────────────────
+  const sidebarEl = document.getElementById("sidebar");
+  const sectionsEl = document.getElementById("sections");
+  const totalCountEl = document.getElementById("totalCount");
+  const searchInput = document.getElementById("searchInput");
+  const searchClear = document.getElementById("searchClear");
+  const sidebarSearchEl = document.getElementById("sidebarSearch");
+  const emptyFilterEl = document.getElementById("emptyFilter");
+
+  totalCountEl.textContent = flat.length + " assets";
+  searchInput.placeholder = "Search " + flat.length + " assets";
+
+  // Getting Started · category strip — quick visual index of all 9 categories.
+  const gsStrip = document.getElementById("gsCategoryStrip");
+  if (gsStrip) {
+    gsStrip.innerHTML = sections.map(sec => `
+      <a class="cs-row" href="#section-${sec.id}" style="--cs-color: var(--cat-${sec.id});">
+        <span class="dot"></span>
+        <div>
+          <div class="cs-name">${escapeHtml(sec.num)} · ${escapeHtml(sec.name)}</div>
+          <div class="cs-count">${sec.items.length} ${sec.items.length === 1 ? "asset" : "assets"}</div>
+        </div>
+      </a>
+    `).join("");
+  }
+
+  // Sidebar — top-level Getting Started link, an icon-search results section,
+  // then the categorized accordion.
+  const topLinksHtml = `
+    <a class="top-link" href="#getting-started" data-top-link="getting-started">
+      <i data-lucide="compass"></i>
+      <span>Getting started</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="sidebar-icons" id="sidebarIcons" aria-live="polite">
+      <div class="si-label"><span>Icons</span><span class="si-count" id="siCount">0</span></div>
+      <div class="si-list" id="siList"></div>
+    </div>
+  `;
+  sidebarEl.innerHTML = topLinksHtml + sections.map(sec => `
+    <div class="sec" data-section-id="${sec.id}" data-open="false">
+      <button class="sec-header" type="button" data-toggle="${sec.id}" aria-expanded="false">
+        <i data-lucide="chevron-right" class="chev"></i>
+        <span>${escapeHtml(sec.num)} · ${escapeHtml(sec.name)}</span>
+        <span class="count-pill">${sec.items.length}</span>
+      </button>
+      <div class="sec-items">
+        ${sec.items.map(it => `
+          <a class="item-link"
+             href="#${encodeURIComponent(it.file)}"
+             data-file="${escapeHtml(it.file)}"
+             data-search="${escapeHtml((it.name + " " + (it.tagline||"") + " " + fileLabel(it.file)).toLowerCase())}">${escapeHtml(it.name)}</a>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  // Sidebar accordion toggling
+  sidebarEl.addEventListener("click", (e) => {
+    const header = e.target.closest(".sec-header");
+    if (!header) return;
+    const sec = header.parentElement;
+    const open = sec.getAttribute("data-open") === "true";
+    sec.setAttribute("data-open", open ? "false" : "true");
+    header.setAttribute("aria-expanded", open ? "false" : "true");
+  });
+
+  function setSidebarActive(item) {
+    sidebarEl.querySelectorAll(".item-link").forEach(a => a.removeAttribute("data-active"));
+    if (!item) return;
+    const link = sidebarEl.querySelector(`.item-link[data-file="${CSS.escape(item.file)}"]`);
+    if (!link) return;
+    link.setAttribute("data-active", "true");
+    const sec = sidebarEl.querySelector(`.sec[data-section-id="${item.section.id}"]`);
+    if (sec) {
+      sec.setAttribute("data-open", "true");
+      sec.querySelector(".sec-header").setAttribute("aria-expanded", "true");
+    }
+    const sidebarRect = sidebarEl.getBoundingClientRect();
+    const linkRect = link.getBoundingClientRect();
+    if (linkRect.top < sidebarRect.top || linkRect.bottom > sidebarRect.bottom) {
+      link.scrollIntoView({ block: "center", behavior: "instant" });
+    }
+  }
+
+  // ── Tile visuals ────────────────────────────────────────────────────
+  // Default Lucide icon per category, used when an asset has no custom visual.
+  const CATEGORY_DEFAULT_ICON = {
+    "foundations":      "ruler",
+    "color":            "palette",
+    "brand":            "gem",
+    "primitives":       "square",
+    "components":       "layout-grid",
+    "advanced-editors": "code-2",
+    "patterns":         "git-branch",
+    "templates":        "layout-template",
+    "data-viz":         "bar-chart-3",
+  };
+  // Per-file overrides: either a Lucide icon name, or a sentinel ("aa", "ramps", "swatches",
+  // "surfaces", "gradient", "spacing", "radius", "shadows", "logo", "launcher", "status",
+  // "bars", "line", "ramp-stack") handled below.
+  const ICON_MAP = {
+    // Foundations
+    "preview/type-scale.html":            "aa",
+    "preview/type-faces.html":            "aa",
+    "preview/spacing-scale.html":         "spacing",
+    "preview/spacing-radius.html":        "radius",
+    "preview/spacing-shadows.html":       "shadows",
+    // Color
+    "preview/colors-all-ramps.html":      "ramps",
+    "preview/colors-semantic-text.html":  "swatches",
+    "preview/colors-surfaces.html":       "surfaces",
+    "preview/colors-gradient-brand.html": "gradient",
+    // Brand
+    "preview/brand-logo.html":            "logo",
+    "preview/brand-iconography.html":     "shapes",
+    "preview/brand-launchers.html":       "launcher",
+    "Brand%20Gradient.html":              "gradient",
+    // Primitives
+    "preview/components-buttons.html":    "mouse-pointer-click",
+    "preview/components-inputs.html":     "rectangle-horizontal",
+    "preview/components-select.html":     "chevrons-up-down",
+    "preview/components-textarea.html":   "text-cursor-input",
+    "preview/components-checkbox.html":   "square-check",
+    "preview/components-radio.html":      "circle-dot",
+    "preview/components-toggle.html":     "toggle-right",
+    "preview/components-slider.html":     "sliders-horizontal",
+    "preview/components-segmented-control.html": "rows-2",
+    "preview/components-search-field.html":      "search",
+    "preview/components-number.html":     "hash",
+    "preview/components-password.html":   "key-round",
+    "preview/components-date-picker.html":"calendar-days",
+    "preview/components-multi-select.html":"list-checks",
+    "preview/components-combobox.html":   "search-code",
+    "preview/components-tree-select.html":"folder-tree",
+    "preview/components-file-upload.html":"upload-cloud",
+    "preview/components-field-anatomy.html":"frame",
+    "preview/components-field-states.html":"layers-2",
+    "preview/components-badges.html":     "tag",
+    "preview/components-chip.html":       "tags",
+    "preview/components-status.html":     "status",
+    "preview/components-notification-dot.html":"bell-dot",
+    "preview/components-spinner.html":    "loader",
+    "preview/components-skeleton.html":   "loader-2",
+    "preview/components-avatar.html":     "circle-user-round",
+    "preview/components-avatar-group.html":"users",
+    // Components
+    "preview/components-card.html":       "square-stack",
+    "preview/components-modal.html":      "app-window",
+    "preview/components-drawer.html":     "panel-right",
+    "preview/components-toast.html":      "message-square",
+    "preview/components-tabs.html":       "panel-top",
+    "preview/components-stepper.html":    "list-ordered",
+    "preview/components-table.html":      "table-2",
+    "preview/components-broadcast-banner.html":"megaphone",
+    "preview/components-notifications.html":"bell",
+    "preview/components-form-row.html":   "rows-3",
+    "preview/components-form-section.html":"layout-list",
+    "preview/components-global-header.html":"panel-top-dashed",
+    "preview/components-left-nav.html":   "panel-left",
+    "preview/components-user-menu.html":  "user",
+    "preview/components-product-launcher.html":"grid-3x3",
+    "preview/components-search-overlay.html":"command",
+    "preview/components-snapgpt-panel.html":"sparkles",
+    "preview/components-env-picker.html": "globe-2",
+    // Advanced editors
+    "preview/components-code-editor.html":"file-code-2",
+    "preview/components-json-editor.html":"braces",
+    "preview/components-key-value-editor.html":"key-square",
+    "preview/components-schema-builder.html":"network",
+    "preview/components-connection-picker.html":"plug",
+    "preview/components-api-param-builder.html":"webhook",
+    "preview/components-dynamic-repeater.html":"copy-plus",
+    // Patterns
+    "preview/patterns-form-validation.html":"check-circle-2",
+    "preview/patterns-inline-editing.html":"pencil-line",
+    "preview/patterns-save-discard.html":"save",
+    "preview/patterns-destructive-confirm.html":"alert-triangle",
+    "preview/patterns-undo-toast.html":"undo-2",
+    "preview/patterns-empty-states.html":"inbox",
+    "preview/patterns-error-states.html":"circle-x",
+    "preview/patterns-filter-sort.html":"filter",
+    "preview/patterns-pagination.html":"more-horizontal",
+    "preview/patterns-bulk-selection.html":"check-square-2",
+    "preview/patterns-keyboard-shortcuts.html":"keyboard",
+    "preview/patterns-drag-drop.html":"move",
+    "preview/patterns-wizard.html":"wand-2",
+    "preview/patterns-drawer-snapgpt.html":"sparkles",
+    "preview/patterns-ai-assisted-input.html":"wand-sparkles",
+    "preview/patterns-editable-ai-output.html":"file-edit",
+    "preview/patterns-ai-confidence.html":"gauge",
+    // Templates
+    "preview/templates-designer.html":    "layout-template",
+    // Data viz
+    "preview/dataviz-usage.html":         "compass",
+    "preview/dataviz-categorical.html":   "ramp-stack",
+    "preview/dataviz-sequential.html":    "ramp-stack",
+    "preview/dataviz-diverging.html":     "ramp-stack",
+    "preview/dataviz-status.html":        "status",
+    "preview/dataviz-kpi.html":           "trending-up",
+    "preview/dataviz-sparkline.html":     "line",
+    "preview/dataviz-gauge.html":         "gauge",
+    "preview/dataviz-donut.html":         "pie-chart",
+    "preview/dataviz-timeseries.html":    "line",
+    "preview/dataviz-stacked.html":       "area-chart",
+    "preview/dataviz-combo.html":         "bars",
+    "preview/dataviz-calendar.html":      "calendar",
+    "preview/dataviz-bar.html":           "bars",
+    "preview/dataviz-histogram.html":     "bar-chart-2",
+    "preview/dataviz-heatmap.html":       "grid",
+    "preview/dataviz-sankey.html":        "git-fork",
+    "preview/dataviz-gantt.html":         "calendar-clock",
+    "preview/dataviz-network.html":       "share-2",
+    "preview/dataviz-hive-plot.html":     "asterisk",
+    "preview/dataviz-loading.html":       "loader",
+    "preview/dataviz-empty.html":         "inbox",
+    "network-graph.html":                 "share-2",
+  };
+
+  // Category background tint + accent color CSS variables consumed by .tile + .tile-visual.
+  const CATEGORY_VARS = {
+    "foundations":      { color: "var(--cat-foundations)",   tint: "var(--sl-indigo-50, #F4F6F9)" },
+    "color":            { color: "var(--cat-color)",         tint: "var(--sl-pink-50,   #FDF3F8)" },
+    "brand":            { color: "var(--cat-brand)",         tint: "var(--sl-purple-50, #F7F5F9)" },
+    "primitives":       { color: "var(--cat-primitives)",    tint: "var(--sl-blue-50,   #F2F6FC)" },
+    "components":       { color: "var(--cat-components)",    tint: "var(--sl-teal-50,   #F2F8F8)" },
+    "advanced-editors": { color: "var(--cat-editors)",       tint: "var(--sl-indigo-50, #F4F6F9)" },
+    "patterns":         { color: "var(--cat-patterns)",      tint: "var(--sl-orange-50, #FEF7F3)" },
+    "templates":        { color: "var(--cat-templates)",     tint: "var(--sl-yellow-50, #FFFBF2)" },
+    "data-viz":         { color: "var(--cat-data-viz)",      tint: "var(--sl-green-50,  #F2F8F3)" },
+  };
+
+  // Hex ramp values for custom visuals (keep in sync with colors_and_type.css).
+  const RAMP_600 = ["#0841B4","#09817F","#304684","#F9660B","#FBBC04","#623684","#017D1B","#E31C3D","#E31C73","#9CA7BA"];
+
+  function tileVisualHtml(item, sec) {
+    const key = ICON_MAP[item.file] || CATEGORY_DEFAULT_ICON[sec.id] || "square";
+    switch (key) {
+      case "aa":
+        return `<div class="visual-aa">Aa<em>Aa</em></div>`;
+      case "ramps":
+        return `<div class="visual-ramp-row">${RAMP_600.map(c => `<div style="background:${c}"></div>`).join("")}</div>`;
+      case "swatches":
+        return `<div class="visual-swatch-grid">
+          <div style="background:#031A48"></div>
+          <div style="background:#7D8695"></div>
+          <div style="background:#0841B4"></div>
+          <div style="background:#017D1B"></div>
+          <div style="background:#E31C3D"></div>
+        </div>`;
+      case "surfaces":
+        return `<div class="visual-surfaces"><div class="s1"></div><div class="s2"></div><div class="s3"></div></div>`;
+      case "gradient":
+        return `<div class="visual-gradient-band"></div>`;
+      case "spacing":
+        return `<div class="visual-spacing">
+          <div style="height: 8px"></div>
+          <div style="height: 14px"></div>
+          <div style="height: 22px"></div>
+          <div style="height: 32px"></div>
+          <div style="height: 44px"></div>
+          <div style="height: 58px"></div>
+        </div>`;
+      case "radius":
+        return `<div class="visual-radius">
+          <div style="border-radius: 2px"></div>
+          <div style="border-radius: 4px"></div>
+          <div style="border-radius: 8px"></div>
+          <div style="border-radius: 999px"></div>
+        </div>`;
+      case "shadows":
+        return `<div class="visual-shadows"><div class="sh1"></div><div class="sh2"></div><div class="sh3"></div></div>`;
+      case "logo":
+        return `<div class="visual-logo-mark">◇ SnapLogic</div>`;
+      case "launcher":
+        return `<div class="visual-launcher-grid">
+          <div style="background: linear-gradient(135deg, #09817F, #0841B4)"></div>
+          <div style="background: linear-gradient(135deg, #0841B4, #623684)"></div>
+          <div style="background: linear-gradient(135deg, #F9660B, #FBBC04)"></div>
+          <div style="background: linear-gradient(135deg, #017D1B, #09817F)"></div>
+          <div style="background: linear-gradient(135deg, #E31C73, #623684)"></div>
+          <div style="background: linear-gradient(135deg, #304684, #0841B4)"></div>
+        </div>`;
+      case "status":
+        return `<div class="visual-status-dots">
+          <div style="background:#017D1B"></div>
+          <div style="background:#0841B4"></div>
+          <div style="background:#FBBC04"></div>
+          <div style="background:#E31C3D"></div>
+          <div style="background:#9CA7BA"></div>
+        </div>`;
+      case "bars":
+        return `<div class="visual-chart-bars">
+          ${[24,38,18,46,30,52,20].map(h => `<div style="height:${h}px"></div>`).join("")}
+        </div>`;
+      case "line":
+        return `<div class="visual-chart-line"><svg viewBox="0 0 100 50" preserveAspectRatio="none">
+          <path d="M0 38 L15 22 L28 30 L40 12 L55 26 L70 8 L85 18 L100 4"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></div>`;
+      case "ramp-stack":
+        return `<div class="visual-ramp-stack">${
+          ["#031A48","#05276C","#063490","#0841B4","#3967C3","#6B8DD2","#9CB3E1","#CED9F0","#E6ECF8","#F2F6FC"]
+            .map(c => `<div style="background:${c}"></div>`).join("")
+        }</div>`;
+      default:
+        // Default Lucide icon path: emit a placeholder that Lucide will replace.
+        return `<i data-lucide="${escapeHtml(key)}" class="lucide-mark"></i>`;
+    }
+  }
+
+  // Gallery grid
+  function tileHtml(it, sec) {
+    const v = CATEGORY_VARS[sec.id] || { color: "var(--sl-blue-600)", tint: "var(--sl-blue-50)" };
+    return `
+      <a class="tile"
+         href="#${encodeURIComponent(it.file)}"
+         data-file="${escapeHtml(it.file)}"
+         data-search="${escapeHtml((it.name + " " + (it.tagline||"") + " " + fileLabel(it.file) + " " + sec.name).toLowerCase())}"
+         style="--tile-color: ${v.color}; --tile-tint: ${v.tint};">
+        <div class="tile-visual">${tileVisualHtml(it, sec)}</div>
+        <div class="tile-body">
+          <div class="name">${escapeHtml(it.name)}</div>
+          <div class="tagline">${escapeHtml(it.tagline || "")}</div>
+          <div class="meta">
+            <span class="cat-chip">${escapeHtml(sec.name)}</span>
+            <span class="file-name">${escapeHtml(fileLabel(it.file))}</span>
+          </div>
+        </div>
+      </a>
+    `;
+  }
+
+  sectionsEl.innerHTML = sections.map(sec => `
+    <section class="section" id="section-${sec.id}" data-section-id="${sec.id}">
+      <div class="section-head">
+        <span class="label-num">${escapeHtml(sec.num)}</span>
+        <h2>${escapeHtml(sec.name)}</h2>
+        <span class="label-count" data-section-count="${sec.id}">${sec.items.length} ${sec.items.length === 1 ? "asset" : "assets"}</span>
+      </div>
+      <div class="grid">
+        ${sec.items.map(it => tileHtml(it, sec)).join("")}
+      </div>
+    </section>
+  `).join("");
+
+  // ── Search ──────────────────────────────────────────────────────────
+  let currentQuery = "";
+
+  // Icon-name index for sidebar search (data shipped via _data/icons.js).
+  const ICON_INDEX = (() => {
+    const I = window.JELLYROLL_ICONS || {};
+    const out = [];
+    (I.jellyroll || []).forEach(n => out.push({ name: n, set: "jellyroll" }));
+    (I.fa_brands || []).forEach(n => out.push({ name: n, set: "fa", family: "brands" }));
+    (I.fa_regular || []).forEach(n => out.push({ name: n, set: "fa", family: "regular" }));
+    return out;
+  })();
+  const sidebarIconsEl = document.getElementById("sidebarIcons");
+  const siListEl = document.getElementById("siList");
+  const siCountEl = document.getElementById("siCount");
+
+  function renderIconResults(query) {
+    if (!query) {
+      sidebarIconsEl.removeAttribute("data-active");
+      siListEl.innerHTML = "";
+      return;
+    }
+    const matches = ICON_INDEX.filter(ic => ic.name.toLowerCase().includes(query));
+    if (matches.length === 0) {
+      sidebarIconsEl.removeAttribute("data-active");
+      siListEl.innerHTML = "";
+      return;
+    }
+    sidebarIconsEl.setAttribute("data-active", "true");
+    // Cap to 20 rows to keep the sidebar tidy; suffix shows total if truncated.
+    const cap = 20;
+    const shown = matches.slice(0, cap);
+    siCountEl.textContent = matches.length > cap
+      ? (cap + " of " + matches.length)
+      : String(matches.length);
+    siListEl.innerHTML = shown.map(ic => {
+      const tag = ic.set === "fa" ? "FA" : "JR";
+      // Deep-link with `q=` in the hash so the iconography preview prefills + filters.
+      const href = "#preview/brand-iconography.html?q=" + encodeURIComponent(ic.name);
+      return `<a class="si-row" href="${href}" data-set="${ic.set}">
+        <i data-lucide="square"></i>
+        <span>${escapeHtml(ic.name)}</span>
+        <span class="si-tag">${tag}</span>
+      </a>`;
+    }).join("");
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  function applyFilter(query) {
+    currentQuery = (query || "").trim().toLowerCase();
+    sidebarSearchEl.setAttribute("data-has-query", currentQuery ? "true" : "false");
+
+    renderIconResults(currentQuery);
+
+    let totalVisible = 0;
+    for (const sec of sections) {
+      let secVisible = 0;
+      // Tiles
+      document.querySelectorAll(`.section[data-section-id="${sec.id}"] .tile`).forEach(tile => {
+        const haystack = tile.getAttribute("data-search") || "";
+        const match = !currentQuery || haystack.includes(currentQuery);
+        tile.setAttribute("data-hide", match ? "false" : "true");
+        if (match) secVisible++;
+      });
+      // Section visibility
+      const secEl = document.querySelector(`.section[data-section-id="${sec.id}"]`);
+      secEl.setAttribute("data-hide", secVisible === 0 ? "true" : "false");
+      const countEl = secEl.querySelector(`[data-section-count="${sec.id}"]`);
+      if (currentQuery) countEl.textContent = secVisible + " of " + sec.items.length;
+      else countEl.textContent = sec.items.length + (sec.items.length === 1 ? " asset" : " assets");
+
+      // Sidebar items + section
+      const sbSec = sidebarEl.querySelector(`.sec[data-section-id="${sec.id}"]`);
+      let sbItems = 0;
+      sbSec.querySelectorAll(".item-link").forEach(a => {
+        const haystack = a.getAttribute("data-search") || "";
+        const match = !currentQuery || haystack.includes(currentQuery);
+        a.setAttribute("data-hide", match ? "false" : "true");
+        if (match) sbItems++;
+      });
+      sbSec.setAttribute("data-hide", sbItems === 0 ? "true" : "false");
+      // Auto-expand sections with matches while a query is active.
+      if (currentQuery && sbItems > 0) {
+        sbSec.setAttribute("data-open", "true");
+        sbSec.querySelector(".sec-header").setAttribute("aria-expanded", "true");
+      }
+      totalVisible += secVisible;
+    }
+    emptyFilterEl.style.display = (currentQuery && totalVisible === 0) ? "block" : "none";
+  }
+
+  searchInput.addEventListener("input", (e) => applyFilter(e.target.value));
+  searchClear.addEventListener("click", () => {
+    searchInput.value = "";
+    applyFilter("");
+    searchInput.focus();
+  });
+  // Focus the search field on `/` from anywhere (unless typing in a field)
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/" && document.body.getAttribute("data-view") === "grid"
+        && !["INPUT","TEXTAREA"].includes(document.activeElement?.tagName)) {
+      e.preventDefault();
+      searchInput.focus();
+    }
+  });
+
+  // ── Inline preview rendering (Shadow DOM) ───────────────────────────
+  const previewCache = new Map();
+  async function fetchPreview(filePath) {
+    if (previewCache.has(filePath)) return previewCache.get(filePath);
+    // Cache-bust so stale browser cache doesn't hand back a previous version of
+    // the preview file across edits.
+    const url = filePath + (filePath.includes("?") ? "&" : "?") + "_=" + Date.now();
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error("Failed to fetch " + filePath + " (HTTP " + res.status + ")");
+    const html = await res.text();
+    previewCache.set(filePath, html);
+    return html;
+  }
+  function rewritePaths(doc, baseUrl) {
+    function fix(el, attr) {
+      const v = el.getAttribute(attr);
+      if (!v || /^(https?:|data:|mailto:|#|\/\/)/.test(v)) return;
+      try { el.setAttribute(attr, new URL(v, baseUrl).pathname); } catch {}
+    }
+    doc.querySelectorAll("[href]").forEach(el => fix(el, "href"));
+    doc.querySelectorAll("[src]").forEach(el => fix(el, "src"));
+    doc.querySelectorAll("style").forEach(el => {
+      el.textContent = (el.textContent || "").replace(/url\((['"]?)([^)'"]+)\1\)/g, (m, q, u) => {
+        if (/^(https?:|data:|\/\/)/.test(u)) return m;
+        try { return `url(${q}${new URL(u, baseUrl).pathname}${q})`; } catch { return m; }
+      });
+    });
+  }
+
+  function renderIframeFallback(host, wrap, filePath) {
+    // Drop into an <iframe> so previews still work when fetch() is blocked
+    // (e.g., file:// origin) or fails for any other reason.
+    host.innerHTML = "";
+    const iframe = document.createElement("iframe");
+    iframe.className = "fallback";
+    iframe.title = "Asset preview";
+    iframe.src = filePath;
+    iframe.addEventListener("load", () => {
+      try {
+        const doc = iframe.contentDocument;
+        if (!doc) return;
+        // Auto-size to content height so the preview reads as inline content
+        // rather than a fixed scrollable embed.
+        const body = doc.body;
+        const html = doc.documentElement;
+        const h = Math.max(body?.scrollHeight || 0, html?.scrollHeight || 0, 480);
+        iframe.style.height = (h + 24) + "px";
+        // Hide iframe scrollbars; the parent already handles overflow.
+        if (body) body.style.overflow = "hidden";
+      } catch { /* cross-origin won't happen for same-origin local files */ }
+    });
+    host.appendChild(iframe);
+    wrap.setAttribute("data-loading", "false");
+  }
+
+  let currentRenderToken = 0;
+  async function renderPreviewInline(filePath) {
+    const host = document.getElementById("previewRender");
+    const wrap = document.getElementById("previewHost");
+    // Detach previous shadow root by replacing the element
+    const fresh = document.createElement("div");
+    fresh.className = "preview-render";
+    fresh.id = "previewRender";
+    host.replaceWith(fresh);
+    wrap.setAttribute("data-loading", "true");
+    fresh.textContent = "Loading preview…";
+
+    const token = ++currentRenderToken;
+
+    // On file:// origins, fetch() is blocked in most browsers — go straight
+    // to the iframe fallback so previews load no matter how the page is opened.
+    if (onFileProtocol) {
+      if (token !== currentRenderToken) return;
+      renderIframeFallback(fresh, wrap, filePath);
+      return;
+    }
+
+    try {
+      const html = await fetchPreview(filePath);
+      if (token !== currentRenderToken) return; // newer navigation; abort
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const baseUrl = new URL(filePath, location.href);
+      rewritePaths(doc, baseUrl);
+
+      // Attach shadow root and copy <link rel=stylesheet> / <style> / body content.
+      fresh.innerHTML = "";
+      const shadow = fresh.attachShadow({ mode: "open" });
+
+      doc.head.querySelectorAll("link[rel='stylesheet'], style").forEach(el => {
+        shadow.appendChild(el.cloneNode(true));
+      });
+      // Move body children directly from the parsed document into the shadow root.
+      // (Avoids an innerHTML round-trip that can mangle SVG namespaces + slows large
+      // pages like the icon gallery.)
+      while (doc.body.firstChild) shadow.appendChild(doc.body.firstChild);
+
+      // Run Lucide inside the shadow root
+      // (Lucide UMD createIcons accepts a `root` option in v0.398+; fall back to document scan.)
+      if (window.lucide && window.lucide.createIcons) {
+        try { window.lucide.createIcons({ root: shadow }); }
+        catch { try { window.lucide.createIcons(); } catch {} }
+      }
+
+      // Re-execute inline scripts so previews that need JS (e.g. the icon search)
+      // work inside the shadow root. Scripts moved via innerHTML don't auto-run;
+      // we have to create fresh <script> elements. Skip external (src) scripts —
+      // they were already loaded as global side-effects (e.g. Lucide via CDN).
+      shadow.querySelectorAll("script").forEach(oldScript => {
+        if (oldScript.src) { oldScript.remove(); return; }
+        const fresh = document.createElement("script");
+        // Copy the script type if set (e.g. type="module" — though we don't use it here).
+        if (oldScript.type) fresh.type = oldScript.type;
+        fresh.textContent = oldScript.textContent;
+        oldScript.replaceWith(fresh);
+      });
+      wrap.setAttribute("data-loading", "false");
+    } catch (err) {
+      if (token !== currentRenderToken) return;
+      // Fetch failed for some other reason — try the iframe fallback so the
+      // user still sees something instead of a bare error.
+      console.warn("Inline render failed, falling back to iframe:", err);
+      renderIframeFallback(fresh, wrap, filePath);
+    }
+  }
+
+  // ── Detail view ─────────────────────────────────────────────────────
+  const detailTitle = document.getElementById("detailTitle");
+  const detailTagline = document.getElementById("detailTagline");
+  const detailMetaStrip = document.getElementById("detailMetaStrip");
+  const navPosition = document.getElementById("navPosition");
+  const prevBtn = document.querySelector('[data-action="prev"]');
+  const nextBtn = document.querySelector('[data-action="next"]');
+
+  const docFields = [
+    { key: "anatomy",   secId: "doc-anatomy",   bodyId: "docAnatomy"   },
+    { key: "options",   secId: "doc-options",   bodyId: "docOptions"   },
+    { key: "usage",     secId: "doc-usage",     bodyId: "docUsage"     },
+    { key: "behaviors", secId: "doc-behaviors", bodyId: "docBehaviors" },
+  ];
+
+  function isColorValue(v) {
+    if (!v) return false;
+    const s = String(v).trim();
+    return /^#[0-9A-Fa-f]{3,8}$/.test(s)
+        || /^rgba?\(/.test(s)
+        || /^hsla?\(/.test(s)
+        || /^linear-gradient\(/.test(s)
+        || /^radial-gradient\(/.test(s);
+  }
+  function renderTokensTable(tokens) {
+    if (!tokens || !tokens.length) return "";
+    const rows = tokens.map(t => {
+      const swatch = isColorValue(t.value)
+        ? `<span class="sw" style="background:${escapeHtml(t.value)}"></span>`
+        : "";
+      return `
+        <div class="token-row">
+          <div class="token-name">${escapeHtml(t.name)}</div>
+          <div class="token-swatch">${swatch}</div>
+          <div class="token-value">${escapeHtml(t.value || "")}</div>
+          <div class="token-role">${escapeHtml(t.role || "")}</div>
+        </div>
+      `;
+    }).join("");
+    return `
+      <div class="token-list">
+        <div class="token-head">Token</div>
+        <div class="token-head"></div>
+        <div class="token-head">Value</div>
+        <div class="token-head">Role</div>
+        ${rows}
+      </div>
+    `;
+  }
+
+  function showGallery() {
+    document.body.setAttribute("data-view", "grid");
+    // Drop the rendered preview (and its iframes/timers) so it stops eating CPU.
+    const host = document.getElementById("previewRender");
+    const fresh = document.createElement("div");
+    fresh.className = "preview-render";
+    fresh.id = "previewRender";
+    host.replaceWith(fresh);
+    document.getElementById("previewHost").setAttribute("data-loading", "false");
+    document.title = "JellyRoll · SnapLogic Design System 2.0";
+    setSidebarActive(null);
+  }
+
+  function showDetail(item, params) {
+    document.body.setAttribute("data-view", "detail");
+
+    const sec = item.section;
+    const cssVar = `--cat-${sec.id}`;
+    const tintMap = {
+      "foundations": "var(--sl-indigo-50, #F4F6F9)",
+      "color": "var(--sl-pink-50, #FDF3F8)",
+      "brand": "var(--sl-purple-50, #F7F5F9)",
+      "primitives": "var(--sl-blue-50, #F2F6FC)",
+      "components": "var(--sl-teal-50, #F2F8F8)",
+      "advanced-editors": "var(--sl-indigo-50, #F4F6F9)",
+      "patterns": "var(--sl-orange-50, #FEF7F3)",
+      "templates": "var(--sl-yellow-50, #FFFBF2)",
+      "data-viz": "var(--sl-green-50, #F2F8F3)",
+    };
+    detailMetaStrip.style.setProperty("--tile-color", `var(${cssVar})`);
+    detailMetaStrip.style.setProperty("--tile-tint", tintMap[sec.id] || "var(--sl-blue-50)");
+
+    detailMetaStrip.innerHTML = `
+      <span class="cat-chip">${escapeHtml(sec.num)} · ${escapeHtml(sec.name)}</span>
+      <span class="crumb-sep">/</span>
+      <span>${escapeHtml(fileLabel(item.file))}</span>
+    `;
+    detailTitle.textContent = item.name;
+    detailTagline.textContent = item.tagline || "";
+
+    // Populate doc sections; hide ones the item didn't author + their TOC entry.
+    const meta = item.meta || {};
+    docFields.forEach(({ key, secId, bodyId }) => {
+      const secEl = document.getElementById(secId);
+      const bodyEl = document.getElementById(bodyId);
+      const tocLink = document.querySelector(`.detail-toc a[data-toc="${secId}"]`);
+      const v = meta[key];
+      if (v && v.trim()) {
+        secEl.setAttribute("data-hide", "false");
+        bodyEl.innerHTML = renderMarkdownLite(v, key);
+        if (tocLink) tocLink.setAttribute("data-hide", "false");
+      } else {
+        secEl.setAttribute("data-hide", "true");
+        bodyEl.innerHTML = "";
+        if (tocLink) tocLink.setAttribute("data-hide", "true");
+      }
+    });
+
+    // Tokens section — fall back to the central tokens map if the item didn't bake its own.
+    const tokensSec = document.getElementById("doc-tokens");
+    const tokensBody = document.getElementById("docTokens");
+    const tokensToc = document.querySelector('.detail-toc a[data-toc="doc-tokens"]');
+    const tokens = (Array.isArray(meta.tokens) && meta.tokens.length)
+      ? meta.tokens
+      : (window.JELLYROLL_TOKENS && window.JELLYROLL_TOKENS[item.file]) || null;
+    if (tokens && tokens.length) {
+      tokensSec.setAttribute("data-hide", "false");
+      tokensBody.innerHTML = renderTokensTable(tokens);
+      if (tokensToc) tokensToc.setAttribute("data-hide", "false");
+    } else {
+      tokensSec.setAttribute("data-hide", "true");
+      tokensBody.innerHTML = "";
+      if (tokensToc) tokensToc.setAttribute("data-hide", "true");
+    }
+
+    // Prev/next position
+    const idx = flat.findIndex(x => x.file === item.file);
+    navPosition.textContent = (idx + 1) + " / " + flat.length;
+    prevBtn.disabled = idx <= 0;
+    nextBtn.disabled = idx >= flat.length - 1;
+
+    document.title = item.name + " · JellyRoll";
+    setSidebarActive(item);
+
+    // Render the preview inline, then apply any deep-link params (e.g. ?q=aws
+    // on the iconography page to pre-fill its search).
+    renderPreviewInline(item.file).then(() => {
+      if (!params) return;
+      const q = params.get("q");
+      if (!q) return;
+      const host = document.getElementById("previewRender");
+      const root = host && host.shadowRoot;
+      if (!root) return;
+      const input = root.getElementById ? root.getElementById("iconSearch") : root.querySelector("#iconSearch");
+      if (!input) return;
+      input.value = q;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.focus();
+    }).catch(() => {});
+
+    // Scroll back to top of the page for a fresh asset
+    window.scrollTo({ top: 0, behavior: "instant" });
+    setActiveToc("doc-examples");
+  }
+
+  // ── On-page TOC ─────────────────────────────────────────────────────
+  const tocLinks = document.querySelectorAll(".detail-toc a[data-toc]");
+  function setActiveToc(id) {
+    tocLinks.forEach(a => {
+      if (a.getAttribute("data-hide") === "true") {
+        a.removeAttribute("data-active");
+      } else {
+        a.setAttribute("data-active", a.getAttribute("data-toc") === id ? "true" : "false");
+      }
+    });
+  }
+  tocLinks.forEach(a => a.addEventListener("click", (e) => {
+    e.preventDefault();
+    const id = a.getAttribute("data-toc");
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      setActiveToc(id);
+    }
+  }));
+  const docSections = ["doc-examples","doc-anatomy","doc-options","doc-usage","doc-behaviors","doc-tokens"]
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+  if ("IntersectionObserver" in window && docSections.length) {
+    const topbarH = getComputedStyle(document.documentElement).getPropertyValue("--topbar-h").trim();
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter(e => e.isIntersecting && e.target.getAttribute("data-hide") !== "true")
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible[0]) setActiveToc(visible[0].target.id);
+    }, { rootMargin: `-${topbarH} 0px -60% 0px`, threshold: 0 });
+    docSections.forEach(s => io.observe(s));
+  }
+
+  // ── Routing ──────────────────────────────────────────────────────────
+  function applyHash() {
+    const raw = window.location.hash.slice(1);
+    if (!raw) {
+      showGallery();
+      setTopLinkActive(null);
+      return;
+    }
+    // In-gallery anchors: getting-started, section-foundations, etc.
+    if (raw === "getting-started" || raw.startsWith("section-")) {
+      showGallery();
+      const target = document.getElementById(raw);
+      if (target) target.scrollIntoView({ behavior: "instant", block: "start" });
+      setTopLinkActive(raw === "getting-started" ? "getting-started" : null);
+      return;
+    }
+    // Split off a `?...` query string from the file path so we can deep-link
+    // into the preview (e.g. open iconography with the search pre-filled).
+    const [filePart, queryPart] = raw.split("?");
+    const file = decodeURIComponent(filePart);
+    const params = queryPart ? new URLSearchParams(queryPart) : null;
+    const item = byFile.get(file);
+    if (item) {
+      showDetail(item, params);
+      setTopLinkActive(null);
+    } else {
+      showGallery();
+      setTopLinkActive(null);
+    }
+  }
+  function setTopLinkActive(key) {
+    sidebarEl.querySelectorAll(".top-link").forEach(a => {
+      if (key && a.getAttribute("data-top-link") === key) a.setAttribute("data-active", "true");
+      else a.removeAttribute("data-active");
+    });
+  }
+  window.addEventListener("hashchange", applyHash);
+
+  // ── Top-bar actions ─────────────────────────────────────────────────
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest("[data-action]");
+    if (!target) return;
+    const action = target.getAttribute("data-action");
+    if (action === "home" || action === "back") {
+      e.preventDefault();
+      history.pushState(null, "", window.location.pathname + window.location.search);
+      showGallery();
+    } else if (action === "prev" || action === "next") {
+      e.preventDefault();
+      const current = byFile.get(decodeURIComponent(window.location.hash.slice(1)));
+      if (!current) return;
+      const idx = flat.findIndex(x => x.file === current.file);
+      const nextIdx = action === "prev" ? idx - 1 : idx + 1;
+      if (nextIdx < 0 || nextIdx >= flat.length) return;
+      window.location.hash = "#" + encodeURIComponent(flat[nextIdx].file);
+    }
+  });
+
+  // Keyboard nav in detail view: ← → arrows + Esc to go back
+  document.addEventListener("keydown", (e) => {
+    if (document.body.getAttribute("data-view") !== "detail") return;
+    if (e.target && ["INPUT","TEXTAREA"].includes(e.target.tagName)) return;
+    if (e.key === "ArrowLeft" && !prevBtn.disabled) prevBtn.click();
+    else if (e.key === "ArrowRight" && !nextBtn.disabled) nextBtn.click();
+    else if (e.key === "Escape") document.querySelector('[data-action="back"]').click();
+  });
+
+  // Initial chrome icons
+  if (window.lucide) window.lucide.createIcons();
+
+  // Initial route
+  applyHash();
+})();
+</script>
+
+</body>
+</html>

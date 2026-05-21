@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Card</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .pipe-card { padding: 16px; border-radius: var(--radius-sm); background: var(--sl-white); display:flex; flex-direction:column; gap: 12px; min-height: 200px; box-shadow: var(--shadow-raised); }
+  .pipe-card.default  { border: 1px solid var(--sl-grey-400); }
+  .pipe-card.hover    { border: 1.5px solid var(--sl-blue-600); }
+  .pipe-card.selected { border: 3px solid var(--sl-blue-600); padding: 14px; }
+  .ph { display:flex; justify-content: space-between; align-items: center; }
+  .ph .t { font: 800 14px/20px var(--font-sans); color: var(--sl-indigo-900); }
+  .ph .acts { display: flex; gap: 8px; color: var(--color-text-subtle); font-size: 12px; }
+  .meta { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); display: flex; gap: 8px; align-items:center; }
+  .meta::before { content: ''; width: 12px; height: 12px; border-radius: 2px; background: var(--sl-blue-200); display:inline-block; }
+  .stage { font: 800 10px/14px var(--font-sans); color: var(--sl-indigo-700); }
+  .body { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .label { font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-subtle); margin-bottom: 6px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Card states</span><span class="meta">default · hover · selected</span></div>
+    <div class="row">
+      <div>
+        <div class="label">Default</div>
+        <div class="pipe-card default">
+          <div class="ph"><div class="t">Integration name</div><div class="acts">☆ ✎ ⋮</div></div>
+          <div class="meta">Auto synchronize</div>
+          <div class="stage">Repeats every 5 mins</div>
+          <div class="body">Owner: Maddie Golbaz<br/>Created 09:23 PM, Nov 12 2022</div>
+        </div>
+      </div>
+      <div>
+        <div class="label">Hover</div>
+        <div class="pipe-card hover">
+          <div class="ph"><div class="t">Integration name</div><div class="acts">☆ ✎ ⋮</div></div>
+          <div class="meta">Auto synchronize</div>
+          <div class="stage">Repeats every 5 mins</div>
+          <div class="body">Owner: Maddie Golbaz<br/>Created 09:23 PM, Nov 12 2022</div>
+        </div>
+      </div>
+      <div>
+        <div class="label">Selected</div>
+        <div class="pipe-card selected">
+          <div class="ph"><div class="t">Integration name</div><div class="acts">☆ ✎ ⋮</div></div>
+          <div class="meta">Auto synchronize</div>
+          <div class="stage">Repeats every 5 mins</div>
+          <div class="body">Owner: Maddie Golbaz<br/>Created 09:23 PM, Nov 12 2022</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

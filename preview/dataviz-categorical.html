@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Data viz · Categorical</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .card { width: 1080px; gap: 18px; }
+
+  .palette {
+    display: grid; grid-template-columns: repeat(8, 1fr);
+    gap: 4px; border-radius: var(--radius-sm); overflow: hidden;
+  }
+  .swatch {
+    height: 140px; padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 4px; justify-content: flex-end;
+    font-family: var(--font-sans);
+  }
+  .swatch.light { color: var(--sl-white); }
+  .swatch.dark { color: #0d0d0d; }
+  .swatch .idx { font: 800 11px/14px var(--font-mono); opacity: 0.75; }
+  .swatch .name { font: 800 12px/14px var(--font-sans); }
+  .swatch .hex { font: 400 11px/14px var(--font-mono); opacity: 0.85; }
+
+  .source-note { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); font-style: italic; }
+
+  .demos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .demo {
+    padding: 16px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+  }
+  .demo .lbl {
+    font: 800 10px/14px var(--font-sans);
+    color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .legend { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 12px; margin-top: 10px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* Pie + donut */
+  .pie-wrap { display: flex; justify-content: center; padding: 8px 0; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label">
+      <span class="name">Categorical · Bright 8</span>
+      <span class="meta">distinctly non-brand · maximum hue separation · for unordered chart series</span>
+    </div>
+
+    <div class="palette">
+      <div class="swatch light" style="background:#003A7D"><div class="idx">01</div><div class="name">Deep Navy</div><div class="hex">#003A7D</div></div>
+      <div class="swatch light" style="background:#008DFF"><div class="idx">02</div><div class="name">Vivid Blue</div><div class="hex">#008DFF</div></div>
+      <div class="swatch light" style="background:#FF73B6"><div class="idx">03</div><div class="name">Pink</div><div class="hex">#FF73B6</div></div>
+      <div class="swatch light" style="background:#C701FF"><div class="idx">04</div><div class="name">Electric Purple</div><div class="hex">#C701FF</div></div>
+      <div class="swatch dark" style="background:#4ECB8D"><div class="idx">05</div><div class="name">Bright Green</div><div class="hex">#4ECB8D</div></div>
+      <div class="swatch dark" style="background:#FF9D3A"><div class="idx">06</div><div class="name">Orange</div><div class="hex">#FF9D3A</div></div>
+      <div class="swatch dark" style="background:#F9E858"><div class="idx">07</div><div class="name">Yellow</div><div class="hex">#F9E858</div></div>
+      <div class="swatch light" style="background:#D83034"><div class="idx">08</div><div class="name">Red</div><div class="hex">#D83034</div></div>
+    </div>
+
+    <span class="source-note">
+      Distinct from the SnapLogic brand ramps on purpose — these are chart colors, not UI colors. High saturation, well-spaced around the wheel, so series 1 and series 2 never get confused in a stacked bar.
+    </span>
+
+    <div class="demos">
+      <!-- Pie / donut -->
+      <div class="demo">
+        <div class="lbl">Pie / donut (8 categories)</div>
+        <div class="pie-wrap">
+          <svg width="240" height="240" viewBox="-130 -130 260 260" xmlns="http://www.w3.org/2000/svg">
+            <!-- 8 slices: angles below sum to 360. Drawn clockwise starting at -90°. -->
+            <!-- values: 18, 14, 12, 12, 11, 11, 12, 10 (sum = 100) -->
+            <g>
+              <!-- arc helper data, computed and pasted in -->
+              <path d="M 0 -120 A 120 120 0 0 1 102.36 -62.41 L 0 0 Z"        fill="#003A7D"/>
+              <path d="M 102.36 -62.41 A 120 120 0 0 1 114.97 33.92 L 0 0 Z" fill="#008DFF"/>
+              <path d="M 114.97 33.92 A 120 120 0 0 1 75.18 93.66 L 0 0 Z"   fill="#FF73B6"/>
+              <path d="M 75.18 93.66 A 120 120 0 0 1 -1.05 119.99 L 0 0 Z"    fill="#C701FF"/>
+              <path d="M -1.05 119.99 A 120 120 0 0 1 -71.49 96.36 L 0 0 Z"   fill="#4ECB8D"/>
+              <path d="M -71.49 96.36 A 120 120 0 0 1 -116.49 28.97 L 0 0 Z" fill="#FF9D3A"/>
+              <path d="M -116.49 28.97 A 120 120 0 0 1 -106.41 -55.42 L 0 0 Z" fill="#F9E858"/>
+              <path d="M -106.41 -55.42 A 120 120 0 0 1 0 -120 L 0 0 Z"      fill="#D83034"/>
+              <!-- center hole -->
+              <circle r="36" fill="white"/>
+            </g>
+          </svg>
+        </div>
+        <div class="legend">
+          <div class="lg-item"><span class="lg-dot" style="background:#003A7D"></span>Deep Navy</div>
+          <div class="lg-item"><span class="lg-dot" style="background:#008DFF"></span>Vivid Blue</div>
+          <div class="lg-item"><span class="lg-dot" style="background:#FF73B6"></span>Pink</div>
+          <div class="lg-item"><span class="lg-dot" style="background:#C701FF"></span>Electric Purple</div>
+          <div class="lg-item"><span class="lg-dot" style="background:#4ECB8D"></span>Bright Green</div>
+          <div class="lg-item"><span class="lg-dot" style="background:#FF9D3A"></span>Orange</div>
+          <div class="lg-item"><span class="lg-dot" style="background:#F9E858"></span>Yellow</div>
+          <div class="lg-item"><span class="lg-dot" style="background:#D83034"></span>Red</div>
+        </div>
+      </div>
+
+      <!-- Stacked bars + lines -->
+      <div class="demo">
+        <div class="lbl">Stacked bars (Q1–Q4 × 8 series)</div>
+        <svg width="460" height="180" viewBox="0 0 460 180" xmlns="http://www.w3.org/2000/svg">
+          <line x1="32" y1="152" x2="452" y2="152" stroke="#D7DCE3" stroke-width="1"/>
+          <g>
+            <!-- Q1 -->
+            <rect x="40"  y="78"  width="11" height="74"  fill="#003A7D" rx="1"/>
+            <rect x="53"  y="48"  width="11" height="104" fill="#008DFF" rx="1"/>
+            <rect x="66"  y="92"  width="11" height="60"  fill="#FF73B6" rx="1"/>
+            <rect x="79"  y="64"  width="11" height="88"  fill="#C701FF" rx="1"/>
+            <rect x="92"  y="74"  width="11" height="78"  fill="#4ECB8D" rx="1"/>
+            <rect x="105" y="68"  width="11" height="84"  fill="#FF9D3A" rx="1"/>
+            <rect x="118" y="98"  width="11" height="54"  fill="#F9E858" rx="1"/>
+            <rect x="131" y="88"  width="11" height="64"  fill="#D83034" rx="1"/>
+            <!-- Q2 -->
+            <rect x="155" y="64"  width="11" height="88"  fill="#003A7D" rx="1"/>
+            <rect x="168" y="74"  width="11" height="78"  fill="#008DFF" rx="1"/>
+            <rect x="181" y="58"  width="11" height="94"  fill="#FF73B6" rx="1"/>
+            <rect x="194" y="80"  width="11" height="72"  fill="#C701FF" rx="1"/>
+            <rect x="207" y="48"  width="11" height="104" fill="#4ECB8D" rx="1"/>
+            <rect x="220" y="92"  width="11" height="60"  fill="#FF9D3A" rx="1"/>
+            <rect x="233" y="80"  width="11" height="72"  fill="#F9E858" rx="1"/>
+            <rect x="246" y="68"  width="11" height="84"  fill="#D83034" rx="1"/>
+            <!-- Q3 -->
+            <rect x="270" y="92"  width="11" height="60"  fill="#003A7D" rx="1"/>
+            <rect x="283" y="58"  width="11" height="94"  fill="#008DFF" rx="1"/>
+            <rect x="296" y="78"  width="11" height="74"  fill="#FF73B6" rx="1"/>
+            <rect x="309" y="42"  width="11" height="110" fill="#C701FF" rx="1"/>
+            <rect x="322" y="84"  width="11" height="68"  fill="#4ECB8D" rx="1"/>
+            <rect x="335" y="72"  width="11" height="80"  fill="#FF9D3A" rx="1"/>
+            <rect x="348" y="92"  width="11" height="60"  fill="#F9E858" rx="1"/>
+            <rect x="361" y="80"  width="11" height="72"  fill="#D83034" rx="1"/>
+            <!-- Q4 -->
+            <rect x="385" y="52"  width="11" height="100" fill="#003A7D" rx="1"/>
+            <rect x="398" y="78"  width="11" height="74"  fill="#008DFF" rx="1"/>
+            <rect x="411" y="62"  width="11" height="90"  fill="#FF73B6" rx="1"/>
+            <rect x="424" y="78"  width="11" height="74"  fill="#C701FF" rx="1"/>
+            <rect x="437" y="50"  width="11" height="102" fill="#4ECB8D" rx="1"/>
+          </g>
+          <text x="95"  y="172" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">Q1</text>
+          <text x="205" y="172" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">Q2</text>
+          <text x="320" y="172" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">Q3</text>
+          <text x="420" y="172" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#7D8695">Q4</text>
+        </svg>
+
+        <div class="lbl" style="margin-top: 14px">Lines (first 4 series)</div>
+        <svg width="460" height="150" viewBox="0 0 460 150" xmlns="http://www.w3.org/2000/svg">
+          <line x1="32" y1="122" x2="448" y2="122" stroke="#D7DCE3" stroke-width="1"/>
+          <line x1="32" y1="8" x2="32" y2="122" stroke="#D7DCE3" stroke-width="1"/>
+          <path d="M32,86 L92,77 L152,68 L212,72 L272,55 L332,40 L392,46 L448,28" fill="none" stroke="#003A7D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M32,55 L92,60 L152,72 L212,68 L272,76 L332,80 L392,72 L448,68" fill="none" stroke="#008DFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M32,98 L92,90 L152,82 L212,86 L272,68 L332,60 L392,50 L448,44" fill="none" stroke="#FF73B6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M32,65 L92,52 L152,60 L212,42 L272,55 L332,67 L392,72 L448,80" fill="none" stroke="#C701FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

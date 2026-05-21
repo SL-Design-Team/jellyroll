@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Undo via toast</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* Stage that simulates the bottom of the app */
+  .stage {
+    position: relative;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-grey-100);
+    height: 160px;
+    overflow: hidden;
+  }
+  .stage__chrome {
+    position: absolute; inset: 0;
+    padding: 14px 18px;
+    color: var(--color-text-subtle);
+    font: 400 12px/18px var(--font-sans);
+  }
+
+  /* ─── Toast (matches Toast component) ───────────────────── */
+  .toast {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font: 400 13px/18px var(--font-sans);
+    color: var(--sl-indigo-900);
+    box-shadow: var(--shadow-raised);
+    border: 1px solid transparent;
+    min-width: 460px;
+    max-width: 560px;
+    overflow: hidden;
+  }
+  .toast .icon-w {
+    width: 24px; height: 24px; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; flex-shrink: 0;
+  }
+  .toast .icon-w i, .toast .icon-w svg { width: 14px; height: 14px; }
+  .toast .msg { flex: 1; }
+  .toast .msg b { font-weight: 800; }
+
+  /* Inline action button — outline pill, scoped to the toast's accent */
+  .toast .action {
+    flex: none;
+    background: transparent;
+    border: 1px solid currentColor;
+    color: inherit;
+    font: 800 12px/16px var(--font-sans);
+    padding: 4px 10px;
+    border-radius: var(--field-radius);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .toast .action:hover { background: rgba(0,0,0,0.04); }
+  .toast .x {
+    color: var(--color-text-subtle); cursor: pointer;
+    width: 18px; height: 18px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: none;
+  }
+  .toast .x i, .toast .x svg { width: 16px; height: 16px; }
+
+  /* Variants — match component exactly */
+  .toast-info     { background: var(--sl-blue-100);   border-color: var(--sl-blue-300); }
+  .toast-info     .icon-w { background: var(--sl-blue-600); }
+  .toast-info     .action { color: var(--sl-blue-800); border-color: var(--sl-blue-600); }
+  .toast-info     .action:hover { background: var(--sl-blue-200); }
+
+  .toast-success  { background: var(--sl-green-100); border-color: var(--sl-green-300); }
+  .toast-success  .icon-w { background: var(--sl-green-600); }
+
+  .toast-loading  { background: var(--sl-grey-1000); color: var(--sl-white); align-items: center; }
+  .toast-loading .msg { color: var(--sl-white); }
+  .spin { width: 16px; height: 16px; border-radius: 999px; border: 2px solid rgba(255,255,255,0.3); border-top-color: var(--sl-white); animation: sp 0.8s linear infinite; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+
+  /* Countdown bar — sits inside, bottom of the toast, accent-tinted */
+  .toast .countdown {
+    position: absolute; left: 0; bottom: 0; height: 2px;
+    background: var(--sl-blue-600);
+  }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Undo via toast</span><span class="meta">soft-revert window · uses Toast component · info → loading → success</span></div>
+
+    <div>
+      <div class="section-h">Standard <span class="meta">single-record soft delete · info toast + Undo button + countdown</span></div>
+      <div class="stage">
+        <div class="stage__chrome">Pipelines list · just deleted "MG-pipeline-Nov2022"</div>
+        <div class="toast toast-info">
+          <span class="icon-w"><i data-lucide="trash-2"></i></span>
+          <span class="msg">Pipeline <b>'MG-pipeline-Nov2022'</b> moved to the Recycle Bin.</span>
+          <button class="action">Undo</button>
+          <span class="x" role="button" aria-label="Dismiss"><i data-lucide="x"></i></span>
+          <span class="countdown" style="width: 62%;"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Bulk action <span class="meta">multi-record · one toast for the batch</span></div>
+      <div class="stage">
+        <div class="stage__chrome">Pipelines list · 47 pipelines paused</div>
+        <div class="toast toast-info">
+          <span class="icon-w"><i data-lucide="pause"></i></span>
+          <span class="msg">Paused <b>47 pipelines</b> in <b>Sales analytics</b>.</span>
+          <button class="action">Undo all</button>
+          <span class="x" role="button" aria-label="Dismiss"><i data-lucide="x"></i></span>
+          <span class="countdown" style="width: 80%;"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Undo in progress <span class="meta">loading variant · disable further toast actions</span></div>
+      <div class="stage">
+        <div class="stage__chrome">Pipelines list · restoring deleted pipeline…</div>
+        <div class="toast toast-loading">
+          <span class="spin"></span>
+          <span class="msg">Restoring <b>'MG-pipeline-Nov2022'</b>…</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Restored <span class="meta">success variant · auto-dismiss</span></div>
+      <div class="stage">
+        <div class="stage__chrome">Pipelines list · restored</div>
+        <div class="toast toast-success">
+          <span class="icon-w"><i data-lucide="check"></i></span>
+          <span class="msg"><b>'MG-pipeline-Nov2022'</b> restored to <b>Sales analytics</b>.</span>
+          <span class="x" role="button" aria-label="Dismiss"><i data-lucide="x"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>when to use</dt><dd>Any <b>reversible action</b>: soft-delete, pause, archive, move, bulk tag, dismiss notification, mark resolved. Use instead of a confirmation modal when the action is cheap to undo — confirmations interrupt; undo respects user flow.</dd>
+      <dt>built on</dt><dd>Uses the standard <b>Toast component</b>. Variant: <b>info</b> for the undo window, <b>loading</b> while reverting, <b>success</b> on restore complete. Never red — for errors, use the inline <b>Error states</b> pattern.</dd>
+      <dt>placement</dt><dd>Bottom-center of the viewport, 18px gutter (matches Toast). Stacks vertically when multiple toasts. Don't pin to bottom-right (Designer canvas chrome lives there) and never block the form/footer action bar.</dd>
+      <dt>copy</dt><dd>Past-tense sentence stating <i>what happened</i>, with the object name <b>in quotes and bold</b>. Single sentence — no meta line. Scope is named inline when relevant ("in Sales analytics"). Never apologetic, never "Are you sure?" — the action is already done.</dd>
+      <dt>undo button</dt><dd>Outline pill, scoped to the toast's accent (Blue 600 on info). Label: <b>"Undo"</b> for single, <b>"Undo all"</b> for bulk. Keyboard: <code>⌘Z</code> triggers the most recent toast's undo while it's visible.</dd>
+      <dt>countdown</dt><dd>2px accent-colored bar pinned to the bottom edge of the toast, shrinking left-to-right over the window. Default <b>10s</b> for undo toasts (longer than the Toast component's 3s default — undo needs time to find). Hover pauses; mouse-leave resumes.</dd>
+      <dt>bulk</dt><dd>One toast for the whole batch — never N toasts. Show count + scope inline ("47 pipelines in Sales analytics"). "Undo all" restores everything atomically; if any fail to restore, show an error toast listing failed items.</dd>
+      <dt>after window</dt><dd>Once the window expires, the toast either auto-dismisses or shifts into a "Restored from Recycle Bin" affordance reachable via the bin — never silently lose access to recovery.</dd>
+      <dt>not for</dt><dd>Non-reversible actions (permanent deletes, environment teardown, password reset). For those, use the <b>Destructive confirm</b> dialog with type-to-confirm.</dd>
+      <dt>a11y</dt><dd><code>role="status"</code> with <code>aria-live="polite"</code>; toast appearance is announced. Undo button is a real <code>&lt;button&gt;</code>, reachable by Tab while toast is visible. Focus is not stolen — toast appears non-modally.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Text area</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+  .sl-textarea {
+    min-height: 88px;
+    padding: 8px var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    color: var(--field-text-default);
+    font: var(--field-font);
+    resize: vertical;
+    width: 100%;
+    outline: none;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .sl-textarea:hover { border-color: var(--field-border-hover); }
+  .sl-textarea:focus, .sl-textarea.focus { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .sl-textarea::placeholder { color: var(--field-text-placeholder); font-style: italic; font-weight: 300; }
+  .sl-textarea.error { border-color: var(--field-border-error); }
+  .sl-textarea[disabled] { background: var(--field-bg-disabled); color: var(--field-text-disabled); border-color: var(--field-border-disabled); }
+
+  .sl-field__meta { display: flex; justify-content: space-between; font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .sl-field__count { font: 400 11px/18px var(--font-mono); }
+  .sl-field__count.over { color: var(--sl-red-700); }
+  .sl-field__error { color: var(--sl-red-700); display: inline-flex; align-items: center; gap: 4px; }
+  .sl-field__error svg { width: 12px; height: 12px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Text area</span><span class="meta">multi-line · resizable · counter</span></div>
+
+    <div>
+      <div class="section-h">Default <span class="meta">88px min height · vertical resize handle</span></div>
+      <div class="sl-field">
+        <label class="sl-field__label">Pipeline description</label>
+        <textarea class="sl-textarea" placeholder="Describe what this pipeline does…">Pulls accounts from Salesforce nightly, transforms them, and loads them into the Snowflake analytics warehouse.</textarea>
+        <div class="sl-field__meta"><span>Markdown supported.</span><span class="sl-field__count">112 / 500</span></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">States</div>
+      <div class="row">
+        <div class="sl-field">
+          <label class="sl-field__label">Empty</label>
+          <textarea class="sl-textarea" placeholder="Describe what this pipeline does…"></textarea>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Focus</label>
+          <textarea class="sl-textarea focus">Caret is here…</textarea>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Error</label>
+          <textarea class="sl-textarea error">Way too short.</textarea>
+          <div class="sl-field__meta"><span class="sl-field__error"><i data-lucide="alert-circle"></i>Description must be at least 20 characters.</span></div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Disabled</label>
+          <textarea class="sl-textarea" disabled>Inherited from upstream — read-only.</textarea>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>height</dt><dd>Default min <b>88px</b> (≈3 lines). Resizable vertically by user. Set <code>rows</code> attribute or CSS <code>min-height</code> to constrain.</dd>
+      <dt>resize</dt><dd><code>resize: vertical</code> by default. Use <code>resize: none</code> for auto-grow textareas that handle their own sizing.</dd>
+      <dt>counter</dt><dd>Right-aligned in meta row, 11px mono. Turns Red-700 when over the max. <code>aria-live="polite"</code> within 10% of the limit.</dd>
+      <dt>composition</dt><dd>Uses the same <code>--field-*</code> tokens as Text field. Wrap in <code>.sl-field</code> for label + helper + counter.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

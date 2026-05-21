@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Checkbox</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .grid { display: grid; grid-template-columns: 130px 1fr 1fr; gap: 10px 24px; align-items: center; }
+  .tag { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
+  .opt { display: flex; align-items: center; gap: 8px; font: 400 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+  .opt.disabled { color: var(--color-text-disabled); }
+  .cb {
+    width: 20px; height: 20px; border-radius: 3px;
+    border: 1.5px solid var(--sl-grey-600);
+    background: var(--sl-white);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .cb.hover { border-color: var(--sl-blue-600); }
+  .cb.focus { border-color: var(--sl-blue-600); box-shadow: 0 0 0 3px rgba(8,65,180,0.25); }
+  .cb.selected { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .cb.selected::after {
+    content: ''; width: 12px; height: 7px; transform: rotate(-45deg) translate(1px, -1px);
+    border-left: 2px solid white; border-bottom: 2px solid white;
+  }
+  .cb.indeterminate { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .cb.indeterminate::after { content: ''; width: 10px; height: 2px; background: white; border-radius: 1px; }
+  .cb.disabled { background: var(--sl-grey-100); border-color: var(--sl-grey-300); }
+  .cb.disabled.selected { background: var(--sl-blue-200); border-color: var(--sl-blue-200); }
+  .cb.disabled.selected::after { border-color: var(--sl-blue-400); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Checkbox</span><span class="meta">20px · 3px radius · checkmark + indeterminate</span></div>
+    <div class="grid">
+      <div></div><span class="tag">Enabled</span><span class="tag">Disabled</span>
+      <span class="tag">Unselected</span>
+      <span class="opt"><span class="cb"></span>Label</span>
+      <span class="opt disabled"><span class="cb disabled"></span>Label</span>
+      <span class="tag">Hover</span>
+      <span class="opt"><span class="cb hover"></span>Label</span>
+      <span></span>
+      <span class="tag">Selected</span>
+      <span class="opt"><span class="cb selected"></span>Label</span>
+      <span class="opt disabled"><span class="cb disabled selected"></span>Label</span>
+      <span class="tag">Indeterminate</span>
+      <span class="opt"><span class="cb indeterminate"></span>Label</span>
+      <span class="opt disabled"><span class="cb disabled indeterminate" style="background: var(--sl-blue-200); border-color: var(--sl-blue-200);"></span>Label</span>
+      <span class="tag">Tab focus</span>
+      <span class="opt"><span class="cb focus"></span>Label</span>
+      <span></span>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Date picker</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; width: 880px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  /* Date input */
+  .sl-date {
+    height: var(--field-height-md);
+    padding: var(--field-padding-y-md) var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    display: flex; align-items: center; gap: 8px;
+    font: var(--field-font); color: var(--field-text-default);
+    cursor: pointer;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .sl-date:hover { border-color: var(--field-border-hover); }
+  .sl-date.focus, .sl-date.open { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .sl-date .value { flex: 1; min-width: 0; }
+  .sl-date .value.placeholder { color: var(--field-text-placeholder); font-style: italic; font-weight: 300; }
+  .sl-date .icon { color: var(--color-text-subtle); display: inline-flex; flex: none; }
+  .sl-date .icon svg { width: 16px; height: 16px; }
+
+  /* Calendar popover */
+  .sl-date-wrap { position: relative; }
+  .sl-cal {
+    position: absolute;
+    top: calc(100% + 4px); left: 0;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    box-shadow: var(--shadow-overlay);
+    z-index: 10;
+    padding: 16px;
+    display: flex; gap: 24px;
+  }
+  .sl-cal--single { display: block; }
+
+  .sl-cal__month { width: 240px; }
+  .sl-cal__head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .sl-cal__title { font: 800 14px/20px var(--font-sans); color: var(--sl-indigo-900); }
+  .sl-cal__nav {
+    width: 24px; height: 24px;
+    border: 0; background: transparent;
+    border-radius: var(--radius-xs);
+    color: var(--color-text-body);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sl-cal__nav:hover { background: var(--sl-grey-100); }
+  .sl-cal__nav svg { width: 14px; height: 14px; }
+
+  .sl-cal__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 32px);
+    gap: 0;
+  }
+  .sl-cal__dow {
+    font: 800 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    text-align: center;
+    padding: 4px 0;
+  }
+  .sl-cal__day {
+    width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 400 13px/16px var(--font-sans);
+    color: var(--sl-indigo-900);
+    cursor: pointer;
+    border-radius: 999px;
+    border: 0; background: transparent;
+  }
+  .sl-cal__day:hover { background: var(--sl-blue-100); }
+  .sl-cal__day.muted { color: var(--sl-grey-500); }
+  .sl-cal__day.today { box-shadow: inset 0 0 0 1px var(--sl-blue-600); font-weight: 800; }
+  .sl-cal__day.selected { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; }
+  .sl-cal__day.selected:hover { background: var(--sl-blue-700); }
+  .sl-cal__day.range { background: var(--sl-blue-100); border-radius: 0; color: var(--sl-blue-700); }
+  .sl-cal__day.range-start { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; border-radius: 999px 0 0 999px; }
+  .sl-cal__day.range-end   { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; border-radius: 0 999px 999px 0; }
+  .sl-cal__day.disabled { color: var(--sl-grey-400); cursor: not-allowed; }
+  .sl-cal__day.disabled:hover { background: transparent; }
+
+  /* Presets sidebar (range picker) */
+  .sl-cal__presets {
+    width: 140px;
+    border-right: 1px solid var(--sl-grey-200);
+    padding-right: 16px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .sl-cal__preset {
+    text-align: left;
+    border: 0; background: transparent;
+    padding: 6px 10px;
+    border-radius: var(--field-radius);
+    font: 400 13px/18px var(--font-sans);
+    color: var(--color-text-body);
+    cursor: pointer;
+  }
+  .sl-cal__preset:hover { background: var(--sl-grey-100); }
+  .sl-cal__preset.active { background: var(--sl-blue-100); color: var(--sl-blue-700); font-weight: 800; }
+
+  .sl-cal__foot {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--sl-grey-200);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 8px;
+    grid-column: 1 / -1;
+  }
+  .sl-cal__foot .selected-text { font: 400 12px/16px var(--font-mono); color: var(--color-text-subtle); }
+  .sl-cal__foot .actions { display: flex; gap: 6px; }
+  .sl-cal__foot .btn { font: 800 13px/16px var(--font-sans); padding: 4px 12px; border-radius: var(--radius-sm); border: 1.5px solid; cursor: pointer; }
+  .sl-cal__foot .btn-secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .sl-cal__foot .btn-primary { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .stage { min-height: 380px; padding-top: 8px; }
+  .stage--wide { min-height: 480px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Date picker</span><span class="meta">single · range · presets</span></div>
+
+    <div>
+      <div class="section-h">Closed states</div>
+      <div class="row">
+        <div class="sl-field"><label class="sl-field__label">Empty</label><div class="sl-date"><span class="value placeholder">dd/mm/yyyy</span><span class="icon"><i data-lucide="calendar"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Selected</label><div class="sl-date"><span class="value">19 May 2026</span><span class="icon"><i data-lucide="calendar"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Range — selected</label><div class="sl-date"><span class="value">19 May 2026 — 26 May 2026</span><span class="icon"><i data-lucide="calendar"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Range — open trigger</label><div class="sl-date focus"><span class="value">Last 7 days</span><span class="icon"><i data-lucide="calendar"></i></span></div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Single date · calendar popover</div>
+      <div class="row stage">
+        <div class="sl-field">
+          <label class="sl-field__label">Scheduled run</label>
+          <div class="sl-date-wrap">
+            <div class="sl-date open"><span class="value">19 May 2026</span><span class="icon"><i data-lucide="calendar"></i></span></div>
+            <div class="sl-cal sl-cal--single">
+              <div class="sl-cal__month">
+                <div class="sl-cal__head">
+                  <button class="sl-cal__nav" aria-label="Previous month"><i data-lucide="chevron-left"></i></button>
+                  <span class="sl-cal__title">May 2026</span>
+                  <button class="sl-cal__nav" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
+                </div>
+                <div class="sl-cal__grid">
+                  <span class="sl-cal__dow">M</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">W</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">F</span><span class="sl-cal__dow">S</span><span class="sl-cal__dow">S</span>
+                  <button class="sl-cal__day muted">27</button><button class="sl-cal__day muted">28</button><button class="sl-cal__day muted">29</button><button class="sl-cal__day muted">30</button><button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button>
+                  <button class="sl-cal__day">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button><button class="sl-cal__day">8</button><button class="sl-cal__day">9</button><button class="sl-cal__day">10</button>
+                  <button class="sl-cal__day">11</button><button class="sl-cal__day">12</button><button class="sl-cal__day">13</button><button class="sl-cal__day">14</button><button class="sl-cal__day">15</button><button class="sl-cal__day">16</button><button class="sl-cal__day">17</button>
+                  <button class="sl-cal__day">18</button><button class="sl-cal__day today selected">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button><button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button>
+                  <button class="sl-cal__day">25</button><button class="sl-cal__day">26</button><button class="sl-cal__day">27</button><button class="sl-cal__day">28</button><button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day">31</button>
+                </div>
+                <div class="sl-cal__foot">
+                  <span class="selected-text">19 May 2026</span>
+                  <div class="actions">
+                    <button class="btn btn-secondary">Today</button>
+                    <button class="btn btn-primary">Apply</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Date range · two months + presets</div>
+      <div class="stage stage--wide">
+        <div class="sl-field">
+          <label class="sl-field__label">Runs in last…</label>
+          <div class="sl-date-wrap">
+            <div class="sl-date open" style="max-width: 320px;"><span class="value">12 May 2026 — 19 May 2026</span><span class="icon"><i data-lucide="calendar"></i></span></div>
+            <div class="sl-cal" style="display: grid; grid-template-columns: auto auto auto; gap: 0 16px;">
+              <div class="sl-cal__presets">
+                <button class="sl-cal__preset">Today</button>
+                <button class="sl-cal__preset">Yesterday</button>
+                <button class="sl-cal__preset active">Last 7 days</button>
+                <button class="sl-cal__preset">Last 14 days</button>
+                <button class="sl-cal__preset">Last 30 days</button>
+                <button class="sl-cal__preset">This month</button>
+                <button class="sl-cal__preset">Last month</button>
+                <button class="sl-cal__preset">Custom…</button>
+              </div>
+              <div class="sl-cal__month">
+                <div class="sl-cal__head">
+                  <button class="sl-cal__nav"><i data-lucide="chevron-left"></i></button>
+                  <span class="sl-cal__title">May 2026</span>
+                  <span style="width: 24px;"></span>
+                </div>
+                <div class="sl-cal__grid">
+                  <span class="sl-cal__dow">M</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">W</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">F</span><span class="sl-cal__dow">S</span><span class="sl-cal__dow">S</span>
+                  <button class="sl-cal__day muted">27</button><button class="sl-cal__day muted">28</button><button class="sl-cal__day muted">29</button><button class="sl-cal__day muted">30</button><button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button>
+                  <button class="sl-cal__day">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button><button class="sl-cal__day">8</button><button class="sl-cal__day">9</button><button class="sl-cal__day">10</button>
+                  <button class="sl-cal__day">11</button><button class="sl-cal__day range-start">12</button><button class="sl-cal__day range">13</button><button class="sl-cal__day range">14</button><button class="sl-cal__day range">15</button><button class="sl-cal__day range">16</button><button class="sl-cal__day range">17</button>
+                  <button class="sl-cal__day range">18</button><button class="sl-cal__day range-end today">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button><button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button>
+                  <button class="sl-cal__day">25</button><button class="sl-cal__day">26</button><button class="sl-cal__day">27</button><button class="sl-cal__day">28</button><button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day">31</button>
+                </div>
+              </div>
+              <div class="sl-cal__month">
+                <div class="sl-cal__head">
+                  <span style="width: 24px;"></span>
+                  <span class="sl-cal__title">June 2026</span>
+                  <button class="sl-cal__nav"><i data-lucide="chevron-right"></i></button>
+                </div>
+                <div class="sl-cal__grid">
+                  <span class="sl-cal__dow">M</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">W</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">F</span><span class="sl-cal__dow">S</span><span class="sl-cal__dow">S</span>
+                  <button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button><button class="sl-cal__day">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button>
+                  <button class="sl-cal__day">8</button><button class="sl-cal__day">9</button><button class="sl-cal__day">10</button><button class="sl-cal__day">11</button><button class="sl-cal__day">12</button><button class="sl-cal__day">13</button><button class="sl-cal__day">14</button>
+                  <button class="sl-cal__day">15</button><button class="sl-cal__day">16</button><button class="sl-cal__day">17</button><button class="sl-cal__day">18</button><button class="sl-cal__day">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button>
+                  <button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button><button class="sl-cal__day">25</button><button class="sl-cal__day">26</button><button class="sl-cal__day">27</button><button class="sl-cal__day">28</button>
+                  <button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day muted">1</button><button class="sl-cal__day muted">2</button><button class="sl-cal__day muted">3</button><button class="sl-cal__day muted">4</button><button class="sl-cal__day muted">5</button>
+                </div>
+              </div>
+              <div class="sl-cal__foot" style="grid-column: 2 / -1;">
+                <span class="selected-text">12 May 2026 — 19 May 2026 · 7 days</span>
+                <div class="actions">
+                  <button class="btn btn-secondary">Cancel</button>
+                  <button class="btn btn-primary">Apply</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>trigger</dt><dd>Field with calendar icon trailing. Displays selected date(s) formatted per locale.</dd>
+      <dt>popover</dt><dd>Floats below the trigger. Single picker = one month. Range picker = two months side-by-side + preset sidebar.</dd>
+      <dt>presets</dt><dd>Range picker offers common selections (Today, Last 7 days, Last 30 days, This/Last month, Custom). Active preset highlighted Blue-100.</dd>
+      <dt>states</dt><dd><b>Today</b>: outline ring · <b>Selected</b>: blue fill · <b>Range</b>: blue tint between endpoints, solid blue endpoints · <b>Muted</b>: previous/next month · <b>Disabled</b>: grey, no hover.</dd>
+      <dt>keyboard</dt><dd>Arrow keys move day-by-day · <code>PgUp/PgDn</code> month-by-month · <code>Shift+PgUp/PgDn</code> year · <code>Enter</code> apply · <code>Esc</code> close.</dd>
+      <dt>a11y</dt><dd><code>role="dialog" aria-modal="true" aria-label="Choose date"</code>. Grid: <code>role="grid"</code>; day buttons: <code>role="gridcell" aria-selected aria-current="date"</code>.</dd>
+      <dt>related</dt><dd><b>Time picker</b> and <b>Datetime picker</b> follow the same anatomy with an added time control. Coming in Wave 2.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

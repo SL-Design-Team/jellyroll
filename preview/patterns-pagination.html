@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Pagination</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .frame {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+  .frame__bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-100);
+    font: 800 12px/16px var(--font-sans); color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+
+  /* Body placeholder */
+  .body-stub {
+    padding: 18px 16px;
+    font: 400 13px/22px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+  .body-stub b { color: var(--color-text-body); font-weight: 800; }
+  .row-stub {
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    font: 400 13px/20px var(--font-sans);
+  }
+  .row-stub.head { font: 800 10px/14px var(--font-mono); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.05em; background: var(--sl-grey-100); }
+  .row-stub:last-child { border-bottom: 0; }
+  .row-stub .muted { color: var(--color-text-subtle); }
+
+  /* Table-style pagination footer (matches Table component) */
+  .pg-foot {
+    display: flex; align-items: center; gap: 16px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-white);
+    font: 400 13px/16px var(--font-sans);
+    color: var(--sl-indigo-900);
+  }
+  .pg-grow { flex: 1; }
+  .pg-nav { display: flex; align-items: center; gap: 4px; }
+  .pg-arrow {
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--sl-indigo-900);
+    border-radius: var(--radius-sm);
+    border: 0; background: transparent;
+  }
+  .pg-arrow:hover { background: var(--sl-grey-100); }
+  .pg-arrow.disabled { color: var(--sl-grey-400); cursor: not-allowed; }
+  .pg-arrow.disabled:hover { background: transparent; }
+  .pg-arrow i, .pg-arrow svg { width: 14px; height: 14px; }
+  .pg-of { color: var(--color-text-subtle); margin: 0 4px; }
+  .pg-select {
+    font: 500 13px/16px var(--font-sans);
+    color: var(--sl-indigo-900);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    padding: 4px 10px; background: var(--sl-white);
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .pg-select i, .pg-select svg { width: 12px; height: 12px; }
+  .pg-group { display: flex; align-items: center; gap: 8px; }
+
+  /* Load more */
+  .load-more {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 18px 14px;
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-100);
+  }
+  .load-more button {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 18px;
+    font: 800 13px/22px var(--font-sans);
+    border-radius: var(--field-radius);
+    border: 1.5px solid var(--sl-blue-600);
+    background: var(--sl-white);
+    color: var(--sl-blue-600);
+    cursor: pointer;
+  }
+  .load-more button i { width: 14px; height: 14px; }
+  .load-more .meta { font: 400 12px/16px var(--font-mono); color: var(--color-text-subtle); }
+
+  /* End-of-list marker */
+  .end {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 14px;
+    border-top: 1px solid var(--sl-grey-200);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-subtle);
+    background: var(--sl-grey-100);
+  }
+  .end i { width: 14px; height: 14px; }
+
+  /* Infinite scroll loader */
+  .infinite {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 16px;
+    border-top: 1px solid var(--sl-grey-200);
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+  .infinite .spinner {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--sl-teal-600);
+    border-top-color: transparent;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Pagination and load more</span><span class="meta">table footer · load-more · infinite · end-of-list</span></div>
+
+    <div>
+      <div class="section-h">Table pagination <span class="meta">Manager / Monitor tables · matches Table component</span></div>
+      <div class="frame">
+        <div class="row-stub head"><span>Pipeline</span><span>Last run</span><span>Status</span></div>
+        <div class="row-stub"><span>sf-to-snowflake-nightly</span><span class="muted">2 min ago</span><span>Active</span></div>
+        <div class="row-stub"><span>orders-to-warehouse</span><span class="muted">14 min ago</span><span>Active</span></div>
+        <div class="row-stub"><span>users-cdc-stream</span><span class="muted">1 h ago</span><span>Failed</span></div>
+        <div class="pg-foot">
+          <div class="pg-grow"></div>
+          <div class="pg-nav">
+            <button class="pg-arrow disabled" aria-label="Previous page"><i data-lucide="chevron-left"></i></button>
+            <span>Go to page</span>
+            <span class="pg-select">1 <i data-lucide="chevron-down"></i></span>
+            <span class="pg-of">of 10</span>
+            <button class="pg-arrow" aria-label="Next page"><i data-lucide="chevron-right"></i></button>
+          </div>
+          <div class="pg-group">
+            <span class="pg-select">25 <i data-lucide="chevron-down"></i></span>
+            <span>Rows per page</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Load more <span class="meta">unknown totals · feed-shaped data</span></div>
+      <div class="frame">
+        <div class="frame__bar">Activity log</div>
+        <div class="body-stub"><b>Showing 50 events.</b> Most recent at top — older events load below.</div>
+        <div class="load-more">
+          <button><i data-lucide="chevron-down"></i>Load 50 more events</button>
+          <span class="meta">50 of an estimated 2,400 events</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Infinite scroll <span class="meta">streams · feeds · canvas results</span></div>
+      <div class="frame">
+        <div class="frame__bar">Snap palette · search results</div>
+        <div class="body-stub">Salesforce Read · Salesforce Write · SF Bulk Create · SF SOQL Query · SF Composite Tree · …</div>
+        <div class="infinite">
+          <span class="spinner"></span>
+          Loading 12 more snaps…
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">End-of-list marker <span class="meta">load-more / infinite reached the end</span></div>
+      <div class="frame">
+        <div class="row-stub"><span>users-cdc-stream</span><span class="muted">1 h ago</span><span>Failed</span></div>
+        <div class="row-stub"><span>billing-monthly-export</span><span class="muted">3 h ago</span><span>Active</span></div>
+        <div class="end"><i data-lucide="check"></i>End of results · 1,240 total</div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>which to use</dt><dd><b>Table pagination</b>: tables in Manager / Monitor. Matches the Table component exactly — page select + prev/next + rows-per-page. <b>Load more</b>: activity logs, run history. <b>Infinite</b>: feed-shaped UI like the snap palette search; never use for actionable tables. <b>Never mix</b> on one screen.</dd>
+      <dt>table</dt><dd>Single canonical control: <code>[‹] Go to page [N ▾] of T [›]</code> with <b>rows-per-page</b> select on the right. Default 25 rows; options 25 / 50 / 100. No numbered page buttons, no first/last. Prev/Next are 28×28 ghost arrows.</dd>
+      <dt>load more</dt><dd>Centered secondary button below last row. Label includes <b>batch size</b> ("Load 50 more events"). Show running count beneath ("50 of ~2,400 events"). Estimated totals are fine — exact counts are expensive.</dd>
+      <dt>infinite</dt><dd>Auto-trigger when the sentinel row hits the viewport. Show a small spinner row beneath: <i>"Loading 12 more snaps…"</i>. Never auto-load without a visible affordance. <b>Always</b> render an end-of-list marker when exhausted.</dd>
+      <dt>url state</dt><dd>Table: persist <code>?page=N&rows=25</code>. Load-more / infinite: persist the cursor, restore to nearest loaded chunk on back nav.</dd>
+      <dt>errors</dt><dd>If a fetch fails, replace the loader with an inline retry: <i>"Couldn't load more · Retry"</i>. Don't break the rest of the loaded list.</dd>
+      <dt>a11y</dt><dd>Table pagination is wrapped in <code>&lt;nav aria-label="Pagination"&gt;</code>. Prev/Next arrows use <code>aria-label</code>. Page-select is a real select. Load-more button announces label. Infinite must announce <i>"N new items loaded"</i> via <code>aria-live="polite"</code>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Spinner</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .card { gap: 18px; }
+
+  /* ─── SPINNER ──────────────────────────────────────────────
+     Comet-tail loader. A conic gradient ramps from transparent
+     to currentColor over a full revolution, masked into a ring;
+     a small "head" dot sits at the top to cap the seam where
+     the bright head meets the faded tail — so the comet reads
+     as one continuous tapered tail rather than two arcs.
+     Sized by width/height; ring thickness via --sl-spin-thick.
+  */
+  .sl-spinner {
+    --sl-spin-thick: 1.25px;
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    color: var(--sl-blue-600);
+    background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
+    -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+            mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+    animation: sl-spin 1.1s linear infinite;
+    flex: none;
+  }
+  /* The "head" — a round cap sitting at the seam where the
+     bright end of the gradient meets the transparent end. */
+  .sl-spinner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: var(--sl-spin-thick);
+    height: var(--sl-spin-thick);
+    border-radius: 50%;
+    background: currentColor;
+    transform: translateX(-50%);
+  }
+  /* Legacy: any inner <svg> from older markup is hidden. */
+  .sl-spinner svg { display: none; }
+
+  @keyframes sl-spin { to { transform: rotate(360deg); } }
+
+  /* Respect reduced motion — slow further */
+  @media (prefers-reduced-motion: reduce) {
+    .sl-spinner { animation-duration: 2.8s; }
+  }
+
+  /* Sizes — width/height + ring thickness scale together */
+  .sl-spinner--xs { width: 12px; height: 12px; --sl-spin-thick: 1px; }
+  .sl-spinner--sm { width: 16px; height: 16px; --sl-spin-thick: 1px; }
+  .sl-spinner--md { width: 24px; height: 24px; --sl-spin-thick: 1.25px; }    /* default */
+  .sl-spinner--lg { width: 40px; height: 40px; --sl-spin-thick: 1.5px; }
+  .sl-spinner--xl { width: 64px; height: 64px; --sl-spin-thick: 2px; }
+
+  /* Color variants — inherit via color */
+  .sl-spinner--brand   { color: var(--sl-blue-600); }       /* default */
+  .sl-spinner--teal    { color: var(--sl-teal-600); }
+  .sl-spinner--ai      { color: var(--ai-accent); }
+  .sl-spinner--success { color: var(--sl-green-600); }
+  .sl-spinner--warning { color: var(--sl-yellow-700); }
+  .sl-spinner--danger  { color: var(--sl-red-600); }
+  .sl-spinner--subtle  { color: var(--sl-grey-500); }
+  .sl-spinner--inverse { color: var(--sl-white); }
+
+  /* In-button placement */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font: 800 14px/22px var(--font-sans);
+    padding: 6px 18px;
+    border-radius: var(--field-radius);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    height: var(--field-height-md);
+  }
+  .btn--primary { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .btn[disabled] { cursor: progress; opacity: 0.85; }
+
+  /* In-field placement */
+  .sl-input {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: var(--field-height-md);
+    padding: 8px 12px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    font: var(--field-font); color: var(--field-text-default);
+    width: 100%;
+  }
+  .sl-input input { flex: 1; border: 0; outline: 0; background: transparent; font: inherit; color: inherit; padding: 0; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+  .sl-field__meta { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+
+  /* Block loader (centered, with optional label) */
+  .sl-loader-block {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px;
+    padding: 32px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-grey-100);
+    color: var(--color-text-subtle);
+  }
+  .sl-loader-block .sl-spinner { color: var(--sl-blue-600); }
+  .sl-loader-block .lbl { font: 800 13px/18px var(--font-sans); color: var(--color-text-body); }
+
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+  .with-label { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+
+  /* Inverse demo backing */
+  .demo-dark { background: var(--sl-blue-900); padding: 14px 18px; border-radius: var(--field-radius); display: inline-flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.85); font: 400 13px/20px var(--font-sans); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Spinner</span><span class="meta">comet tail · 1.1s rotate · sizes · colors</span></div>
+
+    <div>
+      <div class="section-h">Sizes</div>
+      <div class="row">
+        <span class="with-label"><span class="sl-spinner sl-spinner--xs"></span>xs · 12</span>
+        <span class="with-label"><span class="sl-spinner sl-spinner--sm"></span>sm · 16</span>
+        <span class="with-label"><span class="sl-spinner sl-spinner--md"></span>md · 24 · default</span>
+        <span class="with-label"><span class="sl-spinner sl-spinner--lg"></span>lg · 40</span>
+        <span class="with-label"><span class="sl-spinner sl-spinner--xl"></span>xl · 64</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Color variants <span class="meta">inherits currentColor — set color on parent</span></div>
+      <div class="row">
+        <span class="with-label"><span class="sl-spinner sl-spinner--md sl-spinner--brand"></span>brand · default</span>
+        <span class="with-label"><span class="sl-spinner sl-spinner--md sl-spinner--teal"></span>teal · focus</span>
+        <span class="with-label"><span class="sl-spinner sl-spinner--md sl-spinner--ai"></span>ai · SnapGPT</span>
+        <span class="with-label"><span class="sl-spinner sl-spinner--md sl-spinner--success"></span>success</span>
+        <span class="with-label"><span class="sl-spinner sl-spinner--md sl-spinner--warning"></span>warning</span>
+        <span class="with-label"><span class="sl-spinner sl-spinner--md sl-spinner--danger"></span>danger</span>
+        <span class="with-label"><span class="sl-spinner sl-spinner--md sl-spinner--subtle"></span>subtle</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">In context</div>
+
+      <div class="row" style="margin-bottom: 12px;">
+        <span style="font: 800 10px/14px var(--font-mono); color: var(--color-text-subtle); width: 100px;">IN BUTTON</span>
+        <button class="btn btn--primary" disabled>
+          <span class="sl-spinner sl-spinner--sm sl-spinner--inverse"></span>
+          Saving…
+        </button>
+        <button class="btn btn--secondary" disabled>
+          <span class="sl-spinner sl-spinner--sm"></span>
+          Validating…
+        </button>
+      </div>
+
+      <div class="row" style="margin-bottom: 12px;">
+        <span style="font: 800 10px/14px var(--font-mono); color: var(--color-text-subtle); width: 100px;">IN FIELD</span>
+        <div class="sl-field" style="flex: 1; max-width: 360px;">
+          <label class="sl-field__label">Pipeline name</label>
+          <div class="sl-input">
+            <input value="sf-to-snowflake-nightly" />
+            <span class="sl-spinner sl-spinner--sm sl-spinner--teal"></span>
+          </div>
+          <div class="sl-field__meta">Checking availability…</div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 12px;">
+        <span style="font: 800 10px/14px var(--font-mono); color: var(--color-text-subtle); width: 100px;">ON NAVBAR</span>
+        <div class="demo-dark">
+          <span class="sl-spinner sl-spinner--sm sl-spinner--inverse"></span>
+          Loading project assets…
+        </div>
+      </div>
+
+      <div class="row">
+        <span style="font: 800 10px/14px var(--font-mono); color: var(--color-text-subtle); width: 100px;">BLOCK LOADER</span>
+        <div class="sl-loader-block" style="width: 320px;">
+          <span class="sl-spinner sl-spinner--lg"></span>
+          <span class="lbl">Loading pipeline…</span>
+          <span style="font: 400 12px/16px var(--font-sans);">Fetching 1,240 runs from Monitor</span>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>shape</dt><dd>A masked ring rendered from a conic gradient (transparent → currentColor over 360°), with a round "head" dot at the seam. Ring thickness controlled by <code>--sl-spin-thick</code>.</dd>
+      <dt>motion</dt><dd>Single <b>1.1s linear</b> rotation. The taper itself is static within the spinner — the gradient does the work, so motion stays smooth and one-speed. Respects <code>prefers-reduced-motion</code> (slows to 2.8s).</dd>
+      <dt>sizes</dt><dd><code>xs 12</code> · <code>sm 16</code> · <code>md 24</code> (default) · <code>lg 40</code> · <code>xl 64</code>. Stroke widens at xs/sm for visibility.</dd>
+      <dt>color</dt><dd>Inherits <code>currentColor</code> — set <code>color</code> on the parent. Variants (<code>--brand · --teal · --ai · --success · --warning · --danger · --subtle · --inverse</code>) are shortcuts to common values.</dd>
+      <dt>placement</dt><dd><b>In button</b>: sm size, replaces or precedes label. Disable button while loading. <b>In field</b>: sm trailing, replaces icon. <b>Block</b>: lg/xl centered with label text below for full-section loads.</dd>
+      <dt>a11y</dt><dd>Wrap in <code>role="status" aria-live="polite"</code> with an <code>aria-label</code> describing what's loading. Don't rely on visual motion alone — screen readers need text.</dd>
+      <dt>vs. skeleton</dt><dd>Use a <b>Spinner</b> for short, indeterminate waits (&lt;3s) and inline contexts. Use <b>Skeleton loader</b> for layout-shaped loads where you can preview the content's structure.</dd>
+    </dl>
+  </div>
+</body>
+</html>

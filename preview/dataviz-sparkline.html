@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Sparkline</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .demo { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .demo .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .demo .desc { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-top: 10px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .spark-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .panel { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .panel .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+
+  .spark-table { width: 100%; border-collapse: collapse; font-family: var(--font-sans); }
+  .spark-table td { padding: 10px 12px; font: 500 13px/16px var(--font-sans); color: var(--sl-indigo-900); border-bottom: 1px solid var(--sl-grey-200); vertical-align: middle; }
+  .spark-table tr:last-child td { border-bottom: none; }
+  .spark-table .name { font-weight: 500; }
+  .spark-table .num { font-variant-numeric: tabular-nums; text-align: right; font-weight: 800; }
+  .spark-table .delta { text-align: right; font: 800 11px/14px var(--font-sans); }
+  .spark-table .delta.up { color: #017D1B; }
+  .spark-table .delta.down { color: #B61631; }
+
+  .spark-card { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; background: var(--sl-grey-100); border-radius: var(--radius-sm); }
+  .spark-card .label { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; }
+  .spark-card .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .spark-card .value { font: 800 22px/24px var(--font-sans); color: var(--sl-indigo-900); font-variant-numeric: tabular-nums; }
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Sparkline</span><span class="meta">inline mini-trend · no axis · use in tables and KPI cards</span></div>
+    <div class="spark-grid">
+      <div class="panel">
+        <div class="lbl">In table rows</div>
+        <table class="spark-table">
+          <tr>
+            <td class="name">prod-snaplex-01</td>
+            <td><svg width="120" height="28" viewBox="0 0 120 28"><polyline points="0,20 15,18 30,14 45,16 60,10 75,8 90,12 105,6 120,4" fill="none" stroke="#008DFF" stroke-width="2"/></svg></td>
+            <td class="num">8.2k/s</td>
+            <td class="delta up">▲ 12%</td>
+          </tr>
+          <tr>
+            <td class="name">prod-snaplex-02</td>
+            <td><svg width="120" height="28" viewBox="0 0 120 28"><polyline points="0,12 15,14 30,18 45,14 60,16 75,20 90,18 105,22 120,20" fill="none" stroke="#D83034" stroke-width="2"/></svg></td>
+            <td class="num">3.4k/s</td>
+            <td class="delta down">▼ 8%</td>
+          </tr>
+          <tr>
+            <td class="name">dev-snaplex-02</td>
+            <td><svg width="120" height="28" viewBox="0 0 120 28"><polyline points="0,16 15,15 30,17 45,14 60,16 75,15 90,17 105,14 120,16" fill="none" stroke="#7D8695" stroke-width="2"/></svg></td>
+            <td class="num">1.1k/s</td>
+            <td class="delta" style="color: var(--color-text-subtle)">— 0%</td>
+          </tr>
+          <tr>
+            <td class="name">prod-snaplex-03</td>
+            <td><svg width="120" height="28" viewBox="0 0 120 28"><polyline points="0,22 15,20 30,18 45,15 60,12 75,14 90,10 105,7 120,4" fill="none" stroke="#4ECB8D" stroke-width="2"/></svg></td>
+            <td class="num">12.7k/s</td>
+            <td class="delta up">▲ 24%</td>
+          </tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="lbl">In KPI cards (area-fill variant)</div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="spark-card">
+            <span class="label">Records / second</span>
+            <div class="row">
+              <span class="value">25.4k</span>
+              <svg width="120" height="36" viewBox="0 0 120 36">
+                <defs><linearGradient id="grad1" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#008DFF" stop-opacity="0.4"/><stop offset="100%" stop-color="#008DFF" stop-opacity="0"/></linearGradient></defs>
+                <path d="M0,26 L15,22 L30,20 L45,18 L60,14 L75,12 L90,10 L105,8 L120,5 L120,36 L0,36 Z" fill="url(#grad1)"/>
+                <polyline points="0,26 15,22 30,20 45,18 60,14 75,12 90,10 105,8 120,5" fill="none" stroke="#008DFF" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+          <div class="spark-card">
+            <span class="label">Failed runs / hour</span>
+            <div class="row">
+              <span class="value">12</span>
+              <svg width="120" height="36" viewBox="0 0 120 36">
+                <defs><linearGradient id="grad2" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#D83034" stop-opacity="0.4"/><stop offset="100%" stop-color="#D83034" stop-opacity="0"/></linearGradient></defs>
+                <path d="M0,28 L15,24 L30,26 L45,20 L60,22 L75,16 L90,18 L105,12 L120,8 L120,36 L0,36 Z" fill="url(#grad2)"/>
+                <polyline points="0,28 15,24 30,26 45,20 60,22 75,16 90,18 105,12 120,8" fill="none" stroke="#D83034" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+          <div class="spark-card">
+            <span class="label">Avg duration</span>
+            <div class="row">
+              <span class="value">01:48</span>
+              <svg width="120" height="36" viewBox="0 0 120 36">
+                <defs><linearGradient id="grad3" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#4ECB8D" stop-opacity="0.4"/><stop offset="100%" stop-color="#4ECB8D" stop-opacity="0"/></linearGradient></defs>
+                <path d="M0,18 L15,20 L30,22 L45,18 L60,16 L75,14 L90,12 L105,14 L120,10 L120,36 L0,36 Z" fill="url(#grad3)"/>
+                <polyline points="0,18 15,20 30,22 45,18 60,16 75,14 90,12 105,14 120,10" fill="none" stroke="#4ECB8D" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body></html>

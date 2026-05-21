@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Table</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<!--
+  Sourced from the JellyRoll Figma "Table specification" page (node 5903:668).
+  Configuration uses lightweight toolbar popovers (Display, Columns) plus per-column
+  filter popovers anchored to the funnel icon in each filterable header. Everything
+  applies instantly — no Apply/Cancel commit step.
+-->
+<style>
+  .card { max-width: 1240px; width: 100%; padding: 24px; background: var(--sl-grey-100); box-sizing: border-box; }
+
+  .data-table {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    font-family: var(--font-sans);
+  }
+
+  /* Fluid: contracts with container, 800px table minimum, horizontal scroll below that. */
+  .dt-scroll { overflow-x: auto; }
+  .dt-inner  { min-width: max(800px, 100%); width: fit-content; }
+
+  /* ── Toolbar ──────────────────────────────────────────────────── */
+  .dt-toolbar {
+    display: flex; align-items: center; gap: 16px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .dt-toolbar .count {
+    font: 800 14px/22px var(--font-sans);
+    color: var(--color-text-body);
+    white-space: nowrap;
+  }
+  .dt-toolbar .vpipe   { width: 1px; height: 20px; background: var(--sl-blue-200); }
+  .dt-toolbar .actions { display: flex; align-items: center; gap: 4px; flex: 1; min-width: 0; }
+  .dt-toolbar .right   { display: flex; align-items: center; gap: 8px; }
+
+  .tb-link {
+    font: 400 14px/22px var(--font-sans);
+    color: var(--sl-blue-600);
+    background: none; border: 0; cursor: pointer;
+    padding: 4px 8px; border-radius: var(--radius-sm);
+    display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+  }
+  .tb-link:hover { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+  .tb-link.danger { color: var(--sl-red-700); }
+  .tb-link.danger:hover { background: var(--sl-red-100); color: var(--sl-red-800); }
+
+  .dt-search {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    padding: 4px 10px; width: 260px;
+  }
+  .dt-search input { border: none; background: none; outline: none; font: 400 14px/22px var(--font-sans); color: var(--color-text-body); flex: 1; width: 100%; }
+  .dt-search input::placeholder { color: var(--color-text-subtle); font-style: italic; font-weight: 300; }
+  .dt-search svg { color: var(--color-text-subtle); flex-shrink: 0; }
+
+  .dt-icon-btn {
+    width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-sm); color: var(--color-text-body);
+    cursor: pointer; background: transparent;
+  }
+  .dt-icon-btn:hover { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+  .dt-icon-btn.active { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+
+  /* ── Table ──────────────────────────────────────────────────── */
+  .dt-tbl { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+  .dt-tbl thead th {
+    background: var(--sl-white);
+    font: 800 14px/22px var(--font-sans);
+    color: var(--color-text-body);
+    text-align: left;
+    padding: 0 12px;
+    height: 40px;
+    border-bottom: 1px solid var(--sl-grey-300);
+    vertical-align: middle;
+    white-space: nowrap; user-select: none;
+    position: relative;
+  }
+  .dt-tbl thead th + th::before {
+    content: '';
+    position: absolute; left: 0; top: 9px; bottom: 9px;
+    width: 1px; background: var(--sl-grey-200);
+  }
+  .dt-tbl thead th .h-cell {
+    display: inline-flex; align-items: center; gap: 6px;
+    cursor: pointer; padding: 4px 0;
+  }
+  .dt-tbl thead th .h-cell:hover { color: var(--sl-blue-700); }
+  .dt-tbl thead th .sort { color: var(--color-text-body); display: inline-flex; }
+  .dt-tbl thead th .sort svg { width: 14px !important; height: 14px !important; stroke-width: 2.25; }
+  .dt-tbl thead th .filter-btn {
+    width: 22px; height: 22px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-subtle);
+    cursor: pointer; margin-right: 4px;
+  }
+  .dt-tbl thead th .filter-btn:hover { background: var(--sl-grey-100); color: var(--sl-blue-700); }
+  .dt-tbl thead th .filter-btn.active { color: var(--sl-blue-600); }
+  .dt-tbl thead th .filter-btn svg { width: 14px !important; height: 14px !important; stroke-width: 2; }
+
+  .dt-tbl thead .cb-col { width: 40px; padding: 0; text-align: center; }
+  .dt-tbl thead .cb-col::before { display: none; }
+  .dt-tbl thead .act-col { width: 80px; padding: 0; }
+  .dt-tbl thead .num-col { text-align: right; }
+  .dt-tbl thead .num-col .h-cell { display: inline-flex; }
+
+  /* Resize handle */
+  .col-resize {
+    position: absolute; top: 0; right: -3px; bottom: 0;
+    width: 6px; cursor: col-resize; z-index: 2;
+  }
+  .col-resize::after {
+    content: ''; position: absolute; left: 2px; top: 9px; bottom: 9px;
+    width: 2px; background: var(--sl-blue-600);
+    opacity: 0; transition: opacity 120ms ease;
+  }
+  .col-resize:hover::after, .col-resize.dragging::after { opacity: 1; }
+  body.col-resizing { cursor: col-resize !important; user-select: none; }
+  body.col-resizing * { cursor: col-resize !important; }
+
+  /* Body cells */
+  .dt-tbl tbody td {
+    padding: 0 12px; height: 40px;
+    font: 400 14px/22px var(--font-sans); color: var(--color-text-body);
+    border-bottom: 1px solid var(--sl-grey-200);
+    vertical-align: middle;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .dt-tbl tbody tr:last-child td { border-bottom: none; }
+  .dt-tbl tbody tr:hover:not(.selected) { background: var(--sl-grey-100); cursor: pointer; }
+  .dt-tbl tbody tr.selected { background: var(--sl-blue-100); }
+
+  .num { font-variant-numeric: tabular-nums; text-align: right; }
+  .muted { color: var(--color-text-subtle); }
+
+  /* Densities */
+  .data-table[data-density="expanded"] .dt-tbl thead th,
+  .data-table[data-density="expanded"] .dt-tbl tbody td { height: 48px; }
+  .data-table[data-density="expanded"] .dt-tbl thead th + th::before { top: 11px; bottom: 11px; }
+  .data-table[data-density="dense"] .dt-tbl thead th,
+  .data-table[data-density="dense"] .dt-tbl tbody td { height: 32px; }
+  .data-table[data-density="dense"] .dt-tbl thead th + th::before { top: 7px; bottom: 7px; }
+
+  /* Row striping */
+  .data-table[data-striping="on"] .dt-tbl tbody tr:nth-child(even):not(.selected) { background: var(--sl-grey-50); }
+
+  /* Hide columns by name (covers col + th + td via shared data-col-name attribute) */
+  .data-table.hide-pipeline [data-col-name="pipeline"] { display: none; }
+  .data-table.hide-snaplex  [data-col-name="snaplex"]  { display: none; }
+  .data-table.hide-status   [data-col-name="status"]   { display: none; }
+  .data-table.hide-duration [data-col-name="duration"] { display: none; }
+  .data-table.hide-lastrun  [data-col-name="lastrun"]  { display: none; }
+  .data-table.hide-records  [data-col-name="records"]  { display: none; }
+
+  /* Filtered-out rows */
+  .dt-tbl tbody tr.filter-hidden { display: none; }
+
+  /* Checkbox */
+  .cb {
+    width: 16px; height: 16px; border-radius: 2px;
+    border: 1.5px solid var(--sl-grey-600);
+    background: var(--sl-white);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; vertical-align: middle; flex-shrink: 0;
+    box-sizing: border-box;
+  }
+  .cb:hover { border-color: var(--sl-blue-600); }
+  .cb.selected { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .cb.selected::after { content: ''; width: 8px; height: 4px; transform: rotate(-45deg) translate(1px, -1px); border-left: 2px solid white; border-bottom: 2px solid white; }
+  .cb.indeterminate { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .cb.indeterminate::after { content: ''; width: 8px; height: 2px; background: white; border-radius: 1px; }
+
+  /* Action column */
+  .act-cell { display: flex; align-items: center; justify-content: flex-end; }
+  .row-kebab {
+    width: 24px; height: 24px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-body);
+    cursor: pointer;
+  }
+  .row-kebab:hover { background: var(--sl-grey-200); color: var(--sl-blue-700); }
+
+  /* Pipeline cell */
+  .pipeline-cell { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .pipeline-cell .n  { color: var(--color-text-body); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pipeline-cell .id { font: 400 12px/14px var(--font-mono); color: var(--color-text-subtle); flex-shrink: 0; }
+
+  /* Status — colored dot + text, no background */
+  .tag {
+    font: 400 14px/22px var(--font-sans); color: var(--color-text-body);
+    display: inline-flex; align-items: center; gap: 8px; width: max-content;
+  }
+  .tag .dot { width: 8px; height: 8px; border-radius: 999px; flex-shrink: 0; }
+  .tag-info .dot { background: var(--sl-blue-600); }
+  .tag-ok   .dot { background: var(--sl-green-600); }
+  .tag-warn .dot { background: var(--sl-yellow-600); }
+  .tag-fail .dot { background: var(--sl-red-600); }
+  .tag-mute .dot { background: var(--sl-grey-500); }
+  @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .tag-info .dot { animation: pulse-dot 1.4s ease-in-out infinite; }
+
+  /* Pagination */
+  .dt-foot {
+    display: flex; align-items: center; gap: 16px;
+    padding: 8px 16px;
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-white);
+    font: 400 14px/22px var(--font-sans); color: var(--color-text-body);
+  }
+  .pg-select {
+    font: 500 14px/20px var(--font-sans); color: var(--color-text-body);
+    border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm);
+    padding: 2px 10px; background: var(--sl-white); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .pg-nav { display: flex; align-items: center; gap: 4px; }
+  .pg-arrow {
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--color-text-body); border-radius: var(--radius-sm);
+  }
+  .pg-arrow:hover { background: var(--sl-grey-100); }
+  .pg-arrow.disabled { color: var(--sl-grey-400); cursor: not-allowed; }
+  .pg-of   { color: var(--color-text-subtle); margin: 0 4px; }
+  .pg-grow { flex: 1; }
+
+  /* ── Lightweight popovers (Display / Columns / per-column Filter) ── */
+  .tbl-pop {
+    position: fixed;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 24px rgba(38, 40, 44, 0.18);
+    padding: 4px;
+    min-width: 240px;
+    z-index: 100;
+    display: none;
+  }
+  .tbl-pop.open { display: block; }
+  .tbl-pop .pop-label {
+    font: 800 11px/14px var(--font-sans);
+    color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 8px 8px 4px;
+  }
+  .tbl-pop hr {
+    border: 0; border-top: 1px solid var(--sl-grey-200);
+    margin: 4px 0;
+  }
+  .pop-opt {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border-radius: var(--radius-sm);
+    cursor: pointer;
+    font: 400 14px/22px var(--font-sans); color: var(--color-text-body);
+  }
+  .pop-opt:hover { background: var(--sl-grey-100); }
+  .pop-opt input[type="radio"] {
+    appearance: none; width: 16px; height: 16px; border-radius: 999px;
+    border: 1.5px solid var(--sl-grey-600); margin: 0; position: relative; cursor: pointer; box-sizing: border-box;
+  }
+  .pop-opt input[type="radio"]:checked { border-color: var(--sl-blue-600); }
+  .pop-opt input[type="radio"]:checked::after { content: ''; position: absolute; inset: 3px; border-radius: 999px; background: var(--sl-blue-600); }
+  .pop-opt input[type="checkbox"] {
+    appearance: none; width: 16px; height: 16px; border-radius: 2px;
+    border: 1.5px solid var(--sl-grey-600); margin: 0; position: relative; cursor: pointer; box-sizing: border-box;
+  }
+  .pop-opt input[type="checkbox"]:checked { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .pop-opt input[type="checkbox"]:checked::after {
+    content: ''; position: absolute; left: 3px; top: 1px;
+    width: 6px; height: 10px;
+    border-right: 2px solid white; border-bottom: 2px solid white;
+    transform: rotate(45deg);
+  }
+
+  /* Columns popover — rows are draggable */
+  .col-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border-radius: var(--radius-sm);
+    cursor: pointer;
+    font: 400 14px/22px var(--font-sans); color: var(--color-text-body);
+  }
+  .col-row:hover { background: var(--sl-grey-100); }
+  .col-row.dragging   { opacity: 0.4; }
+  .col-row.drop-target { box-shadow: inset 0 2px 0 var(--sl-blue-600); }
+  .col-row .name { flex: 1; }
+  .col-row .grip {
+    color: var(--color-text-subtle); cursor: grab;
+    width: 20px; height: 20px;
+    display: inline-flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 120ms ease;
+  }
+  .col-row:hover .grip { opacity: 1; }
+  .col-row .grip:active { cursor: grabbing; color: var(--sl-blue-600); }
+
+  /* Filter popover — anchored to each column header funnel */
+  .filter-clear {
+    background: none; border: 0; cursor: pointer;
+    font: 400 14px/22px var(--font-sans); color: var(--sl-blue-600);
+    padding: 6px 8px; border-radius: var(--radius-sm); width: 100%; text-align: left;
+  }
+  .filter-clear:hover { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+  .filter-input {
+    display: flex; align-items: center; gap: 4px;
+    border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm);
+    padding: 4px 10px; margin: 4px 8px; background: var(--sl-white);
+  }
+  .filter-input input {
+    border: 0; outline: 0; background: none; font: 400 14px/22px var(--font-sans);
+    color: var(--color-text-body); flex: 1; width: 100%;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label" style="margin-bottom: 14px"><span class="name">Table</span><span class="meta">Pipeline executions · interactive · spec Figma 5903:668</span></div>
+
+    <div class="data-table" id="data-table" data-density="compact" data-striping="off">
+     <div class="dt-scroll">
+      <div class="dt-inner">
+
+      <!-- Toolbar — count flips to "N selected" + selection actions when 1+ rows are checked -->
+      <div class="dt-toolbar">
+        <span class="count" id="tb-count">10 pipelines</span>
+        <span class="vpipe" id="tb-pipe" hidden></span>
+        <div class="actions" id="tb-actions" hidden>
+          <button class="tb-link danger"><i data-lucide="trash-2" style="width:14px;height:14px"></i>Delete</button>
+          <button class="tb-link"><i data-lucide="copy" style="width:14px;height:14px"></i>Clone</button>
+          <button class="tb-link"><i data-lucide="pause" style="width:14px;height:14px"></i>Stop</button>
+          <button class="tb-link">More <i data-lucide="chevron-down" style="width:14px;height:14px"></i></button>
+        </div>
+        <div style="flex:1"></div>
+        <div class="right">
+          <div class="dt-search"><i data-lucide="search" style="width:14px;height:14px"></i><input placeholder="Search executions" /></div>
+          <div class="dt-icon-btn" title="Refresh"><i data-lucide="refresh-cw" style="width:16px;height:16px"></i></div>
+          <div class="dt-icon-btn" id="display-btn" title="Display"><i data-lucide="sliders-horizontal" style="width:16px;height:16px"></i></div>
+          <div class="dt-icon-btn" id="columns-btn" title="Columns"><i data-lucide="columns-3" style="width:16px;height:16px"></i></div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <table class="dt-tbl" id="dt-tbl">
+        <colgroup>
+          <col style="width: 40px" />
+          <col data-col-name="pipeline" style="width: 28%" />
+          <col data-col-name="snaplex"  style="width: 16%" />
+          <col data-col-name="status"   style="width: 13%" />
+          <col data-col-name="duration" style="width: 10%" />
+          <col data-col-name="lastrun"  style="width: 19%" />
+          <col data-col-name="records"  style="width: 10%" />
+          <col style="width: 80px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="cb-col"><span class="cb" id="cb-all"></span></th>
+            <th data-col-name="pipeline">
+              <span class="filter-btn" data-filter="pipeline" data-filter-type="search"><i data-lucide="filter"></i></span>
+              <span class="h-cell" data-sort="pipeline">Pipeline <span class="sort"></span></span>
+              <div class="col-resize"></div>
+            </th>
+            <th data-col-name="snaplex">
+              <span class="filter-btn" data-filter="snaplex" data-filter-type="multi"><i data-lucide="filter"></i></span>
+              <span class="h-cell" data-sort="snaplex">Snaplex <span class="sort"></span></span>
+              <div class="col-resize"></div>
+            </th>
+            <th data-col-name="status">
+              <span class="filter-btn" data-filter="status" data-filter-type="multi"><i data-lucide="filter"></i></span>
+              <span class="h-cell" data-sort="status">Status <span class="sort"></span></span>
+              <div class="col-resize"></div>
+            </th>
+            <th class="num-col" data-col-name="duration">
+              <span class="h-cell" data-sort="duration">Duration <span class="sort"></span></span>
+              <div class="col-resize"></div>
+            </th>
+            <th data-col-name="lastrun">
+              <span class="h-cell" data-sort="lastrun">Last run <span class="sort"></span></span>
+              <div class="col-resize"></div>
+            </th>
+            <th class="num-col" data-col-name="records">
+              <span class="h-cell" data-sort="records">Records <span class="sort"></span></span>
+              <div class="col-resize"></div>
+            </th>
+            <th class="act-col"></th>
+          </tr>
+        </thead>
+        <tbody id="dt-body">
+          <tr class="selected" data-sortkey-records="82917"  data-sortkey-duration="272">
+            <td class="cb-col"><span class="cb selected"></span></td>
+            <td data-col-name="pipeline"><div class="pipeline-cell"><span class="n">Salesforce to Snowflake daily</span><span class="id">pip_d8f2a1b3</span></div></td>
+            <td data-col-name="snaplex">prod-snaplex-01</td>
+            <td data-col-name="status" data-status="running"><span class="tag tag-info"><span class="dot"></span>Running</span></td>
+            <td data-col-name="duration" class="num">04:32</td>
+            <td data-col-name="lastrun" data-sortkey="2022-11-18T22:23">10:23 PM, Nov 18 2022</td>
+            <td data-col-name="records" class="num">82,917</td>
+            <td><div class="act-cell"><span class="row-kebab"><i data-lucide="more-vertical" style="width:16px;height:16px"></i></span></div></td>
+          </tr>
+          <tr data-sortkey-records="12403" data-sortkey-duration="108">
+            <td class="cb-col"><span class="cb"></span></td>
+            <td data-col-name="pipeline"><div class="pipeline-cell"><span class="n">MG-pipeline-Nov2022</span><span class="id">pip_a31c9e07</span></div></td>
+            <td data-col-name="snaplex">prod-snaplex-01</td>
+            <td data-col-name="status" data-status="succeeded"><span class="tag tag-ok"><span class="dot"></span>Succeeded</span></td>
+            <td data-col-name="duration" class="num">01:48</td>
+            <td data-col-name="lastrun" data-sortkey="2023-03-02T16:13">04:13 PM, Mar 02 2023</td>
+            <td data-col-name="records" class="num">12,403</td>
+            <td><div class="act-cell"><span class="row-kebab"><i data-lucide="more-vertical" style="width:16px;height:16px"></i></span></div></td>
+          </tr>
+          <tr class="selected" data-sortkey-records="0" data-sortkey-duration="9">
+            <td class="cb-col"><span class="cb selected"></span></td>
+            <td data-col-name="pipeline"><div class="pipeline-cell"><span class="n">Auto-sync MCP server</span><span class="id">pip_77b4d6e1</span></div></td>
+            <td data-col-name="snaplex">dev-snaplex-02</td>
+            <td data-col-name="status" data-status="failed"><span class="tag tag-fail"><span class="dot"></span>Failed</span></td>
+            <td data-col-name="duration" class="num">00:09</td>
+            <td data-col-name="lastrun" data-sortkey="2023-03-21T09:23">09:23 AM, Mar 21 2023</td>
+            <td data-col-name="records" class="num">0</td>
+            <td><div class="act-cell"><span class="row-kebab"><i data-lucide="more-vertical" style="width:16px;height:16px"></i></span></div></td>
+          </tr>
+          <tr data-sortkey-records="3189" data-sortkey-duration="314">
+            <td class="cb-col"><span class="cb"></span></td>
+            <td data-col-name="pipeline"><div class="pipeline-cell"><span class="n">REST API ingest hourly</span><span class="id">pip_55ac8129</span></div></td>
+            <td data-col-name="snaplex">prod-snaplex-02</td>
+            <td data-col-name="status" data-status="warning"><span class="tag tag-warn"><span class="dot"></span>Warning</span></td>
+            <td data-col-name="duration" class="num">05:14</td>
+            <td data-col-name="lastrun" data-sortkey="2023-04-04T14:01">02:01 PM, Apr 04 2023</td>
+            <td data-col-name="records" class="num">3,189</td>
+            <td><div class="act-cell"><span class="row-kebab"><i data-lucide="more-vertical" style="width:16px;height:16px"></i></span></div></td>
+          </tr>
+          <tr class="selected" data-sortkey-records="1204883" data-sortkey-duration="767">
+            <td class="cb-col"><span class="cb selected"></span></td>
+            <td data-col-name="pipeline"><div class="pipeline-cell"><span class="n">Kafka to BigQuery realtime</span><span class="id">pip_19d4c20b</span></div></td>
+            <td data-col-name="snaplex">prod-snaplex-01</td>
+            <td data-col-name="status" data-status="running"><span class="tag tag-info"><span class="dot"></span>Running</span></td>
+            <td data-col-name="duration" class="num">12:47</td>
+            <td data-col-name="lastrun" data-sortkey="2023-04-12T11:08">11:08 AM, Apr 12 2023</td>
+            <td data-col-name="records" class="num">1,204,883</td>
+            <td><div class="act-cell"><span class="row-kebab"><i data-lucide="more-vertical" style="width:16px;height:16px"></i></span></div></td>
+          </tr>
+          <tr data-sortkey-records="" data-sortkey-duration="">
+            <td class="cb-col"><span class="cb"></span></td>
+            <td data-col-name="pipeline"><div class="pipeline-cell"><span class="n">Marketing leads enrichment</span><span class="id">pip_3e1f88c0</span></div></td>
+            <td data-col-name="snaplex">dev-snaplex-02</td>
+            <td data-col-name="status" data-status="queued"><span class="tag tag-mute"><span class="dot"></span>Queued</span></td>
+            <td data-col-name="duration" class="num muted">—</td>
+            <td data-col-name="lastrun" class="muted">—</td>
+            <td data-col-name="records" class="num muted">—</td>
+            <td><div class="act-cell"><span class="row-kebab"><i data-lucide="more-vertical" style="width:16px;height:16px"></i></span></div></td>
+          </tr>
+          <tr data-sortkey-records="47231" data-sortkey-duration="72">
+            <td class="cb-col"><span class="cb"></span></td>
+            <td data-col-name="pipeline"><div class="pipeline-cell"><span class="n">HubSpot contacts nightly</span><span class="id">pip_92e8f4d5</span></div></td>
+            <td data-col-name="snaplex">prod-snaplex-01</td>
+            <td data-col-name="status" data-status="succeeded"><span class="tag tag-ok"><span class="dot"></span>Succeeded</span></td>
+            <td data-col-name="duration" class="num">01:12</td>
+            <td data-col-name="lastrun" data-sortkey="2023-04-13T00:00">12:00 AM, Apr 13 2023</td>
+            <td data-col-name="records" class="num">47,231</td>
+            <td><div class="act-cell"><span class="row-kebab"><i data-lucide="more-vertical" style="width:16px;height:16px"></i></span></div></td>
+          </tr>
+          <tr data-sortkey-records="9884" data-sortkey-duration="42">
+            <td class="cb-col"><span class="cb"></span></td>
+            <td data-col-name="pipeline"><div class="pipeline-cell"><span class="n">Stripe events to Postgres</span><span class="id">pip_61c30b88</span></div></td>
+            <td data-col-name="snaplex">prod-snaplex-02</td>
+            <td data-col-name="status" data-status="succeeded"><span class="tag tag-ok"><span class="dot"></span>Succeeded</span></td>
+            <td data-col-name="duration" class="num">00:42</td>
+            <td data-col-name="lastrun" data-sortkey="2023-04-13T08:15">08:15 AM, Apr 13 2023</td>
+            <td data-col-name="records" class="num">9,884</td>
+            <td><div class="act-cell"><span class="row-kebab"><i data-lucide="more-vertical" style="width:16px;height:16px"></i></span></div></td>
+          </tr>
+          <tr data-sortkey-records="" data-sortkey-duration="">
+            <td class="cb-col"><span class="cb"></span></td>
+            <td data-col-name="pipeline"><div class="pipeline-cell"><span class="n">Zendesk tickets to S3 archive</span><span class="id">pip_4cd91a72</span></div></td>
+            <td data-col-name="snaplex">prod-snaplex-02</td>
+            <td data-col-name="status" data-status="queued"><span class="tag tag-mute"><span class="dot"></span>Queued</span></td>
+            <td data-col-name="duration" class="num muted">—</td>
+            <td data-col-name="lastrun" class="muted">—</td>
+            <td data-col-name="records" class="num muted">—</td>
+            <td><div class="act-cell"><span class="row-kebab"><i data-lucide="more-vertical" style="width:16px;height:16px"></i></span></div></td>
+          </tr>
+          <tr data-sortkey-records="0" data-sortkey-duration="21">
+            <td class="cb-col"><span class="cb"></span></td>
+            <td data-col-name="pipeline"><div class="pipeline-cell"><span class="n">Workday HR sync</span><span class="id">pip_8af2b056</span></div></td>
+            <td data-col-name="snaplex">prod-snaplex-01</td>
+            <td data-col-name="status" data-status="failed"><span class="tag tag-fail"><span class="dot"></span>Failed</span></td>
+            <td data-col-name="duration" class="num">00:21</td>
+            <td data-col-name="lastrun" data-sortkey="2023-04-13T06:00">06:00 AM, Apr 13 2023</td>
+            <td data-col-name="records" class="num">0</td>
+            <td><div class="act-cell"><span class="row-kebab"><i data-lucide="more-vertical" style="width:16px;height:16px"></i></span></div></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="dt-foot">
+        <div class="pg-grow"></div>
+        <div class="pg-nav">
+          <span class="pg-arrow disabled"><i data-lucide="chevron-left" style="width:14px;height:14px"></i></span>
+          <span>Go to page</span>
+          <span class="pg-select">1 <i data-lucide="chevron-down" style="width:12px;height:12px"></i></span>
+          <span class="pg-of">of 10</span>
+          <span class="pg-arrow"><i data-lucide="chevron-right" style="width:14px;height:14px"></i></span>
+        </div>
+        <div style="display:flex; align-items: center; gap: 8px;">
+          <span class="pg-select">25 <i data-lucide="chevron-down" style="width:12px;height:12px"></i></span>
+          <span>Rows per page</span>
+        </div>
+      </div>
+
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <!-- ── Toolbar popovers ─────────────────────────────────────────── -->
+  <div class="tbl-pop" id="pop-display">
+    <div class="pop-label">Row spacing</div>
+    <label class="pop-opt"><input type="radio" name="density" value="expanded"> Expanded</label>
+    <label class="pop-opt"><input type="radio" name="density" value="compact" checked> Compact</label>
+    <label class="pop-opt"><input type="radio" name="density" value="dense"> Dense</label>
+    <hr>
+    <div class="pop-label">Row striping</div>
+    <label class="pop-opt"><input type="checkbox" id="opt-striping"> On</label>
+    <hr>
+    <div class="pop-label">Auto-refresh</div>
+    <label class="pop-opt"><input type="checkbox" id="opt-refresh"> Refresh every 30s</label>
+  </div>
+
+  <div class="tbl-pop" id="pop-columns">
+    <div class="pop-label">Show columns &middot; drag to reorder</div>
+    <div id="col-list">
+      <div class="col-row" draggable="true" data-col="pipeline"><label class="pop-opt" style="padding:0;background:transparent"><input type="checkbox" checked></label><span class="name">Pipeline</span><span class="grip"><i data-lucide="grip-vertical"></i></span></div>
+      <div class="col-row" draggable="true" data-col="snaplex"><label class="pop-opt" style="padding:0;background:transparent"><input type="checkbox" checked></label><span class="name">Snaplex</span><span class="grip"><i data-lucide="grip-vertical"></i></span></div>
+      <div class="col-row" draggable="true" data-col="status"><label class="pop-opt" style="padding:0;background:transparent"><input type="checkbox" checked></label><span class="name">Status</span><span class="grip"><i data-lucide="grip-vertical"></i></span></div>
+      <div class="col-row" draggable="true" data-col="duration"><label class="pop-opt" style="padding:0;background:transparent"><input type="checkbox" checked></label><span class="name">Duration</span><span class="grip"><i data-lucide="grip-vertical"></i></span></div>
+      <div class="col-row" draggable="true" data-col="lastrun"><label class="pop-opt" style="padding:0;background:transparent"><input type="checkbox" checked></label><span class="name">Last run</span><span class="grip"><i data-lucide="grip-vertical"></i></span></div>
+      <div class="col-row" draggable="true" data-col="records"><label class="pop-opt" style="padding:0;background:transparent"><input type="checkbox" checked></label><span class="name">Records</span><span class="grip"><i data-lucide="grip-vertical"></i></span></div>
+    </div>
+  </div>
+
+  <!-- Shared per-column filter popover (content rebuilt on open) -->
+  <div class="tbl-pop" id="pop-filter">
+    <div id="pop-filter-body"></div>
+    <hr>
+    <button class="filter-clear" id="filter-clear">Clear filter</button>
+  </div>
+
+  <script>
+  // Wrapped in an IIFE so consts don't collide with re-renders. The host page
+  // (index.html) renders previews inside a Shadow DOM, but `document.currentScript`
+  // is unreliable for dynamically-inserted scripts — so we locate the hosting root
+  // by searching every shadow root in the document for #data-table. When the file
+  // is opened standalone, the table lives directly in the document.
+  (function() {
+    function findHostingRoot(){
+      if (document.getElementById('data-table')) return document;
+      const stack = Array.from(document.querySelectorAll('*'));
+      while (stack.length) {
+        const el = stack.pop();
+        if (el.shadowRoot) {
+          if (el.shadowRoot.getElementById && el.shadowRoot.getElementById('data-table')) return el.shadowRoot;
+          stack.push(...el.shadowRoot.querySelectorAll('*'));
+        }
+      }
+      return null;
+    }
+    const root = findHostingRoot();
+    if (!root) { console.warn('[table preview] hosting root not found — interactions disabled'); return; }
+    const byId  = (id)  => (root.getElementById ? root.getElementById(id) : root.querySelector('#' + id));
+    const qsa   = (sel) => root.querySelectorAll(sel);
+
+    function renderIcons() {
+      if (!window.lucide) return;
+      try { lucide.createIcons({ root }); }
+      catch { try { lucide.createIcons(); } catch {} }
+    }
+    renderIcons();
+
+    const tbl       = byId('data-table');
+    const tableEl   = byId('dt-tbl');
+    const tbody     = byId('dt-body');
+    const allRows   = () => Array.from(tbody.querySelectorAll('tr'));
+
+    // ── Popover infrastructure ────────────────────────────────────
+    function closeAllPops(){ qsa('.tbl-pop.open').forEach(p => p.classList.remove('open')); }
+    function positionPop(pop, anchor, align='right'){
+      const r = anchor.getBoundingClientRect();
+      pop.style.top = (r.bottom + 4) + 'px';
+      pop.style.right = ''; pop.style.left = '';
+      if (align === 'right') pop.style.right = (window.innerWidth - r.right) + 'px';
+      else                   pop.style.left  = r.left + 'px';
+    }
+    // Click events bubble out of shadow DOM but `e.target` is retargeted to the
+    // host. Use composedPath() to peek inside and find the real click target.
+    document.addEventListener('click', (e) => {
+      const path = e.composedPath ? e.composedPath() : [e.target];
+      const inPop    = path.some(el => el && el.classList && el.classList.contains('tbl-pop'));
+      const inAnchor = path.some(el => el && el.hasAttribute && el.hasAttribute('data-pop-anchor'));
+      if (!inPop && !inAnchor) closeAllPops();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllPops(); });
+
+    function openPop(popId, anchor, align){
+      const pop = byId(popId);
+      const wasOpen = pop.classList.contains('open');
+      closeAllPops();
+      if (!wasOpen) { positionPop(pop, anchor, align); pop.classList.add('open'); }
+    }
+
+    // ── Display popover ───────────────────────────────────────────
+    const displayBtn = byId('display-btn');
+    displayBtn.setAttribute('data-pop-anchor','');
+    displayBtn.addEventListener('click', (e) => { e.stopPropagation(); openPop('pop-display', displayBtn); });
+    qsa('#pop-display [name="density"]').forEach(r => {
+      r.addEventListener('change', () => tbl.setAttribute('data-density', r.value));
+    });
+    byId('opt-striping').addEventListener('change', (e) => {
+      tbl.setAttribute('data-striping', e.target.checked ? 'on' : 'off');
+    });
+
+    // ── Columns popover (hide/show + drag-to-reorder) ─────────────
+    const columnsBtn = byId('columns-btn');
+    columnsBtn.setAttribute('data-pop-anchor','');
+    columnsBtn.addEventListener('click', (e) => { e.stopPropagation(); openPop('pop-columns', columnsBtn); });
+
+    const colList = byId('col-list');
+    colList.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        const col = cb.closest('.col-row').dataset.col;
+        const stillChecked = colList.querySelectorAll('input[type="checkbox"]:checked').length;
+        if (!cb.checked && stillChecked === 0) {
+          cb.checked = true; // never leave zero columns visible
+          return;
+        }
+        tbl.classList.toggle('hide-' + col, !cb.checked);
+      });
+    });
+
+    // Move the actual <col>, <th>, and every <td> for a given column name into a target position
+    function reorderTableColumn(name, targetPos){
+      const colgroup = tableEl.querySelector('colgroup');
+      const headRow  = tableEl.querySelector('thead tr');
+      const col = colgroup.querySelector(`col[data-col-name="${name}"]`);
+      const th  = headRow.querySelector(`th[data-col-name="${name}"]`);
+      const colRef = colgroup.children[targetPos] || null;
+      const thRef  = headRow.children[targetPos] || null;
+      if (col !== colRef) colgroup.insertBefore(col, colRef);
+      if (th !== thRef)   headRow.insertBefore(th, thRef);
+      allRows().forEach(row => {
+        const td = row.querySelector(`td[data-col-name="${name}"]`);
+        if (!td) return;
+        const tdRef = row.children[targetPos] || null;
+        if (td !== tdRef) row.insertBefore(td, tdRef);
+      });
+    }
+    function applyColOrderFromList(){
+      const order = Array.from(colList.querySelectorAll('.col-row')).map(r => r.dataset.col);
+      order.forEach((name, i) => reorderTableColumn(name, i + 1)); // 0 is cb-col
+    }
+
+    // Drag-and-drop reorder
+    let dragRow = null;
+    colList.addEventListener('dragstart', (e) => {
+      const row = e.target.closest('.col-row');
+      if (!row) return;
+      dragRow = row; row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    colList.addEventListener('dragend', () => {
+      if (dragRow) dragRow.classList.remove('dragging');
+      colList.querySelectorAll('.drop-target').forEach(r => r.classList.remove('drop-target'));
+      dragRow = null;
+    });
+    colList.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const target = e.target.closest('.col-row');
+      if (!target || target === dragRow) return;
+      colList.querySelectorAll('.drop-target').forEach(r => r.classList.remove('drop-target'));
+      target.classList.add('drop-target');
+    });
+    colList.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const target = e.target.closest('.col-row');
+      if (!target || !dragRow || target === dragRow) return;
+      const rect = target.getBoundingClientRect();
+      const before = (e.clientY - rect.top) < rect.height / 2;
+      colList.insertBefore(dragRow, before ? target : target.nextSibling);
+      target.classList.remove('drop-target');
+      applyColOrderFromList();
+    });
+
+    // ── Sorting ───────────────────────────────────────────────────
+    // Capture original order for "unsorted" cycle.
+    allRows().forEach((r, i) => r.dataset.origIdx = i);
+    let sort = { col: null, dir: null }; // dir: 'asc' | 'desc' | null
+
+    function getSortValue(row, col){
+      const td = row.querySelector(`td[data-col-name="${col}"]`);
+      if (!td) return '';
+      // Prefer an explicit sortkey on the td (for dates), then on the row (for numerics with em-dash UI)
+      const tdKey = td.getAttribute('data-sortkey');
+      if (tdKey !== null) return tdKey;
+      const rowKey = row.getAttribute('data-sortkey-' + col);
+      if (rowKey !== null && rowKey !== '') return rowKey;
+      // For pipeline column, use the name text only (not the id)
+      if (col === 'pipeline') {
+        const n = td.querySelector('.pipeline-cell .n');
+        return n ? n.textContent.trim().toLowerCase() : '';
+      }
+      // For status, prefer data-status (so the sort follows the status string, not the pill text)
+      if (col === 'status') return (td.getAttribute('data-status') || '').toLowerCase();
+      return td.textContent.trim().toLowerCase();
+    }
+    function compare(a, b, col){
+      const va = getSortValue(a, col);
+      const vb = getSortValue(b, col);
+      // Empty / em-dash values sort to the bottom regardless of direction
+      const ea = va === '' || va === '—';
+      const eb = vb === '' || vb === '—';
+      if (ea && eb) return 0;
+      if (ea) return 1;
+      if (eb) return -1;
+      const na = parseFloat(va), nb = parseFloat(vb);
+      if (!isNaN(na) && !isNaN(nb) && (''+na === va || ''+nb === vb || /^-?\d/.test(va))) return na - nb;
+      return va < vb ? -1 : va > vb ? 1 : 0;
+    }
+    function applySort(){
+      const rows = allRows();
+      let ordered;
+      if (sort.col === null) {
+        ordered = rows.slice().sort((a, b) => (+a.dataset.origIdx) - (+b.dataset.origIdx));
+      } else {
+        ordered = rows.slice().sort((a, b) => {
+          const r = compare(a, b, sort.col);
+          return sort.dir === 'asc' ? r : -r;
+        });
+      }
+      ordered.forEach(r => tbody.appendChild(r));
+      renderSortArrows();
+    }
+    function renderSortArrows(){
+      qsa('.dt-tbl thead .h-cell').forEach(h => {
+        const span = h.querySelector('.sort'); span.innerHTML = '';
+        if (h.dataset.sort === sort.col && sort.dir) {
+          const icon = sort.dir === 'asc' ? 'arrow-up' : 'arrow-down';
+          span.innerHTML = `<i data-lucide="${icon}"></i>`;
+        }
+      });
+      renderIcons();
+    }
+    qsa('.dt-tbl thead .h-cell').forEach(h => {
+      h.addEventListener('click', () => {
+        const col = h.dataset.sort;
+        if (sort.col !== col)        sort = { col, dir: 'asc' };
+        else if (sort.dir === 'asc') sort = { col, dir: 'desc' };
+        else                          sort = { col: null, dir: null };
+        applySort();
+      });
+    });
+    // Default: Pipeline asc (matches the original showcase)
+    sort = { col: 'pipeline', dir: 'asc' };
+    applySort();
+
+    // ── Selection ─────────────────────────────────────────────────
+    const cbAll    = byId('cb-all');
+    const tbCount  = byId('tb-count');
+    const tbPipe   = byId('tb-pipe');
+    const tbActs   = byId('tb-actions');
+
+    function updateToolbar(){
+      const selected = tbody.querySelectorAll('tr.selected').length;
+      const total    = allRows().length;
+      if (selected === 0) {
+        tbCount.textContent = total + ' pipelines';
+        tbPipe.hidden = true; tbActs.hidden = true;
+      } else {
+        tbCount.textContent = selected + ' selected';
+        tbPipe.hidden = false; tbActs.hidden = false;
+      }
+      // Header checkbox state
+      cbAll.classList.remove('selected', 'indeterminate');
+      if      (selected === total)     cbAll.classList.add('selected');
+      else if (selected > 0)           cbAll.classList.add('indeterminate');
+    }
+    tbody.querySelectorAll('tr').forEach(row => {
+      const cb = row.querySelector('.cb-col .cb');
+      cb.addEventListener('click', (e) => {
+        e.stopPropagation();
+        row.classList.toggle('selected');
+        cb.classList.toggle('selected');
+        updateToolbar();
+      });
+    });
+    cbAll.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const anySelected = tbody.querySelectorAll('tr.selected').length > 0;
+      allRows().forEach(row => {
+        const cb = row.querySelector('.cb-col .cb');
+        if (anySelected) { row.classList.remove('selected'); cb.classList.remove('selected'); }
+        else             { row.classList.add('selected');    cb.classList.add('selected'); }
+      });
+      updateToolbar();
+    });
+    updateToolbar();
+
+    // ── Column filter popover (anchored to each header funnel) ─────
+    const popFilter   = byId('pop-filter');
+    const filterBody  = byId('pop-filter-body');
+    const filterClear = byId('filter-clear');
+    const filters     = {}; // { columnName: Set<value> | { q: string } }
+    let openFilterCol = null;
+
+    const FILTER_SOURCES = {
+      snaplex: ['prod-snaplex-01', 'prod-snaplex-02', 'dev-snaplex-02'],
+      status:  ['running', 'succeeded', 'failed', 'warning', 'queued'],
+    };
+    const STATUS_LABEL = { running:'Running', succeeded:'Succeeded', failed:'Failed', warning:'Warning', queued:'Queued' };
+
+    function applyFilters(){
+      allRows().forEach(row => {
+        let visible = true;
+        for (const col in filters) {
+          const f = filters[col];
+          const td = row.querySelector(`td[data-col-name="${col}"]`);
+          if (!td) continue;
+          if (col === 'pipeline') {
+            const q = (f && f.q || '').toLowerCase();
+            if (q && !td.textContent.toLowerCase().includes(q)) visible = false;
+          } else if (col === 'status') {
+            const s = (td.getAttribute('data-status') || '').toLowerCase();
+            if (f && f.size > 0 && !f.has(s)) visible = false;
+          } else {
+            const v = td.textContent.trim();
+            if (f && f.size > 0 && !f.has(v)) visible = false;
+          }
+        }
+        row.classList.toggle('filter-hidden', !visible);
+      });
+      // Update funnel "active" state
+      qsa('.filter-btn').forEach(btn => {
+        const col = btn.dataset.filter;
+        const f = filters[col];
+        const active = (col === 'pipeline') ? !!(f && f.q) : !!(f && f.size > 0);
+        btn.classList.toggle('active', active);
+      });
+    }
+
+    qsa('.filter-btn').forEach(btn => {
+      btn.setAttribute('data-pop-anchor', '');
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const col  = btn.dataset.filter;
+        const type = btn.dataset.filterType;
+        openFilterCol = col;
+        filterBody.innerHTML = '';
+
+        if (type === 'search') {
+          const wrap = document.createElement('div');
+          wrap.className = 'filter-input';
+          wrap.innerHTML = '<input type="text" placeholder="Search…" />';
+          const input = wrap.querySelector('input');
+          const cur = filters[col] && filters[col].q || '';
+          input.value = cur;
+          input.addEventListener('input', () => {
+            filters[col] = { q: input.value };
+            applyFilters();
+          });
+          filterBody.appendChild(wrap);
+          setTimeout(() => input.focus(), 0);
+        } else {
+          const set = filters[col] = filters[col] instanceof Set ? filters[col] : new Set();
+          FILTER_SOURCES[col].forEach(val => {
+            const lbl = document.createElement('label');
+            lbl.className = 'pop-opt';
+            const checked = set.has(val);
+            const label = (col === 'status') ? STATUS_LABEL[val] : val;
+            lbl.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}> ${label}`;
+            const cb = lbl.querySelector('input');
+            cb.addEventListener('change', () => {
+              if (cb.checked) set.add(val); else set.delete(val);
+              applyFilters();
+            });
+            filterBody.appendChild(lbl);
+          });
+        }
+        openPop('pop-filter', btn);
+      });
+    });
+    filterClear.addEventListener('click', () => {
+      if (openFilterCol) delete filters[openFilterCol];
+      applyFilters();
+      closeAllPops();
+    });
+
+    // ── Column resize ─────────────────────────────────────────────
+    (function colResize(){
+      const colgroup = tableEl.querySelector('colgroup');
+      let locked = false;
+      function lockToPx(){
+        if (locked) return;
+        const cols = Array.from(colgroup.children);
+        let total = 0;
+        cols.forEach(c => { const w = c.getBoundingClientRect().width; c.style.width = w + 'px'; total += w; });
+        tableEl.style.width = total + 'px';
+        locked = true;
+      }
+      function recomputeWidth(){
+        let total = 0;
+        Array.from(colgroup.children).forEach(c => total += parseFloat(c.style.width) || c.getBoundingClientRect().width);
+        tableEl.style.width = total + 'px';
+      }
+      qsa('.col-resize').forEach(handle => {
+        handle.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          lockToPx();
+          // After lock, find the col element matching this th (handle is inside the th, th has data-col-name)
+          const th = handle.closest('th');
+          const name = th.getAttribute('data-col-name');
+          const col = colgroup.querySelector(`col[data-col-name="${name}"]`);
+          if (!col) return;
+          const startX = e.clientX;
+          const startW = parseFloat(col.style.width);
+          handle.classList.add('dragging');
+          document.body.classList.add('col-resizing');
+          function onMove(ev){
+            const w = Math.max(60, startW + (ev.clientX - startX));
+            col.style.width = w + 'px';
+            recomputeWidth();
+          }
+          function onUp(){
+            handle.classList.remove('dragging');
+            document.body.classList.remove('col-resizing');
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+          }
+          document.addEventListener('mousemove', onMove);
+          document.addEventListener('mouseup', onUp);
+        });
+      });
+    })();
+  })();
+  </script>
+</body>
+</html>

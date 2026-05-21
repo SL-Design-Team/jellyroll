@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Empty states</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* Frames simulate the container the empty state lives in */
+  .frame {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    min-height: 280px;
+    display: flex; flex-direction: column;
+  }
+  .frame__bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-100);
+    font: 800 12px/16px var(--font-sans); color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .frame__bar i { width: 14px; height: 14px; }
+  .frame__body {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px 24px;
+  }
+
+  .empty {
+    text-align: center;
+    max-width: 360px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .empty__art {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--sl-grey-100);
+    border: 1px solid var(--sl-grey-200);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sl-grey-700);
+    margin-bottom: 12px;
+  }
+  .empty__art i { width: 28px; height: 28px; }
+  .empty--locked .empty__art { background: var(--sl-yellow-100); border-color: var(--sl-yellow-300); color: var(--sl-yellow-1000); }
+  .empty--first .empty__art {
+    background: linear-gradient(112.63deg, rgba(11,157,155,0.12) 12%, rgba(8,65,180,0.12) 137%);
+    border: 1px solid var(--sl-blue-300);
+    color: var(--sl-blue-600);
+  }
+  .empty__title {
+    font: 800 16px/24px var(--font-sans);
+    color: var(--color-text-heading);
+  }
+  .empty__desc {
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-subtle);
+    margin: 2px 0 14px;
+  }
+  .empty__actions { display: flex; gap: 8px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    font: 800 13px/22px var(--font-sans);
+    border-radius: var(--field-radius);
+    border: 1.5px solid;
+    cursor: pointer;
+  }
+  .btn--primary  { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .btn--ghost { background: transparent; color: var(--color-text-link); border-color: transparent; padding-left: 6px; padding-right: 6px; }
+  .btn--ghost:hover { text-decoration: underline; }
+  .btn i { width: 14px; height: 14px; }
+
+  /* Inline-in-table variant (smaller) */
+  .row-empty {
+    padding: 36px 20px;
+    text-align: center;
+    color: var(--color-text-subtle);
+    font: 400 13px/20px var(--font-sans);
+    border-top: 1px dashed var(--sl-grey-200);
+  }
+  .row-empty .lbl { font-weight: 800; color: var(--color-text-body); }
+
+  /* Mini search-no-results variant */
+  .search-stub {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    font: 400 13px/20px var(--font-sans); color: var(--color-text-body);
+    margin: 14px 24px;
+  }
+  .search-stub i { width: 16px; height: 16px; color: var(--color-text-subtle); }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Empty states</span><span class="meta">zero-data · no-results · no-permission · first-run</span></div>
+
+    <div>
+      <div class="section-h">First-run zero state <span class="meta">no records ever · invites action</span></div>
+      <div class="frame">
+        <div class="frame__bar"><i data-lucide="git-branch"></i>Pipelines</div>
+        <div class="frame__body">
+          <div class="empty empty--first">
+            <div class="empty__art"><i data-lucide="git-branch"></i></div>
+            <div class="empty__title">No pipelines in this project yet</div>
+            <div class="empty__desc">Pipelines are reusable flows that move data between systems. Create one from scratch or start from a pattern.</div>
+            <div class="empty__actions">
+              <button class="btn btn--primary"><i data-lucide="plus"></i>Create a pipeline</button>
+              <button class="btn btn--secondary">Browse patterns</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="grid">
+      <div>
+        <div class="section-h">No results <span class="meta">filter / search returned nothing</span></div>
+        <div class="frame">
+          <div class="frame__bar"><i data-lucide="search"></i>Search</div>
+          <div class="search-stub"><i data-lucide="search"></i>"snowflake nightly"</div>
+          <div class="frame__body" style="padding-top: 8px;">
+            <div class="empty">
+              <div class="empty__art"><i data-lucide="search-x"></i></div>
+              <div class="empty__title">No matches for "snowflake nightly"</div>
+              <div class="empty__desc">Try a shorter term, or clear filters to see all 1,240 runs.</div>
+              <div class="empty__actions">
+                <button class="btn btn--secondary"><i data-lucide="x"></i>Clear filters</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-h">No permission <span class="meta">user lacks entitlement</span></div>
+        <div class="frame">
+          <div class="frame__bar"><i data-lucide="shield"></i>Secrets</div>
+          <div class="frame__body">
+            <div class="empty empty--locked">
+              <div class="empty__art"><i data-lucide="lock"></i></div>
+              <div class="empty__title">You don't have access to Secrets</div>
+              <div class="empty__desc">Ask an Org Admin to grant the <b>Secrets Reader</b> role on this environment.</div>
+              <div class="empty__actions">
+                <button class="btn btn--ghost"><i data-lucide="external-link"></i>Request access</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Inline in table <span class="meta">section has data structure but no rows</span></div>
+      <div class="frame" style="min-height: 0;">
+        <div class="frame__bar"><i data-lucide="list"></i>Recent runs</div>
+        <div style="display: grid; grid-template-columns: 1.6fr 0.8fr 0.8fr 1fr; padding: 8px 16px; font: 800 10px/14px var(--font-mono); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--sl-grey-200);">
+          <span>Pipeline</span><span>Status</span><span>Duration</span><span>Started</span>
+        </div>
+        <div class="row-empty">
+          <span class="lbl">No runs in the last 24 hours.</span> Adjust the time range or
+          <a href="#" style="color: var(--color-text-link); text-decoration: underline; font-weight: 800;">run a pipeline now</a>.
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>anatomy</dt><dd>Round 64×64 icon medallion, <b>16px ExtraBold</b> title, <b>13px regular</b> description (≤2 lines, ≤140 chars), 1–2 action buttons. Centered, max-width 360px. Lives inside the container that would normally show data.</dd>
+      <dt>variants</dt><dd><b>First-run</b> (brand-tinted medallion, primary CTA) · <b>No results</b> (grey medallion, secondary "Clear filters") · <b>No permission</b> (yellow medallion, ghost link) · <b>Inline</b> (one-line, no medallion — for sub-sections inside a populated screen).</dd>
+      <dt>copy</dt><dd>Title is a <b>declarative phrase</b>, sentence case, names the missing object ("No pipelines in this project yet"). Description names <i>why</i> + the next step. Never apologize ("Sorry, no results"). Never use "Oops".</dd>
+      <dt>actions</dt><dd>Primary CTA only when the user can resolve the empty state themselves. For no-permission, replace CTA with a ghost "Request access" link — never a disabled button. For no-results, the action is <b>always</b> "Clear filters" or "Adjust search", never "Create".</dd>
+      <dt>art</dt><dd>Single Lucide glyph in a flat medallion — no illustrations, no characters, no spot art. Brand-gradient tint reserved for first-run states only.</dd>
+      <dt>vs. loading</dt><dd>Show a <b>skeleton</b> while data is fetching. Only render the empty state once the request resolves with zero rows — never flash empty before loading completes.</dd>
+      <dt>a11y</dt><dd>Empty container has <code>role="status"</code> with the title as accessible name. Actions are real buttons, focusable, keyboard-reachable.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

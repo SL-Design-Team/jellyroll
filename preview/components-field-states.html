@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Field states</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+
+  /* ─── FIELD (reused — same structure as Field anatomy) ───── */
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label {
+    font: 800 14px/22px var(--font-sans);
+    color: var(--sl-indigo-900);
+    display: flex; align-items: baseline; gap: 4px;
+  }
+  .sl-field__label.muted { color: var(--field-text-disabled); }
+  .sl-field__control {
+    height: var(--field-height-md);
+    padding: var(--field-padding-y-md) var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    color: var(--field-text-default);
+    font: var(--field-font);
+    display: flex; align-items: center; gap: 8px;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .sl-field__control input {
+    border: 0; outline: 0; background: transparent;
+    flex: 1; min-width: 0;
+    font: inherit; color: inherit; padding: 0;
+  }
+  .sl-field__control .icon { color: inherit; display: inline-flex; flex: none; }
+  .sl-field__control .icon svg { width: 16px; height: 16px; stroke-width: 2; }
+  .sl-field__meta { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .sl-field__error  { color: var(--sl-red-700); display: inline-flex; align-items: center; gap: 4px; }
+  .sl-field__error svg { width: 12px; height: 12px; }
+  .sl-field__warning { color: var(--sl-yellow-1000); display: inline-flex; align-items: center; gap: 4px; }
+  .sl-field__warning svg { width: 12px; height: 12px; }
+  .sl-field__success { color: var(--sl-green-800); display: inline-flex; align-items: center; gap: 4px; }
+  .sl-field__success svg { width: 12px; height: 12px; }
+
+  /* State modifiers */
+  .s-hover    .sl-field__control { border-color: var(--field-border-hover); }
+  .s-focus    .sl-field__control { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .s-disabled .sl-field__control { background: var(--field-bg-disabled); color: var(--field-text-disabled); border-color: var(--field-border-disabled); cursor: not-allowed; }
+  .s-readonly .sl-field__control { background: var(--field-bg-readonly); color: var(--field-text-readonly); border-color: var(--field-border-readonly); }
+  .s-error    .sl-field__control { border-color: var(--field-border-error);   background: var(--field-bg-error); }
+  .s-warning  .sl-field__control { border-color: var(--field-border-warning); }
+  .s-success  .sl-field__control { border-color: var(--field-border-success); }
+  .s-loading  .sl-field__control .icon { animation: spin 1s linear infinite; color: var(--sl-teal-600); }
+  .s-ai       .sl-field__control {
+    border-color: var(--ai-accent);
+    background: linear-gradient(90deg, var(--sl-white) 0%, var(--ai-tint) 50%, var(--sl-white) 100%);
+    background-size: 200% 100%;
+    animation: ai-sweep 2.4s ease-in-out infinite;
+  }
+  .s-ai       .sl-field__control .icon { color: var(--ai-accent); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes ai-sweep { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0 0; } }
+
+  /* Layout */
+  .matrix { display: grid; grid-template-columns: 140px 1fr 1fr 1.4fr; gap: 14px 18px; align-items: start; }
+  .matrix .h { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); padding-bottom: 6px; border-bottom: 1px solid var(--sl-grey-200); }
+  .matrix .rowlbl {
+    font: 800 13px/20px var(--font-sans);
+    color: var(--sl-indigo-900);
+    padding-top: 28px;
+  }
+  .matrix .rowlbl small {
+    display: block;
+    font: 400 11px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    margin-top: 2px;
+  }
+  .matrix .when {
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-subtle);
+    padding-top: 26px;
+  }
+  .matrix .when b { color: var(--color-text-body); }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+
+  .spec {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 4px 16px;
+    font: 400 11px/16px var(--font-sans);
+    padding: 12px 14px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+  }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label">
+      <span class="name">Field states</span>
+      <span class="meta">canonical state vocabulary · applies to every input</span>
+    </div>
+
+    <div>
+      <div class="section-h">State matrix <span class="meta">11 states · same control rendered each way</span></div>
+      <div class="matrix">
+        <div class="h">State</div>
+        <div class="h">Empty</div>
+        <div class="h">Filled</div>
+        <div class="h">When to use</div>
+
+        <div class="rowlbl">Default<small>token: <span style="font-weight:800;color:var(--sl-grey-700)">grey-400</span></small></div>
+        <div class="sl-field"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input placeholder="Enter a name" /></div></div>
+        <div class="sl-field"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="sf-nightly" /></div></div>
+        <div class="when">Idle, not focused, no validation has run.</div>
+
+        <div class="rowlbl">Hover<small>border: blue-600</small></div>
+        <div class="sl-field s-hover"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input placeholder="Enter a name" /></div></div>
+        <div class="sl-field s-hover"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="sf-nightly" /></div></div>
+        <div class="when">Pointer over the control. Subtle border shift signals it's interactive.</div>
+
+        <div class="rowlbl">Focus<small>halo + border: teal-600</small></div>
+        <div class="sl-field s-focus"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input placeholder="Enter a name" /></div></div>
+        <div class="sl-field s-focus"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="sf-nightly" /></div></div>
+        <div class="when">Keyboard or pointer focus. <b>2px teal halo</b> via <code>--ring-focus</code>.</div>
+
+        <div class="rowlbl">Disabled<small>bg: blue-100</small></div>
+        <div class="sl-field s-disabled"><div class="sl-field__label muted">Pipeline name</div><div class="sl-field__control"><input value="" placeholder="not available" disabled /></div></div>
+        <div class="sl-field s-disabled"><div class="sl-field__label muted">Pipeline name</div><div class="sl-field__control"><input value="sf-nightly" disabled /></div></div>
+        <div class="when">Not editable now <b>and</b> reason is contextual (e.g. another field must be set first). Tinted blue keeps brand identity.</div>
+
+        <div class="rowlbl">Read-only<small>bg: grey-100</small></div>
+        <div class="sl-field s-readonly"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="" readonly placeholder="—" /></div></div>
+        <div class="sl-field s-readonly"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="sf-nightly" readonly /></div></div>
+        <div class="when">Display-only. Text is <b>selectable</b>. Different from disabled — no chrome on hover.</div>
+
+        <div class="rowlbl">Error<small>border + tint: red</small></div>
+        <div class="sl-field s-error"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="" placeholder="required" /></div><div class="sl-field__meta"><span class="sl-field__error"><i data-lucide="alert-circle"></i>Pipeline name is required.</span></div></div>
+        <div class="sl-field s-error"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="bad value!!" /></div><div class="sl-field__meta"><span class="sl-field__error"><i data-lucide="alert-circle"></i>Letters, numbers, and dashes only.</span></div></div>
+        <div class="when">Validation failed. Inline message is <b>specific</b> — never "Invalid input."</div>
+
+        <div class="rowlbl">Warning<small>border: yellow-700</small></div>
+        <div class="sl-field s-warning"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="sf-nightly-deprecated-v1" /></div><div class="sl-field__meta"><span class="sl-field__warning"><i data-lucide="alert-triangle"></i>This name matches a deprecated convention.</span></div></div>
+        <div class="sl-field s-warning"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="MyPipeline" /></div><div class="sl-field__meta"><span class="sl-field__warning"><i data-lucide="alert-triangle"></i>Mixed case isn't recommended.</span></div></div>
+        <div class="when">Value works but isn't ideal. Sub-optimal, not blocking. Sparingly.</div>
+
+        <div class="rowlbl">Success<small>border: green-600</small></div>
+        <div class="sl-field s-success"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="sf-to-snow-nightly" /><span class="icon" style="color: var(--sl-green-600);"><i data-lucide="check"></i></span></div></div>
+        <div class="sl-field s-success"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="sf-to-snow-nightly" /><span class="icon" style="color: var(--sl-green-600);"><i data-lucide="check"></i></span></div><div class="sl-field__meta"><span class="sl-field__success"><i data-lucide="check-circle"></i>Available.</span></div></div>
+        <div class="when">Async check passed (e.g. uniqueness, connectivity). Use briefly, not as default-filled state.</div>
+
+        <div class="rowlbl">Loading<small>spinner trailing</small></div>
+        <div class="sl-field s-loading"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="sf-to-snow" /><span class="icon"><i data-lucide="loader"></i></span></div></div>
+        <div class="sl-field s-loading"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="checking…" /><span class="icon"><i data-lucide="loader"></i></span></div><div class="sl-field__meta">Checking availability…</div></div>
+        <div class="when">Async validation in flight (debounce <code>350ms</code> via <code>--validate-debounce</code>).</div>
+
+        <div class="rowlbl">AI generating<small>purple sweep</small></div>
+        <div class="sl-field s-ai"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="" placeholder="SnapGPT is writing…" /><span class="icon"><i data-lucide="sparkles"></i></span></div></div>
+        <div class="sl-field s-ai"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control"><input value="sf-to-snowflake-nightly-ingestion" /><span class="icon"><i data-lucide="sparkles"></i></span></div></div>
+        <div class="when">SnapGPT is generating the value. Purple sweep gradient + sparkles icon. Wave 3.</div>
+
+        <div class="rowlbl">AI review<small>tint: purple-100</small></div>
+        <div class="sl-field" style="--field-border-default: var(--ai-accent);"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control" style="background: var(--ai-tint); border-color: var(--ai-accent);"><input value="sf-to-snowflake-nightly-ingestion" /><span class="icon" style="color: var(--ai-accent);"><i data-lucide="sparkle"></i></span></div><div class="sl-field__meta" style="color: var(--ai-accent);">Generated · review and accept.</div></div>
+        <div class="sl-field" style="--field-border-default: var(--ai-accent);"><div class="sl-field__label">Pipeline name</div><div class="sl-field__control" style="background: var(--ai-tint); border-color: var(--ai-accent);"><input value="sf-to-snowflake-nightly-ingestion" /><span class="icon" style="color: var(--ai-accent);"><i data-lucide="sparkle"></i></span></div><div class="sl-field__meta" style="color: var(--ai-accent);">Generated · review and accept.</div></div>
+        <div class="when">AI-generated value awaiting human confirmation. Purple tint + sparkle icon. Wave 3.</div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>contract</dt><dd>Every input primitive must visually implement <b>at least</b>: default, hover, focus, disabled, read-only, error. Should implement: warning, success, loading. May implement: AI generating, AI review (Wave 3).</dd>
+      <dt>tokens</dt><dd>Border colors via <code>--field-border-*</code>. Background via <code>--field-bg-*</code>. Text via <code>--field-text-*</code>. Focus halo via <code>--ring-focus</code>. <b>Never invent values</b> — extend the token set if a new state appears.</dd>
+      <dt>validation timing</dt><dd>Inline async validation: debounce <b>350ms</b> (<code>--validate-debounce</code>) before showing loading state. On-blur: validate immediately. On-submit: validate the whole form, focus the first invalid field, announce summary in a live region.</dd>
+      <dt>error precedence</dt><dd>When a field could match multiple states, precedence is: <b>Error → Warning → AI review → Loading → Success → Focus → Hover → Default</b>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

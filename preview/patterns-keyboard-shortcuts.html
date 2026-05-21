@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Keyboard shortcuts</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* kbd token (canonical) */
+  kbd.k, .k {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px;
+    padding: 0 6px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    font: 800 11px/16px var(--font-mono);
+    color: var(--color-text-body);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+  }
+  .k.dark { background: var(--sl-indigo-900); color: var(--sl-white); border-color: rgba(255,255,255,0.18); }
+  .kgroup { display: inline-flex; align-items: center; gap: 4px; }
+  .kgroup .sep { color: var(--color-text-subtle); font: 400 12px/16px var(--font-mono); }
+
+  /* Cheatsheet overlay (large) */
+  .scrim {
+    background: var(--color-scrim);
+    border-radius: var(--field-radius);
+    padding: 24px;
+    display: flex; justify-content: center;
+  }
+  .sheet {
+    width: 720px;
+    background: var(--sl-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-overlay-strong);
+    overflow: hidden;
+  }
+  .sheet__head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .sheet__head h3 { font: 800 16px/24px var(--font-sans); margin: 0; color: var(--color-text-heading); flex: 1; }
+  .sheet__head .hint { font: 400 12px/18px var(--font-mono); color: var(--color-text-subtle); }
+  .sheet__head .x {
+    width: 28px; height: 28px; border-radius: var(--radius-xs);
+    border: 0; background: transparent; color: var(--color-text-subtle); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sheet__head .x i { width: 16px; height: 16px; }
+
+  .sheet__body {
+    padding: 16px 18px 20px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+  }
+  .sheet__col h4 {
+    margin: 0 0 8px;
+    font: 800 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .sheet__row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    padding: 7px 0;
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .sheet__row + .sheet__row { border-top: 1px dashed var(--sl-grey-200); }
+
+  .sheet__filter {
+    display: flex; align-items: center; gap: 6px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    margin: 0 18px 0 0;
+    flex: 1;
+  }
+  .sheet__filter i { width: 14px; height: 14px; color: var(--color-text-subtle); }
+  .sheet__filter input { flex: 1; border: 0; outline: 0; background: transparent; font: 400 13px/20px var(--font-sans); }
+
+  /* Status bar hint */
+  .statusbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 14px;
+    background: var(--sl-grey-100);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+  .statusbar .grp { display: inline-flex; align-items: center; gap: 4px; }
+  .statusbar .grp .lbl { color: var(--color-text-body); }
+  .statusbar .grp + .grp { margin-left: 14px; }
+
+  /* Tooltip variant */
+  .tt-stage {
+    display: flex; align-items: center; gap: 14px;
+    padding: 22px;
+    background: var(--sl-grey-100);
+    border-radius: var(--field-radius);
+  }
+  .tt-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    font: 800 13px/22px var(--font-sans);
+    border-radius: var(--field-radius);
+    border: 1.5px solid var(--sl-blue-600);
+    background: var(--sl-white);
+    color: var(--sl-blue-600);
+    cursor: default;
+  }
+  .tt-btn i { width: 14px; height: 14px; }
+  .tt {
+    background: var(--sl-indigo-1000, var(--sl-indigo-900));
+    color: var(--sl-white);
+    border-radius: var(--radius-xs);
+    padding: 6px 10px;
+    font: 400 12px/18px var(--font-sans);
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: var(--shadow-overlay);
+  }
+  .tt .label { font-weight: 800; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Keyboard shortcuts overlay</span><span class="meta">cheatsheet · key tokens · inline hints</span></div>
+
+    <div>
+      <div class="section-h">Key tokens <span class="meta">canonical kbd style · use everywhere</span></div>
+      <div style="padding: 14px 18px; border: 1px solid var(--sl-grey-200); border-radius: var(--field-radius); display: flex; flex-wrap: wrap; gap: 18px; align-items: center;">
+        <span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">K</span> <span style="font:400 12px/16px var(--font-sans); color: var(--color-text-subtle);">Quick open</span></span>
+        <span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">S</span> <span style="font:400 12px/16px var(--font-sans); color: var(--color-text-subtle);">Save</span></span>
+        <span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">Z</span> <span style="font:400 12px/16px var(--font-sans); color: var(--color-text-subtle);">Undo</span></span>
+        <span class="kgroup"><span class="k">⇧</span><span class="sep">+</span><span class="k">↵</span> <span style="font:400 12px/16px var(--font-sans); color: var(--color-text-subtle);">Validate</span></span>
+        <span class="kgroup"><span class="k">/</span> <span style="font:400 12px/16px var(--font-sans); color: var(--color-text-subtle);">Focus search</span></span>
+        <span class="kgroup"><span class="k">?</span> <span style="font:400 12px/16px var(--font-sans); color: var(--color-text-subtle);">Open cheatsheet</span></span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Cheatsheet overlay <span class="meta">opened with <kbd class="k">?</kbd> from anywhere · scoped to current product</span></div>
+      <div class="scrim">
+        <div class="sheet">
+          <div class="sheet__head">
+            <h3>Keyboard shortcuts</h3>
+            <div class="sheet__filter"><i data-lucide="search"></i><input placeholder="Filter shortcuts" /></div>
+            <span class="hint">Press <span class="k">Esc</span> to close</span>
+            <button class="x" aria-label="Close"><i data-lucide="x"></i></button>
+          </div>
+          <div class="sheet__body">
+
+            <div class="sheet__col">
+              <h4>Global</h4>
+              <div class="sheet__row"><span>Quick open</span><span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">K</span></span></div>
+              <div class="sheet__row"><span>Search the org</span><span class="kgroup"><span class="k">/</span></span></div>
+              <div class="sheet__row"><span>Go to Designer</span><span class="kgroup"><span class="k">G</span><span class="sep">then</span><span class="k">D</span></span></div>
+              <div class="sheet__row"><span>Go to Monitor</span><span class="kgroup"><span class="k">G</span><span class="sep">then</span><span class="k">M</span></span></div>
+              <div class="sheet__row"><span>Open SnapGPT</span><span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">J</span></span></div>
+              <div class="sheet__row"><span>Show this cheatsheet</span><span class="kgroup"><span class="k">?</span></span></div>
+            </div>
+
+            <div class="sheet__col">
+              <h4>Designer canvas</h4>
+              <div class="sheet__row"><span>Save pipeline</span><span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">S</span></span></div>
+              <div class="sheet__row"><span>Validate pipeline</span><span class="kgroup"><span class="k">⇧</span><span class="sep">+</span><span class="k">↵</span></span></div>
+              <div class="sheet__row"><span>Execute</span><span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">↵</span></span></div>
+              <div class="sheet__row"><span>Undo / redo</span><span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">Z</span><span class="sep">·</span><span class="k">⌘</span><span class="sep">+</span><span class="k">⇧</span><span class="sep">+</span><span class="k">Z</span></span></div>
+              <div class="sheet__row"><span>Zoom to fit</span><span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">0</span></span></div>
+              <div class="sheet__row"><span>Open snap palette</span><span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">P</span></span></div>
+            </div>
+
+            <div class="sheet__col">
+              <h4>Tables</h4>
+              <div class="sheet__row"><span>Select row</span><span class="kgroup"><span class="k">Space</span></span></div>
+              <div class="sheet__row"><span>Select all in view</span><span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">A</span></span></div>
+              <div class="sheet__row"><span>Edit cell</span><span class="kgroup"><span class="k">↵</span><span class="sep">or</span><span class="k">F2</span></span></div>
+              <div class="sheet__row"><span>Cancel edit</span><span class="kgroup"><span class="k">Esc</span></span></div>
+              <div class="sheet__row"><span>Next / prev page</span><span class="kgroup"><span class="k">J</span><span class="sep">·</span><span class="k">K</span></span></div>
+            </div>
+
+            <div class="sheet__col">
+              <h4>Editing</h4>
+              <div class="sheet__row"><span>Rename in place</span><span class="kgroup"><span class="k">F2</span></span></div>
+              <div class="sheet__row"><span>Undo last action</span><span class="kgroup"><span class="k">⌘</span><span class="sep">+</span><span class="k">Z</span></span></div>
+              <div class="sheet__row"><span>Confirm dialog</span><span class="kgroup"><span class="k">↵</span></span></div>
+              <div class="sheet__row"><span>Cancel dialog</span><span class="kgroup"><span class="k">Esc</span></span></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="grid2">
+      <div>
+        <div class="section-h">Status bar hint <span class="meta">bottom-of-product · context-sensitive</span></div>
+        <div class="statusbar">
+          <span class="grp"><span class="lbl">Snaplex</span> · prod-us-west-2</span>
+          <span class="grp"><span class="lbl">Pipeline</span> · sf-to-snowflake-nightly</span>
+          <span style="flex: 1;"></span>
+          <span class="grp"><span class="k">?</span> Shortcuts</span>
+          <span class="grp"><span class="k">⌘</span><span class="sep" style="font-size:11px;">+</span><span class="k">K</span> Quick open</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-h">Tooltip with shortcut <span class="meta">on hover · pairs with button</span></div>
+        <div class="tt-stage">
+          <button class="tt-btn"><i data-lucide="save"></i>Save</button>
+          <span class="tt"><span class="label">Save pipeline</span><span class="kgroup"><span class="k dark">⌘</span><span class="sep" style="color: rgba(255,255,255,0.6); font-size: 11px;">+</span><span class="k dark">S</span></span></span>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>key token</dt><dd>22px high, mono font ExtraBold 11px, white background, 1px grey border with a <b>2px bottom border</b> (gives the "physical key" feel), 4px radius. Joined with <code>+</code> separators in mono grey. Symbols: <kbd class="k">⌘</kbd> Cmd · <kbd class="k">⌃</kbd> Ctrl · <kbd class="k">⌥</kbd> Opt · <kbd class="k">⇧</kbd> Shift · <kbd class="k">↵</kbd> Enter · <kbd class="k">⌫</kbd> Delete.</dd>
+      <dt>cheatsheet</dt><dd>Opens with <kbd class="k">?</kbd> from anywhere. Modal overlay (Overlay surface), <b>720px wide</b>, columns grouped by scope: Global · current-product context · Tables · Editing. Filter input at top searches both labels and key combos.</dd>
+      <dt>scope</dt><dd>Cheatsheet contents <b>change per product</b> — Designer shows canvas shortcuts; Monitor shows table/timeline shortcuts. Global section is always present.</dd>
+      <dt>discovery</dt><dd><b>Status bar</b> at the bottom of each product persistently shows the 2 most useful shortcuts (<kbd class="k">?</kbd> and <kbd class="k">⌘</kbd>+<kbd class="k">K</kbd>). New users learn shortcuts here without opening the sheet.</dd>
+      <dt>tooltips</dt><dd>Every clickable action with a shortcut shows it in its tooltip on hover. Dark indigo background, key tokens flip to dark variant. Label first, keys aligned right.</dd>
+      <dt>chord vs combo</dt><dd><b>Combo</b> (held simultaneously): <kbd class="k">⌘</kbd>+<kbd class="k">S</kbd>. <b>Chord</b> (sequential): <kbd class="k">G</kbd> then <kbd class="k">D</kbd> — separator is the word "then" in muted text, not a plus sign. Chord prefix shows a transient HUD ("G then…") at 300ms.</dd>
+      <dt>collisions</dt><dd>Never override platform shortcuts (<kbd class="k">⌘</kbd>+<kbd class="k">W</kbd>, <kbd class="k">⌘</kbd>+<kbd class="k">T</kbd>). Don't bind <kbd class="k">Tab</kbd> to a custom action — it always cycles focus.</dd>
+      <dt>platform</dt><dd>Show <kbd class="k">⌘</kbd> on macOS, <kbd class="k">Ctrl</kbd> on Windows / Linux. Detect with <code>navigator.platform</code>. Don't show both with a slash — pick one per session.</dd>
+      <dt>a11y</dt><dd>Cheatsheet is a focus-trapped modal. <kbd class="k">Esc</kbd> closes. Filter input auto-focuses on open. Every shortcut is also available via menu / button — keyboard is an accelerator, never the only path.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

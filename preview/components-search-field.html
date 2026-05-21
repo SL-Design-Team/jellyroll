@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Search field</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  .sl-search {
+    height: var(--field-height-md);
+    padding: var(--field-padding-y-md) var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    display: flex; align-items: center; gap: 8px;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .sl-search:hover { border-color: var(--field-border-hover); }
+  .sl-search.focus { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .sl-search input {
+    border: 0; outline: 0; background: transparent;
+    flex: 1; min-width: 0; padding: 0;
+    font: var(--field-font); color: var(--field-text-default);
+  }
+  .sl-search input::placeholder { color: var(--field-text-placeholder); font-style: italic; font-weight: 300; }
+  .sl-search .icon { color: var(--color-text-subtle); display: inline-flex; flex: none; }
+  .sl-search .icon svg { width: 16px; height: 16px; }
+  .sl-search .clear {
+    width: 20px; height: 20px;
+    border: 0; background: transparent;
+    border-radius: 999px;
+    color: var(--color-text-subtle);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sl-search .clear:hover { background: var(--sl-grey-200); color: var(--color-text-body); }
+  .sl-search .clear svg { width: 12px; height: 12px; stroke-width: 2.5; }
+  .sl-search .spinner { animation: spin 1s linear infinite; color: var(--sl-teal-600); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .sl-search--sm { height: var(--field-height-sm); padding: 4px 10px; }
+  .sl-search--sm input { font-size: 12px; line-height: 16px; }
+
+  /* Kbd badge */
+  .kbd {
+    font: 800 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    border: 1px solid var(--sl-grey-300);
+    background: var(--sl-grey-100);
+    padding: 0 5px;
+    border-radius: 3px;
+    flex: none;
+  }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Search field</span><span class="meta">leading magnifier · trailing clear · async loading</span></div>
+
+    <div>
+      <div class="section-h">States</div>
+      <div class="row">
+
+        <div class="sl-field">
+          <label class="sl-field__label">Empty</label>
+          <div class="sl-search">
+            <span class="icon"><i data-lucide="search"></i></span>
+            <input type="search" placeholder="Search snaps" />
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">Typing</label>
+          <div class="sl-search focus">
+            <span class="icon"><i data-lucide="search"></i></span>
+            <input type="search" value="salesforce" />
+            <button class="clear" aria-label="Clear search"><i data-lucide="x"></i></button>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">Loading (async)</label>
+          <div class="sl-search">
+            <span class="icon spinner"><i data-lucide="loader"></i></span>
+            <input type="search" value="snowflake" />
+            <button class="clear" aria-label="Clear search"><i data-lucide="x"></i></button>
+          </div>
+        </div>
+
+        <div class="sl-field">
+          <label class="sl-field__label">With shortcut hint</label>
+          <div class="sl-search">
+            <span class="icon"><i data-lucide="search"></i></span>
+            <input type="search" placeholder="Search everything" />
+            <span class="kbd">⌘ K</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Sizes</div>
+      <div class="row">
+        <div class="sl-field">
+          <label class="sl-field__label">Medium (default · 40px)</label>
+          <div class="sl-search"><span class="icon"><i data-lucide="search"></i></span><input type="search" placeholder="Search snaps" /></div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Small (32px)</label>
+          <div class="sl-search sl-search--sm"><span class="icon"><i data-lucide="search"></i></span><input type="search" placeholder="Search snaps" /></div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>icons</dt><dd>Leading magnifier 16px, subtle grey. Replaced with spinner during async debounced search (350ms). Trailing X appears only when input has content.</dd>
+      <dt>debounce</dt><dd>Default <b>350ms</b> (<code>--validate-debounce</code>) before firing the search request. Adjust per use case — instant for local lists, longer for remote APIs.</dd>
+      <dt>type</dt><dd>Use <code>type="search"</code> — provides native clear button on some platforms (which is hidden by the system's CSS reset; the explicit clear button replaces it).</dd>
+      <dt>shortcut</dt><dd>Global search fields show <code>⌘K</code> / <code>Ctrl+K</code> badge inline. Pressing the shortcut opens the Search overlay component.</dd>
+      <dt>a11y</dt><dd>Wrap in <code>&lt;form role="search"&gt;</code> if the field is the primary search affordance on the page. Clear button: <code>aria-label="Clear search"</code>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

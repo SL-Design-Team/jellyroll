@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Drag and drop</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .frame {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+  .frame__bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-100);
+    font: 800 12px/16px var(--font-sans); color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .frame__bar i { width: 14px; height: 14px; }
+
+  /* ─── Sortable list ────────────────────────────────────────── */
+  .sortable { padding: 6px; }
+  .row-d {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-xs);
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    margin: 4px 0;
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-body);
+    position: relative;
+  }
+  .row-d__handle {
+    width: 18px; height: 18px;
+    color: var(--color-text-subtle);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: grab;
+    flex: none;
+  }
+  .row-d__handle:hover { color: var(--color-text-link); }
+  .row-d__handle i { width: 14px; height: 14px; }
+  .row-d__title { font-weight: 800; }
+  .row-d .meta { color: var(--color-text-subtle); margin-left: auto; font-size: 12px; }
+
+  .row-d.dragging {
+    background: var(--sl-white);
+    border-color: var(--sl-blue-600);
+    box-shadow: var(--shadow-overlay);
+    transform: rotate(-0.5deg) translateX(2px);
+    cursor: grabbing;
+  }
+  .drop-line {
+    height: 0; position: relative; margin: 2px 0;
+  }
+  .drop-line::after {
+    content: ""; position: absolute; left: 4px; right: 4px; top: -1px; height: 2px;
+    background: var(--sl-blue-600);
+    border-radius: 2px;
+  }
+  .drop-line::before {
+    content: ""; position: absolute; left: -2px; top: -4px; width: 8px; height: 8px;
+    border-radius: 50%; background: var(--sl-blue-600);
+  }
+
+  /* ─── Canvas drop (Designer-style) ─────────────────────────── */
+  .designer {
+    display: grid; grid-template-columns: 180px 1fr;
+    height: 280px;
+  }
+  .palette {
+    background: var(--sl-grey-100);
+    border-right: 1px solid var(--sl-grey-200);
+    padding: 10px 8px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .pal-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--sl-grey-200);
+    background: var(--sl-white);
+    font: 800 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    cursor: grab;
+  }
+  .pal-item .ic {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .pal-item .ic i { width: 14px; height: 14px; }
+  .pal-item--ghost { opacity: 0.4; cursor: grabbing; }
+
+  .canvas {
+    position: relative;
+    background:
+      radial-gradient(circle, var(--sl-grey-300) 1px, transparent 1px) 0 0/16px 16px,
+      var(--sl-white);
+    overflow: hidden;
+  }
+  .pipeline-node {
+    position: absolute;
+    width: 130px; height: 64px;
+    background: var(--sl-white);
+    border: 1.5px solid var(--sl-grey-300);
+    border-radius: 10px;
+    box-shadow: var(--shadow-raised);
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 12px;
+    font: 800 12px/16px var(--font-sans);
+  }
+  .pipeline-node .ic {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--sl-blue-100); color: var(--sl-blue-700);
+  }
+  .pipeline-node .ic i { width: 16px; height: 16px; }
+  .pipeline-node small { display: block; font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); }
+
+  .arrow {
+    position: absolute;
+    height: 2px;
+    background: var(--sl-grey-400);
+  }
+  .arrow::after {
+    content: ""; position: absolute; right: -1px; top: -3px;
+    border-style: solid; border-width: 4px 0 4px 6px;
+    border-color: transparent transparent transparent var(--sl-grey-400);
+  }
+
+  /* drop target hint */
+  .drop-zone {
+    position: absolute;
+    width: 130px; height: 64px;
+    border-radius: 10px;
+    border: 2px dashed var(--sl-blue-600);
+    background: var(--sl-blue-50);
+    display: flex; align-items: center; justify-content: center;
+    font: 800 11px/14px var(--font-sans);
+    color: var(--sl-blue-700);
+  }
+  .drop-zone i { width: 14px; height: 14px; margin-right: 4px; }
+
+  /* Ghost following pointer */
+  .ghost-floating {
+    position: absolute;
+    background: var(--sl-white);
+    border: 1.5px solid var(--sl-blue-600);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font: 800 12px/16px var(--font-sans);
+    color: var(--color-text-body);
+    box-shadow: var(--shadow-overlay-strong);
+    pointer-events: none;
+    display: flex; align-items: center; gap: 8px;
+    transform: rotate(-1deg);
+  }
+  .ghost-floating .ic {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--sl-blue-100); color: var(--sl-blue-700);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .ghost-floating .ic i { width: 14px; height: 14px; }
+
+  /* ─── File upload drop zone ────────────────────────────────── */
+  .upload {
+    border: 2px dashed var(--sl-blue-400);
+    background: var(--sl-blue-50);
+    border-radius: var(--field-radius);
+    padding: 36px 24px;
+    text-align: center;
+    color: var(--color-text-body);
+  }
+  .upload i.lg { width: 28px; height: 28px; color: var(--sl-blue-700); margin-bottom: 6px; }
+  .upload h4 { font: 800 14px/22px var(--font-sans); margin: 0 0 2px; color: var(--sl-blue-900); }
+  .upload p { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); margin: 0; }
+  .upload p a { color: var(--color-text-link); font-weight: 800; text-decoration: underline; }
+  .upload--active { background: var(--sl-blue-100); border-color: var(--sl-blue-600); border-style: solid; }
+  .upload--err { background: var(--sl-red-50); border-color: var(--sl-red-500); }
+  .upload--err i.lg { color: var(--sl-red-700); }
+  .upload--err h4 { color: var(--sl-red-900); }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Drag-and-drop affordances</span><span class="meta">reorder · canvas drop · file upload · drop indicators</span></div>
+
+    <div>
+      <div class="section-h">Reorder list <span class="meta">handle · ghost row · insertion line</span></div>
+      <div class="frame">
+        <div class="frame__bar"><i data-lucide="list"></i>Stages in pipeline · drag to reorder</div>
+        <div class="sortable">
+          <div class="row-d">
+            <span class="row-d__handle" aria-label="Drag handle"><i data-lucide="grip-vertical"></i></span>
+            <span class="row-d__title">Salesforce Read</span>
+            <span class="meta">SF Bulk Query</span>
+          </div>
+          <div class="drop-line"></div>
+          <div class="row-d dragging">
+            <span class="row-d__handle"><i data-lucide="grip-vertical"></i></span>
+            <span class="row-d__title">Mapper</span>
+            <span class="meta">Rename + cast columns</span>
+          </div>
+          <div class="row-d">
+            <span class="row-d__handle"><i data-lucide="grip-vertical"></i></span>
+            <span class="row-d__title">Filter</span>
+            <span class="meta">status &ne; 'cancelled'</span>
+          </div>
+          <div class="row-d">
+            <span class="row-d__handle"><i data-lucide="grip-vertical"></i></span>
+            <span class="row-d__title">Snowflake Write</span>
+            <span class="meta">PROD.SALES.ORDERS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Canvas drop <span class="meta">Designer-style · palette → canvas · drop target hint</span></div>
+      <div class="frame">
+        <div class="designer">
+          <div class="palette">
+            <div class="pal-item"><span class="ic"><i data-lucide="cloud"></i></span>Salesforce Read</div>
+            <div class="pal-item pal-item--ghost"><span class="ic"><i data-lucide="filter"></i></span>Filter</div>
+            <div class="pal-item"><span class="ic"><i data-lucide="git-merge"></i></span>Mapper</div>
+            <div class="pal-item"><span class="ic"><i data-lucide="database"></i></span>Snowflake Write</div>
+          </div>
+          <div class="canvas">
+            <div class="pipeline-node" style="top: 60px; left: 24px;">
+              <span class="ic"><i data-lucide="cloud"></i></span>
+              <div>Salesforce<small>Read</small></div>
+            </div>
+            <div class="arrow" style="top: 90px; left: 154px; width: 60px;"></div>
+            <div class="drop-zone" style="top: 60px; left: 220px;">
+              <i data-lucide="plus"></i>Drop here
+            </div>
+            <div class="arrow" style="top: 90px; left: 350px; width: 60px;"></div>
+            <div class="pipeline-node" style="top: 60px; left: 416px;">
+              <span class="ic" style="background: var(--sl-green-100); color: var(--sl-green-700);"><i data-lucide="database"></i></span>
+              <div>Snowflake<small>Write</small></div>
+            </div>
+
+            <div class="ghost-floating" style="top: 170px; left: 100px;">
+              <span class="ic"><i data-lucide="filter"></i></span>Filter
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">File drop zone <span class="meta">idle · active · rejected</span></div>
+      <div class="grid2">
+        <div class="upload">
+          <i data-lucide="upload-cloud" class="lg"></i>
+          <h4>Drop your schema here</h4>
+          <p>Or <a>browse files</a> · JSON, YAML, or AVRO up to 5 MB</p>
+        </div>
+        <div class="upload upload--active">
+          <i data-lucide="upload-cloud" class="lg"></i>
+          <h4>Release to upload <b>orders-schema.json</b></h4>
+          <p>2.3 KB · application/json</p>
+        </div>
+      </div>
+      <div class="upload upload--err" style="margin-top: 12px;">
+        <i data-lucide="x-circle" class="lg"></i>
+        <h4>Can't upload <b>image.png</b></h4>
+        <p>This drop zone only accepts JSON, YAML, or AVRO. <a>Browse the right files</a></p>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>handle</dt><dd>Always provide an explicit grip icon (<code>grip-vertical</code>) when rows or columns are draggable. Don't make the whole row draggable — conflicts with click-to-select. Cursor is <code>grab</code> at rest, <code>grabbing</code> while dragging.</dd>
+      <dt>dragging row</dt><dd>The original row gets a subtle elevation: <b>Blue 600 border</b>, raised shadow, small rotation (~−0.5°) and 2px offset. The row remains <b>in place</b> as the ghost — don't remove it; the insertion-line tells the user where the drop will land.</dd>
+      <dt>insertion line</dt><dd>2px Blue 600 line with a 8px filled dot on the left, rendered between target rows. Snaps to row gaps, never overlaps content. Only one line visible at a time.</dd>
+      <dt>canvas drop</dt><dd>Designer-style: dashed Blue 600 outline + Blue 50 fill on valid drop targets. Show "Drop here" with a <code>+</code> icon, sized to match the dropped node. Invalid zones (full lanes, type mismatch) don't highlight at all — never use red on hover.</dd>
+      <dt>floating ghost</dt><dd>When dragging from palette to canvas, render a <b>floating ghost</b> that tracks the pointer: white card with Blue 600 border, slight rotation, raised shadow. Hidden when over an invalid zone.</dd>
+      <dt>file drop zone</dt><dd>Dashed Blue 400 border + Blue 50 fill at rest. <b>Active</b> (file over zone): Blue 600 solid border + Blue 100 fill + name the file. <b>Rejected</b>: red border + red fill + specific reason ("This zone only accepts JSON, YAML, or AVRO").</dd>
+      <dt>keyboard</dt><dd>Every draggable affordance must have a <b>keyboard equivalent</b>: rows reorder via focus + <kbd>Space</kbd> to pick up, <kbd>↑</kbd>/<kbd>↓</kbd> to move, <kbd>Space</kbd> to drop, <kbd>Esc</kbd> to cancel. Files have a "Browse" link. Canvas placement has the snap palette's "+" button.</dd>
+      <dt>announce</dt><dd>Use <code>aria-live="assertive"</code> to announce pickup ("Mapper picked up"), movement ("Mapper, position 2 of 4"), and drop ("Mapper dropped, position 3 of 4"). Cancel announces "Drop cancelled".</dd>
+      <dt>auto-scroll</dt><dd>When dragging near a scrollable edge, scroll the container at 8px/frame max — never the page. Stop scrolling when pointer moves away from edge.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

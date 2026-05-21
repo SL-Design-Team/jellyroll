@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Combo chart</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .panel { padding: 20px 22px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .panel .t { font: 800 14px/18px var(--font-sans); color: var(--sl-indigo-900); margin-bottom: 4px; }
+  .panel .sub { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-bottom: 14px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Multi-axis combo</span><span class="meta">bars + line with dual y-axes · unlike units on one chart</span></div>
+    <div class="panel">
+      <div class="t">Throughput vs. latency · last 7 days</div>
+      <div class="sub">bars = records/hour (left axis) · line = avg latency in ms (right axis)</div>
+      <svg width="100%" height="280" viewBox="0 0 1000 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <!-- gridlines + left y labels -->
+        <line x1="80" y1="30" x2="920" y2="30" class="axis" stroke-dasharray="2 4"/><line x1="80" y1="78" x2="920" y2="78" class="axis" stroke-dasharray="2 4"/><line x1="80" y1="126" x2="920" y2="126" class="axis" stroke-dasharray="2 4"/><line x1="80" y1="174" x2="920" y2="174" class="axis" stroke-dasharray="2 4"/><line x1="80" y1="222" x2="920" y2="222" class="axis" stroke-dasharray=""/>
+        <text x="68" y="34" text-anchor="end" class="axis-text" fill="#008DFF">1200k</text><text x="68" y="82" text-anchor="end" class="axis-text" fill="#008DFF">900k</text><text x="68" y="130" text-anchor="end" class="axis-text" fill="#008DFF">600k</text><text x="68" y="178" text-anchor="end" class="axis-text" fill="#008DFF">300k</text><text x="68" y="226" text-anchor="end" class="axis-text" fill="#008DFF">0k</text>
+        <text x="934" y="34" class="axis-text" fill="#D83034">720</text><text x="934" y="82" class="axis-text" fill="#D83034">540</text><text x="934" y="130" class="axis-text" fill="#D83034">360</text><text x="934" y="178" class="axis-text" fill="#D83034">180</text><text x="934" y="226" class="axis-text" fill="#D83034">0</text>
+        <!-- x labels -->
+        <text x="110" y="252" text-anchor="middle" class="axis-text">Mon</text><text x="230" y="252" text-anchor="middle" class="axis-text">Tue</text><text x="350" y="252" text-anchor="middle" class="axis-text">Wed</text><text x="470" y="252" text-anchor="middle" class="axis-text">Thu</text><text x="590" y="252" text-anchor="middle" class="axis-text">Fri</text><text x="710" y="252" text-anchor="middle" class="axis-text">Sat</text><text x="830" y="252" text-anchor="middle" class="axis-text">Sun</text>
+        <!-- Bars -->
+        <rect x="96" y="90.80000000000001" width="28" height="131.2" rx="2" fill="#008DFF" opacity="0.85"/><rect x="216" y="71.6" width="28" height="150.4" rx="2" fill="#008DFF" opacity="0.85"/><rect x="336" y="33.20000000000002" width="28" height="188.79999999999998" rx="2" fill="#008DFF" opacity="0.85"/><rect x="456" y="58.80000000000001" width="28" height="163.2" rx="2" fill="#008DFF" opacity="0.85"/><rect x="576" y="23.599999999999966" width="28" height="198.40000000000003" rx="2" fill="#008DFF" opacity="0.85"/><rect x="696" y="145.2" width="28" height="76.80000000000001" rx="2" fill="#008DFF" opacity="0.85"/><rect x="816" y="164.4" width="28" height="57.599999999999994" rx="2" fill="#008DFF" opacity="0.85"/>
+        <!-- Line (latency ms, scaled 0-720, right axis) -->
+        <path d="M110,170 L230,150 L350,80 L470,120 L590,60 L710,210 L830,225" fill="none" stroke="#D83034" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- Line dots -->
+        <circle cx="110" cy="170" r="4" fill="#D83034" stroke="white" stroke-width="2"/><circle cx="230" cy="150" r="4" fill="#D83034" stroke="white" stroke-width="2"/><circle cx="350" cy="80" r="4" fill="#D83034" stroke="white" stroke-width="2"/><circle cx="470" cy="120" r="4" fill="#D83034" stroke="white" stroke-width="2"/><circle cx="590" cy="60" r="4" fill="#D83034" stroke="white" stroke-width="2"/><circle cx="710" cy="210" r="4" fill="#D83034" stroke="white" stroke-width="2"/><circle cx="830" cy="225" r="4" fill="#D83034" stroke="white" stroke-width="2"/>
+        <!-- Left axis title -->
+        <text x="20" y="135" font-family="Acherus Grotesque, sans-serif" font-size="11" font-weight="800" fill="#008DFF" transform="rotate(-90 20 135)">RECORDS / HOUR</text>
+        <text x="980" y="135" font-family="Acherus Grotesque, sans-serif" font-size="11" font-weight="800" fill="#D83034" transform="rotate(-90 980 135)">LATENCY (MS)</text>
+      </svg>
+      <div class="legend">
+        <div class="lg-item"><span class="lg-dot" style="background:#008DFF"></span>Records / hour (left)</div>
+        <div class="lg-item"><span class="lg-dot" style="background:#D83034"></span>Avg latency (right)</div>
+      </div>
+    </div>
+  </div>
+</body></html>

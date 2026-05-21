@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Select</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+
+  .sl-select {
+    height: var(--field-height-md);
+    padding: var(--field-padding-y-md) var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    color: var(--field-text-default);
+    font: var(--field-font);
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer;
+    transition: border-color 150ms, box-shadow 150ms;
+    user-select: none;
+  }
+  .sl-select:hover { border-color: var(--field-border-hover); }
+  .sl-select.focus, .sl-select.open { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  .sl-select .value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sl-select .value.placeholder { color: var(--field-text-placeholder); font-style: italic; font-weight: 300; }
+  .sl-select .caret { flex: none; color: var(--color-text-subtle); display: inline-flex; transition: transform 150ms; }
+  .sl-select .caret svg { width: 16px; height: 16px; }
+  .sl-select.open .caret { transform: rotate(180deg); }
+  .sl-select[disabled], .sl-select.disabled { background: var(--field-bg-disabled); color: var(--field-text-disabled); border-color: var(--field-border-disabled); cursor: not-allowed; }
+
+  /* Dropdown panel */
+  .sl-select-wrap { position: relative; }
+  .sl-menu {
+    position: absolute;
+    top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--field-radius);
+    box-shadow: var(--shadow-overlay);
+    z-index: 10;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 4px 0;
+  }
+  .sl-menu__item {
+    padding: 8px 12px;
+    font: 400 14px/22px var(--font-sans);
+    color: var(--sl-indigo-900);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sl-menu__item:hover { background: var(--sl-blue-100); }
+  .sl-menu__item.selected { background: var(--sl-blue-100); color: var(--sl-blue-700); font-weight: 800; }
+  .sl-menu__item.selected .check { color: var(--sl-blue-600); }
+  .sl-menu__item .check { margin-left: auto; opacity: 0; flex: none; }
+  .sl-menu__item .check svg { width: 14px; height: 14px; }
+  .sl-menu__item.selected .check { opacity: 1; }
+  .sl-menu__group-label {
+    padding: 8px 12px 4px;
+    font: 800 10px/14px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-subtle);
+  }
+  .sl-menu__divider { height: 1px; background: var(--sl-grey-200); margin: 4px 0; }
+
+  /* sizes */
+  .sl-select--sm { height: var(--field-height-sm); padding: 4px 10px; font-size: 13px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .stage { min-height: 320px; padding-top: 8px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Select</span><span class="meta">single-select dropdown · grouped options · sizes</span></div>
+
+    <div>
+      <div class="section-h">Closed states</div>
+      <div class="row">
+        <div class="sl-field"><label class="sl-field__label">Empty</label><div class="sl-select"><span class="value placeholder">Choose a Snaplex</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Selected</label><div class="sl-select"><span class="value">prod-east-1</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Focused</label><div class="sl-select focus"><span class="value">prod-east-1</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Disabled</label><div class="sl-select disabled"><span class="value">prod-east-1</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Open · with grouped options</div>
+      <div class="row stage">
+        <div class="sl-field">
+          <label class="sl-field__label">Snaplex</label>
+          <div class="sl-select-wrap">
+            <div class="sl-select open"><span class="value">prod-east-1</span><span class="caret"><i data-lucide="chevron-down"></i></span></div>
+            <div class="sl-menu">
+              <div class="sl-menu__group-label">Production</div>
+              <div class="sl-menu__item selected">prod-east-1<span class="check"><i data-lucide="check"></i></span></div>
+              <div class="sl-menu__item">prod-east-2<span class="check"><i data-lucide="check"></i></span></div>
+              <div class="sl-menu__item">prod-west-1<span class="check"><i data-lucide="check"></i></span></div>
+              <div class="sl-menu__divider"></div>
+              <div class="sl-menu__group-label">Staging</div>
+              <div class="sl-menu__item">staging-east-1<span class="check"><i data-lucide="check"></i></span></div>
+              <div class="sl-menu__item">staging-shared<span class="check"><i data-lucide="check"></i></span></div>
+              <div class="sl-menu__divider"></div>
+              <div class="sl-menu__group-label">Development</div>
+              <div class="sl-menu__item">dev-shared<span class="check"><i data-lucide="check"></i></span></div>
+              <div class="sl-menu__item">my-local-laptop<span class="check"><i data-lucide="check"></i></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">With icons in options</label>
+          <div class="sl-select-wrap">
+            <div class="sl-select open"><span class="value" style="display:flex;align-items:center;gap:8px;"><i data-lucide="folder"></i>Salesforce-pipelines</span><span class="caret"><i data-lucide="chevron-down"></i></span></div>
+            <div class="sl-menu">
+              <div class="sl-menu__item selected"><i data-lucide="folder"></i>Salesforce-pipelines<span class="check"><i data-lucide="check"></i></span></div>
+              <div class="sl-menu__item"><i data-lucide="folder"></i>Snowflake-loaders<span class="check"><i data-lucide="check"></i></span></div>
+              <div class="sl-menu__item"><i data-lucide="folder"></i>Kafka-streams<span class="check"><i data-lucide="check"></i></span></div>
+              <div class="sl-menu__item"><i data-lucide="folder"></i>Archive (2023)<span class="check"><i data-lucide="check"></i></span></div>
+              <div class="sl-menu__divider"></div>
+              <div class="sl-menu__item" style="color: var(--sl-blue-600); font-weight: 800;"><i data-lucide="plus"></i>Create new project</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Sizes</div>
+      <div class="row">
+        <div class="sl-field"><label class="sl-field__label">Medium (default · 40px)</label><div class="sl-select"><span class="value">prod-east-1</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Small (32px)</label><div class="sl-select sl-select--sm"><span class="value">prod-east-1</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>trigger</dt><dd>Looks like a text field with a trailing <code>chevron-down</code>. Rotates 180° when open.</dd>
+      <dt>menu</dt><dd>Positioned 4px below the trigger, same width. Max-height 260px (≈6 items) with scroll. Supports group labels (10px UPPERCASE mono) and dividers.</dd>
+      <dt>selected</dt><dd>Highlighted with Blue-100 background, Blue-700 text, ExtraBold. Right-side check icon. Single selection only — for multi, see Multi-select.</dd>
+      <dt>create</dt><dd>"Create new …" inline option at the bottom of the menu when applicable (blue text + plus icon). Use for connection pickers, project pickers, etc.</dd>
+      <dt>keyboard</dt><dd><code>↑/↓</code> navigate · <code>Enter</code> select · <code>Esc</code> close · <code>Home/End</code> first/last · type-ahead jumps to first match.</dd>
+      <dt>a11y</dt><dd><code>role="combobox" aria-expanded aria-haspopup="listbox" aria-controls="menu-id"</code>. Menu: <code>role="listbox"</code>; items: <code>role="option" aria-selected</code>.</dd>
+      <dt>virtualize</dt><dd>For lists with &gt;200 options (Snaplex picker, account list), virtualize rows. Don't paint 5,000 DOM nodes.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

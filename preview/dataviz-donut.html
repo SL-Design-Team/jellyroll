@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Donut chart</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .demo { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .demo .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .demo .desc { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-top: 10px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .donut-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .panel { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .panel .t { font: 800 14px/18px var(--font-sans); color: var(--sl-indigo-900); margin-bottom: 10px; }
+  .donut-row { display: flex; align-items: center; gap: 24px; }
+  .donut-center { display: flex; flex-direction: column; align-items: center; }
+  .center-val { font: 800 36px/40px var(--font-sans); color: var(--sl-indigo-900); font-variant-numeric: tabular-nums; }
+  .center-lab { font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .leg { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .leg-row { display: grid; grid-template-columns: 12px 1fr 50px 50px; align-items: center; gap: 8px; font: 500 13px/16px var(--font-sans); color: var(--sl-indigo-900); }
+  .leg-row .dot { width: 12px; height: 12px; border-radius: 2px; }
+  .leg-row .num { font-family: ui-monospace, Menlo, monospace; text-align: right; font-weight: 800; }
+  .leg-row .pct { font-family: ui-monospace, Menlo, monospace; text-align: right; color: var(--color-text-subtle); }
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Donut chart</span><span class="meta">status distribution · center metric · external legend with values</span></div>
+    <div class="donut-grid">
+      <div class="panel">
+        <div class="t">Pipeline runs by status</div>
+        <div class="donut-row">
+          <div style="position: relative;">
+            <svg width="180" height="180" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg">
+              <!-- Succeeded 62, Failed 12, Running 8, Warning 7, Queued 11 -->
+              <path d="M 0 -90 A 90 90 0 0 1 85.59 28.07 L 0 0 Z" fill="#017D1B"/>
+              <path d="M 85.59 28.07 A 90 90 0 0 1 22.59 87.16 L 0 0 Z" fill="#B61631"/>
+              <path d="M 22.59 87.16 A 90 90 0 0 1 -35.99 82.49 L 0 0 Z" fill="#0841B4"/>
+              <path d="M -35.99 82.49 A 90 90 0 0 1 -76.04 47.97 L 0 0 Z" fill="#C99603"/>
+              <path d="M -76.04 47.97 A 90 90 0 0 1 0 -90 L 0 0 Z" fill="#9CA7BA"/>
+              <circle r="52" fill="white"/>
+            </svg>
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;">
+              <div class="center-val">247</div>
+              <div class="center-lab">total runs</div>
+            </div>
+          </div>
+          <div class="leg">
+            <div class="leg-row"><span class="dot" style="background:#017D1B"></span><span>Succeeded</span><span class="num">153</span><span class="pct">62%</span></div>
+            <div class="leg-row"><span class="dot" style="background:#B61631"></span><span>Failed</span><span class="num">30</span><span class="pct">12%</span></div>
+            <div class="leg-row"><span class="dot" style="background:#0841B4"></span><span>Running</span><span class="num">20</span><span class="pct">8%</span></div>
+            <div class="leg-row"><span class="dot" style="background:#C99603"></span><span>Warning</span><span class="num">17</span><span class="pct">7%</span></div>
+            <div class="leg-row"><span class="dot" style="background:#9CA7BA"></span><span>Queued</span><span class="num">27</span><span class="pct">11%</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="t">Records by snap type</div>
+        <div class="donut-row">
+          <svg width="180" height="180" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Categorical bright 8: 28 22 18 12 8 6 4 2 -->
+            <path d="M 0 -90 A 90 90 0 0 1 70.66 55.61 L 0 0 Z" fill="#003A7D"/>
+            <path d="M 70.66 55.61 A 90 90 0 0 1 -8.99 89.55 L 0 0 Z" fill="#008DFF"/>
+            <path d="M -8.99 89.55 A 90 90 0 0 1 -82.55 36.05 L 0 0 Z" fill="#FF73B6"/>
+            <path d="M -82.55 36.05 A 90 90 0 0 1 -86.81 -23.96 L 0 0 Z" fill="#C701FF"/>
+            <path d="M -86.81 -23.96 A 90 90 0 0 1 -65.49 -61.69 L 0 0 Z" fill="#4ECB8D"/>
+            <path d="M -65.49 -61.69 A 90 90 0 0 1 -35.99 -82.49 L 0 0 Z" fill="#FF9D3A"/>
+            <path d="M -35.99 -82.49 A 90 90 0 0 1 -16.85 -88.41 L 0 0 Z" fill="#F9E858"/>
+            <path d="M -16.85 -88.41 A 90 90 0 0 1 0 -90 L 0 0 Z" fill="#D83034"/>
+            <circle r="52" fill="white"/>
+            <text x="0" y="-2" text-anchor="middle" font-family="Acherus Grotesque, sans-serif" font-size="22" font-weight="800" fill="#031A48">3.4M</text>
+            <text x="0" y="14" text-anchor="middle" font-family="Acherus Grotesque, sans-serif" font-size="10" fill="#7D8695">records</text>
+          </svg>
+          <div class="leg">
+            <div class="leg-row"><span class="dot" style="background:#003A7D"></span><span>Read</span><span class="num">945k</span><span class="pct">28%</span></div>
+            <div class="leg-row"><span class="dot" style="background:#008DFF"></span><span>Transform</span><span class="num">748k</span><span class="pct">22%</span></div>
+            <div class="leg-row"><span class="dot" style="background:#FF73B6"></span><span>Parse</span><span class="num">612k</span><span class="pct">18%</span></div>
+            <div class="leg-row"><span class="dot" style="background:#C701FF"></span><span>Write</span><span class="num">408k</span><span class="pct">12%</span></div>
+            <div class="leg-row"><span class="dot" style="background:#4ECB8D"></span><span>Format</span><span class="num">272k</span><span class="pct">8%</span></div>
+            <div class="leg-row"><span class="dot" style="background:#FF9D3A"></span><span>Flow</span><span class="num">204k</span><span class="pct">6%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body></html>

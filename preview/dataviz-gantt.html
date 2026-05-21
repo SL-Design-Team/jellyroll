@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Swim-lane Gantt</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .panel { padding: 20px 22px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .panel .t { font: 800 14px/18px var(--font-sans); color: var(--sl-indigo-900); margin-bottom: 4px; }
+  .panel .sub { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-bottom: 14px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .gantt-tbl { display: grid; grid-template-columns: 220px 1fr; gap: 0; }
+  .gantt-tbl .lane-label {
+    font: 500 13px/16px var(--font-sans); color: var(--sl-indigo-900);
+    padding: 10px 14px; border-bottom: 1px solid var(--sl-grey-200); height: 44px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .gantt-tbl .lane-label .dot { width: 8px; height: 8px; border-radius: 999px; flex-shrink: 0; }
+  .gantt-tbl .lane-track { position: relative; border-bottom: 1px solid var(--sl-grey-200); border-left: 1px solid var(--sl-grey-200); height: 44px; }
+  .gantt-tbl .header-cell { background: var(--sl-grey-100); font: 800 11px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); padding: 10px 14px; height: 36px; display: flex; align-items: center; }
+  .gantt-tbl .ticks { position: relative; background: var(--sl-grey-100); border-left: 1px solid var(--sl-grey-200); height: 36px; }
+  .gantt-tbl .ticks .tick { position: absolute; top: 0; bottom: 0; font: 400 10px ui-monospace, Menlo, monospace; color: var(--color-text-subtle); display: flex; align-items: center; padding-left: 6px; border-left: 1px dashed var(--sl-grey-300); }
+  .bar { position: absolute; top: 50%; transform: translateY(-50%); height: 22px; border-radius: 3px; display: flex; align-items: center; padding: 0 8px; font: 800 10px/14px var(--font-sans); white-space: nowrap; overflow: hidden; box-shadow: 0 1px 2px rgba(15,23,42,0.06); }
+  .bar.ok      { background: var(--sl-green-200);  color: var(--sl-green-800); }
+  .bar.fail    { background: var(--sl-red-200);    color: var(--sl-red-900); }
+  .bar.running { background: var(--sl-blue-200);   color: var(--sl-blue-800); }
+  .bar.warn    { background: var(--sl-orange-200); color: var(--sl-orange-900); }
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Swim-lane Gantt</span><span class="meta">one row per pipeline · run durations along time</span></div>
+    <div class="panel">
+      <div class="t">Pipeline executions · last 12 hours</div>
+      <div class="sub">overlapping runs by snaplex · color = final status</div>
+      <div class="gantt-tbl">
+        <div class="header-cell">Pipeline</div>
+        <div class="ticks">
+          <span class="tick" style="left: 0%">00:00</span>
+          <span class="tick" style="left: 16.6%">02:00</span>
+          <span class="tick" style="left: 33.3%">04:00</span>
+          <span class="tick" style="left: 50%">06:00</span>
+          <span class="tick" style="left: 66.6%">08:00</span>
+          <span class="tick" style="left: 83.3%">10:00</span>
+        </div>
+
+        <div class="lane-label"><span class="dot" style="background:#008DFF"></span>SF → Snowflake daily</div>
+        <div class="lane-track">
+          <div class="bar ok" style="left: 4%; width: 14%">04:32</div>
+          <div class="bar ok" style="left: 38%; width: 11%">03:18</div>
+          <div class="bar ok" style="left: 72%; width: 13%">04:01</div>
+        </div>
+
+        <div class="lane-label"><span class="dot" style="background:#FF73B6"></span>Kafka → BigQuery RT</div>
+        <div class="lane-track">
+          <div class="bar running" style="left: 0%; width: 100%">streaming · 12h continuous</div>
+        </div>
+
+        <div class="lane-label"><span class="dot" style="background:#C701FF"></span>Stripe → Postgres</div>
+        <div class="lane-track">
+          <div class="bar ok" style="left: 6%; width: 5%">01:12</div>
+          <div class="bar ok" style="left: 22%; width: 5%">01:08</div>
+          <div class="bar fail" style="left: 38%; width: 2%">err</div>
+          <div class="bar ok" style="left: 54%; width: 5%">01:14</div>
+          <div class="bar ok" style="left: 70%; width: 5%">01:10</div>
+          <div class="bar ok" style="left: 86%; width: 5%">01:09</div>
+        </div>
+
+        <div class="lane-label"><span class="dot" style="background:#4ECB8D"></span>HubSpot contacts</div>
+        <div class="lane-track">
+          <div class="bar warn" style="left: 12%; width: 22%">06:42 · slow</div>
+          <div class="bar ok"   style="left: 64%; width: 12%">03:28</div>
+        </div>
+
+        <div class="lane-label"><span class="dot" style="background:#FF9D3A"></span>Workday HR sync</div>
+        <div class="lane-track">
+          <div class="bar ok"   style="left: 8%; width: 3%">52s</div>
+          <div class="bar ok"   style="left: 16%; width: 3%">48s</div>
+          <div class="bar ok"   style="left: 24%; width: 3%">51s</div>
+          <div class="bar fail" style="left: 32%; width: 2%">err</div>
+          <div class="bar ok"   style="left: 40%; width: 3%">49s</div>
+          <div class="bar ok"   style="left: 48%; width: 3%">53s</div>
+          <div class="bar ok"   style="left: 56%; width: 3%">50s</div>
+          <div class="bar ok"   style="left: 64%; width: 3%">47s</div>
+          <div class="bar ok"   style="left: 72%; width: 3%">49s</div>
+          <div class="bar ok"   style="left: 80%; width: 3%">52s</div>
+          <div class="bar ok"   style="left: 88%; width: 3%">48s</div>
+        </div>
+
+        <div class="lane-label"><span class="dot" style="background:#D83034"></span>Marketing leads</div>
+        <div class="lane-track">
+          <div class="bar ok"   style="left: 10%; width: 16%">04:48</div>
+          <div class="bar ok"   style="left: 56%; width: 16%">04:51</div>
+        </div>
+      </div>
+      <div class="legend">
+        <div class="lg-item"><span class="lg-dot" style="background:var(--sl-green-200)"></span>Succeeded</div>
+        <div class="lg-item"><span class="lg-dot" style="background:var(--sl-blue-200)"></span>Running</div>
+        <div class="lg-item"><span class="lg-dot" style="background:var(--sl-orange-200)"></span>Warning</div>
+        <div class="lg-item"><span class="lg-dot" style="background:var(--sl-red-200)"></span>Failed</div>
+      </div>
+    </div>
+  </div>
+</body></html>

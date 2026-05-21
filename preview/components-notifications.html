@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Notifications</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<link rel="stylesheet" href="dropdown.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .nf {
+    width: 420px;
+    padding: 0;
+  }
+
+  .nf .head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 20px 20px 16px;
+  }
+  .nf .head .label {
+    font: 800 11px/14px var(--font-sans);
+    color: #6F8BC6;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+  }
+  .nf .head .filter {
+    font: 500 12px/16px var(--font-sans);
+    color: rgba(255,255,255,0.92);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; gap: 4px;
+    cursor: pointer;
+  }
+  .nf .head .mark-all {
+    font: 500 12px/16px var(--font-sans);
+    color: #8FA4D4;
+    cursor: pointer;
+    margin-left: auto;
+  }
+  .nf .head .mark-all:hover { color: var(--sl-teal-300); }
+
+  .nf-list { padding: 0 20px; }
+  .notif {
+    display: flex; gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .notif:last-of-type { border-bottom: none; }
+  .notif .ic {
+    width: 32px; height: 32px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .notif.broadcast .ic { background: radial-gradient(circle at 35% 30%, #B58CFF 0%, #6E2BE1 80%); color: white; }
+  .notif.alert .ic     { background: radial-gradient(circle at 35% 30%, #FF7B91 0%, #B61631 80%); color: white; }
+  .notif.info .ic      { background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.8); }
+  .notif .body { flex: 1; }
+  .notif .msg { font: 400 13px/18px var(--font-sans); color: var(--sl-white); }
+  .notif .meta { font: 400 11px/14px var(--font-sans); color: rgba(255,255,255,0.45); margin-top: 6px; }
+  .notif .tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .notif .ntag {
+    font: 800 9px/12px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+  .ntag-broadcast { background: rgba(155, 119, 218, 0.18); color: #C8A8E8; }
+  .ntag-snaplex   { background: rgba(43, 227, 160, 0.16); color: #56E8B0; }
+  .ntag-account   { background: rgba(94, 91, 255, 0.18); color: #A4A2FF; }
+  .ntag-demo      { background: rgba(155, 119, 218, 0.18); color: #C8A8E8; }
+  .ntag-other     { background: rgba(255, 105, 199, 0.18); color: #FF96D8; }
+  .notif .unread {
+    width: 8px; height: 8px; border-radius: 999px;
+    background: var(--sl-teal-400);
+    flex-shrink: 0; margin-top: 8px;
+  }
+
+  .nf-foot {
+    padding: 14px 20px 16px;
+    display: flex; justify-content: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .nf-foot a {
+    font: 500 13px/18px var(--font-sans);
+    color: var(--sl-white);
+    display: flex; align-items: center; gap: 6px;
+    cursor: pointer;
+  }
+  .nf-foot a:hover { color: var(--sl-teal-300); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Notifications</span><span class="meta">anchored to bell in global header</span></div>
+    <div class="dropdown-stage">
+      <div class="dropdown nf">
+        <div class="head">
+          <span class="label">Notifications</span>
+          <span class="filter">All <i data-lucide="chevron-down" style="width:12px;height:12px"></i></span>
+          <span class="mark-all">Mark all read</span>
+        </div>
+        <div class="dd-divider"></div>
+        <div class="nf-list">
+          <div class="notif broadcast">
+            <div class="ic"><i data-lucide="zap" style="width:16px;height:16px"></i></div>
+            <div class="body">
+              <div class="msg">Your weekly summary is ready. Review key metrics, new signups, and open tasks.</div>
+              <div class="meta">2h ago</div>
+              <div class="tags"><span class="ntag ntag-broadcast">Broadcast</span><span class="ntag ntag-demo">SLDemo</span></div>
+            </div>
+            <span class="unread"></span>
+          </div>
+          <div class="notif alert">
+            <div class="ic"><i data-lucide="alert-circle" style="width:16px;height:16px"></i></div>
+            <div class="body">
+              <div class="msg">Your weekly summary is ready. Review key metrics, new signups, and open tasks.</div>
+              <div class="meta">02/20/26 at 10:13AM</div>
+              <div class="tags"><span class="ntag ntag-snaplex">Snaplex</span><span class="ntag ntag-demo">SLDemo</span></div>
+            </div>
+            <span class="unread"></span>
+          </div>
+          <div class="notif info">
+            <div class="ic"><i data-lucide="info" style="width:16px;height:16px"></i></div>
+            <div class="body">
+              <div class="msg">Your weekly summary is ready. Review key metrics, new signups, and open tasks.</div>
+              <div class="meta">02/20/26 at 10:13AM</div>
+              <div class="tags"><span class="ntag ntag-account">Account</span><span class="ntag ntag-other">ConnectFaster 123</span></div>
+            </div>
+            <span class="unread"></span>
+          </div>
+        </div>
+        <div class="nf-foot">
+          <a>View all in Message Center <i data-lucide="arrow-right" style="width:14px;height:14px"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

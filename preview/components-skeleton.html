@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Skeleton loader</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  /* Tailwind / Flowbite animate-pulse — flat grey, opacity 1 → 0.5 → 1 */
+  @keyframes sk-pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.5; }
+  }
+  .sk {
+    background-color: var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    animation: sk-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sk { animation: none; }
+  }
+  .row { display: flex; gap: 24px; }
+  .col { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .col h5 { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); margin: 0 0 4px; }
+
+  .card-skeleton {
+    border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); padding: 14px;
+    display: flex; flex-direction: column; gap: 8px;
+    background: var(--sl-white);
+  }
+
+  .variants { display: flex; gap: 16px; align-items: center; }
+  .v-cell { display: flex; flex-direction: column; gap: 6px; align-items: center; font: 800 9px/12px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Skeleton loader</span><span class="meta">grayscale, pulsing</span></div>
+    <div class="row">
+      <div class="col">
+        <h5>Example card</h5>
+        <div class="card-skeleton">
+          <div style="display:flex; justify-content: space-between; align-items: center;">
+            <div class="sk" style="width: 60%; height: 12px"></div>
+            <div style="display:flex; gap: 6px;">
+              <div class="sk" style="width: 12px; height: 12px; border-radius: 999px;"></div>
+              <div class="sk" style="width: 12px; height: 12px; border-radius: 999px;"></div>
+              <div class="sk" style="width: 12px; height: 12px; border-radius: 999px;"></div>
+            </div>
+          </div>
+          <div class="sk" style="width: 90%; height: 8px"></div>
+          <div class="sk" style="width: 75%; height: 8px"></div>
+          <div class="sk" style="width: 50%; height: 8px"></div>
+        </div>
+      </div>
+      <div class="col">
+        <h5>Example list</h5>
+        <div class="card-skeleton" style="padding: 0;">
+          <div style="padding: 10px 14px; border-bottom: 1px solid var(--sl-grey-200);">
+            <div class="sk" style="width: 60%; height: 10px"></div>
+          </div>
+          <div style="padding: 10px 14px; display:flex; align-items:center; gap: 10px;">
+            <div class="sk" style="width: 14px; height: 14px; border-radius: 999px;"></div>
+            <div class="sk" style="height: 8px; flex: 1"></div>
+          </div>
+          <div style="padding: 10px 14px; display:flex; align-items:center; gap: 10px;">
+            <div class="sk" style="width: 14px; height: 14px; border-radius: 999px;"></div>
+            <div class="sk" style="height: 8px; flex: 1"></div>
+          </div>
+          <div style="padding: 10px 14px; display:flex; align-items:center; gap: 10px;">
+            <div class="sk" style="width: 14px; height: 14px; border-radius: 999px;"></div>
+            <div class="sk" style="height: 8px; flex: 1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row-label" style="margin-top: 8px"><span class="name">Shape variants</span><span class="meta">grayscale, rounded corners on every shape</span></div>
+    <div class="variants">
+      <div class="v-cell"><div class="sk" style="width: 36px; height: 36px; border-radius: 999px"></div>Circle</div>
+      <div class="v-cell"><div class="sk" style="width: 36px; height: 36px"></div>Square</div>
+      <div class="v-cell"><div class="sk" style="width: 60px; height: 14px"></div>Rect</div>
+      <div class="v-cell"><div class="sk" style="width: 60px; height: 18px; border-radius: 999px"></div>Pill</div>
+      <div class="v-cell" style="align-items: flex-start"><div class="sk" style="width: 200px; height: 8px"></div>Text</div>
+    </div>
+  </div>
+</body>
+</html>

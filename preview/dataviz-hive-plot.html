@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Data viz · Hive plot</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .card { gap: 22px; width: 880px; }
+
+  .panel {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    padding: 18px 20px;
+  }
+  .panel .t {
+    font: 800 14px/22px var(--font-sans);
+    color: var(--color-text-heading);
+    margin-bottom: 2px;
+  }
+  .panel .sub {
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-subtle);
+    margin-bottom: 14px;
+  }
+
+  .hive {
+    width: 100%;
+    height: 460px;
+    background: var(--sl-white);
+    border-radius: var(--radius-xs);
+  }
+
+  /* Legend */
+  .legend {
+    display: flex; gap: 22px; flex-wrap: wrap;
+    margin-top: 14px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .legend__item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend__dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+  .legend__axis { display: inline-flex; align-items: center; gap: 6px; font: 400 11px/16px var(--font-mono); color: var(--color-text-subtle); }
+  .legend__axis::before {
+    content: ""; width: 18px; height: 2px; background: var(--sl-grey-500);
+  }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .mini {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    padding: 14px 16px;
+  }
+  .mini .t { font: 800 13px/20px var(--font-sans); color: var(--color-text-heading); margin-bottom: 2px; }
+  .mini .sub { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); margin-bottom: 8px; }
+  .mini svg { width: 100%; height: 220px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Hive plot</span><span class="meta">categorical axes · radial layout · curved edges · structure over aesthetics</span></div>
+
+    <div class="panel">
+      <div class="t">Pipeline flow · Sources → Pipelines → Destinations</div>
+      <div class="sub">Each node is assigned to one of three categorical axes; position along an axis reflects ingestion volume (rows/day, log scale). Curved edges show data flow between categories. Use when the same network looks like spaghetti as a force-directed graph.</div>
+
+      <svg class="hive" viewBox="0 0 800 460" xmlns="http://www.w3.org/2000/svg">
+        <!-- Defs -->
+        <defs>
+          <marker id="arr-blue" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="#0841B4"/>
+          </marker>
+          <marker id="arr-teal" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="#0B9D9B"/>
+          </marker>
+        </defs>
+
+        <!-- Center point -->
+        <circle cx="400" cy="240" r="3" fill="#9CA3AF"/>
+
+        <!-- ─── Three axes radiating at 90° / 210° / 330° ─────────────── -->
+        <!-- Right-Up axis: Pipelines (top) -->
+        <g>
+          <line x1="400" y1="240" x2="400" y2="40" stroke="#5E6470" stroke-width="1.5"/>
+          <text x="408" y="36" font-family="var(--font-sans), sans-serif" font-size="11" font-weight="800" fill="#031A48">PIPELINES</text>
+          <text x="408" y="50" font-family="var(--font-mono), monospace" font-size="10" fill="#7D8695">17 pipelines · sorted by load</text>
+
+          <!-- Tick marks -->
+          <line x1="395" y1="240" x2="405" y2="240" stroke="#9CA3AF" stroke-width="1"/>
+          <line x1="395" y1="180" x2="405" y2="180" stroke="#9CA3AF" stroke-width="1"/>
+          <line x1="395" y1="120" x2="405" y2="120" stroke="#9CA3AF" stroke-width="1"/>
+          <line x1="395" y1="60" x2="405" y2="60" stroke="#9CA3AF" stroke-width="1"/>
+        </g>
+
+        <!-- Lower-left axis: Sources -->
+        <g>
+          <line x1="400" y1="240" x2="227" y2="340" stroke="#5E6470" stroke-width="1.5"/>
+          <text x="115" y="358" font-family="var(--font-sans), sans-serif" font-size="11" font-weight="800" fill="#031A48">SOURCES</text>
+          <text x="115" y="372" font-family="var(--font-mono), monospace" font-size="10" fill="#7D8695">9 systems · by rows ingested</text>
+        </g>
+
+        <!-- Lower-right axis: Destinations -->
+        <g>
+          <line x1="400" y1="240" x2="573" y2="340" stroke="#5E6470" stroke-width="1.5"/>
+          <text x="588" y="358" font-family="var(--font-sans), sans-serif" font-size="11" font-weight="800" fill="#031A48">DESTINATIONS</text>
+          <text x="588" y="372" font-family="var(--font-mono), monospace" font-size="10" fill="#7D8695">6 warehouses · by rows landed</text>
+        </g>
+
+        <!-- ─── Edges (curves between axes) ───────────────────────────── -->
+        <!-- Drawn first, below nodes. Bezier control points pull toward center for the trademark "petal" arcs. -->
+        <g fill="none" stroke-linecap="round">
+          <!-- Sources → Pipelines (orange) -->
+          <path d="M 270 314 Q 350 230 400 80" stroke="#F59E0B" stroke-width="2" opacity="0.65"/>
+          <path d="M 310 290 Q 365 235 400 130" stroke="#F59E0B" stroke-width="2.5" opacity="0.7"/>
+          <path d="M 250 327 Q 340 235 400 180" stroke="#F59E0B" stroke-width="2" opacity="0.6"/>
+          <path d="M 350 270 Q 380 235 400 110" stroke="#F59E0B" stroke-width="1.5" opacity="0.45"/>
+          <path d="M 290 300 Q 360 235 400 200" stroke="#F59E0B" stroke-width="1.5" opacity="0.5"/>
+
+          <!-- Pipelines → Destinations (blue) -->
+          <path d="M 400 80 Q 470 230 573 340" stroke="#0841B4" stroke-width="2" opacity="0.6"/>
+          <path d="M 400 130 Q 460 235 538 320" stroke="#0841B4" stroke-width="2.5" opacity="0.7"/>
+          <path d="M 400 180 Q 440 240 510 305" stroke="#0841B4" stroke-width="2" opacity="0.55"/>
+          <path d="M 400 110 Q 480 235 568 337" stroke="#0841B4" stroke-width="1.5" opacity="0.45"/>
+          <path d="M 400 200 Q 445 240 488 290" stroke="#0841B4" stroke-width="1.5" opacity="0.5"/>
+
+          <!-- Sources → Destinations passthrough (teal · AutoSync direct) -->
+          <path d="M 250 327 Q 400 410 538 320" stroke="#0B9D9B" stroke-width="2" opacity="0.55"/>
+          <path d="M 290 300 Q 400 380 510 305" stroke="#0B9D9B" stroke-width="1.5" opacity="0.45"/>
+        </g>
+
+        <!-- ─── Nodes on each axis ───────────────────────────────────── -->
+        <!-- Pipelines axis (top), top → bottom = higher → lower load -->
+        <g>
+          <circle cx="400" cy="80" r="8" fill="#0841B4"/>
+          <circle cx="400" cy="110" r="7" fill="#0841B4"/>
+          <circle cx="400" cy="130" r="9" fill="#0841B4"/>
+          <circle cx="400" cy="160" r="5" fill="#0841B4" opacity="0.7"/>
+          <circle cx="400" cy="180" r="7" fill="#0841B4"/>
+          <circle cx="400" cy="200" r="5" fill="#0841B4" opacity="0.7"/>
+          <circle cx="400" cy="215" r="4" fill="#0841B4" opacity="0.6"/>
+
+          <!-- Labels for hubs only -->
+          <text x="412" y="83" font-family="var(--font-mono), monospace" font-size="10" fill="#031A48" font-weight="800">orders-rollup</text>
+          <text x="412" y="134" font-family="var(--font-mono), monospace" font-size="10" fill="#031A48" font-weight="800">sf-to-snowflake</text>
+        </g>
+
+        <!-- Sources axis (lower-left), outward → inward = higher → lower volume -->
+        <g>
+          <!-- Outward points (smaller distance from origin → 250 to 340) -->
+          <circle cx="250" cy="327" r="9" fill="#F59E0B"/>
+          <circle cx="270" cy="314" r="8" fill="#F59E0B"/>
+          <circle cx="290" cy="300" r="7" fill="#F59E0B"/>
+          <circle cx="310" cy="290" r="6" fill="#F59E0B" opacity="0.85"/>
+          <circle cx="330" cy="280" r="5" fill="#F59E0B" opacity="0.7"/>
+          <circle cx="350" cy="270" r="4" fill="#F59E0B" opacity="0.6"/>
+
+          <text x="234" y="324" text-anchor="end" font-family="var(--font-mono), monospace" font-size="10" fill="#031A48" font-weight="800">Salesforce</text>
+          <text x="254" y="312" text-anchor="end" font-family="var(--font-mono), monospace" font-size="10" fill="#7D8695">Postgres</text>
+        </g>
+
+        <!-- Destinations axis (lower-right) -->
+        <g>
+          <circle cx="573" cy="340" r="10" fill="#0B9D9B"/>
+          <circle cx="555" cy="328" r="8" fill="#0B9D9B"/>
+          <circle cx="538" cy="320" r="7" fill="#0B9D9B"/>
+          <circle cx="520" cy="312" r="5" fill="#0B9D9B" opacity="0.85"/>
+          <circle cx="510" cy="305" r="5" fill="#0B9D9B" opacity="0.7"/>
+          <circle cx="495" cy="298" r="4" fill="#0B9D9B" opacity="0.6"/>
+
+          <text x="592" y="343" font-family="var(--font-mono), monospace" font-size="10" fill="#031A48" font-weight="800">Snowflake-prod</text>
+          <text x="572" y="327" font-family="var(--font-mono), monospace" font-size="10" fill="#7D8695">BigQuery-eu</text>
+        </g>
+
+        <!-- ─── Center label ─────────────────────────────────────────── -->
+        <text x="400" y="438" text-anchor="middle" font-family="var(--font-mono), monospace" font-size="10" fill="#7D8695">
+          axis position: log(rows / day) · inner → outer = low → high
+        </text>
+      </svg>
+
+      <div class="legend">
+        <span class="legend__item"><span class="legend__dot" style="background: #F59E0B;"></span>Source system</span>
+        <span class="legend__item"><span class="legend__dot" style="background: #0841B4;"></span>Pipeline</span>
+        <span class="legend__item"><span class="legend__dot" style="background: #0B9D9B;"></span>Destination</span>
+        <span class="legend__axis">Edge color = source axis</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Variants <span class="meta">2-axis (bipartite) · 3-axis (categorical)</span></div>
+      <div class="row2">
+        <div class="mini">
+          <div class="t">2-axis · bipartite</div>
+          <div class="sub">Sources ↔ Destinations alone, when pipelines aren't part of the story.</div>
+          <svg viewBox="0 0 320 220">
+            <line x1="160" y1="200" x2="60" y2="40" stroke="#5E6470" stroke-width="1.5"/>
+            <line x1="160" y1="200" x2="260" y2="40" stroke="#5E6470" stroke-width="1.5"/>
+            <circle cx="160" cy="200" r="2" fill="#9CA3AF"/>
+            <text x="48" y="32" font-size="10" font-weight="800" fill="#031A48" font-family="var(--font-mono)">SOURCES</text>
+            <text x="225" y="32" font-size="10" font-weight="800" fill="#031A48" font-family="var(--font-mono)">DESTINATIONS</text>
+
+            <g fill="none" stroke-linecap="round">
+              <path d="M 78 65 Q 160 100 245 60" stroke="#F59E0B" stroke-width="2" opacity="0.65"/>
+              <path d="M 95 90 Q 160 130 230 80" stroke="#F59E0B" stroke-width="2.5" opacity="0.7"/>
+              <path d="M 110 110 Q 160 150 215 100" stroke="#F59E0B" stroke-width="2" opacity="0.6"/>
+              <path d="M 125 130 Q 160 170 200 120" stroke="#F59E0B" stroke-width="1.5" opacity="0.5"/>
+              <path d="M 95 90 Q 160 150 200 120" stroke="#F59E0B" stroke-width="1.5" opacity="0.5"/>
+            </g>
+
+            <g fill="#F59E0B">
+              <circle cx="78" cy="65" r="8"/>
+              <circle cx="95" cy="90" r="7"/>
+              <circle cx="110" cy="110" r="6"/>
+              <circle cx="125" cy="130" r="5"/>
+              <circle cx="140" cy="150" r="4"/>
+            </g>
+            <g fill="#0B9D9B">
+              <circle cx="245" cy="60" r="9"/>
+              <circle cx="230" cy="80" r="7"/>
+              <circle cx="215" cy="100" r="6"/>
+              <circle cx="200" cy="120" r="5"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="mini">
+          <div class="t">Selected · 3-axis</div>
+          <div class="sub">Click a node to dim everything except its edges and immediate neighbours.</div>
+          <svg viewBox="0 0 320 220">
+            <line x1="160" y1="140" x2="160" y2="30" stroke="#5E6470" stroke-width="1.5"/>
+            <line x1="160" y1="140" x2="60" y2="190" stroke="#5E6470" stroke-width="1.5"/>
+            <line x1="160" y1="140" x2="260" y2="190" stroke="#5E6470" stroke-width="1.5"/>
+
+            <!-- Dimmed background -->
+            <g opacity="0.2" fill="none" stroke-linecap="round">
+              <path d="M 75 185 Q 130 145 160 50" stroke="#F59E0B" stroke-width="2"/>
+              <path d="M 95 175 Q 160 140 245 185" stroke="#F59E0B" stroke-width="2"/>
+              <path d="M 245 185 Q 200 140 160 80" stroke="#0841B4" stroke-width="2"/>
+            </g>
+            <g opacity="0.22">
+              <circle cx="75" cy="185" r="6" fill="#F59E0B"/>
+              <circle cx="95" cy="175" r="6" fill="#F59E0B"/>
+              <circle cx="245" cy="185" r="7" fill="#0B9D9B"/>
+              <circle cx="220" cy="170" r="5" fill="#0B9D9B"/>
+              <circle cx="160" cy="50" r="6" fill="#0841B4"/>
+              <circle cx="160" cy="105" r="5" fill="#0841B4"/>
+            </g>
+
+            <!-- Selected: the central pipeline node + neighbours -->
+            <g fill="none" stroke-linecap="round">
+              <path d="M 115 165 Q 145 140 160 80" stroke="#F59E0B" stroke-width="2.5" opacity="0.85"/>
+              <path d="M 160 80 Q 180 140 200 175" stroke="#0841B4" stroke-width="2.5" opacity="0.85"/>
+            </g>
+            <circle cx="160" cy="80" r="11" fill="none" stroke="#0841B4" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <circle cx="160" cy="80" r="7" fill="#0841B4"/>
+            <circle cx="115" cy="165" r="7" fill="#F59E0B"/>
+            <circle cx="200" cy="175" r="7" fill="#0B9D9B"/>
+
+            <text x="170" y="78" font-size="10" font-family="var(--font-mono)" font-weight="800" fill="#031A48">orders-rollup</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Node ribbons <span class="meta">concentric tier bands on each axis · adds a secondary metric without crowding</span></div>
+      <div class="panel">
+        <div class="t">Pipeline flow with volume tier rings</div>
+        <div class="sub">Concentric rings replace tick marks — each ring is one order of magnitude of axis-position metric (rows/day). Bands tint sequentially light → dark so a node's tier reads at a glance, even when labels are off. Petal arcs sit on top.</div>
+        <svg style="width: 100%; height: 460px;" viewBox="0 0 800 460">
+          <!-- Concentric tier rings (sequential green) -->
+          <g>
+            <circle cx="400" cy="240" r="195" fill="#F0FDF4" stroke="#DCFCE7" stroke-width="1"/>
+            <circle cx="400" cy="240" r="155" fill="#DCFCE7" stroke="#BBF7D0" stroke-width="1"/>
+            <circle cx="400" cy="240" r="110" fill="#A8D78A" stroke="#86EFAC" stroke-width="1" opacity="0.85"/>
+            <circle cx="400" cy="240" r="65" fill="#4ADE80" stroke="#22C55E" stroke-width="1" opacity="0.9"/>
+            <circle cx="400" cy="240" r="25" fill="#16A34A"/>
+          </g>
+
+          <!-- Ring labels (right side of axis) -->
+          <g font-family="var(--font-mono), monospace" font-size="9" fill="#475569" font-weight="800">
+            <text x="408" y="50">≥ 1M rows/day</text>
+            <text x="408" y="92">≥ 100k</text>
+            <text x="408" y="135">≥ 10k</text>
+            <text x="408" y="180">≥ 1k</text>
+            <text x="408" y="220">&lt; 1k</text>
+          </g>
+
+          <!-- Axes (drawn over rings) -->
+          <g stroke="#1F2937" stroke-width="1.5">
+            <line x1="400" y1="240" x2="400" y2="40"/>
+            <line x1="400" y1="240" x2="227" y2="340"/>
+            <line x1="400" y1="240" x2="573" y2="340"/>
+          </g>
+          <circle cx="400" cy="240" r="3" fill="#1F2937"/>
+
+          <!-- Axis category labels -->
+          <g font-family="var(--font-sans), sans-serif" font-size="11" font-weight="800" fill="#031A48">
+            <text x="394" y="32" text-anchor="end">PIPELINES</text>
+            <text x="115" y="358">SOURCES</text>
+            <text x="588" y="358">DESTINATIONS</text>
+          </g>
+
+          <!-- Edges (white-ish to contrast with green rings) -->
+          <g fill="none" stroke-linecap="round" opacity="0.92">
+            <!-- Sources → Pipelines -->
+            <path d="M 270 314 Q 350 230 400 80" stroke="#FFFFFF" stroke-width="2.5"/>
+            <path d="M 310 290 Q 365 235 400 130" stroke="#FFFFFF" stroke-width="3"/>
+            <path d="M 250 327 Q 340 235 400 180" stroke="#FFFFFF" stroke-width="2"/>
+            <path d="M 290 300 Q 360 235 400 200" stroke="#FFFFFF" stroke-width="1.5"/>
+
+            <!-- Pipelines → Destinations -->
+            <path d="M 400 80 Q 470 230 573 340" stroke="#FFFFFF" stroke-width="2.5"/>
+            <path d="M 400 130 Q 460 235 538 320" stroke="#FFFFFF" stroke-width="3"/>
+            <path d="M 400 180 Q 440 240 510 305" stroke="#FFFFFF" stroke-width="2"/>
+            <path d="M 400 200 Q 445 240 488 290" stroke="#FFFFFF" stroke-width="1.5"/>
+
+            <!-- AutoSync passthroughs -->
+            <path d="M 250 327 Q 400 410 538 320" stroke="#0841B4" stroke-width="2" opacity="0.5"/>
+          </g>
+
+          <!-- Nodes -->
+          <g>
+            <!-- Pipelines axis -->
+            <circle cx="400" cy="80" r="7" fill="#0841B4" stroke="#FFFFFF" stroke-width="1.5"/>
+            <circle cx="400" cy="130" r="8" fill="#0841B4" stroke="#FFFFFF" stroke-width="1.5"/>
+            <circle cx="400" cy="180" r="6" fill="#0841B4" stroke="#FFFFFF" stroke-width="1.5"/>
+            <circle cx="400" cy="200" r="5" fill="#0841B4" stroke="#FFFFFF" stroke-width="1.5"/>
+
+            <!-- Sources axis -->
+            <circle cx="250" cy="327" r="8" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1.5"/>
+            <circle cx="270" cy="314" r="7" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1.5"/>
+            <circle cx="290" cy="300" r="6" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1.5"/>
+            <circle cx="310" cy="290" r="5" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1.5"/>
+
+            <!-- Destinations axis -->
+            <circle cx="573" cy="340" r="9" fill="#0B9D9B" stroke="#FFFFFF" stroke-width="1.5"/>
+            <circle cx="555" cy="328" r="7" fill="#0B9D9B" stroke="#FFFFFF" stroke-width="1.5"/>
+            <circle cx="538" cy="320" r="6" fill="#0B9D9B" stroke="#FFFFFF" stroke-width="1.5"/>
+            <circle cx="510" cy="305" r="5" fill="#0B9D9B" stroke="#FFFFFF" stroke-width="1.5"/>
+          </g>
+
+          <text x="400" y="438" text-anchor="middle" font-family="var(--font-mono), monospace" font-size="10" fill="#7D8695">
+            ring tier = log₁₀(rows / day) · inner (small) → outer (large)
+          </text>
+        </svg>
+
+        <div class="legend">
+          <span class="legend__item"><span class="legend__dot" style="background: #F59E0B;"></span>Source</span>
+          <span class="legend__item"><span class="legend__dot" style="background: #0841B4;"></span>Pipeline</span>
+          <span class="legend__item"><span class="legend__dot" style="background: #0B9D9B;"></span>Destination</span>
+          <span class="legend__axis">Ring color = volume tier (sequential green)</span>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>when</dt><dd>Graphs where a regular <b>force-directed Network</b> renders as spaghetti — typically &gt;100 nodes with cross-cluster edges. Best when nodes naturally divide into 2 or 3 categories (Source / Pipeline / Destination · Provider / Consumer · Read / Compute / Write).</dd>
+      <dt>axes</dt><dd><b>2 or 3 categorical axes</b> radiating from a center, equally spaced (180° for 2, 120° for 3). Each axis is a category; node position along the axis is a continuous metric (degree, volume, age, etc.). Both ends of the axis must be labelled — show the metric direction.</dd>
+      <dt>node</dt><dd>Filled circle, color = axis category. Size scales with a secondary metric (volume, criticality). Outermost positions are highest-value. Don't label every node — show only top hubs + on hover/selection.</dd>
+      <dt>edge</dt><dd>Quadratic bezier curve with control point near the center, creating the trademark "petal" arcs. Stroke color = <b>source axis color</b>. Width / opacity scale with edge weight. Always non-directed unless arrowheads are needed.</dd>
+      <dt>direction</dt><dd>When edges have direction, arrowhead at the destination end (small filled triangle, same color as edge). For our pipeline flow plots, edges flow <b>Source → Pipeline → Destination</b> by convention.</dd>
+      <dt>same-axis</dt><dd>Edges within the same axis are <b>not allowed</b> in a hive plot. If you have intra-category edges, either omit or use a duplicate axis (e.g. Sources A and Sources B) at slightly offset angles.</dd>
+      <dt>position scale</dt><dd>Log-scale by default for skewed distributions (rows/day, requests). Linear when range is &lt;1 decade. Always note the scale in a footer caption ("axis position: log(rows / day)").</dd>
+      <dt>selection</dt><dd>Click a node to focus: dim all non-neighbour nodes + edges to 0.2 opacity, keep selected node + 1-hop edges + 1-hop nodes at full opacity. Dashed halo around the selected node. Click empty canvas to clear.</dd>
+      <dt>node ribbons</dt><dd>When position alone doesn't convey the secondary metric clearly, layer concentric tier rings behind the axes — each ring = one bucket (log decade, status, etc.) and tints sequentially. Rings stay in the green ramp so cluster colors on nodes stay distinguishable. Don't use rings AND tick labels; pick one calibration system per chart.</dd>
+      <dt>vs. network</dt><dd>Use <b>Network graph</b> when structure is exploratory and clusters emerge from layout. Use <b>Hive plot</b> when categories are known up-front and you need a stable, comparable view across datasets. Pair them: Network for discovery, Hive for reports.</dd>
+      <dt>a11y</dt><dd>Always pair with a sortable table view of nodes + their connections (toggle in toolbar). Each axis labelled with <code>aria-label</code>; nodes are <code>role="button" aria-label="{name}, axis {category}, position {value}"</code>. Colorblind-safe palette (Orange / Blue / Teal). Pattern overlays on stroke when used as the only differentiator in print export.</dd>
+    </dl>
+  </div>
+</body>
+</html>

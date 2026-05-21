@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Avatar</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .card { gap: 20px; }
+
+  /* ─── AVATAR ───────────────────────────────────────────────
+     Initial-only — no photos. Background color is picked
+     deterministically from the user's name/id so the same
+     person always renders the same color across the product.
+     Uses the badge tint pattern: a soft 100-step background with
+     ExtraBold tinted initials in the 700/800 step of the same hue.
+     6 sizes · 8 colors.
+  */
+  .sl-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    color: var(--sl-indigo-900);
+    background: var(--sl-grey-200);
+    flex: none;
+    user-select: none;
+    letter-spacing: 0;
+  }
+
+  /* Sizes (max 32px — never use photos, smaller marks read better) */
+  .sl-avatar--xs  { width: 16px; height: 16px; font-size: 10px; }
+  .sl-avatar--sm  { width: 24px; height: 24px; font-size: 14px; }
+  .sl-avatar--md  { width: 32px; height: 32px; font-size: 18px; }
+
+  /* Color set — 8 distinct hues from the SnapLogic ramps.
+     Pattern matches Badges: tinted background (-100) + bold tinted text (-700/-800).
+     Yellow is intentionally excluded (its -700 still reads poorly on the -100 tint). */
+  .sl-avatar--c1 { background: var(--sl-blue-100);   color: var(--sl-blue-700);   }
+  .sl-avatar--c2 { background: var(--sl-teal-100);   color: var(--sl-teal-700);   }
+  .sl-avatar--c3 { background: var(--sl-indigo-100); color: var(--sl-indigo-700); }
+  .sl-avatar--c4 { background: var(--sl-orange-100); color: var(--sl-orange-700); }
+  .sl-avatar--c5 { background: var(--sl-purple-100); color: var(--sl-purple-700); }
+  .sl-avatar--c6 { background: var(--sl-green-100);  color: var(--sl-green-800);  }
+  .sl-avatar--c7 { background: var(--sl-pink-100);   color: var(--sl-pink-700);   }
+  .sl-avatar--c8 { background: var(--sl-red-100);    color: var(--sl-red-700);    }
+
+  /* ─── Layout helpers ──────────────────────────────────────── */
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .row + .row { margin-top: 12px; }
+  .lbl { width: 100px; flex: none; font: 800 10px/12px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
+  .lbl small { display: block; font: 400 10px/14px var(--font-mono); text-transform: none; letter-spacing: 0; opacity: 0.7; margin-top: 2px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .with-label { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); }
+
+  .spec {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 4px 16px;
+    font: 400 11px/16px var(--font-sans);
+    padding: 10px 12px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+  }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label">
+      <span class="name">Avatar</span>
+      <span class="meta">initial-only · 6 sizes · 8 colors</span>
+    </div>
+
+    <!-- ─── SIZES ────────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Sizes <span class="meta">max 32px — initials read best at small sizes</span></div>
+      <div class="row" style="align-items: flex-end;">
+        <span class="with-label"><span class="sl-avatar sl-avatar--xs sl-avatar--c1" aria-label="Anita Brown">A</span>xs · 16</span>
+        <span class="with-label"><span class="sl-avatar sl-avatar--sm sl-avatar--c2" aria-label="Bilal Khan">B</span>sm · 24</span>
+        <span class="with-label"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Chen Wei">C</span>md · 32 · default</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── COLOR PALETTE ────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Color palette <span class="meta">deterministic hash of name/id → one of 8</span></div>
+      <div class="row">
+        <span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Color 1">A</span>
+        <span class="sl-avatar sl-avatar--md sl-avatar--c2" aria-label="Color 2">B</span>
+        <span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Color 3">C</span>
+        <span class="sl-avatar sl-avatar--md sl-avatar--c4" aria-label="Color 4">D</span>
+        <span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Color 5">E</span>
+        <span class="sl-avatar sl-avatar--md sl-avatar--c6" aria-label="Color 6">F</span>
+        <span class="sl-avatar sl-avatar--md sl-avatar--c7" aria-label="Color 7">G</span>
+        <span class="sl-avatar sl-avatar--md sl-avatar--c8" aria-label="Color 8">H</span>
+      </div>
+      <div style="font: 400 11px/16px var(--font-mono); color: var(--color-text-subtle); margin-top: 8px; padding: 10px 12px; background: var(--sl-grey-100); border-radius: var(--radius-xs); white-space: pre; overflow-x: auto;">function colorForUser(name) {
+  let h = 0;
+  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return `sl-avatar--c${(h % 8) + 1}`;   // stable across sessions
+}</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── IN CONTEXT ───────────────────────────────────────── -->
+    <div>
+      <div class="section-h">In context</div>
+
+      <!-- Avatar + name -->
+      <div class="row">
+        <span class="lbl">Inline meta</span>
+        <span style="display: inline-flex; align-items: center; gap: 8px;">
+          <span class="sl-avatar sl-avatar--sm sl-avatar--c1" aria-label="Anita Brown">A</span>
+          <span style="font: 400 14px/22px var(--font-sans); color: var(--color-text-body);">Anita Brown</span>
+        </span>
+        <span style="color: var(--color-text-subtle); font: 400 13px/22px var(--font-sans);">commented 2h ago</span>
+      </div>
+
+      <!-- Row context -->
+      <div class="row" style="background: var(--sl-grey-100); padding: 10px 14px; border-radius: var(--radius-xs);">
+        <span class="lbl">Table row</span>
+        <span style="display: inline-flex; align-items: center; gap: 8px; flex: 1;">
+          <span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Elif Yilmaz">E</span>
+          <span style="display: flex; flex-direction: column;">
+            <span style="font: 800 14px/20px var(--font-sans); color: var(--sl-indigo-900);">Elif Yilmaz</span>
+            <span style="font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle);">elif.yilmaz@snaplogic.com</span>
+          </span>
+        </span>
+        <span style="font: 400 12px/16px var(--font-mono); color: var(--color-text-subtle);">Admin</span>
+      </div>
+
+      <!-- Header context -->
+      <div class="row" style="border: 1px solid var(--sl-grey-200); padding: 16px; border-radius: var(--radius-sm);">
+        <span class="lbl">Profile header</span>
+        <span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Chen Wei">C</span>
+        <span style="display: flex; flex-direction: column; flex: 1; gap: 2px;">
+          <span style="font: 800 20px/28px var(--font-sans); color: var(--sl-indigo-900);">Chen Wei</span>
+          <span style="font: 400 14px/22px var(--font-sans); color: var(--color-text-subtle);">Integration Lead · APAC</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- ─── SPEC ─────────────────────────────────────────────── -->
+    <dl class="spec">
+      <dt>content</dt>
+      <dd>Always the <b>first initial</b> of the person's display name. Single letter, uppercase, ExtraBold (800).</dd>
+      <dt>sizes</dt>
+      <dd><code>xs 16</code> · <code>sm 24</code> · <code>md 32</code> default. Never larger — we use initials, not photos, so smaller marks read better.</dd>
+      <dt>color</dt>
+      <dd>Pick one of 8 (blue, teal, indigo, orange, purple, green, pink, red) by hashing the user id or name. Yellow and grey are excluded — poor white-on-color contrast.</dd>
+      <dt>a11y</dt>
+      <dd>Always set <code>aria-label="Full name"</code> on the avatar element — the visible initial alone isn't enough for screen readers. When paired with a visible name, use <code>aria-hidden="true"</code>.</dd>
+      <dt>related</dt>
+      <dd><b>Avatar group</b> — overlapping stack for showing multiple users in tight contexts.</dd>
+    </dl>
+  </div>
+</body>
+</html>

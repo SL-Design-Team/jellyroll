@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Slider</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .grid { display: grid; grid-template-columns: 110px 1fr; gap: 14px 20px; align-items: center; }
+  .tag { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
+  .sl-wrap { position: relative; height: 28px; }
+  .sl-track {
+    position: absolute; top: 50%; left: 0; right: 0; height: 3px;
+    background: var(--sl-blue-200); border-radius: 2px; transform: translateY(-50%);
+  }
+  .sl-fill { position: absolute; top: 50%; left: 0; height: 3px; background: var(--sl-blue-600); border-radius: 2px; transform: translateY(-50%); }
+  .sl-thumb {
+    position: absolute; top: 50%; width: 16px; height: 16px; border-radius: 999px;
+    background: var(--sl-blue-600); transform: translate(-50%, -50%); cursor: pointer;
+    border: 2px solid var(--sl-white);
+    box-shadow: 0 0 0 1px var(--sl-blue-600);
+  }
+  .sl-thumb.hover { box-shadow: 0 0 0 1.5px var(--sl-blue-600); }
+  .sl-thumb.focus { box-shadow: 0 0 0 1px var(--sl-blue-600), 0 0 0 8px rgba(8,65,180,0.18); }
+  .sl-thumb.pressed { box-shadow: 0 0 0 1px var(--sl-blue-600), 0 0 0 10px rgba(8,65,180,0.32); }
+  .sl-fill.error { background: var(--sl-red-600); }
+  .sl-track.error { background: var(--sl-red-200); }
+  .sl-thumb.error { background: var(--sl-red-600); box-shadow: 0 0 0 1px var(--sl-red-600); }
+  .scale-labels { display: flex; justify-content: space-between; margin-top: 4px; font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Slider</span><span class="meta">16px thumb · 3px track</span></div>
+    <div class="grid">
+      <span class="tag">Default</span>
+      <div>
+        <div class="sl-wrap">
+          <div class="sl-track"></div>
+          <div class="sl-fill" style="width: 30%"></div>
+          <div class="sl-thumb" style="left: 30%"></div>
+        </div>
+        <div class="scale-labels"><span>0</span><span>90</span></div>
+      </div>
+      <span class="tag">Hover</span>
+      <div>
+        <div class="sl-wrap">
+          <div class="sl-track"></div>
+          <div class="sl-fill" style="width: 40%"></div>
+          <div class="sl-thumb hover" style="left: 40%"></div>
+        </div>
+        <div class="scale-labels"><span>0</span><span>90</span></div>
+      </div>
+      <span class="tag">Focus</span>
+      <div>
+        <div class="sl-wrap">
+          <div class="sl-track"></div>
+          <div class="sl-fill" style="width: 35%"></div>
+          <div class="sl-thumb focus" style="left: 35%"></div>
+        </div>
+        <div class="scale-labels"><span>0</span><span>90</span></div>
+      </div>
+      <span class="tag">Pressed</span>
+      <div>
+        <div class="sl-wrap">
+          <div class="sl-track"></div>
+          <div class="sl-fill" style="width: 32%"></div>
+          <div class="sl-thumb pressed" style="left: 32%"></div>
+        </div>
+        <div class="scale-labels"><span>0</span><span>90</span></div>
+      </div>
+      <span class="tag">Error</span>
+      <div>
+        <div class="sl-wrap">
+          <div class="sl-track error"></div>
+          <div class="sl-fill error" style="width: 28%"></div>
+          <div class="sl-thumb error" style="left: 28%"></div>
+        </div>
+        <div class="scale-labels"><span>0</span><span>90</span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

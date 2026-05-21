@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Form section</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 18px; }
+
+  /* Field minimal (reused) */
+  .sl-field { display: flex; flex-direction: column; gap: 4px; }
+  .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+  .sl-input {
+    height: var(--field-height-md);
+    padding: var(--field-padding-y-md) var(--field-padding-x);
+    border-radius: var(--field-radius);
+    border: 1px solid var(--field-border-default);
+    background: var(--field-bg-default);
+    font: var(--field-font); color: var(--field-text-default);
+    outline: none;
+    width: 100%;
+  }
+  .sl-form-row { display: grid; gap: 16px; }
+  .sl-form-row--2 { grid-template-columns: 1fr 1fr; }
+
+  /* ─── FORM SECTION ─────────────────────────────────────────
+     Groups related fields under a heading + description.
+     Two layouts:
+       split  — heading-left, fields-right (settings page style)
+       stacked — heading-top, fields-below (drawer / wizard style)
+     Optional collapse toggle for "Advanced settings".
+  */
+  .sl-form-section { display: grid; gap: 24px; padding: 28px 0; }
+  .sl-form-section + .sl-form-section { border-top: 1px solid var(--sl-grey-200); }
+
+  .sl-form-section--split { grid-template-columns: 240px 1fr; gap: 48px; align-items: start; }
+
+  .sl-form-section__head { display: flex; flex-direction: column; gap: 4px; }
+  .sl-form-section__title {
+    font: 800 18px/26px var(--font-sans);
+    color: var(--sl-indigo-900);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sl-form-section__title .toggle {
+    width: 24px; height: 24px;
+    border: 0; background: transparent;
+    border-radius: var(--radius-xs);
+    color: var(--color-text-subtle);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-left: auto;
+  }
+  .sl-form-section__title .toggle:hover { background: var(--sl-grey-100); color: var(--color-text-body); }
+  .sl-form-section__title .toggle svg { width: 16px; height: 16px; transition: transform 150ms; }
+  .sl-form-section.collapsed .toggle svg { transform: rotate(-90deg); }
+
+  .sl-form-section__desc {
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-subtle);
+    max-width: 320px;
+  }
+
+  .sl-form-section__body {
+    display: flex; flex-direction: column;
+    gap: 20px;
+  }
+  .sl-form-section.collapsed .sl-form-section__body { display: none; }
+
+  /* Demo wrappers */
+  .demo {
+    padding: 0 24px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+  }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Form section</span><span class="meta">heading + description + grouped fields · split or stacked · collapsible</span></div>
+
+    <div>
+      <div class="section-h">Split layout <span class="meta">heading-left, fields-right · for settings pages</span></div>
+      <div class="demo">
+
+        <div class="sl-form-section sl-form-section--split">
+          <div class="sl-form-section__head">
+            <div class="sl-form-section__title">General</div>
+            <div class="sl-form-section__desc">Basic information about this pipeline. Visible to anyone with project access.</div>
+          </div>
+          <div class="sl-form-section__body">
+            <div class="sl-field"><label class="sl-field__label">Pipeline name</label><input class="sl-input" value="sf-to-snowflake-nightly" /></div>
+            <div class="sl-field"><label class="sl-field__label">Description</label><input class="sl-input" value="Loads Salesforce accounts to Snowflake every night." /></div>
+            <div class="sl-form-row sl-form-row--2">
+              <div class="sl-field"><label class="sl-field__label">Project</label><input class="sl-input" value="salesforce-pipelines" /></div>
+              <div class="sl-field"><label class="sl-field__label">Owner</label><input class="sl-input" value="anita.brown" /></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-form-section sl-form-section--split">
+          <div class="sl-form-section__head">
+            <div class="sl-form-section__title">Schedule</div>
+            <div class="sl-form-section__desc">When this pipeline runs automatically.</div>
+          </div>
+          <div class="sl-form-section__body">
+            <div class="sl-form-row sl-form-row--2">
+              <div class="sl-field"><label class="sl-field__label">Cron expression</label><input class="sl-input" value="0 2 * * *" /></div>
+              <div class="sl-field"><label class="sl-field__label">Timezone</label><input class="sl-input" value="America/Los_Angeles" /></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-form-section sl-form-section--split">
+          <div class="sl-form-section__head">
+            <div class="sl-form-section__title">Advanced
+              <button class="toggle" aria-label="Collapse"><i data-lucide="chevron-down"></i></button>
+            </div>
+            <div class="sl-form-section__desc">Retries, timeout, and execution concurrency. Defaults are safe for most pipelines.</div>
+          </div>
+          <div class="sl-form-section__body">
+            <div class="sl-form-row sl-form-row--2">
+              <div class="sl-field"><label class="sl-field__label">Retries</label><input class="sl-input" value="3" /></div>
+              <div class="sl-field"><label class="sl-field__label">Timeout</label><input class="sl-input" value="60s" /></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sl-form-section sl-form-section--split collapsed">
+          <div class="sl-form-section__head">
+            <div class="sl-form-section__title">Notifications
+              <button class="toggle" aria-label="Expand"><i data-lucide="chevron-down"></i></button>
+            </div>
+            <div class="sl-form-section__desc">Where to send run-status alerts. Currently uses project defaults.</div>
+          </div>
+          <div class="sl-form-section__body">
+            <div class="sl-field"><label class="sl-field__label">Email recipients</label><input class="sl-input" value="" /></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Stacked layout <span class="meta">heading-top, fields-below · for drawers and wizards</span></div>
+      <div class="demo">
+
+        <div class="sl-form-section">
+          <div class="sl-form-section__head">
+            <div class="sl-form-section__title">Connection</div>
+            <div class="sl-form-section__desc">How to reach the source system.</div>
+          </div>
+          <div class="sl-form-section__body">
+            <div class="sl-form-row sl-form-row--2">
+              <div class="sl-field"><label class="sl-field__label">Hostname</label><input class="sl-input" value="acme.my.salesforce.com" /></div>
+              <div class="sl-field"><label class="sl-field__label">Port</label><input class="sl-input" value="443" /></div>
+            </div>
+            <div class="sl-field"><label class="sl-field__label">Account</label><input class="sl-input" value="Acme prod (OAuth)" /></div>
+          </div>
+        </div>
+
+        <div class="sl-form-section">
+          <div class="sl-form-section__head">
+            <div class="sl-form-section__title">Authentication</div>
+            <div class="sl-form-section__desc">Credentials for this source.</div>
+          </div>
+          <div class="sl-form-section__body">
+            <div class="sl-form-row sl-form-row--2">
+              <div class="sl-field"><label class="sl-field__label">Username</label><input class="sl-input" value="svc-snaplogic@acme.com" /></div>
+              <div class="sl-field"><label class="sl-field__label">Password</label><input class="sl-input" value="••••••••••" type="password" /></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>layouts</dt><dd><b>Split</b> (default for settings pages) — 240px heading column + flexible fields column, 48px gap. <b>Stacked</b> (default for drawers and wizards) — heading-top, fields-below, narrower viewports.</dd>
+      <dt>head</dt><dd>Title 18/26 ExtraBold. Description 13/20 subtle grey, max 320px wide. Description is optional but recommended for non-obvious sections.</dd>
+      <dt>spacing</dt><dd>28px padding above/below each section. Border between adjacent sections. Fields inside spaced 20px apart.</dd>
+      <dt>collapsible</dt><dd>Optional toggle in the title area. Collapsed state hides the body, rotates the chevron −90°. Use for "Advanced" / "Notifications" / progressively-disclosed groups.</dd>
+      <dt>composition</dt><dd>Body composes Form rows and individual fields. Section doesn't own field chrome.</dd>
+      <dt>a11y</dt><dd>Use <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> when the section groups truly related controls (radios, checkboxes). For prose sections with mixed inputs, an <code>&lt;h3&gt;</code> heading and <code>aria-labelledby</code> on the section is enough.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

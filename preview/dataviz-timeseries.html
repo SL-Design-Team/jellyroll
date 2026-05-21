@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>Data viz · Time series</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  .card { width: 1080px; gap: 14px; padding: 24px; background: var(--sl-grey-100); }
+  .demo { padding: 20px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .demo .lbl { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .demo .desc { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); margin-top: 10px; }
+  .axis { stroke: #D7DCE3; stroke-width: 1; }
+  .axis-text { font: 400 10px/12px ui-monospace, Menlo, monospace; fill: #7D8695; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
+  .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .ts-wrap { padding: 20px 22px; background: var(--sl-white); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .ts-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .ts-head .t { font: 800 14px/18px var(--font-sans); color: var(--sl-indigo-900); }
+  .ts-head .sub { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); }
+</style></head><body>
+  <div class="card">
+    <div class="row-label"><span class="name">Time series</span><span class="meta">line over time · axis · gridlines · legend · tooltip</span></div>
+    <div class="ts-wrap">
+      <div class="ts-head">
+        <span class="t">Throughput · last 24 hours</span>
+        <span class="sub">records / second</span>
+      </div>
+      <svg width="100%" height="280" viewBox="0 0 1000 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <!-- gridlines -->
+        <line x1="60" y1="30" x2="980" y2="30" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="78" x2="980" y2="78" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="126" x2="980" y2="126" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="174" x2="980" y2="174" class="axis" stroke-dasharray="2 4"/><line x1="60" y1="222" x2="980" y2="222" class="axis" stroke-dasharray=""/>
+        <!-- y labels -->
+        <text x="48" y="34" text-anchor="end" class="axis-text">8k</text><text x="48" y="82" text-anchor="end" class="axis-text">6k</text><text x="48" y="130" text-anchor="end" class="axis-text">4k</text><text x="48" y="178" text-anchor="end" class="axis-text">2k</text><text x="48" y="226" text-anchor="end" class="axis-text">0k</text>
+        <!-- x labels -->
+        <text x="60" y="248" text-anchor="middle" class="axis-text">00:00</text><text x="213.3" y="248" text-anchor="middle" class="axis-text">04:00</text><text x="366.6" y="248" text-anchor="middle" class="axis-text">08:00</text><text x="519.9000000000001" y="248" text-anchor="middle" class="axis-text">12:00</text><text x="673.2" y="248" text-anchor="middle" class="axis-text">16:00</text><text x="826.5" y="248" text-anchor="middle" class="axis-text">20:00</text><text x="979.8000000000001" y="248" text-anchor="middle" class="axis-text">24:00</text>
+        <!-- Line 1: Prod Snaplex 01 (blue) -->
+        <path d="M60,180 L120,170 L180,140 L240,150 L300,110 L360,95 L420,85 L480,100 L540,80 L600,65 L660,75 L720,55 L780,70 L840,60 L900,50 L960,75"
+              fill="none" stroke="#008DFF" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- Line 2: Prod Snaplex 02 (pink) -->
+        <path d="M60,210 L120,200 L180,195 L240,180 L300,170 L360,165 L420,150 L480,140 L540,145 L600,130 L660,140 L720,120 L780,135 L840,115 L900,125 L960,110"
+              fill="none" stroke="#FF73B6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- Line 3: Dev Snaplex (green) -->
+        <path d="M60,230 L120,225 L180,220 L240,225 L300,210 L360,215 L420,205 L480,200 L540,210 L600,195 L660,205 L720,190 L780,200 L840,185 L900,195 L960,180"
+              fill="none" stroke="#4ECB8D" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- Hover indicator at 14:00 -->
+        <line x1="660" y1="30" x2="660" y2="222" stroke="#0841B4" stroke-width="1" stroke-dasharray="3 3"/>
+        <circle cx="660" cy="75" r="4" fill="#008DFF" stroke="white" stroke-width="2"/>
+        <circle cx="660" cy="140" r="4" fill="#FF73B6" stroke="white" stroke-width="2"/>
+        <circle cx="660" cy="205" r="4" fill="#4ECB8D" stroke="white" stroke-width="2"/>
+        <!-- Tooltip -->
+        <g transform="translate(680, 20)">
+          <rect width="160" height="84" rx="6" fill="#031A48"/>
+          <text x="12" y="20" fill="white" font-family="Acherus Grotesque, sans-serif" font-size="11" font-weight="800">14:00 · Wed, Apr 12</text>
+          <circle cx="14" cy="38" r="4" fill="#008DFF"/>
+          <text x="24" y="42" fill="white" font-family="Acherus Grotesque, sans-serif" font-size="11">prod-01</text>
+          <text x="148" y="42" fill="white" font-family="ui-monospace, Menlo, monospace" font-size="11" text-anchor="end">6.8k/s</text>
+          <circle cx="14" cy="56" r="4" fill="#FF73B6"/>
+          <text x="24" y="60" fill="white" font-family="Acherus Grotesque, sans-serif" font-size="11">prod-02</text>
+          <text x="148" y="60" fill="white" font-family="ui-monospace, Menlo, monospace" font-size="11" text-anchor="end">3.2k/s</text>
+          <circle cx="14" cy="74" r="4" fill="#4ECB8D"/>
+          <text x="24" y="78" fill="white" font-family="Acherus Grotesque, sans-serif" font-size="11">dev-02</text>
+          <text x="148" y="78" fill="white" font-family="ui-monospace, Menlo, monospace" font-size="11" text-anchor="end">1.5k/s</text>
+        </g>
+      </svg>
+      <div class="legend">
+        <div class="lg-item"><span class="lg-dot" style="background:#008DFF"></span>prod-snaplex-01</div>
+        <div class="lg-item"><span class="lg-dot" style="background:#FF73B6"></span>prod-snaplex-02</div>
+        <div class="lg-item"><span class="lg-dot" style="background:#4ECB8D"></span>dev-snaplex-02</div>
+      </div>
+    </div>
+  </div>
+</body></html>

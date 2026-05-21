@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · User menu</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<link rel="stylesheet" href="dropdown.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .um {
+    width: 280px;
+    padding: 0;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.55);
+  }
+
+  .userhead {
+    padding: 20px 20px 16px;
+  }
+  .userhead .name { font: 800 16px/20px var(--font-sans); color: var(--sl-white); margin-bottom: 4px; }
+  .userhead .email { font: 400 13px/18px var(--font-sans); color: rgba(255,255,255,0.55); margin-bottom: 8px; }
+  .userhead .role {
+    font: 800 11px/14px var(--font-sans);
+    color: #6F8BC6;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+  }
+
+  .um-list { padding: 8px 0; }
+  .item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 20px;
+    font: 500 14px/22px var(--font-sans);
+    color: rgba(255,255,255,0.92);
+    cursor: pointer;
+  }
+  .item:hover { color: var(--sl-teal-300); background: rgba(255,255,255,0.03); }
+  .item svg { width: 18px; height: 18px; color: rgba(255,255,255,0.62); stroke-width: 1.75; }
+  .item:hover svg { color: var(--sl-teal-300); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">User menu</span><span class="meta">anchored to avatar in global header</span></div>
+    <div class="dropdown-stage">
+      <div class="dropdown um">
+        <div class="userhead">
+          <div class="name">Matthew</div>
+          <div class="email">matthew@snaplogic.com</div>
+          <div class="role">Admin</div>
+        </div>
+        <div class="dd-divider"></div>
+        <div class="um-list">
+          <div class="item"><i data-lucide="lock"></i>Change Password</div>
+          <div class="item"><i data-lucide="git-branch"></i>Git authorization</div>
+          <div class="item"><i data-lucide="settings"></i>App Settings</div>
+          <div class="item"><i data-lucide="log-out"></i>Log out</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

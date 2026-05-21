@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Advanced editors · API parameter builder</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+  .sl-input { height: var(--field-height-md); padding: 8px 12px; border-radius: var(--field-radius); border: 1px solid var(--field-border-default); font: var(--field-font); color: var(--field-text-default); background: var(--sl-white); width: 100%; outline: none; }
+
+  /* URL bar */
+  .ap-urlbar { display: grid; grid-template-columns: 110px 1fr 100px; gap: 4px; border: 1px solid var(--field-border-default); border-radius: var(--field-radius); background: var(--sl-white); overflow: hidden; }
+  .ap-method {
+    border: 0; outline: 0; background: var(--sl-blue-600); color: var(--sl-white);
+    font: 800 14px/22px var(--font-mono); padding: 8px 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 4px;
+  }
+  .ap-method.get { background: var(--sl-green-600); }
+  .ap-method.post { background: var(--sl-blue-600); }
+  .ap-method.put { background: var(--sl-orange-600); }
+  .ap-method.del { background: var(--sl-red-600); }
+  .ap-method svg { width: 12px; height: 12px; }
+  .ap-url { border: 0; outline: 0; padding: 8px 12px; font: 400 14px/22px var(--font-mono); color: var(--sl-indigo-900); background: transparent; }
+  .ap-send { background: var(--sl-blue-600); color: var(--sl-white); border: 0; cursor: pointer; font: 800 14px/22px var(--font-sans); display: inline-flex; align-items: center; gap: 6px; justify-content: center; padding: 8px 12px; }
+  .ap-send svg { width: 14px; height: 14px; }
+
+  /* Tabs */
+  .ap-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--sl-grey-200); }
+  .ap-tab { padding: 8px 14px; font: 800 13px/16px var(--font-sans); color: var(--color-text-subtle); border-bottom: 2px solid transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .ap-tab.active { color: var(--sl-blue-600); border-bottom-color: var(--sl-blue-600); }
+  .ap-tab .count { font: 400 11px/14px var(--font-mono); padding: 0 5px; background: var(--sl-grey-200); color: var(--color-text-subtle); border-radius: 999px; }
+  .ap-tab.active .count { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+
+  /* Tab body — reuse repeater */
+  .kv { border: 1px solid var(--sl-grey-200); border-radius: var(--field-radius); background: var(--sl-white); overflow: hidden; }
+  .kv__head { display: grid; grid-template-columns: 28px 1fr 1.4fr 32px; gap: 8px; padding: 6px 10px 6px 40px; background: var(--sl-grey-100); border-bottom: 1px solid var(--sl-grey-200); font: 800 10px/14px var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-subtle); }
+  .kv__row { display: grid; grid-template-columns: 28px 28px 1fr 1.4fr 32px; gap: 8px; padding: 6px 10px; align-items: center; border-bottom: 1px solid var(--sl-grey-100); }
+  .kv__row:last-child { border-bottom: 0; }
+  .kv__check, .kv__handle { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; color: var(--color-text-subtle); }
+  .kv__check input { accent-color: var(--sl-blue-600); }
+  .kv__handle svg { width: 12px; height: 12px; }
+  .kv__del { width: 32px; height: 32px; border: 0; background: transparent; border-radius: var(--radius-xs); color: var(--color-text-subtle); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+  .kv__del:hover { background: var(--sl-red-100); color: var(--sl-red-700); }
+  .kv__del svg { width: 14px; height: 14px; }
+  .kv__row input.sl-input { height: 28px; padding: 4px 10px; font: 400 13px/20px var(--font-mono); }
+  .kv__footer { padding: 8px 10px; background: var(--sl-grey-100); border-top: 1px solid var(--sl-grey-200); }
+  .kv__footer button { display: inline-flex; align-items: center; gap: 6px; font: 800 12px/16px var(--font-sans); color: var(--sl-blue-600); background: transparent; border: 0; padding: 4px 8px; border-radius: var(--radius-sm); cursor: pointer; }
+  .kv__footer button svg { width: 12px; height: 12px; }
+
+  /* Body editor */
+  .body-types { display: flex; gap: 4px; padding: 8px 10px; background: var(--sl-grey-100); border-radius: var(--field-radius) var(--field-radius) 0 0; }
+  .body-type { padding: 4px 10px; font: 800 11px/14px var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; border-radius: var(--radius-xs); background: transparent; color: var(--color-text-subtle); cursor: pointer; border: 0; }
+  .body-type.active { background: var(--sl-white); color: var(--sl-blue-700); }
+  .body-editor { padding: 12px; background: var(--sl-blue-1000); color: #D8E1F0; font: 400 13px/20px var(--font-mono); border: 1px solid var(--sl-grey-200); border-top: 0; border-radius: 0 0 var(--field-radius) var(--field-radius); white-space: pre; }
+  .body-editor .key { color: #79B8FF; } .body-editor .str { color: #9ECBFF; } .body-editor .punc { color: #8B98A8; } .body-editor .num { color: #F97583; } .body-editor .var { color: #B392F0; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">API parameter builder</span><span class="meta">REST snap composite · method + URL + params + headers + body</span></div>
+
+    <!-- URL bar -->
+    <div class="ap-urlbar">
+      <button class="ap-method post">POST <i data-lucide="chevron-down"></i></button>
+      <input class="ap-url" value="https://$env.host/v2/accounts/{{id}}" />
+      <button class="ap-send"><i data-lucide="play"></i>Send</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="ap-tabs">
+      <div class="ap-tab">Path <span class="count">1</span></div>
+      <div class="ap-tab">Query <span class="count">2</span></div>
+      <div class="ap-tab active">Headers <span class="count">3</span></div>
+      <div class="ap-tab">Body <span class="count">JSON</span></div>
+      <div class="ap-tab">Auth</div>
+    </div>
+
+    <!-- Active tab body -->
+    <div class="kv">
+      <div class="kv__head">
+        <span></span><span>Name</span><span>Value</span><span></span>
+      </div>
+      <div class="kv__row">
+        <span class="kv__check"><input type="checkbox" checked /></span>
+        <span class="kv__handle"><i data-lucide="grip-vertical"></i></span>
+        <input class="sl-input" value="Authorization" />
+        <input class="sl-input" value="Bearer $env.api_token" />
+        <button class="kv__del"><i data-lucide="trash-2"></i></button>
+      </div>
+      <div class="kv__row">
+        <span class="kv__check"><input type="checkbox" checked /></span>
+        <span class="kv__handle"><i data-lucide="grip-vertical"></i></span>
+        <input class="sl-input" value="Content-Type" />
+        <input class="sl-input" value="application/json" />
+        <button class="kv__del"><i data-lucide="trash-2"></i></button>
+      </div>
+      <div class="kv__row">
+        <span class="kv__check"><input type="checkbox" checked /></span>
+        <span class="kv__handle"><i data-lucide="grip-vertical"></i></span>
+        <input class="sl-input" value="X-Request-Id" />
+        <input class="sl-input" value="$execution_id" />
+        <button class="kv__del"><i data-lucide="trash-2"></i></button>
+      </div>
+      <div class="kv__footer">
+        <button><i data-lucide="plus"></i>Add header</button>
+      </div>
+    </div>
+
+    <!-- Body preview -->
+    <div>
+      <div class="body-types">
+        <button class="body-type active">JSON</button>
+        <button class="body-type">Form</button>
+        <button class="body-type">Multipart</button>
+        <button class="body-type">Raw</button>
+        <button class="body-type">None</button>
+      </div>
+      <div class="body-editor">{
+  <span class="key">"id"</span><span class="punc">:</span> <span class="var">$input.id</span><span class="punc">,</span>
+  <span class="key">"name"</span><span class="punc">:</span> <span class="var">$input.name</span><span class="punc">,</span>
+  <span class="key">"revenue_usd"</span><span class="punc">:</span> <span class="var">$input.revenue</span><span class="punc">,</span>
+  <span class="key">"loaded_at"</span><span class="punc">:</span> <span class="var">$now</span>
+<span class="punc">}</span></div>
+    </div>
+
+    <dl class="spec">
+      <dt>url bar</dt><dd>Method dropdown (color-coded: GET green · POST blue · PUT orange · DELETE red) · URL with <code>{{path}}</code> param interpolation and <code>$variables</code> · Send button.</dd>
+      <dt>tabs</dt><dd><b>Path</b> · path-param key/value · <b>Query</b> · query-string params · <b>Headers</b> · request headers · <b>Body</b> · payload editor · <b>Auth</b> · scheme selector + values. Each tab reuses the <b>Key/value editor</b> primitive.</dd>
+      <dt>body types</dt><dd>JSON · Form (urlencoded) · Multipart (file uploads) · Raw (string) · None. JSON uses the <b>JSON editor</b> primitive embedded.</dd>
+      <dt>send</dt><dd>"Send" runs a one-off request from the IDE (not in-pipeline) — used for testing. Result panel docks below.</dd>
+      <dt>composition</dt><dd>Made entirely from existing primitives: URL bar + Tabs + Key/value editor + JSON editor + Connection picker (in Auth tab).</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

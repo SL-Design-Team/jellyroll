@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Error states</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 16px; width: 880px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .frame {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    background: var(--sl-white);
+    overflow: hidden;
+  }
+  .frame__bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-100);
+    font: 800 12px/16px var(--font-sans); color: var(--color-text-subtle);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .frame__bar i { width: 14px; height: 14px; }
+
+  /* ─── Branded full-page error (routing-level: 404 / 403 / 401 / 500) ─── */
+  .err-page {
+    background: var(--sl-white);
+    border-radius: 0;
+    overflow: hidden;
+  }
+  .err-nav {
+    background: var(--sl-indigo-900);
+    color: var(--sl-white);
+    padding: 12px 20px;
+    display: flex; align-items: center; gap: 14px;
+    font: 400 13px/20px var(--font-sans);
+  }
+  .err-nav__brand { font-weight: 800; }
+  .err-nav__sep { opacity: 0.4; }
+  .err-nav__title { opacity: 0.85; }
+  .err-nav .right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .err-nav__waffle {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-xs);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--sl-white); cursor: pointer;
+  }
+  .err-nav__waffle:hover { background: rgba(255,255,255,0.1); }
+  .err-nav__waffle i, .err-nav__waffle svg { width: 18px; height: 18px; }
+  .err-nav__user { opacity: 0.85; font: 400 12px/18px var(--font-sans); }
+
+  .err-body {
+    padding: 56px 40px 40px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+    min-height: 480px;
+  }
+
+  /* The "Oops!" mark — snap-logo as the O */
+  .oops {
+    display: inline-flex; align-items: center;
+    margin-bottom: 22px;
+  }
+  .oops__mark {
+    width: 138px; height: 138px;
+    flex: none;
+    margin-right: -14px;
+  }
+  .oops__word {
+    font: 800 116px/110px var(--font-sans);
+    color: var(--sl-blue-600);
+    letter-spacing: -0.04em;
+  }
+
+  .err-headline {
+    font: 800 18px/26px var(--font-sans);
+    color: var(--sl-indigo-900);
+    margin: 0 0 4px;
+  }
+  .err-sub {
+    font: 400 14px/22px var(--font-sans);
+    color: var(--color-text-subtle);
+    margin: 0 0 28px;
+    max-width: 460px;
+  }
+
+  /* Product launchers (placeholder gradient circles) */
+  .err-launchers {
+    display: flex; gap: 28px;
+    margin-bottom: 36px;
+  }
+  .launcher {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    text-decoration: none;
+    color: var(--color-text-body);
+  }
+  .launcher__circle {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--sl-white);
+    font: 800 17px/22px var(--font-sans);
+  }
+  .launcher__lbl { font: 400 12px/16px var(--font-sans); color: var(--color-text-body); }
+  .launcher--monitor   .launcher__circle { background: linear-gradient(135deg, #0B9D9B, #0841B4); }
+  .launcher--designer  .launcher__circle { background: linear-gradient(135deg, #0841B4, #6E4FD3); }
+  .launcher--autosync  .launcher__circle { background: linear-gradient(135deg, #7C3AED, #B22FAA); }
+  .launcher--manager   .launcher__circle { background: linear-gradient(135deg, #C24A21, #E8A52A); }
+
+  .btn-blue {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 22px;
+    font: 800 14px/22px var(--font-sans);
+    border-radius: var(--field-radius);
+    border: 1.5px solid var(--sl-blue-600);
+    background: var(--sl-blue-600);
+    color: var(--sl-white);
+    cursor: pointer;
+    margin-bottom: 36px;
+  }
+
+  .err-support {
+    margin: 6px 0 28px;
+    font: 400 14px/22px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .err-support a { color: var(--color-text-link); text-decoration: underline; font-weight: 800; }
+
+  .err-foot {
+    display: flex; gap: 22px; justify-content: center;
+    padding-top: 22px;
+    border-top: 1px solid var(--sl-grey-200);
+    width: 100%;
+  }
+  .err-foot a {
+    color: var(--color-text-link);
+    font: 400 13px/20px var(--font-sans);
+    text-decoration: none;
+  }
+  .err-foot a:hover { text-decoration: underline; }
+
+  /* Filmstrip of error variants */
+  .err-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+  .err-mini {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    overflow: hidden;
+  }
+  .err-mini .err-nav { padding: 8px 12px; font-size: 11px; }
+  .err-mini .err-nav__waffle { width: 18px; height: 18px; }
+  .err-mini .err-nav__waffle i, .err-mini .err-nav__waffle svg { width: 12px; height: 12px; }
+  .err-mini .err-body { padding: 20px 12px 16px; min-height: 0; }
+  .err-mini .oops { margin-bottom: 10px; }
+  .err-mini .oops__mark { width: 56px; height: 56px; margin-right: -6px; }
+  .err-mini .oops__word { font: 800 46px/44px var(--font-sans); letter-spacing: -0.04em; }
+  .err-mini .err-headline { font: 800 12px/16px var(--font-sans); margin-bottom: 2px; }
+  .err-mini .err-sub { font: 400 10px/14px var(--font-sans); margin-bottom: 12px; }
+  .err-mini .btn-blue { font: 800 10px/14px var(--font-sans); padding: 4px 10px; margin-bottom: 12px; border-width: 1px; }
+  .err-mini .err-launchers { gap: 10px; margin-bottom: 12px; }
+  .err-mini .launcher__circle { width: 20px; height: 20px; font-size: 9px; }
+  .err-mini .launcher__lbl { font-size: 9px; }
+  .err-mini .err-support { font: 400 10px/14px var(--font-sans); margin-bottom: 10px; }
+  .err-mini .err-foot { padding-top: 8px; }
+  .err-mini .err-foot a { font: 400 9px/12px var(--font-sans); }
+
+  /* ─── Section error ─────────────────────────────────────── */
+  .sec-err {
+    padding: 24px 20px;
+    display: flex; gap: 14px;
+    align-items: flex-start;
+  }
+  .sec-err__icon {
+    flex: none; width: 36px; height: 36px; border-radius: 50%;
+    background: var(--sl-red-100); color: var(--sl-red-700);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sec-err__icon i { width: 18px; height: 18px; }
+  .sec-err__body { flex: 1; }
+  .sec-err__title { font: 800 14px/22px var(--font-sans); color: var(--color-text-heading); }
+  .sec-err__desc { font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); margin-top: 2px; }
+  .sec-err__actions { margin-top: 10px; display: flex; gap: 8px; align-items: center; }
+
+  /* Inline (within a list / cell) */
+  .row {
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr 0.6fr;
+    padding: 10px 16px;
+    font: 400 13px/20px var(--font-sans);
+    border-bottom: 1px solid var(--sl-grey-200);
+    align-items: center;
+  }
+  .row.head { font: 800 10px/14px var(--font-mono); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 16px; background: var(--sl-grey-100); border-bottom: 1px solid var(--sl-grey-200); }
+  .row .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 3px 8px; border-radius: 999px;
+  }
+  .pill--err { background: var(--sl-red-100); color: var(--sl-red-800); }
+  .pill--err::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sl-red-600); }
+  .row .cell-err { color: var(--sl-red-800); display: inline-flex; align-items: center; gap: 4px; font-weight: 800; }
+  .row .cell-err i { width: 12px; height: 12px; }
+  .row a.retry { color: var(--color-text-link); font-weight: 800; text-decoration: underline; font-size: 12px; }
+
+  /* Toast / banner variants */
+  .banner {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 14px;
+    border-radius: var(--field-radius);
+    font: 400 13px/20px var(--font-sans);
+    border: 1px solid;
+  }
+  .banner--err { background: var(--sl-red-100); border-color: var(--sl-red-300); color: var(--sl-red-1000); }
+  .banner--warn { background: var(--sl-yellow-100); border-color: var(--sl-yellow-300); color: var(--sl-yellow-1000); }
+  .banner i.lead { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+  .banner b { font-weight: 800; }
+  .banner__actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .banner__actions a { color: inherit; font-weight: 800; text-decoration: underline; font-size: 13px; }
+  .banner__close { background: none; border: 0; cursor: pointer; color: inherit; padding: 2px; }
+  .banner__close i { width: 14px; height: 14px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    font: 800 13px/22px var(--font-sans);
+    border-radius: var(--field-radius);
+    border: 1.5px solid;
+    cursor: pointer;
+  }
+  .btn--primary  { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .btn--ghost { background: transparent; color: var(--color-text-link); border-color: transparent; padding-left: 6px; padding-right: 6px; }
+  .btn i { width: 14px; height: 14px; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Error states</span><span class="meta">page · section · inline · banner · recovery actions</span></div>
+
+    <div>
+      <div class="section-h">Branded page error <span class="meta">routing-level: 404 / 403 / 401 / 400 / 500 · full-page treatment</span></div>
+      <div class="frame err-page">
+        <div class="err-nav">
+          <span class="err-nav__brand">SnapLogic</span>
+          <span class="err-nav__sep">|</span>
+          <span class="err-nav__title">404 Not Found</span>
+          <span class="right">
+            <span class="err-nav__user">m.garcia@</span>
+            <span class="err-nav__waffle"><i data-lucide="grid"></i></span>
+          </span>
+        </div>
+        <div class="err-body">
+          <div class="oops">
+            <svg class="oops__mark" viewBox="0 0 120 120" aria-hidden="true">
+              <!-- two interlocking rings, snap-mark style -->
+              <circle cx="45" cy="45" r="32" fill="none" stroke="#0B9D9B" stroke-width="14"/>
+              <circle cx="75" cy="75" r="32" fill="none" stroke="#0B9D9B" stroke-width="14"/>
+              <!-- restore overlap so rings interlock -->
+              <path d="M 73 47 a 32 32 0 0 1 4 12" fill="none" stroke="#0B9D9B" stroke-width="14" stroke-linecap="round"/>
+            </svg>
+            <span class="oops__word">ops!</span>
+          </div>
+          <h2 class="err-headline">Sorry, we could not find that page.</h2>
+          <p class="err-sub">Check the page address or use one of the links below.</p>
+          <div class="err-launchers">
+            <a class="launcher launcher--monitor"><span class="launcher__circle">M</span><span class="launcher__lbl">Monitor</span></a>
+            <a class="launcher launcher--designer"><span class="launcher__circle">D</span><span class="launcher__lbl">Designer</span></a>
+            <a class="launcher launcher--autosync"><span class="launcher__circle">S</span><span class="launcher__lbl">AutoSync</span></a>
+          </div>
+          <div class="err-foot">
+            <a href="#">Community</a>
+            <a href="#">Help</a>
+            <a href="#">Public Pattern Library</a>
+            <a href="#">Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Variants <span class="meta">action area changes by error code — same "Oops!" head</span></div>
+      <div class="err-strip">
+        <div class="err-mini">
+          <div class="err-nav"><span class="err-nav__brand">SnapLogic</span><span class="err-nav__sep">|</span><span class="err-nav__title">403 Forbidden</span><span class="right"><span class="err-nav__waffle"><i data-lucide="grid"></i></span></span></div>
+          <div class="err-body">
+            <div class="oops">
+              <svg class="oops__mark" viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="45" cy="45" r="32" fill="none" stroke="#0B9D9B" stroke-width="14"/>
+                <circle cx="75" cy="75" r="32" fill="none" stroke="#0B9D9B" stroke-width="14"/>
+                <path d="M 73 47 a 32 32 0 0 1 4 12" fill="none" stroke="#0B9D9B" stroke-width="14" stroke-linecap="round"/>
+              </svg>
+              <span class="oops__word">ops!</span>
+            </div>
+            <h2 class="err-headline">Sorry, you do not have access permission to view this.</h2>
+            <p class="err-sub">Check the address or contact your admin to change your permissions.</p>
+            <div class="err-launchers">
+              <a class="launcher launcher--monitor"><span class="launcher__circle">M</span><span class="launcher__lbl">Monitor</span></a>
+              <a class="launcher launcher--designer"><span class="launcher__circle">D</span><span class="launcher__lbl">Designer</span></a>
+              <a class="launcher launcher--autosync"><span class="launcher__circle">S</span><span class="launcher__lbl">AutoSync</span></a>
+            </div>
+            <div class="err-foot"><a>Community</a><a>Help</a><a>Privacy</a></div>
+          </div>
+        </div>
+
+        <div class="err-mini">
+          <div class="err-nav"><span class="err-nav__brand">SnapLogic</span><span class="err-nav__sep">|</span><span class="err-nav__title">401 Unauthorized</span><span class="right"><span class="err-nav__waffle"><i data-lucide="grid"></i></span></span></div>
+          <div class="err-body">
+            <div class="oops">
+              <svg class="oops__mark" viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="45" cy="45" r="32" fill="none" stroke="#0B9D9B" stroke-width="14"/>
+                <circle cx="75" cy="75" r="32" fill="none" stroke="#0B9D9B" stroke-width="14"/>
+                <path d="M 73 47 a 32 32 0 0 1 4 12" fill="none" stroke="#0B9D9B" stroke-width="14" stroke-linecap="round"/>
+              </svg>
+              <span class="oops__word">ops!</span>
+            </div>
+            <h2 class="err-headline">Sorry, authentication is required.</h2>
+            <p class="err-sub">Check the page address or login.</p>
+            <button class="btn-blue">Return to login page</button>
+            <div class="err-foot"><a>Community</a><a>Help</a><a>Privacy</a></div>
+          </div>
+        </div>
+
+        <div class="err-mini">
+          <div class="err-nav"><span class="err-nav__brand">SnapLogic</span><span class="err-nav__sep">|</span><span class="err-nav__title">400 Bad Request</span><span class="right"><span class="err-nav__waffle"><i data-lucide="grid"></i></span></span></div>
+          <div class="err-body">
+            <div class="oops">
+              <svg class="oops__mark" viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="45" cy="45" r="32" fill="none" stroke="#0B9D9B" stroke-width="14"/>
+                <circle cx="75" cy="75" r="32" fill="none" stroke="#0B9D9B" stroke-width="14"/>
+                <path d="M 73 47 a 32 32 0 0 1 4 12" fill="none" stroke="#0B9D9B" stroke-width="14" stroke-linecap="round"/>
+              </svg>
+              <span class="oops__word">ops!</span>
+            </div>
+            <h2 class="err-headline">Your request resulted in an error.</h2>
+            <p class="err-sub">That's all we know.</p>
+            <button class="btn-blue">Return to previous page</button>
+            <div class="err-foot"><a>Community</a><a>Help</a><a>Privacy</a></div>
+          </div>
+        </div>
+
+        <div class="err-mini">
+          <div class="err-nav"><span class="err-nav__brand">SnapLogic</span><span class="err-nav__sep">|</span><span class="err-nav__title">500 Server Error</span><span class="right"><span class="err-nav__waffle"><i data-lucide="grid"></i></span></span></div>
+          <div class="err-body">
+            <div class="oops">
+              <svg class="oops__mark" viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="45" cy="45" r="32" fill="none" stroke="#0B9D9B" stroke-width="14"/>
+                <circle cx="75" cy="75" r="32" fill="none" stroke="#0B9D9B" stroke-width="14"/>
+                <path d="M 73 47 a 32 32 0 0 1 4 12" fill="none" stroke="#0B9D9B" stroke-width="14" stroke-linecap="round"/>
+              </svg>
+              <span class="oops__word">ops!</span>
+            </div>
+            <h2 class="err-headline">Well, this is unexpected…</h2>
+            <p class="err-sub">The server encountered an error and could not complete your request.</p>
+            <p class="err-support">If this persists, please <a>contact support</a>.</p>
+            <div class="err-foot"><a>Community</a><a>Help</a><a>Privacy</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="grid">
+      <div>
+        <div class="section-h">Section error <span class="meta">one panel failed · page still usable</span></div>
+        <div class="frame">
+          <div class="frame__bar"><i data-lucide="bar-chart-3"></i>Run history</div>
+          <div class="sec-err">
+            <div class="sec-err__icon"><i data-lucide="wifi-off"></i></div>
+            <div class="sec-err__body">
+              <div class="sec-err__title">Couldn't load run history</div>
+              <div class="sec-err__desc">Connection to the metrics service was lost. Other panels are unaffected.</div>
+              <div class="sec-err__actions">
+                <button class="btn btn--secondary"><i data-lucide="refresh-cw"></i>Retry</button>
+                <button class="btn btn--ghost">View details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-h">Banner <span class="meta">non-blocking · dismissible</span></div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="banner banner--err">
+            <i data-lucide="alert-circle" class="lead"></i>
+            <div>
+              <b>Pipeline failed to validate.</b> 3 errors found. Fix them before executing.
+            </div>
+            <div class="banner__actions">
+              <a href="#">View errors</a>
+              <button class="banner__close" aria-label="Dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+          <div class="banner banner--warn">
+            <i data-lucide="alert-triangle" class="lead"></i>
+            <div>
+              <b>Stale credentials.</b> The Snowflake account <b>prod-east</b> token expires in 4 days.
+            </div>
+            <div class="banner__actions">
+              <a href="#">Renew</a>
+              <button class="banner__close" aria-label="Dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Inline in row <span class="meta">single record failed · others fine</span></div>
+      <div class="frame">
+        <div class="row head">
+          <span>Pipeline</span><span>Status</span><span>Last run</span><span></span>
+        </div>
+        <div class="row">
+          <span>sf-to-snowflake-nightly</span>
+          <span><span class="pill pill--err">Failed</span></span>
+          <span class="cell-err"><i data-lucide="x-circle"></i>JDBC connect timeout</span>
+          <span><a class="retry" href="#">Retry run</a></span>
+        </div>
+        <div class="row">
+          <span>orders-to-warehouse</span>
+          <span><span class="pill" style="background: var(--sl-green-100); color: var(--sl-green-800);"><span style="width:6px;height:6px;border-radius:50%;background:var(--sl-green-600);"></span>Succeeded</span></span>
+          <span style="color: var(--color-text-subtle);">2 min ago</span>
+          <span></span>
+        </div>
+        <div class="row" style="border-bottom: 0;">
+          <span>users-cdc-stream</span>
+          <span><span class="pill pill--err">Failed</span></span>
+          <span class="cell-err"><i data-lucide="x-circle"></i>Permission denied on schema</span>
+          <span><a class="retry" href="#">View error</a></span>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>severity</dt><dd>Pick the smallest container that fully scopes the failure. <b>Inline</b> &lt; <b>Section</b> &lt; <b>Banner</b> &lt; <b>Branded page</b>. Don't wrap a page in an error state if only one panel failed.</dd>
+      <dt>branded page</dt><dd>Reserved for <b>routing-level errors</b>: 404 / 403 / 401 / 400 / 500 / 503. The signature mark is the <i>"Oops!"</i> headline with two interlocking teal rings as the leading O — the snap mark. Always paired with the dark Indigo 900 navbar showing the error code in the title.</dd>
+      <dt>action area</dt><dd>By error code: <b>404 / 403</b> show product launchers (Monitor / Designer / AutoSync) so the user can recover sideways. <b>401</b> shows "Return to login page". <b>400</b> shows "Return to previous page". <b>500</b> shows a contact-support link.</dd>
+      <dt>copy</dt><dd>Headline is a <b>complete sentence</b> ending in a period, sentence case, leads with "Sorry" only on 4xx (the user's intent failed). 500 uses "Well, this is unexpected…" — calmer self-deprecation. Always paired with one descriptive sub-line.</dd>
+      <dt>color</dt><dd>Red is for <b>errors</b> — something failed or is blocked. Yellow is for <b>warnings</b> — something needs attention but isn't broken yet (expiring credentials, deprecation). Don't use red for warnings.</dd>
+      <dt>recovery</dt><dd>Retry buttons should attempt the failed action without reloading the page. If the error is permanent (404, 403), the action goes back to a known-good route — never just "Retry" into the same failure.</dd>
+      <dt>a11y</dt><dd>Container uses <code>role="alert"</code> (assertive) for new errors, <code>role="status"</code> for ongoing/repaired states. Focus moves to the error region when it appears. Icons are <code>aria-hidden</code>; the text carries the meaning.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
