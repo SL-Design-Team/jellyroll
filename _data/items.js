@@ -974,15 +974,6 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "preview/dataviz-network.html",
-          name: "Network graph",
-          tagline: "Force-directed graph of pipelines and connections — flat nodes, cluster colors.",
-          meta: {
-            usage: "Use for many-to-many lineage and dependency views. Node size scales with degree (8–26px); cluster colors apply to both nodes and edges. For strict hierarchical flows, use a DAG view instead.",
-            behaviors: "Hover lights the node and surfaces name / degree / cluster. Click selects: 1-hop neighbors keep full color; everything else dims. Right-click opens contextual actions. Drag a node to reposition; zoom is mouse-wheel."
-          }
-        },
-        {
           file: "preview/dataviz-categorical.html",
           name: "Palette · Categorical",
           tagline: "Five-color palette for unordered categories — designed for light and dark backgrounds.",
