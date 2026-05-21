@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Foundations · Accessibility</title>
 <link rel="stylesheet" href="../colors_and_type.css" />
 <link rel="stylesheet" href="card.css" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
-  .card { width: 900px; gap: 0; padding: 0; }
+  .card { width: 100%; max-width: 900px; gap: 0; padding: 0; }
 
   /* ── Page header ── */
   .a11y-header {
@@ -320,6 +321,30 @@
     color: var(--color-text-body);
   }
   .note i { width: 15px; height: 15px; color: var(--sl-blue-600); flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Responsive ── */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  @media (max-width: 700px) {
+    .a11y-header { padding: 24px 20px 24px; }
+    .a11y-body   { padding: 24px 20px 40px; gap: 28px; }
+
+    .principles  { grid-template-columns: 1fr 1fr; }
+    .do-dont     { grid-template-columns: 1fr; }
+
+    /* Stack contrast table into single-column cards */
+    .contrast-table thead { display: none; }
+    .contrast-table tr    { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-bottom: 1px solid var(--sl-grey-200); }
+    .contrast-table td    { padding: 0; border: 0; }
+
+    /* Make keyboard table scrollable */
+    .key-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .key-table      { min-width: 520px; }
+  }
+
+  @media (max-width: 420px) {
+    .principles { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -463,7 +488,7 @@
         <h2>Keyboard navigation</h2>
       </div>
       <p style="font:400 13px/20px var(--font-sans); color:var(--color-text-body); margin:0 0 14px;">Every interactive element in JellyRoll must be reachable and operable by keyboard alone. All focus indicators use a 3px teal halo at 35% alpha — never remove the outline without providing an equivalent replacement.</p>
-      <table class="key-table">
+      <div class="key-table-wrap"><table class="key-table">
         <thead>
           <tr>
             <th>Key</th>
@@ -513,7 +538,7 @@
             <td>Lists, tables, sliders</td>
           </tr>
         </tbody>
-      </table>
+      </table></div>
     </div>
 
     <div class="sec-divider"></div>
