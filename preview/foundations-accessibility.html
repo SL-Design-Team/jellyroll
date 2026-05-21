@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Foundations · Accessibility</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { width: 900px; gap: 0; padding: 0; }
+
+  /* ── Page header ── */
+  .a11y-header {
+    padding: 36px 40px 32px;
+    background: linear-gradient(135deg, var(--sl-indigo-1000) 0%, var(--sl-indigo-900) 60%, #1F2A52 100%);
+    position: relative;
+    overflow: hidden;
+    border-radius: 0;
+  }
+  .a11y-header::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #008380 29%, #0841B4 100%);
+  }
+  .a11y-header .eyebrow {
+    font: 800 10px/14px var(--font-sans);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--sl-teal-300);
+    margin-bottom: 10px;
+  }
+  .a11y-header h1 {
+    font: 800 32px/38px var(--font-sans);
+    color: var(--sl-white);
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  .a11y-header .lead {
+    font: 400 15px/24px var(--font-sans);
+    color: rgba(255,255,255,0.72);
+    max-width: 58ch;
+    margin: 0;
+  }
+  .wcag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    font: 800 11px/14px var(--font-sans);
+    color: var(--sl-white);
+    letter-spacing: 0.04em;
+  }
+  .wcag-badge i { width: 13px; height: 13px; color: var(--sl-teal-300); }
+
+  /* ── Body ── */
+  .a11y-body { padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 40px; }
+
+  /* ── Principle cards ── */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .principle {
+    padding: 16px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-grey-50);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .principle .p-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .principle .p-icon i { width: 16px; height: 16px; }
+  .principle .p-name {
+    font: 800 12px/16px var(--font-sans);
+    color: var(--color-text-heading);
+    letter-spacing: 0.02em;
+  }
+  .principle .p-desc {
+    font: 400 11px/16px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+
+  /* ── Section headings ── */
+  .sec-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .sec-heading .icon-wrap {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-blue-50);
+    color: var(--sl-blue-600);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-heading .icon-wrap i { width: 14px; height: 14px; }
+  .sec-heading h2 {
+    font: 800 16px/22px var(--font-sans);
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+
+  /* ── Guideline rows ── */
+  .guidelines { display: flex; flex-direction: column; gap: 10px; }
+  .guideline {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    align-items: start;
+  }
+  .guideline .g-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--sl-green-100);
+    color: var(--sl-green-700);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .guideline .g-check i { width: 11px; height: 11px; stroke-width: 2.5; }
+  .guideline .g-text { display: flex; flex-direction: column; gap: 3px; }
+  .guideline .g-title { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .guideline .g-desc  { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .guideline code {
+    font: 400 11px/15px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sl-indigo-700);
+  }
+
+  /* ── Contrast table ── */
+  .contrast-table {
+    width: 100%;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border-collapse: collapse;
+  }
+  .contrast-table th {
+    background: var(--sl-grey-50);
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-subtle);
+    padding: 9px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .contrast-table td {
+    padding: 10px 14px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    border-bottom: 1px solid var(--sl-grey-100);
+    vertical-align: middle;
+  }
+  .contrast-table tr:last-child td { border-bottom: 0; }
+  .ratio {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: 800 12px/16px var(--font-mono);
+    color: var(--color-text-heading);
+  }
+  .ratio .pass {
+    padding: 2px 7px;
+    border-radius: 999px;
+    font: 800 9px/12px var(--font-sans);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--sl-green-100);
+    color: var(--sl-green-800);
+  }
+  .swatch-pair {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .sw { width: 14px; height: 14px; border-radius: 2px; border: 1px solid rgba(0,0,0,0.08); display: inline-block; }
+
+  /* ── Keyboard table ── */
+  .key-table { width: 100%; border-collapse: collapse; }
+  .key-table th {
+    background: var(--sl-grey-50);
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-subtle);
+    padding: 9px 14px;
+    text-align: left;
+    border: 1px solid var(--sl-grey-200);
+  }
+  .key-table td {
+    padding: 9px 14px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    border: 1px solid var(--sl-grey-200);
+    vertical-align: top;
+  }
+  .key-table tr:nth-child(even) td { background: var(--sl-grey-50); }
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .kbd kbd {
+    display: inline-block;
+    padding: 2px 7px;
+    font: 800 11px/16px var(--font-mono);
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-400);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    color: var(--color-text-heading);
+    white-space: nowrap;
+  }
+
+  /* ── Do / Don't ── */
+  .do-dont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .do-card, .dont-card {
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--sl-grey-200);
+  }
+  .do-card .card-bar, .dont-card .card-bar {
+    padding: 8px 14px;
+    font: 800 10px/14px var(--font-sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .do-card .card-bar { background: var(--sl-green-50); color: var(--sl-green-800); border-bottom: 1px solid var(--sl-green-200); }
+  .dont-card .card-bar { background: var(--sl-red-50); color: var(--sl-red-800); border-bottom: 1px solid var(--sl-red-200); }
+  .do-card .card-bar i, .dont-card .card-bar i { width: 13px; height: 13px; }
+  .do-card .card-body, .dont-card .card-body {
+    padding: 14px 16px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .do-card .card-body p, .dont-card .card-body p { margin: 0; }
+  .do-card .card-body code, .dont-card .card-body code {
+    font: 400 11px/15px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sl-indigo-700);
+    display: block;
+    white-space: pre;
+  }
+
+  /* ── Resources ── */
+  .resources { display: flex; flex-direction: column; gap: 8px; }
+  .resource-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: inherit;
+    background: var(--sl-white);
+    transition: border-color 120ms ease-out, background 120ms ease-out;
+  }
+  .resource-link:hover { border-color: var(--sl-blue-400); background: var(--sl-blue-50); }
+  .resource-link .r-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-100);
+    color: var(--color-text-subtle);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .resource-link .r-icon i { width: 15px; height: 15px; }
+  .resource-link .r-text { flex: 1; }
+  .resource-link .r-name { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .resource-link .r-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .resource-link .r-arrow { color: var(--sl-grey-400); }
+  .resource-link .r-arrow i { width: 14px; height: 14px; }
+
+  /* ── Section divider ── */
+  .sec-divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* ── Note block ── */
+  .note {
+    display: flex;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--sl-blue-50);
+    border: 1px solid var(--sl-blue-200);
+    border-left: 3px solid var(--sl-blue-600);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .note i { width: 15px; height: 15px; color: var(--sl-blue-600); flex-shrink: 0; margin-top: 1px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Header -->
+  <div class="a11y-header">
+    <div class="eyebrow">Foundations</div>
+    <h1>Accessibility</h1>
+    <p class="lead">JellyRoll is built to be usable by everyone — whether navigating with a mouse, keyboard, or screen reader. These guidelines apply to all SnapLogic surfaces.</p>
+    <div class="wcag-badge">
+      <i data-lucide="shield-check"></i>
+      WCAG 2.1 AA Target Conformance
+    </div>
+  </div>
+
+  <div class="a11y-body">
+
+    <!-- POUR principles -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="layers"></i></div>
+        <h2>The four POUR principles</h2>
+      </div>
+      <div class="principles">
+        <div class="principle">
+          <div class="p-icon"><i data-lucide="eye"></i></div>
+          <div class="p-name">Perceivable</div>
+          <div class="p-desc">Information and UI components must be presentable in ways users can perceive — including non-visual alternatives.</div>
+        </div>
+        <div class="principle">
+          <div class="p-icon"><i data-lucide="mouse-pointer-2"></i></div>
+          <div class="p-name">Operable</div>
+          <div class="p-desc">UI components and navigation must be operable by keyboard, not just a pointer device.</div>
+        </div>
+        <div class="principle">
+          <div class="p-icon"><i data-lucide="book-open"></i></div>
+          <div class="p-name">Understandable</div>
+          <div class="p-desc">Information and operation of the UI must be understandable — clear language, predictable behavior.</div>
+        </div>
+        <div class="principle">
+          <div class="p-icon"><i data-lucide="wrench"></i></div>
+          <div class="p-name">Robust</div>
+          <div class="p-desc">Content must be interpreted reliably by assistive technologies, including current and future user agents.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Color & Contrast -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="contrast"></i></div>
+        <h2>Color and contrast</h2>
+      </div>
+      <div class="note" style="margin-bottom:16px;">
+        <i data-lucide="info"></i>
+        Never use color as the only means of conveying information or requesting an action. Always pair color with a label, icon, or pattern.
+      </div>
+      <table class="contrast-table">
+        <thead>
+          <tr>
+            <th>Pairing</th>
+            <th>Use</th>
+            <th>Ratio</th>
+            <th>WCAG AA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <span class="swatch-pair">
+                <span class="sw" style="background:#031A48"></span>
+                <span class="sw" style="background:#FFFFFF"></span>
+              </span>
+              <span style="margin-left:8px; font:400 12px/18px var(--font-mono);">Indigo-1000 on White</span>
+            </td>
+            <td>Body text, headings</td>
+            <td><span class="ratio">17.5:1 <span class="pass">AA</span></span></td>
+            <td>Normal &amp; large text</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="swatch-pair">
+                <span class="sw" style="background:#0841B4"></span>
+                <span class="sw" style="background:#FFFFFF"></span>
+              </span>
+              <span style="margin-left:8px; font:400 12px/18px var(--font-mono);">Blue-600 on White</span>
+            </td>
+            <td>Interactive / link text</td>
+            <td><span class="ratio">7.2:1 <span class="pass">AA</span></span></td>
+            <td>Normal &amp; large text</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="swatch-pair">
+                <span class="sw" style="background:#FFFFFF"></span>
+                <span class="sw" style="background:#0841B4"></span>
+              </span>
+              <span style="margin-left:8px; font:400 12px/18px var(--font-mono);">White on Blue-600</span>
+            </td>
+            <td>Primary button label</td>
+            <td><span class="ratio">7.2:1 <span class="pass">AA</span></span></td>
+            <td>Normal &amp; large text</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="swatch-pair">
+                <span class="sw" style="background:#7D8695"></span>
+                <span class="sw" style="background:#FFFFFF"></span>
+              </span>
+              <span style="margin-left:8px; font:400 12px/18px var(--font-mono);">Grey-500 on White</span>
+            </td>
+            <td>Subtle / placeholder text</td>
+            <td><span class="ratio">4.6:1 <span class="pass">AA</span></span></td>
+            <td>Normal text minimum</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="swatch-pair">
+                <span class="sw" style="background:#0841B4"></span>
+                <span class="sw" style="background:#D7DCE3"></span>
+              </span>
+              <span style="margin-left:8px; font:400 12px/18px var(--font-mono);">Blue-600 on Grey-300</span>
+            </td>
+            <td>Avoid — insufficient for small text</td>
+            <td><span class="ratio" style="color:var(--sl-red-700);">2.9:1</span></td>
+            <td>Fails normal text</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Keyboard navigation -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="keyboard"></i></div>
+        <h2>Keyboard navigation</h2>
+      </div>
+      <p style="font:400 13px/20px var(--font-sans); color:var(--color-text-body); margin:0 0 14px;">Every interactive element in JellyRoll must be reachable and operable by keyboard alone. All focus indicators use a 3px teal halo at 35% alpha — never remove the outline without providing an equivalent replacement.</p>
+      <table class="key-table">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Action</th>
+            <th>Applies to</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="kbd"><kbd>Tab</kbd></span></td>
+            <td>Move focus to next interactive element</td>
+            <td>All focusable elements</td>
+          </tr>
+          <tr>
+            <td><span class="kbd"><kbd>Shift</kbd> + <kbd>Tab</kbd></span></td>
+            <td>Move focus to previous interactive element</td>
+            <td>All focusable elements</td>
+          </tr>
+          <tr>
+            <td><span class="kbd"><kbd>Enter</kbd></span></td>
+            <td>Activate button or link; submit form</td>
+            <td>Buttons, links, form submit</td>
+          </tr>
+          <tr>
+            <td><span class="kbd"><kbd>Space</kbd></span></td>
+            <td>Toggle checkbox, radio, or toggle; activate button</td>
+            <td>Checkboxes, toggles, buttons</td>
+          </tr>
+          <tr>
+            <td><span class="kbd"><kbd>↑</kbd> <kbd>↓</kbd></span></td>
+            <td>Navigate items in a list, menu, or select</td>
+            <td>Dropdowns, menus, radio groups</td>
+          </tr>
+          <tr>
+            <td><span class="kbd"><kbd>←</kbd> <kbd>→</kbd></span></td>
+            <td>Navigate tabs, segmented controls, sliders</td>
+            <td>Tabs, segmented controls</td>
+          </tr>
+          <tr>
+            <td><span class="kbd"><kbd>Esc</kbd></span></td>
+            <td>Close modal, dismiss popover, cancel action</td>
+            <td>Modals, popovers, drawers, tooltips</td>
+          </tr>
+          <tr>
+            <td><span class="kbd"><kbd>Home</kbd> / <kbd>End</kbd></span></td>
+            <td>Jump to first or last item</td>
+            <td>Lists, tables, sliders</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Semantic HTML & ARIA -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="code-2"></i></div>
+        <h2>Semantic HTML and ARIA</h2>
+      </div>
+      <p style="font:400 13px/20px var(--font-sans); color:var(--color-text-body); margin:0 0 14px;">Use native HTML elements before reaching for ARIA. A native <code style="font:400 11px/15px var(--font-mono); background:var(--sl-grey-100); padding:1px 5px; border-radius:3px;">&lt;button&gt;</code> gives you keyboard support, focus management, and screen reader semantics for free.</p>
+      <div class="do-dont">
+        <div class="do-card">
+          <div class="card-bar"><i data-lucide="check"></i> Do</div>
+          <div class="card-body">
+            <p>Use semantic elements that describe their purpose.</p>
+            <code>&lt;button type="button"&gt;Save&lt;/button&gt;
+&lt;nav aria-label="Primary"&gt;...&lt;/nav&gt;
+&lt;main&gt;...&lt;/main&gt;</code>
+            <p>Add <code>aria-label</code> when visible text is absent (icon-only buttons).</p>
+            <code>&lt;button aria-label="Close dialog"&gt;
+  &lt;svg ...&gt;...&lt;/svg&gt;
+&lt;/button&gt;</code>
+          </div>
+        </div>
+        <div class="dont-card">
+          <div class="card-bar"><i data-lucide="x"></i> Don't</div>
+          <div class="card-body">
+            <p>Don't use non-semantic elements as interactive controls.</p>
+            <code>&lt;div onclick="save()"&gt;Save&lt;/div&gt;
+&lt;span role="button"&gt;Close&lt;/span&gt;</code>
+            <p>Don't use ARIA roles to paper over missing semantics when a native element exists.</p>
+            <code>&lt;div role="button" tabindex="0"
+  onclick="..."&gt;Save&lt;/div&gt;</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Forms & Inputs -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="pen-line"></i></div>
+        <h2>Forms and inputs</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Every input must have a visible label</div>
+            <div class="g-desc">Placeholder text disappears on focus and is not a substitute for a label. The only exception is search fields, where the magnifying glass icon serves as a visible label — but even these require a visually hidden <code>&lt;label&gt;</code> for screen readers.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Associate labels with inputs using <code>for</code> and <code>id</code></div>
+            <div class="g-desc">Clicking a properly associated label should move focus to the control. Never use <code>aria-label</code> to replace a visible label on a standard form field.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Surface validation errors inline and programmatically</div>
+            <div class="g-desc">Use <code>aria-describedby</code> to link the error message to its field. Set <code>aria-invalid="true"</code> on the input when it fails validation. Move focus to the first error on form submit.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Group related inputs with <code>&lt;fieldset&gt;</code> and <code>&lt;legend&gt;</code></div>
+            <div class="g-desc">Required for radio and checkbox groups. The legend text is read by screen readers before each option in the group, providing essential context.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Images & Icons -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="image"></i></div>
+        <h2>Images and icons</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Meaningful images require descriptive <code>alt</code> text</div>
+            <div class="g-desc">Describe the content and purpose of the image, not its appearance. Keep alt text concise — one or two sentences. Do not start with "Image of" or "Photo of".</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Decorative images use <code>alt=""</code> and <code>aria-hidden="true"</code></div>
+            <div class="g-desc">Decorative images, dividers, and background textures should be invisible to screen readers. An empty <code>alt=""</code> on an <code>&lt;img&gt;</code> tells screen readers to skip it entirely.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Standalone icon buttons need an accessible label</div>
+            <div class="g-desc">For icon-only buttons, use <code>aria-label</code> on the <code>&lt;button&gt;</code> element. For inline informational icons (status indicators, help icons), use a <code>&lt;title&gt;</code> inside the SVG or <code>aria-label</code> on the surrounding element.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Focus management -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="focus"></i></div>
+        <h2>Focus management</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Trap focus inside open modals and drawers</div>
+            <div class="g-desc">When a modal opens, focus should move to the first focusable element inside it. Tab cycling must remain within the modal until it is closed. On close, return focus to the trigger element that opened it.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Never suppress the visible focus ring</div>
+            <div class="g-desc">The JellyRoll focus ring is a 3px teal halo. Use <code>:focus-visible</code> to show it for keyboard users while hiding it on mouse click. Setting <code>outline: none</code> without a replacement fails WCAG 2.4.7.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Maintain a logical focus order</div>
+            <div class="g-desc">Focus order must follow the visual reading order (left-to-right, top-to-bottom). Avoid <code>tabindex</code> values above 0, which disrupt the natural DOM order and confuse keyboard users.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Testing -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="flask-conical"></i></div>
+        <h2>Testing checklist</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Keyboard-only navigation</div>
+            <div class="g-desc">Unplug the mouse. Can you reach every interactive element with Tab/Shift-Tab? Does Esc close modals? Do arrow keys work in menus and selects?</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Screen reader smoke test</div>
+            <div class="g-desc">Test with VoiceOver (macOS/iOS) or NVDA (Windows). Navigate by headings, landmarks, and form controls. Confirm all interactive elements announce their role, name, and state.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Automated scan with an axe-based tool</div>
+            <div class="g-desc">Run axe DevTools, Deque's browser extension, or Lighthouse accessibility audit on every new page or component. Fix all critical and serious violations before shipping.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">200% zoom test</div>
+            <div class="g-desc">Increase browser zoom to 200%. Content must not overflow or overlap. All functionality must remain available without horizontal scrolling (WCAG 1.4.4).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Resources -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="link"></i></div>
+        <h2>Resources</h2>
+      </div>
+      <div class="resources">
+        <a class="resource-link" href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="globe"></i></div>
+          <div class="r-text">
+            <div class="r-name">W3C Web Content Accessibility Guidelines (WCAG 2.1)</div>
+            <div class="r-desc">The authoritative standard. JellyRoll targets full AA conformance.</div>
+          </div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://www.w3.org/WAI/ARIA/apg/" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="code-2"></i></div>
+          <div class="r-text">
+            <div class="r-name">WAI-ARIA Authoring Practices Guide</div>
+            <div class="r-desc">Patterns for keyboard interaction and ARIA usage in common UI components.</div>
+          </div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://webaim.org/resources/contrastchecker/" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="contrast"></i></div>
+          <div class="r-text">
+            <div class="r-name">WebAIM Contrast Checker</div>
+            <div class="r-desc">Verify foreground/background color pairs meet WCAG AA or AAA ratios.</div>
+          </div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://www.deque.com/axe/devtools/" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="flask-conical"></i></div>
+          <div class="r-text">
+            <div class="r-name">axe DevTools</div>
+            <div class="r-desc">Browser extension for automated accessibility testing. Integrates with CI pipelines.</div>
+          </div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://a11yproject.com/" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="heart"></i></div>
+          <div class="r-text">
+            <div class="r-name">The A11Y Project</div>
+            <div class="r-desc">Community-driven resource for learning accessible design and development fundamentals.</div>
+          </div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /a11y-body -->
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

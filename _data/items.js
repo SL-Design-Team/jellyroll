@@ -12,6 +12,15 @@ window.JELLYROLL_DATA = {
       name: "Foundations",
       items: [
         {
+          file: "preview/foundations-accessibility.html",
+          name: "Accessibility",
+          tagline: "WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.",
+          meta: {
+            usage: "Apply these guidelines to every SnapLogic surface. All components in JellyRoll are built to meet WCAG 2.1 AA as a baseline. When building new components or patterns, review the keyboard interaction, focus management, and ARIA sections before implementation.",
+            behaviors: "The page covers the four POUR principles, contrast ratios for core token pairings, keyboard interaction patterns, semantic HTML vs ARIA guidance, form labeling rules, image alt text requirements, focus management for modals and drawers, a testing checklist, and links to external resources."
+          }
+        },
+        {
           file: "preview/spacing-radius.html",
           name: "Radius",
           tagline: "Restrained corners: 2 / 4 / 6–8 / 999px.",
