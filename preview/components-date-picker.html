@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="card.css" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
-  .card { gap: 18px; width: 880px; }
+  .card { gap: 18px; max-width: 880px; width: 100%; }
   .sl-field { display: flex; flex-direction: column; gap: 4px; }
   .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
 
@@ -30,11 +30,11 @@
   .sl-date .icon { color: var(--color-text-subtle); display: inline-flex; flex: none; }
   .sl-date .icon svg { width: 16px; height: 16px; }
 
-  /* Calendar popover */
+  /* Calendar popover — static positioning for demo so the section scrolls responsively */
   .sl-date-wrap { position: relative; }
   .sl-cal {
-    position: absolute;
-    top: calc(100% + 4px); left: 0;
+    position: static;
+    margin-top: 4px;
     background: var(--sl-white);
     border: 1px solid var(--sl-grey-300);
     border-radius: var(--field-radius);
@@ -131,8 +131,8 @@
   .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
   .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
   .divider { height: 1px; background: var(--sl-grey-200); }
-  .stage { min-height: 380px; padding-top: 8px; }
-  .stage--wide { min-height: 480px; }
+  .stage { padding-top: 8px; }
+  .stage--wide { overflow-x: auto; }
 
   .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
   .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
