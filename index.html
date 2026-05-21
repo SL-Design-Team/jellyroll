@@ -2773,6 +2773,7 @@ Implement: <span class="tk-var">&lt;what you want built&gt;</span></pre>
   }
 
   function showGallery() {
+    window.scrollTo({ top: 0, behavior: "instant" });
     document.body.setAttribute("data-view", "grid");
     // Drop the rendered preview (and its iframes/timers) so it stops eating CPU.
     const host = document.getElementById("previewRender");
@@ -2786,6 +2787,7 @@ Implement: <span class="tk-var">&lt;what you want built&gt;</span></pre>
   }
 
   function showDetail(item, params) {
+    window.scrollTo({ top: 0, behavior: "instant" });
     document.body.setAttribute("data-view", "detail");
 
     const sec = item.section;
