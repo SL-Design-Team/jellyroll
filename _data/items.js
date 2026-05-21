@@ -56,6 +56,14 @@ window.JELLYROLL_DATA = {
           }
         },
         {
+          file: "preview/foundations-tokens.html",
+          name: "Tokens",
+          tagline: "All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.",
+          meta: {
+            usage: "Import `colors_and_type.css` and reference tokens by name in your CSS or inline styles. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code. Raw ramp tokens (`--sl-blue-600`) are appropriate only when building new semantic tokens or one-off brand moments."
+          }
+        },
+        {
           file: "preview/colors-surfaces.html",
           name: "Surfaces",
           tagline: "Navbar · Canvas · Sunken · Raised · Overlay — five elevation planes.",

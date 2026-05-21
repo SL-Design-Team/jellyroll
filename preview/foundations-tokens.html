@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Foundations · Design tokens</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<link rel="stylesheet" href="card.css"/>
+<style>
+  body { margin: 0; padding: 0; background: var(--sl-grey-100); }
+  .card { width: 100%; max-width: 960px; box-sizing: border-box; padding: 24px; background: var(--sl-grey-100); display: flex; flex-direction: column; gap: 32px; }
+
+  /* Section headers */
+  .token-section { display: flex; flex-direction: column; gap: 0; }
+  .section-title {
+    font: 800 11px/14px var(--font-sans);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0 0 10px;
+    border-bottom: 1px solid var(--sl-grey-300);
+    margin-bottom: 4px;
+  }
+  .section-desc {
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-subtle);
+    margin: 6px 0 12px;
+  }
+
+  /* Subsection label */
+  .sub-label {
+    font: 800 10px/14px var(--font-sans);
+    color: var(--sl-grey-600);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 14px 0 6px;
+  }
+
+  /* Token rows */
+  .token-table { width: 100%; border-collapse: collapse; }
+  .token-table tr { border-bottom: 1px solid var(--sl-grey-200); }
+  .token-table tr:last-child { border-bottom: none; }
+  .token-table td { padding: 6px 8px; vertical-align: middle; }
+  .token-table td:first-child { width: 40px; padding-left: 0; }
+
+  /* Swatch */
+  .swatch {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0,0,0,0.08);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .swatch-gradient {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0,0,0,0.08);
+    display: inline-block;
+  }
+
+  /* Token name */
+  .token-name {
+    font: 400 12px/18px var(--font-mono);
+    color: var(--color-text-body);
+    white-space: nowrap;
+    width: 320px;
+  }
+  .token-value {
+    font: 400 11px/16px var(--font-mono);
+    color: var(--color-text-subtle);
+    word-break: break-all;
+  }
+  .token-desc {
+    font: 400 11px/16px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+
+  /* Ramp grid for color ramps */
+  .ramp-block { margin-bottom: 16px; }
+  .ramp-name {
+    font: 800 11px/16px var(--font-sans);
+    color: var(--color-text-body);
+    margin-bottom: 6px;
+  }
+  .ramp-row { display: flex; gap: 3px; flex-wrap: wrap; }
+  .ramp-chip {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .ramp-chip .chip-swatch {
+    width: 44px; height: 36px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .ramp-chip .chip-step {
+    font: 800 8px/10px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-align: center;
+  }
+
+  /* Shadow previews */
+  .shadow-demo {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: white;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* Space / radius / type preview cells */
+  .preview-cell { display: flex; align-items: center; }
+  .space-bar {
+    height: 8px;
+    border-radius: 2px;
+    background: var(--sl-blue-400);
+    display: inline-block;
+  }
+  .radius-demo {
+    width: 28px; height: 28px;
+    background: var(--sl-blue-200);
+    border: 1.5px solid var(--sl-blue-400);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .type-preview {
+    color: var(--color-text-body);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 240px;
+  }
+
+  @media (max-width: 680px) {
+    .card { padding: 16px; gap: 24px; }
+    .token-name { width: auto; min-width: 0; }
+    .token-table td { padding: 5px 4px; }
+    .ramp-chip .chip-swatch { width: 32px; height: 28px; }
+    .ramp-chip .chip-step { font-size: 7px; }
+    .type-preview { max-width: 120px; }
+  }
+</style></head>
+<body>
+<div class="card">
+  <div class="row-label"><span class="name">Design tokens</span><span class="meta">all CSS custom properties · colors_and_type.css</span></div>
+
+  <!-- ═══ COLOR RAMPS ═══════════════════════════════════════ -->
+  <div class="token-section">
+    <div class="section-title">Color ramps</div>
+    <div class="section-desc">11 ramps × 11 steps (50–1000). The 600 step is the canonical default for each hue. Prefer semantic tokens in component code.</div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">Blue — primary brand &amp; action</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F2F6FC"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#E6ECF8"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#CED9F0"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#9CB3E1"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#6B8DD2"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#3967C3"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#0841B4"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#063490"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#05276C"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#031A48"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#020D24"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">Teal — hover &amp; secondary accent</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F2F8F8"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#E6F2F2"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#CEE6E5"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#9DCDCC"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#6BB3B2"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#3A9A99"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#09817F"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#076766"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#054D4C"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#043433"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#021A19"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">Indigo — dark navigation chrome</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F4F6F9"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#EAEDF3"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#D6DAE6"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#ACB5CE"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#8390B5"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#596B9D"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#304684"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#26386A"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#1D2A4F"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#131C35"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#0A0E1A"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">Orange</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FEF7F3"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FEF0E7"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FEE0CE"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FDC29D"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FBA36D"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FA853C"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F9660B"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#C75209"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#953D07"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#642904"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#321402"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">Yellow — warning</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FFFBF2"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FFF8E6"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FEF2CD"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FDE49B"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FDD768"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FCC936"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FBBC04"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#C99603"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#977102"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#644B02"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#322601"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">Purple — discovery &amp; AI accents</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F7F5F9"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#EFEBF3"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#E0D7E6"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#C0AFCE"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#A186B5"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#815E9D"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#623684"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#4E2B6A"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#3B204F"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#271635"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#140B1A"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">Green — success</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F2F8F3"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#E6F2E8"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#CCE5D1"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#99CBA4"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#67B176"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#349749"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#017D1B"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#016416"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#014B10"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#00320B"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#001905"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">Red — alert &amp; destructive</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FDF3F5"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FCE8EC"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F9D2D8"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F4A4B1"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#EE778B"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#E94964"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#E31C3D"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#B61631"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#881125"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#5B0B18"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#2D060C"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">Pink — promotion &amp; secondary accent</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FDF3F8"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FCE8F1"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F9D2E3"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F4A5C7"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#EE78AB"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#E94B8F"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#E31C73"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#B6165C"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#881145"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#5B0B2E"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#2D0617"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">Grey — neutrals</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#FAFAFB"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F5F6F8"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#EBEDF1"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#D7DCE3"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#C4CAD6"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#B0B9C8"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#9CA7BA"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#7D8695"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#5E6470"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#3E434A"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#1F2125"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <div class="ramp-block">
+      <div class="ramp-name">AI — SnapGPT &amp; AI-generated content (purplish-blue)</div>
+      <div class="ramp-row">
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#F6F8FF"></div><div class="chip-step">50</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#EEF1FF"></div><div class="chip-step">100</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#D7DCFF"></div><div class="chip-step">200</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#B3BCFF"></div><div class="chip-step">300</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#8B97F2"></div><div class="chip-step">400</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#6672D8"></div><div class="chip-step">500</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#545FC4"></div><div class="chip-step">600</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#434AA3"></div><div class="chip-step">700</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#313777"></div><div class="chip-step">800</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#222652"></div><div class="chip-step">900</div></div>
+        <div class="ramp-chip"><div class="chip-swatch" style="background:#111329"></div><div class="chip-step">1000</div></div>
+      </div>
+    </div>
+
+    <!-- Base neutrals -->
+    <div class="sub-label">Base neutrals</div>
+    <table class="token-table">
+      <tr>
+        <td><span class="swatch" style="background:#FFFFFF; box-shadow: inset 0 0 0 1px #D7DCE3;"></span></td>
+        <td class="token-name">--sl-white</td>
+        <td class="token-value">#FFFFFF</td>
+        <td class="token-desc"></td>
+      </tr>
+      <tr>
+        <td><span class="swatch" style="background:#000000"></span></td>
+        <td class="token-name">--sl-black</td>
+        <td class="token-value">#000000</td>
+        <td class="token-desc"></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ═══ SEMANTIC TOKENS ═══════════════════════════════════ -->
+  <div class="token-section">
+    <div class="section-title">Semantic tokens — surfaces</div>
+    <div class="section-desc">Five elevation planes. Use surface tokens to set the background of regions, not raw ramp colors.</div>
+    <table class="token-table">
+      <tr><td><span class="swatch" style="background:#FFFFFF; box-shadow: inset 0 0 0 1px #D7DCE3;"></span></td><td class="token-name">--color-surface-primary</td><td class="token-value">--sl-white</td><td class="token-desc">Canvas — main workspace</td></tr>
+      <tr><td><span class="swatch" style="background:#FFFFFF; box-shadow: inset 0 0 0 1px #D7DCE3;"></span></td><td class="token-name">--color-surface-raised</td><td class="token-value">--sl-white</td><td class="token-desc">Cards, drawers — floats above canvas</td></tr>
+      <tr><td><span class="swatch" style="background:#F5F6F8"></span></td><td class="token-name">--color-surface-sunken</td><td class="token-value">--sl-grey-100</td><td class="token-desc">Anchored / pressed-in sections</td></tr>
+      <tr><td><span class="swatch" style="background:#FFFFFF; box-shadow: inset 0 0 0 1px #D7DCE3;"></span></td><td class="token-name">--color-surface-overlay</td><td class="token-value">--sl-white</td><td class="token-desc">Modals, popovers — highest plane</td></tr>
+      <tr><td><span class="swatch" style="background:#031A48"></span></td><td class="token-name">--color-surface-navbar</td><td class="token-value">--sl-blue-900</td><td class="token-desc">Global nav — dark navy, always</td></tr>
+    </table>
+  </div>
+
+  <div class="token-section">
+    <div class="section-title">Semantic tokens — backgrounds</div>
+    <table class="token-table">
+      <tr><td><span class="swatch" style="background:#0841B4"></span></td><td class="token-name">--color-background-primary</td><td class="token-value">--sl-blue-600</td><td class="token-desc">Primary button fill</td></tr>
+      <tr><td><span class="swatch-gradient" style="background:linear-gradient(112.63deg,#0B9D9B 12.38%,#0841B4 137.46%)"></span></td><td class="token-name">--color-background-primary-hover</td><td class="token-value">gradient teal → blue</td><td class="token-desc">Primary button hover</td></tr>
+      <tr><td><span class="swatch" style="background:#6BB3B2"></span></td><td class="token-name">--color-background-primary-pressed</td><td class="token-value">--sl-teal-400</td><td class="token-desc">Primary button pressed</td></tr>
+      <tr><td><span class="swatch" style="background:#FFFFFF; box-shadow: inset 0 0 0 1px #D7DCE3;"></span></td><td class="token-name">--color-background-secondary</td><td class="token-value">--sl-white</td><td class="token-desc">Secondary button fill</td></tr>
+      <tr><td><span class="swatch" style="background:#FFFFFF; box-shadow: inset 0 0 0 1px #D7DCE3;"></span></td><td class="token-name">--color-background-secondary-hover</td><td class="token-value">--sl-white</td><td class="token-desc">Secondary button hover</td></tr>
+      <tr><td><span class="swatch" style="background:#CEE6E5"></span></td><td class="token-name">--color-background-secondary-pressed</td><td class="token-value">--sl-teal-200</td><td class="token-desc">Secondary button pressed</td></tr>
+      <tr><td><span class="swatch" style="background:#F5F6F8"></span></td><td class="token-name">--color-background-input</td><td class="token-value">--sl-grey-100</td><td class="token-desc">Text input background</td></tr>
+      <tr><td><span class="swatch" style="background:#EBEDF1"></span></td><td class="token-name">--color-background-disabled</td><td class="token-value">--sl-grey-200</td><td class="token-desc">Disabled control fill</td></tr>
+      <tr><td><span class="swatch" style="background:#F5F6F8"></span></td><td class="token-name">--color-background-subtle</td><td class="token-value">--sl-grey-100</td><td class="token-desc">Low-contrast section fills</td></tr>
+      <tr><td><span class="swatch" style="background:#FCE8EC"></span></td><td class="token-name">--color-background-alert</td><td class="token-value">--sl-red-100</td><td class="token-desc">Error / destructive tint</td></tr>
+      <tr><td><span class="swatch" style="background:#E6F2E8"></span></td><td class="token-name">--color-background-success</td><td class="token-value">--sl-green-100</td><td class="token-desc">Success tint</td></tr>
+      <tr><td><span class="swatch" style="background:#EFEBF3"></span></td><td class="token-name">--color-background-discovery</td><td class="token-value">--sl-purple-100</td><td class="token-desc">Discovery / new feature tint</td></tr>
+      <tr><td><span class="swatch" style="background:#EAEDF3"></span></td><td class="token-name">--color-background-information</td><td class="token-value">--sl-indigo-100</td><td class="token-desc">Informational tint</td></tr>
+    </table>
+  </div>
+
+  <div class="token-section">
+    <div class="section-title">Semantic tokens — text</div>
+    <table class="token-table">
+      <tr><td><span class="swatch" style="background:#131C35"></span></td><td class="token-name">--color-text-body</td><td class="token-value">--sl-indigo-900</td><td class="token-desc">Default body copy</td></tr>
+      <tr><td><span class="swatch" style="background:#131C35"></span></td><td class="token-name">--color-text-heading</td><td class="token-value">--sl-indigo-900</td><td class="token-desc">Headings</td></tr>
+      <tr><td><span class="swatch" style="background:#7D8695"></span></td><td class="token-name">--color-text-subtle</td><td class="token-value">--sl-grey-700</td><td class="token-desc">Secondary copy, captions</td></tr>
+      <tr><td><span class="swatch" style="background:#B0B9C8"></span></td><td class="token-name">--color-text-disabled</td><td class="token-value">--sl-grey-500</td><td class="token-desc">Disabled labels</td></tr>
+      <tr><td><span class="swatch" style="background:#FFFFFF; box-shadow: inset 0 0 0 1px #D7DCE3;"></span></td><td class="token-name">--color-text-inverse</td><td class="token-value">--sl-white</td><td class="token-desc">Text on dark surfaces</td></tr>
+      <tr><td><span class="swatch" style="background:#0841B4"></span></td><td class="token-name">--color-text-selected</td><td class="token-value">--sl-blue-600</td><td class="token-desc">Selected item label</td></tr>
+      <tr><td><span class="swatch" style="background:#0841B4"></span></td><td class="token-name">--color-text-link</td><td class="token-value">--sl-blue-600</td><td class="token-desc">Default hyperlink</td></tr>
+      <tr><td><span class="swatch" style="background:#09817F"></span></td><td class="token-name">--color-text-link-hover</td><td class="token-value">--sl-teal-600</td><td class="token-desc">Link hover</td></tr>
+      <tr><td><span class="swatch" style="background:#6BB3B2"></span></td><td class="token-name">--color-text-link-pressed</td><td class="token-value">--sl-teal-400</td><td class="token-desc">Link pressed</td></tr>
+      <tr><td><span class="swatch" style="background:#B61631"></span></td><td class="token-name">--color-text-alert</td><td class="token-value">--sl-red-700</td><td class="token-desc">Error / destructive text</td></tr>
+      <tr><td><span class="swatch" style="background:#014B10"></span></td><td class="token-name">--color-text-success</td><td class="token-value">--sl-green-800</td><td class="token-desc">Success text</td></tr>
+      <tr><td><span class="swatch" style="background:#4E2B6A"></span></td><td class="token-name">--color-text-discovery</td><td class="token-value">--sl-purple-700</td><td class="token-desc">Discovery / new feature text</td></tr>
+      <tr><td><span class="swatch" style="background:#26386A"></span></td><td class="token-name">--color-text-information</td><td class="token-value">--sl-indigo-700</td><td class="token-desc">Informational text</td></tr>
+      <tr><td><span class="swatch" style="background:#0841B4"></span></td><td class="token-name">--color-text-accent-blue</td><td class="token-value">--sl-blue-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#09817F"></span></td><td class="token-name">--color-text-accent-teal</td><td class="token-value">--sl-teal-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#304684"></span></td><td class="token-name">--color-text-accent-indigo</td><td class="token-value">--sl-indigo-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#F9660B"></span></td><td class="token-name">--color-text-accent-orange</td><td class="token-value">--sl-orange-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#FCC936"></span></td><td class="token-name">--color-text-accent-yellow</td><td class="token-value">--sl-yellow-500</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#623684"></span></td><td class="token-name">--color-text-accent-purple</td><td class="token-value">--sl-purple-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#017D1B"></span></td><td class="token-name">--color-text-accent-green</td><td class="token-value">--sl-green-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#E31C3D"></span></td><td class="token-name">--color-text-accent-red</td><td class="token-value">--sl-red-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#E31C73"></span></td><td class="token-name">--color-text-accent-pink</td><td class="token-value">--sl-pink-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#9CA7BA"></span></td><td class="token-name">--color-text-accent-grey</td><td class="token-value">--sl-grey-600</td><td class="token-desc"></td></tr>
+    </table>
+  </div>
+
+  <div class="token-section">
+    <div class="section-title">Semantic tokens — borders &amp; interaction</div>
+    <div class="sub-label">Borders</div>
+    <table class="token-table">
+      <tr><td><span class="swatch" style="background:#C4CAD6"></span></td><td class="token-name">--color-border-default</td><td class="token-value">--sl-grey-400</td><td class="token-desc">Default card border</td></tr>
+      <tr><td><span class="swatch" style="background:#D7DCE3"></span></td><td class="token-name">--color-border-subtle</td><td class="token-value">--sl-grey-300</td><td class="token-desc">Light dividers</td></tr>
+      <tr><td><span class="swatch" style="background:#131C35"></span></td><td class="token-name">--color-border-strong</td><td class="token-value">--sl-indigo-900</td><td class="token-desc">High-contrast outline</td></tr>
+      <tr><td><span class="swatch" style="background:#09817F"></span></td><td class="token-name">--color-border-focus</td><td class="token-value">--sl-teal-600</td><td class="token-desc">Focus ring — high-contrast teal</td></tr>
+      <tr><td><span class="swatch" style="background:#0841B4"></span></td><td class="token-name">--color-border-selected</td><td class="token-value">--sl-blue-600</td><td class="token-desc">Selected state outline</td></tr>
+      <tr><td><span class="swatch" style="background:#0841B4"></span></td><td class="token-name">--color-border-hover</td><td class="token-value">--sl-blue-600</td><td class="token-desc">Hover state outline</td></tr>
+      <tr><td><span class="swatch" style="background:#E31C3D"></span></td><td class="token-name">--color-border-error</td><td class="token-value">--sl-red-600</td><td class="token-desc">Validation error outline</td></tr>
+    </table>
+
+    <div class="sub-label">Interaction overlays</div>
+    <table class="token-table">
+      <tr><td><span class="swatch" style="background:#CED9F0"></span></td><td class="token-name">--color-interaction-hovered</td><td class="token-value">--sl-blue-200</td><td class="token-desc">Row / item hover overlay</td></tr>
+      <tr><td><span class="swatch" style="background:#9CB3E1"></span></td><td class="token-name">--color-interaction-pressed</td><td class="token-value">--sl-blue-300</td><td class="token-desc">Row / item pressed overlay</td></tr>
+      <tr><td><span class="swatch" style="background:#E6ECF8"></span></td><td class="token-name">--color-interaction-selected</td><td class="token-value">--sl-blue-100</td><td class="token-desc">Row / item selected fill</td></tr>
+    </table>
+
+    <div class="sub-label">Scrim</div>
+    <table class="token-table">
+      <tr><td><span class="swatch" style="background:rgba(9,30,66,0.54)"></span></td><td class="token-name">--color-scrim</td><td class="token-value">rgba(9, 30, 66, 0.54)</td><td class="token-desc">Modal / drawer backdrop</td></tr>
+    </table>
+  </div>
+
+  <!-- ═══ GRADIENTS ════════════════════════════════════════ -->
+  <div class="token-section">
+    <div class="section-title">Gradients</div>
+    <div class="section-desc">Reserved for branded moments — hero surfaces, launcher backgrounds, primary-button hover. Never for normal UI components.</div>
+    <table class="token-table">
+      <tr>
+        <td><span class="swatch-gradient" style="background:linear-gradient(90deg,#008380 29%,#0841B4 100%)"></span></td>
+        <td class="token-name">--gradient-brand</td>
+        <td class="token-value">linear-gradient(90deg, #008380 29%, #0841B4 100%)</td>
+        <td class="token-desc">Hero, launchers, brand moments</td>
+      </tr>
+      <tr>
+        <td><span class="swatch" style="background:#008380"></span></td>
+        <td class="token-name">--gradient-brand-stop-1</td>
+        <td class="token-value">#008380</td>
+        <td class="token-desc">Teal stop — for icons on gradient</td>
+      </tr>
+      <tr>
+        <td><span class="swatch" style="background:#0841B4"></span></td>
+        <td class="token-name">--gradient-brand-stop-2</td>
+        <td class="token-value">#0841B4</td>
+        <td class="token-desc">Blue stop — for icons on gradient</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ═══ TYPOGRAPHY ═══════════════════════════════════════ -->
+  <div class="token-section">
+    <div class="section-title">Typography</div>
+    <div class="sub-label">Font families</div>
+    <table class="token-table">
+      <tr>
+        <td style="width:40px"><span style="font:400 14px/1 'Acherus Grotesque',system-ui,sans-serif;color:var(--sl-indigo-900)">Aa</span></td>
+        <td class="token-name">--font-sans</td>
+        <td class="token-value" colspan="2">"Acherus Grotesque", system-ui, "SF Pro", "Segoe UI", sans-serif</td>
+      </tr>
+      <tr>
+        <td><span style="font:400 14px/1 ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:var(--sl-indigo-900)">Aa</span></td>
+        <td class="token-name">--font-mono</td>
+        <td class="token-value" colspan="2">ui-monospace, "SF Mono", Menlo, Consolas, monospace</td>
+      </tr>
+    </table>
+
+    <div class="sub-label">Type scale</div>
+    <table class="token-table">
+      <tr>
+        <td style="width:40px"><span class="type-preview" style="font:400 56px/64px var(--font-sans)">A</span></td>
+        <td class="token-name">--type-display-*</td>
+        <td class="token-value">56px / 64px / 400</td>
+        <td class="token-desc">Display — marketing hero</td>
+      </tr>
+      <tr>
+        <td><span class="type-preview" style="font:800 32px/38px var(--font-sans)">Title</span></td>
+        <td class="token-name">--type-title-*</td>
+        <td class="token-value">32px / 38px / 800</td>
+        <td class="token-desc">Page titles</td>
+      </tr>
+      <tr>
+        <td><span class="type-preview" style="font:800 24px/36px var(--font-sans)">Heading</span></td>
+        <td class="token-name">--type-heading-*</td>
+        <td class="token-value">24px / 36px / 800</td>
+        <td class="token-desc">Section headings</td>
+      </tr>
+      <tr>
+        <td><span class="type-preview" style="font:800 20px/32px var(--font-sans)">Subheading</span></td>
+        <td class="token-name">--type-subheading-*</td>
+        <td class="token-value">20px / 32px / 800</td>
+        <td class="token-desc">Sub-section headings</td>
+      </tr>
+      <tr>
+        <td><span class="type-preview" style="font:800 18px/28px var(--font-sans)">Card title</span></td>
+        <td class="token-name">--type-cardtitle-*</td>
+        <td class="token-value">18px / 28px / 800</td>
+        <td class="token-desc">Card and panel headings</td>
+      </tr>
+      <tr>
+        <td><span class="type-preview" style="font:800 14px/22px var(--font-sans)">Label</span></td>
+        <td class="token-name">--type-label-*</td>
+        <td class="token-value">14px / 22px / 800</td>
+        <td class="token-desc">Form labels, bold UI text</td>
+      </tr>
+      <tr>
+        <td><span class="type-preview" style="font:400 14px/22px var(--font-sans)">Body copy</span></td>
+        <td class="token-name">--type-body-*</td>
+        <td class="token-value">14px / 22px / 400</td>
+        <td class="token-desc">Default body text</td>
+      </tr>
+      <tr>
+        <td><span class="type-preview" style="font:italic 300 14px/22px var(--font-sans);color:var(--sl-grey-700)">Placeholder</span></td>
+        <td class="token-name">--type-placeholder-*</td>
+        <td class="token-value">14px / 22px / 300 italic</td>
+        <td class="token-desc">Input placeholders</td>
+      </tr>
+      <tr>
+        <td><span class="type-preview" style="font:400 12px/18px var(--font-sans)">Small text</span></td>
+        <td class="token-name">--type-small-*</td>
+        <td class="token-value">12px / 18px / 400</td>
+        <td class="token-desc">Captions, helper text</td>
+      </tr>
+      <tr>
+        <td><span class="type-preview" style="font:800 10px/14px var(--font-sans)">MICRO</span></td>
+        <td class="token-name">--type-micro-*</td>
+        <td class="token-value">10px / 14px / 800</td>
+        <td class="token-desc">Micro labels, overlines</td>
+      </tr>
+      <tr>
+        <td><span class="type-preview" style="font:800 10px/14px var(--font-sans);letter-spacing:0.06em;text-transform:uppercase">PILL</span></td>
+        <td class="token-name">--type-pill-*</td>
+        <td class="token-value">10px / 14px / 800 / +0.06em</td>
+        <td class="token-desc">Badge and tag labels</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ═══ SPACING ═══════════════════════════════════════════ -->
+  <div class="token-section">
+    <div class="section-title">Spacing — 4-pt grid</div>
+    <div class="section-desc">Use <code>--space-*</code> for every margin, padding, and gap. Never hardcode pixel values.</div>
+    <table class="token-table">
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:0px; min-width:2px; opacity:0.3;"></span></div></td><td class="token-name">--space-0</td><td class="token-value">0px</td><td class="token-desc"></td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:4px;"></span></div></td><td class="token-name">--space-1</td><td class="token-value">4px</td><td class="token-desc">Tight spacing, icon gaps</td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:8px;"></span></div></td><td class="token-name">--space-2</td><td class="token-value">8px</td><td class="token-desc">Input padding y, chip gap</td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:12px;"></span></div></td><td class="token-name">--space-3</td><td class="token-value">12px</td><td class="token-desc">Input padding x, row gap</td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:16px;"></span></div></td><td class="token-name">--space-4</td><td class="token-value">16px</td><td class="token-desc">Card internal padding</td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:20px;"></span></div></td><td class="token-name">--space-5</td><td class="token-value">20px</td><td class="token-desc">Section gaps</td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:24px;"></span></div></td><td class="token-name">--space-6</td><td class="token-value">24px</td><td class="token-desc">Panel padding</td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:32px;"></span></div></td><td class="token-name">--space-8</td><td class="token-value">32px</td><td class="token-desc">Grid gutters</td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:40px;"></span></div></td><td class="token-name">--space-10</td><td class="token-value">40px</td><td class="token-desc">Section spacing</td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:48px;"></span></div></td><td class="token-name">--space-12</td><td class="token-value">48px</td><td class="token-desc">Frame header top/bottom padding</td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:64px;"></span></div></td><td class="token-name">--space-16</td><td class="token-value">64px</td><td class="token-desc">Layout container padding</td></tr>
+      <tr><td><div class="preview-cell"><span class="space-bar" style="width:80px;"></span></div></td><td class="token-name">--space-20</td><td class="token-value">80px</td><td class="token-desc">Large section margins</td></tr>
+    </table>
+  </div>
+
+  <!-- ═══ RADIUS ════════════════════════════════════════════ -->
+  <div class="token-section">
+    <div class="section-title">Radius</div>
+    <table class="token-table">
+      <tr><td><span class="radius-demo" style="border-radius:2px"></span></td><td class="token-name">--radius-xs</td><td class="token-value">2px</td><td class="token-desc">Badges, chips, small inline elements</td></tr>
+      <tr><td><span class="radius-demo" style="border-radius:4px"></span></td><td class="token-name">--radius-sm</td><td class="token-value">4px</td><td class="token-desc">Default — cards, buttons</td></tr>
+      <tr><td><span class="radius-demo" style="border-radius:6px"></span></td><td class="token-name">--radius-md</td><td class="token-value">6px</td><td class="token-desc">Medium containers</td></tr>
+      <tr><td><span class="radius-demo" style="border-radius:8px"></span></td><td class="token-name">--radius-lg</td><td class="token-value">8px</td><td class="token-desc">Large surfaces, modals</td></tr>
+      <tr><td><span class="radius-demo" style="border-radius:999px"></span></td><td class="token-name">--radius-pill</td><td class="token-value">999px</td><td class="token-desc">Pill tags only</td></tr>
+    </table>
+  </div>
+
+  <!-- ═══ SHADOWS ═══════════════════════════════════════════ -->
+  <div class="token-section">
+    <div class="section-title">Shadows</div>
+    <div class="section-desc">Light, blueish, low-spread. Borders carry more visual weight than shadows in this system.</div>
+    <table class="token-table">
+      <tr><td><span class="shadow-demo" style="box-shadow:0px 2px 4px rgba(206,217,240,0.8)"></span></td><td class="token-name">--shadow-raised</td><td class="token-value">0 2px 4px rgba(206,217,240,0.8)</td><td class="token-desc">Card resting</td></tr>
+      <tr><td><span class="shadow-demo" style="box-shadow:0px 4px 8px rgba(206,217,240,1)"></span></td><td class="token-name">--shadow-raised-hover</td><td class="token-value">0 4px 8px rgba(206,217,240,1)</td><td class="token-desc">Card hover</td></tr>
+      <tr><td><span class="shadow-demo" style="box-shadow:0px 8px 24px rgba(38,40,44,0.18)"></span></td><td class="token-name">--shadow-overlay</td><td class="token-value">0 8px 24px rgba(38,40,44,0.18)</td><td class="token-desc">Modal / popover</td></tr>
+      <tr><td><span class="shadow-demo" style="box-shadow:0px 12px 32px rgba(38,40,44,0.28)"></span></td><td class="token-name">--shadow-overlay-strong</td><td class="token-value">0 12px 32px rgba(38,40,44,0.28)</td><td class="token-desc">Prominent overlays</td></tr>
+      <tr><td><span class="shadow-demo" style="box-shadow:0 0 0 3px rgba(9,129,127,0.35)"></span></td><td class="token-name">--shadow-focus-ring</td><td class="token-value">0 0 0 3px rgba(9,129,127,0.35)</td><td class="token-desc">Teal-600 focus halo</td></tr>
+      <tr><td><span class="shadow-demo" style="background:var(--sl-grey-100);box-shadow:inset 0 1px 2px rgba(38,40,44,0.08)"></span></td><td class="token-name">--shadow-inset-sunken</td><td class="token-value">inset 0 1px 2px rgba(38,40,44,0.08)</td><td class="token-desc">Inset / pressed panel</td></tr>
+    </table>
+  </div>
+
+  <!-- ═══ FORM FIELD TOKENS ═════════════════════════════════ -->
+  <div class="token-section">
+    <div class="section-title">Form field tokens</div>
+    <div class="section-desc">Use in every input, select, combobox, and date primitive so disabled, focus, error, and AI states stay consistent.</div>
+
+    <div class="sub-label">Sizing</div>
+    <table class="token-table">
+      <tr><td style="width:40px"><span style="display:inline-flex;align-items:center;justify-content:center;height:32px;width:32px;border:1px solid var(--sl-grey-400);border-radius:4px;font:400 10px var(--font-mono);color:var(--sl-grey-700)">sm</span></td><td class="token-name">--field-height-sm</td><td class="token-value">32px</td><td class="token-desc">Small input</td></tr>
+      <tr><td><span style="display:inline-flex;align-items:center;justify-content:center;height:28px;width:32px;border:1px solid var(--sl-blue-400);border-radius:4px;font:800 10px var(--font-mono);color:var(--sl-blue-600)">md</span></td><td class="token-name">--field-height-md</td><td class="token-value">40px</td><td class="token-desc">Default input</td></tr>
+      <tr><td><span style="display:inline-flex;align-items:center;justify-content:center;height:24px;width:32px;border:1px solid var(--sl-grey-400);border-radius:4px;font:400 10px var(--font-mono);color:var(--sl-grey-700)">lg</span></td><td class="token-name">--field-height-lg</td><td class="token-value">48px</td><td class="token-desc">Large input</td></tr>
+      <tr><td></td><td class="token-name">--field-padding-x</td><td class="token-value">12px</td><td class="token-desc">Horizontal padding</td></tr>
+      <tr><td></td><td class="token-name">--field-padding-y-md</td><td class="token-value">8px</td><td class="token-desc">Vertical padding (md)</td></tr>
+      <tr><td><span class="radius-demo" style="border-radius:4px;width:20px;height:20px"></span></td><td class="token-name">--field-radius</td><td class="token-value">--radius-sm (4px)</td><td class="token-desc">Input corner radius</td></tr>
+      <tr><td></td><td class="token-name">--field-font</td><td class="token-value">400 14px/22px --font-sans</td><td class="token-desc">Input text style</td></tr>
+    </table>
+
+    <div class="sub-label">Field backgrounds</div>
+    <table class="token-table">
+      <tr><td><span class="swatch" style="background:#FFFFFF; box-shadow: inset 0 0 0 1px #D7DCE3;"></span></td><td class="token-name">--field-bg-default</td><td class="token-value">--sl-white</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#FFFFFF; box-shadow: inset 0 0 0 1px #D7DCE3;"></span></td><td class="token-name">--field-bg-hover</td><td class="token-value">--sl-white</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#E6ECF8"></span></td><td class="token-name">--field-bg-disabled</td><td class="token-value">--sl-blue-100</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#F5F6F8"></span></td><td class="token-name">--field-bg-readonly</td><td class="token-value">--sl-grey-100</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#FCE8EC"></span></td><td class="token-name">--field-bg-error</td><td class="token-value">--sl-red-100</td><td class="token-desc"></td></tr>
+    </table>
+
+    <div class="sub-label">Field borders</div>
+    <table class="token-table">
+      <tr><td><span class="swatch" style="background:#C4CAD6"></span></td><td class="token-name">--field-border-default</td><td class="token-value">--sl-grey-400</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#0841B4"></span></td><td class="token-name">--field-border-hover</td><td class="token-value">--sl-blue-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#09817F"></span></td><td class="token-name">--field-border-focus</td><td class="token-value">--sl-teal-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#E31C3D"></span></td><td class="token-name">--field-border-error</td><td class="token-value">--sl-red-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#C99603"></span></td><td class="token-name">--field-border-warning</td><td class="token-value">--sl-yellow-700</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#017D1B"></span></td><td class="token-name">--field-border-success</td><td class="token-value">--sl-green-600</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#CED9F0"></span></td><td class="token-name">--field-border-disabled</td><td class="token-value">--sl-blue-200</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#D7DCE3"></span></td><td class="token-name">--field-border-readonly</td><td class="token-value">--sl-grey-300</td><td class="token-desc"></td></tr>
+    </table>
+
+    <div class="sub-label">Field text</div>
+    <table class="token-table">
+      <tr><td><span class="swatch" style="background:#131C35"></span></td><td class="token-name">--field-text-default</td><td class="token-value">--sl-indigo-900</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#9CB3E1"></span></td><td class="token-name">--field-text-disabled</td><td class="token-value">--sl-blue-300</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#5E6470"></span></td><td class="token-name">--field-text-readonly</td><td class="token-value">--sl-grey-800</td><td class="token-desc"></td></tr>
+      <tr><td><span class="swatch" style="background:#7D8695"></span></td><td class="token-name">--field-text-placeholder</td><td class="token-value">--sl-grey-700</td><td class="token-desc"></td></tr>
+    </table>
+  </div>
+
+  <!-- ═══ AI TOKENS ═════════════════════════════════════════ -->
+  <div class="token-section">
+    <div class="section-title">AI tokens</div>
+    <div class="section-desc">Distinct from "discovery" (purple) and "action" (blue). Uses the dedicated purplish-blue AI ramp.</div>
+    <table class="token-table">
+      <tr><td><span class="swatch" style="background:#EEF1FF"></span></td><td class="token-name">--ai-tint</td><td class="token-value">--sl-ai-100</td><td class="token-desc">AI surface tint</td></tr>
+      <tr><td><span class="swatch" style="background:#6672D8"></span></td><td class="token-name">--ai-accent</td><td class="token-value">--sl-ai-500</td><td class="token-desc">AI accent / icon color</td></tr>
+      <tr><td><span class="swatch" style="background:#017D1B"></span></td><td class="token-name">--ai-confidence-high</td><td class="token-value">--sl-green-600</td><td class="token-desc">High confidence indicator</td></tr>
+      <tr><td><span class="swatch" style="background:#FBBC04"></span></td><td class="token-name">--ai-confidence-med</td><td class="token-value">--sl-yellow-600</td><td class="token-desc">Medium confidence indicator</td></tr>
+      <tr><td><span class="swatch" style="background:#F9660B"></span></td><td class="token-name">--ai-confidence-low</td><td class="token-value">--sl-orange-600</td><td class="token-desc">Low confidence indicator</td></tr>
+    </table>
+  </div>
+
+  <!-- ═══ MISC ══════════════════════════════════════════════ -->
+  <div class="token-section">
+    <div class="section-title">Miscellaneous</div>
+    <table class="token-table">
+      <tr>
+        <td><span class="shadow-demo" style="box-shadow:0 0 0 2px rgba(9,129,127,0.25)"></span></td>
+        <td class="token-name">--ring-focus</td>
+        <td class="token-value">0 0 0 2px rgba(9,129,127,0.25)</td>
+        <td class="token-desc">Standardized focus halo for all focusable controls</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="token-name">--validate-debounce</td>
+        <td class="token-value">350ms</td>
+        <td class="token-desc">Validation delay — use on inline validation timers</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+</body></html>
