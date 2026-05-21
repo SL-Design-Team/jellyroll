@@ -83,16 +83,19 @@ jellyroll-design-system/
 
 ## For AI coding agents
 
-The design source is exported as a [Claude Design](https://claude.ai/design) handoff bundle. Any AI coding agent that can fetch URLs (Claude Code, Cursor, etc.) can pull the same agent-oriented context with this prompt:
+The design system is published live from [`SL-Design-Team/jellyroll`](https://github.com/SL-Design-Team/jellyroll) — the repo is the source of truth, not a frozen export. Any AI coding agent that can fetch URLs (Claude Code, Cursor, etc.) can pull the agent-oriented context with this prompt:
 
 ```
-Fetch this design file, read its readme, and implement the relevant aspects of the design. https://api.anthropic.com/v1/design/h/90dHojavnV1kmls0JNSLlA
+Read the JellyRoll design system at https://sl-design-team.github.io/jellyroll/README.md,
+then fetch the token CSS at https://sl-design-team.github.io/jellyroll/colors_and_type.css
+and any preview files at https://sl-design-team.github.io/jellyroll/preview/<name>.html that
+relate to what you're building.
 Implement: <describe what you want built>
 ```
 
-The URL serves a `.tar.gz` containing the full bundle: the SnapLogic brand README, this token CSS, all 115 preview HTML files (with their inline styles + Lucide icon usage), the Acherus Grotesque webfonts, brand assets, plus a `SKILL.md` that turns the bundle into a [Claude Skill](https://docs.anthropic.com/skills) the agent can invoke as `snaplogic-design`. The README inside that bundle is addressed directly to coding agents — read it first and follow its guidance for pixel-fidelity recreation.
+The README on the live site is addressed to coding agents — read it first and follow its guidance for pixel-fidelity recreation. The repo includes the full token CSS, every preview HTML file (inline styles + Lucide icon usage), the Acherus Grotesque webfonts, and brand assets. Browse the rendered gallery at <https://sl-design-team.github.io/jellyroll/> to see component names + previews; each tile's URL maps directly to a fetchable file under `/preview/`.
 
-If you're inside this repo instead of the bundle, point your agent at this `README.md` plus `colors_and_type.css` and one or two representative preview cards (`preview/components-buttons.html`, `preview/components-table.html`) — that's enough context to recreate the look.
+Because the source of truth is the live repo, what you fetch is always current — no stale tarball drift.
 
 ## Caveats
 
