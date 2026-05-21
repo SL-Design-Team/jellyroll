@@ -982,30 +982,6 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "preview/dataviz-categorical.html",
-          name: "Palette · Categorical",
-          tagline: "Five-color palette for unordered categories — designed for light and dark backgrounds.",
-          meta: {
-            usage: "Use the categorical palette only when categories are unordered. The five colors are picked to keep relative perceived weight equal; do not extend with extra colors or you will read order into the order. For more than five categories, use a series of small-multiple charts."
-          }
-        },
-        {
-          file: "preview/dataviz-diverging.html",
-          name: "Palette · Diverging",
-          tagline: "Two-hue ramps for values around a meaningful midpoint.",
-          meta: {
-            usage: "Use a diverging palette for values that fan out from zero or a target — deltas, sentiment, percent change. The midpoint is always Grey or off-white; ends are color-coded by direction. Pair with a clear legend showing the midpoint and the units."
-          }
-        },
-        {
-          file: "preview/dataviz-sequential.html",
-          name: "Palette · Sequential",
-          tagline: "Single-hue ramps for ordered values — counts, magnitudes, percentages.",
-          meta: {
-            usage: "Use a sequential ramp when the value has a meaningful order with one extreme. Most often Green (success / volume) or Blue (neutral). Encode larger values with the darker step. For two-sided values around a meaningful zero, use a Diverging palette."
-          }
-        },
-        {
           file: "preview/dataviz-sankey.html",
           name: "Sankey diagram",
           tagline: "Flow from sources to destinations — ribbon width = volume.",
@@ -1033,14 +1009,6 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "preview/dataviz-status.html",
-          name: "Status colors",
-          tagline: "Green / Yellow / Red / Blue mapping for pipeline run states.",
-          meta: {
-            usage: "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite."
-          }
-        },
-        {
           file: "preview/dataviz-gantt.html",
           name: "Swim-lane Gantt",
           tagline: "Pipeline runs along a timeline — color = final status.",
@@ -1065,6 +1033,45 @@ window.JELLYROLL_DATA = {
           tagline: "When to reach for each chart type — and when not to.",
           meta: {
             usage: "Use this card as the decision tree for picking a chart. The default is the simplest visualization that answers the question — a number for a KPI, a sparkline for a trend, a small-multiple grid before a giant chart. Never use a chart to decorate; if the chart does not answer a specific question, remove it."
+          }
+        }
+      ]
+    },
+    {
+      num: "10",
+      id: "dataviz-colors",
+      name: "Dataviz · Colors",
+      items: [
+        {
+          file: "preview/dataviz-categorical.html",
+          name: "Palette · Categorical",
+          tagline: "Five-color palette for unordered categories — designed for light and dark backgrounds.",
+          meta: {
+            usage: "Use the categorical palette only when categories are unordered. The five colors are picked to keep relative perceived weight equal; do not extend with extra colors or you will read order into the order. For more than five categories, use a series of small-multiple charts."
+          }
+        },
+        {
+          file: "preview/dataviz-diverging.html",
+          name: "Palette · Diverging",
+          tagline: "Two-hue ramps for values around a meaningful midpoint.",
+          meta: {
+            usage: "Use a diverging palette for values that fan out from zero or a target — deltas, sentiment, percent change. The midpoint is always Grey or off-white; ends are color-coded by direction. Pair with a clear legend showing the midpoint and the units."
+          }
+        },
+        {
+          file: "preview/dataviz-sequential.html",
+          name: "Palette · Sequential",
+          tagline: "Single-hue ramps for ordered values — counts, magnitudes, percentages.",
+          meta: {
+            usage: "Use a sequential ramp when the value has a meaningful order with one extreme. Most often Green (success / volume) or Blue (neutral). Encode larger values with the darker step. For two-sided values around a meaningful zero, use a Diverging palette."
+          }
+        },
+        {
+          file: "preview/dataviz-status.html",
+          name: "Status colors",
+          tagline: "Green / Yellow / Red / Blue mapping for pipeline run states.",
+          meta: {
+            usage: "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite."
           }
         }
       ]
