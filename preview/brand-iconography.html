@@ -759,7 +759,9 @@
 
 <script>
   (function() {
-    const ROOT = document.currentScript.getRootNode();
+    const ROOT = (document.currentScript && document.currentScript.getRootNode())
+              || (document.querySelector('#previewRender, .preview-render') || {}).shadowRoot
+              || document;
     function $(id) { return (ROOT.getElementById ? ROOT.getElementById(id) : ROOT.querySelector("#" + id)); }
     const input = $("iconSearch");
     const empty = $("iconEmpty");
