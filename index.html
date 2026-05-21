@@ -137,6 +137,19 @@
   .hamburger-btn svg { width: 18px; height: 18px; stroke-width: 2; }
   .hamburger-btn:hover { background: rgba(255,255,255,0.16); }
 
+  /* ── Sidebar ─────────────────────────────────────────────── */
+  .sidebar {
+    position: sticky;
+    top: var(--topbar-h);
+    align-self: start;
+    height: calc(100vh - var(--topbar-h));
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border-right: 1px solid var(--sl-grey-300, #D7DCE3);
+    background: var(--sl-white);
+  }
+
   /* ── Mobile nav drawer ───────────────────────────────────── */
   .nav-backdrop {
     display: none;
@@ -154,8 +167,6 @@
 
     /* Drawer: hidden off-screen by default */
     .sidebar {
-      display: grid !important;
-      grid-template-rows: auto 1fr;
       position: fixed;
       top: var(--topbar-h);
       left: 0;
@@ -175,19 +186,6 @@
       display: block;
       opacity: 1;
     }
-  }
-
-  /* ── Sidebar ─────────────────────────────────────────────── */
-  .sidebar {
-    position: sticky;
-    top: var(--topbar-h);
-    align-self: start;
-    height: calc(100vh - var(--topbar-h));
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: auto 1fr;
-    border-right: 1px solid var(--sl-grey-300, #D7DCE3);
-    background: var(--sl-white);
   }
   .sidebar-search {
     padding: 14px 16px 8px 24px;
@@ -409,6 +407,9 @@
     max-width: 1320px; /* content stays comfortable on ultra-wide screens */
   }
   body[data-view="detail"] main { padding: 0; max-width: 1320px; }
+  @media (max-width: 900px) {
+    main { padding: 16px 16px 64px; }
+  }
 
   /* Gallery */
   body[data-view="detail"] .gallery { display: none; }
