@@ -12,6 +12,15 @@ window.JELLYROLL_DATA = {
       name: "Foundations",
       items: [
         {
+          file: "preview/foundations-accessibility.html",
+          name: "Accessibility",
+          tagline: "WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.",
+          meta: {
+            usage: "Apply these guidelines to every SnapLogic surface. All components in JellyRoll are built to meet WCAG 2.1 AA as a baseline. When building new components or patterns, review the keyboard interaction, focus management, and ARIA sections before implementation.",
+            behaviors: "The page covers the four POUR principles, contrast ratios for core token pairings, keyboard interaction patterns, semantic HTML vs ARIA guidance, form labeling rules, image alt text requirements, focus management for modals and drawers, a testing checklist, and links to external resources."
+          }
+        },
+        {
           file: "preview/brand-iconography.html",
           name: "Iconography",
           tagline: "202 outlined line icons — 24×24 viewbox, currentColor stroke.",
@@ -20,15 +29,6 @@ window.JELLYROLL_DATA = {
             options: "Sizes: 24px default, 16px inline / dense contexts, 20px nav rail. Outlined glyphs by default; filled status pictograms (running check, failed dot, sticky star) are the only exception. Click any icon in the gallery to copy its name.",
             usage: "Pick the icon whose metaphor matches the action or object directly — never invent a custom mark. Drop the SVG inline (or reference via `<svg><use href=\"icons/{name}.svg\">`) so it picks up the surrounding text color. For vendor logos (AWS, Salesforce, GitHub) the system falls back to Font Awesome 6 brands at matching stroke weight.",
             behaviors: "Icon-only buttons require an explicit `aria-label`. Icons paired with text take `aria-hidden=\"true\"` so screen readers don't read them twice. The icon inherits `currentColor` from its parent — never hardcode a tint."
-          }
-        },
-        {
-          file: "preview/foundations-accessibility.html",
-          name: "Accessibility",
-          tagline: "WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.",
-          meta: {
-            usage: "Apply these guidelines to every SnapLogic surface. All components in JellyRoll are built to meet WCAG 2.1 AA as a baseline. When building new components or patterns, review the keyboard interaction, focus management, and ARIA sections before implementation.",
-            behaviors: "The page covers the four POUR principles, contrast ratios for core token pairings, keyboard interaction patterns, semantic HTML vs ARIA guidance, form labeling rules, image alt text requirements, focus management for modals and drawers, a testing checklist, and links to external resources."
           }
         },
         {
