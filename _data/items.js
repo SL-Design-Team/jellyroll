@@ -56,6 +56,14 @@ window.JELLYROLL_DATA = {
           }
         },
         {
+          file: "preview/colors-surfaces.html",
+          name: "Surfaces",
+          tagline: "Navbar · Canvas · Sunken · Raised · Overlay — five elevation planes.",
+          meta: {
+            usage: "Compose interfaces from five surfaces. Navbar (Indigo-1000) carries the dark global chrome only. Canvas (white) is the default page. Sunken (Grey-100) nests inside Canvas for inline panels. Raised (white + shadow) lifts cards and drawers. Overlay sits on top for modals and popovers. Use elevation to organize complexity, not for decoration."
+          }
+        },
+        {
           file: "preview/type-scale.html",
           name: "Type scale",
           tagline: "Display through Micro — eight steps with set line heights and weight conventions.",
@@ -102,14 +110,6 @@ window.JELLYROLL_DATA = {
             usage: "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-600 (success), Red-600 (danger), Yellow-600 (warning). Discovery uses Yellow-500; AI uses the dedicated SL AI ramp — purple is reserved for Discovery only, not for AI."
           }
         },
-        {
-          file: "preview/colors-surfaces.html",
-          name: "Surfaces",
-          tagline: "Navbar · Canvas · Sunken · Raised · Overlay — five elevation planes.",
-          meta: {
-            usage: "Compose interfaces from five surfaces. Navbar (Indigo-1000) carries the dark global chrome only. Canvas (white) is the default page. Sunken (Grey-100) nests inside Canvas for inline panels. Raised (white + shadow) lifts cards and drawers. Overlay sits on top for modals and popovers. Use elevation to organize complexity, not for decoration."
-          }
-        }
       ]
     },
     {
@@ -522,15 +522,6 @@ window.JELLYROLL_DATA = {
             options: "Read / unread state per row. Filter tabs (`All`, `Mentions`, `System`). Mark-all-as-read action.",
             usage: "Use as the persistent inbox for any non-urgent event the user should see eventually — pipeline run completes, comment mentions, system updates. For urgent actionable events, also surface a Toast.",
             behaviors: "Clicking the bell opens the panel and marks the dot dismissed (but does not auto-mark rows as read). Click a row to navigate to the source object and mark the row read."
-          }
-        },
-        {
-          file: "preview/brand-launchers.html",
-          name: "Product launcher",
-          tagline: "Gradient-circle marks for each app in the waffle menu.",
-          meta: {
-            usage: "Use the colored gradient circle plus product name in the waffle menu only. Each product has its own gradient (Designer = teal→blue, APIM = blue→purple, AutoSync = orange→yellow, etc.) — do not invent new combinations or apply these gradients to other surfaces.",
-            behaviors: "Hover lifts the row background to Blue-100; selected state uses the 3px Blue-600 left border treatment shared with cards. Real product icons are not exported from Figma; the UI kit uses placeholder gradient circles with Lucide glyphs."
           }
         },
         {
