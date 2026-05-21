@@ -119,9 +119,61 @@
     /* Sidebar flush against the viewport's left edge — match the rest of the
        design system sites we're modeling on. Content keeps its own max-width below. */
   }
+  /* ── Hamburger button (mobile only) ─────────────────────── */
+  .hamburger-btn {
+    display: none;
+    appearance: none;
+    background: rgba(255,255,255,0.08);
+    border: 0;
+    color: var(--sl-white);
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background-color 150ms ease-out;
+  }
+  .hamburger-btn svg { width: 18px; height: 18px; stroke-width: 2; }
+  .hamburger-btn:hover { background: rgba(255,255,255,0.16); }
+
+  /* ── Mobile nav drawer ───────────────────────────────────── */
+  .nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(3,26,72,0.45);
+    z-index: 49;
+    opacity: 0;
+    transition: opacity 220ms ease-out;
+  }
+
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
+    .hamburger-btn { display: inline-flex; }
+
+    /* Drawer: hidden off-screen by default */
+    .sidebar {
+      display: flex !important;
+      position: fixed;
+      top: var(--topbar-h);
+      left: 0;
+      height: calc(100dvh - var(--topbar-h));
+      width: min(300px, 85vw);
+      z-index: 50;
+      transform: translateX(-100%);
+      transition: transform 240ms cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 4px 0 24px rgba(3,26,72,0.18);
+    }
+
+    /* Open state */
+    body[data-mobile-nav="open"] .sidebar {
+      transform: translateX(0);
+    }
+    body[data-mobile-nav="open"] .nav-backdrop {
+      display: block;
+      opacity: 1;
+    }
   }
 
   /* ── Sidebar ─────────────────────────────────────────────── */
@@ -1685,6 +1737,9 @@
 <body data-view="grid">
 
 <header class="topbar">
+  <button class="hamburger-btn" type="button" id="hamburgerBtn" aria-label="Open navigation" aria-expanded="false">
+    <i data-lucide="menu"></i>
+  </button>
   <a class="brand" href="#" data-action="home">
     <img src="./assets/logo-white.png" alt="SnapLogic" />
     <span class="sub">JellyRoll Design System 2.0</span>
@@ -1701,6 +1756,7 @@
   <span class="count" id="totalCount">— assets</span>
 </header>
 
+<div class="nav-backdrop" id="navBackdrop"></div>
 <div class="layout">
   <aside class="sidebar">
     <div class="sidebar-search" id="sidebarSearch">
@@ -2949,6 +3005,38 @@ Implement: <span class="tk-var">&lt;what you want built&gt;</span></pre>
       else a.removeAttribute("data-active");
     });
   }
+  // ── Mobile nav drawer ───────────────────────────────────────────────
+  const hamburgerBtn = document.getElementById("hamburgerBtn");
+  const navBackdrop  = document.getElementById("navBackdrop");
+
+  function openMobileNav() {
+    document.body.setAttribute("data-mobile-nav", "open");
+    hamburgerBtn.setAttribute("aria-expanded", "true");
+    hamburgerBtn.innerHTML = '<i data-lucide="x"></i>';
+    lucide.createIcons({ nodes: [hamburgerBtn] });
+  }
+  function closeMobileNav() {
+    document.body.removeAttribute("data-mobile-nav");
+    hamburgerBtn.setAttribute("aria-expanded", "false");
+    hamburgerBtn.innerHTML = '<i data-lucide="menu"></i>';
+    lucide.createIcons({ nodes: [hamburgerBtn] });
+  }
+
+  hamburgerBtn.addEventListener("click", () => {
+    document.body.getAttribute("data-mobile-nav") === "open" ? closeMobileNav() : openMobileNav();
+  });
+  navBackdrop.addEventListener("click", closeMobileNav);
+
+  // Close drawer when a nav item is tapped
+  sidebarEl.addEventListener("click", (e) => {
+    if (e.target.closest(".item-link") || e.target.closest(".top-link")) closeMobileNav();
+  });
+
+  // Close on Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && document.body.getAttribute("data-mobile-nav") === "open") closeMobileNav();
+  });
+
   window.addEventListener("hashchange", applyHash);
 
   // ── Top-bar actions ─────────────────────────────────────────────────
