@@ -154,7 +154,8 @@
 
     /* Drawer: hidden off-screen by default */
     .sidebar {
-      display: flex !important;
+      display: grid !important;
+      grid-template-rows: auto 1fr;
       position: fixed;
       top: var(--topbar-h);
       left: 0;
