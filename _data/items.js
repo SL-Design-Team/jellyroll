@@ -12,6 +12,17 @@ window.JELLYROLL_DATA = {
       name: "Foundations",
       items: [
         {
+          file: "preview/brand-iconography.html",
+          name: "Iconography",
+          tagline: "202 outlined line icons — 24×24 viewbox, currentColor stroke.",
+          meta: {
+            anatomy: "Each icon is a 24×24 SVG with `viewBox=\"0 0 24 24\"`, 2px stroke, rounded caps and joins, and `stroke=\"currentColor\"` so it inherits text color. No fills (except a single white-fill contrast detail in one icon).",
+            options: "Sizes: 24px default, 16px inline / dense contexts, 20px nav rail. Outlined glyphs by default; filled status pictograms (running check, failed dot, sticky star) are the only exception. Click any icon in the gallery to copy its name.",
+            usage: "Pick the icon whose metaphor matches the action or object directly — never invent a custom mark. Drop the SVG inline (or reference via `<svg><use href=\"icons/{name}.svg\">`) so it picks up the surrounding text color. For vendor logos (AWS, Salesforce, GitHub) the system falls back to Font Awesome 6 brands at matching stroke weight.",
+            behaviors: "Icon-only buttons require an explicit `aria-label`. Icons paired with text take `aria-hidden=\"true\"` so screen readers don't read them twice. The icon inherits `currentColor` from its parent — never hardcode a tint."
+          }
+        },
+        {
           file: "preview/foundations-accessibility.html",
           name: "Accessibility",
           tagline: "WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.",
@@ -107,17 +118,6 @@ window.JELLYROLL_DATA = {
       name: "Brand",
       items: [
         {
-          file: "preview/brand-iconography.html",
-          name: "Iconography",
-          tagline: "202 outlined line icons — 24×24 viewbox, currentColor stroke.",
-          meta: {
-            anatomy: "Each icon is a 24×24 SVG with `viewBox=\"0 0 24 24\"`, 2px stroke, rounded caps and joins, and `stroke=\"currentColor\"` so it inherits text color. No fills (except a single white-fill contrast detail in one icon).",
-            options: "Sizes: 24px default, 16px inline / dense contexts, 20px nav rail. Outlined glyphs by default; filled status pictograms (running check, failed dot, sticky star) are the only exception. Click any icon in the gallery to copy its name.",
-            usage: "Pick the icon whose metaphor matches the action or object directly — never invent a custom mark. Drop the SVG inline (or reference via `<svg><use href=\"icons/{name}.svg\">`) so it picks up the surrounding text color. For vendor logos (AWS, Salesforce, GitHub) the system falls back to Font Awesome 6 brands at matching stroke weight.",
-            behaviors: "Icon-only buttons require an explicit `aria-label`. Icons paired with text take `aria-hidden=\"true\"` so screen readers don't read them twice. The icon inherits `currentColor` from its parent — never hardcode a tint."
-          }
-        },
-        {
           file: "preview/brand-logo.html",
           name: "Logo",
           tagline: "SnapLogic wordmark + snap-icon. White-on-dark version supplied.",
@@ -125,15 +125,6 @@ window.JELLYROLL_DATA = {
             usage: "Use the white wordmark on the dark navbar and any dark brand surface. The wordmark and snap-icon ship together — do not separate them, recolor them, or pair the wordmark with a non-system glyph. Minimum clear space around the mark is the height of the snap-icon."
           }
         },
-        {
-          file: "preview/brand-launchers.html",
-          name: "Product launcher",
-          tagline: "Gradient-circle marks for each app in the waffle menu.",
-          meta: {
-            usage: "Use the colored gradient circle plus product name in the waffle menu only. Each product has its own gradient (Designer = teal→blue, APIM = blue→purple, AutoSync = orange→yellow, etc.) — do not invent new combinations or apply these gradients to other surfaces.",
-            behaviors: "Hover lifts the row background to Blue-100; selected state uses the 3px Blue-600 left border treatment shared with cards. Real product icons are not exported from Figma; the UI kit uses placeholder gradient circles with Lucide glyphs."
-          }
-        }
       ]
     },
     {
@@ -531,6 +522,15 @@ window.JELLYROLL_DATA = {
             options: "Read / unread state per row. Filter tabs (`All`, `Mentions`, `System`). Mark-all-as-read action.",
             usage: "Use as the persistent inbox for any non-urgent event the user should see eventually — pipeline run completes, comment mentions, system updates. For urgent actionable events, also surface a Toast.",
             behaviors: "Clicking the bell opens the panel and marks the dot dismissed (but does not auto-mark rows as read). Click a row to navigate to the source object and mark the row read."
+          }
+        },
+        {
+          file: "preview/brand-launchers.html",
+          name: "Product launcher",
+          tagline: "Gradient-circle marks for each app in the waffle menu.",
+          meta: {
+            usage: "Use the colored gradient circle plus product name in the waffle menu only. Each product has its own gradient (Designer = teal→blue, APIM = blue→purple, AutoSync = orange→yellow, etc.) — do not invent new combinations or apply these gradients to other surfaces.",
+            behaviors: "Hover lifts the row background to Blue-100; selected state uses the 3px Blue-600 left border treatment shared with cards. Real product icons are not exported from Figma; the UI kit uses placeholder gradient circles with Lucide glyphs."
           }
         },
         {
