@@ -261,10 +261,90 @@
   .mini__gpt .gh { font: 800 9px/12px var(--font-sans); color: var(--sl-indigo-900); }
   .mini__gpt .line { height: 5px; background: var(--sl-grey-200); border-radius: 2px; }
 
+  /* ─── Input section ──────────────────────────────── */
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  .input-demo { display: flex; flex-direction: column; gap: 6px; }
+  .input-demo .cap { font: 800 11px/14px var(--font-sans); color: var(--color-text-body); }
+  .input-demo .cap small { display: block; font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); margin-top: 2px; }
+
+  /* Standalone input block */
+  .sgpt-input {
+    border: 1.5px solid var(--sl-grey-300);
+    border-radius: 10px;
+    padding: 12px 12px 10px;
+    background: var(--sl-white);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sgpt-input--focus { border-color: var(--sl-blue-400); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+  .sgpt-input--filled { border-color: var(--sl-blue-400); }
+  .sgpt-input__text {
+    font: 400 14px/22px var(--font-sans);
+    color: var(--color-text-subtle);
+    font-style: italic;
+    min-height: 44px;
+  }
+  .sgpt-input__text.filled { color: var(--sl-indigo-900); font-style: normal; }
+  .sgpt-input__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sgpt-input__toolbar .tb-sep {
+    width: 1px; height: 20px;
+    background: var(--sl-grey-300);
+    flex-shrink: 0;
+    margin: 0 2px;
+  }
+  .sgpt-input__toolbar .tb-icon {
+    width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--sl-grey-300);
+    border-radius: var(--radius-xs);
+    background: var(--sl-white);
+    color: var(--color-text-body);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .sgpt-input__toolbar .tb-icon svg { width: 15px; height: 15px; }
+  .sgpt-input__toolbar .tb-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 10px;
+    border: 1.5px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    background: var(--sl-white);
+    font: 500 13px/18px var(--font-sans);
+    color: var(--color-text-body);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .sgpt-input__toolbar .tb-pill svg { width: 14px; height: 14px; color: var(--sl-blue-600); }
+  .sgpt-input__toolbar .tb-pill .chev { color: var(--color-text-subtle); }
+  .sgpt-input__send {
+    margin-left: auto;
+    width: 36px; height: 36px;
+    border-radius: 999px;
+    background: var(--sl-teal-600);
+    color: var(--sl-white);
+    border: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .sgpt-input__send--idle { background: var(--sl-grey-300); color: var(--color-text-subtle); }
+  .sgpt-input__send svg { width: 17px; height: 17px; }
+
   .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .compare > div { display: flex; flex-direction: column; gap: 8px; }
   .compare .cap { font: 800 11px/14px var(--font-sans); color: var(--color-text-body); }
   .compare .cap small { display: block; font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); margin-top: 2px; }
+
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 
   .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
   .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
@@ -361,6 +441,61 @@
           </div>
 
         </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ─── INPUT AREA ────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Input area <span class="meta">textarea + toolbar · sits at panel footer</span></div>
+      <div class="input-grid">
+
+        <!-- Idle / empty -->
+        <div class="input-demo">
+          <div class="cap">Idle <small>empty · send dimmed</small></div>
+          <div class="sgpt-input">
+            <div class="sgpt-input__text">Ask SnapGPT…</div>
+            <div class="sgpt-input__toolbar">
+              <button class="tb-icon" aria-label="Add"><i data-lucide="plus"></i></button>
+              <span class="tb-sep"></span>
+              <button class="tb-pill"><i data-lucide="target"></i>Mode<i data-lucide="chevron-down" class="chev"></i></button>
+              <button class="tb-pill"><i data-lucide="file-text"></i>Select context<i data-lucide="chevron-down" class="chev"></i></button>
+              <button class="sgpt-input__send sgpt-input__send--idle" aria-label="Send" disabled><i data-lucide="arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Focused / typing -->
+        <div class="input-demo">
+          <div class="cap">Focused <small>blue ring · actively typing</small></div>
+          <div class="sgpt-input sgpt-input--focus">
+            <div class="sgpt-input__text filled">How do I join two datasets from differe<span style="display:inline-block;width:2px;height:1em;background:var(--sl-blue-500);vertical-align:text-bottom;margin-left:1px;animation:blink 1s step-end infinite;"></span></div>
+            <div class="sgpt-input__toolbar">
+              <button class="tb-icon" aria-label="Add"><i data-lucide="plus"></i></button>
+              <span class="tb-sep"></span>
+              <button class="tb-pill"><i data-lucide="target"></i>Mode<i data-lucide="chevron-down" class="chev"></i></button>
+              <button class="tb-pill"><i data-lucide="file-text"></i>Select context<i data-lucide="chevron-down" class="chev"></i></button>
+              <button class="sgpt-input__send" aria-label="Send"><i data-lucide="arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filled / ready to send -->
+        <div class="input-demo">
+          <div class="cap">Filled <small>send active · teal</small></div>
+          <div class="sgpt-input sgpt-input--filled">
+            <div class="sgpt-input__text filled">How do I join two datasets from different sources without duplicating rows?</div>
+            <div class="sgpt-input__toolbar">
+              <button class="tb-icon" aria-label="Add"><i data-lucide="plus"></i></button>
+              <span class="tb-sep"></span>
+              <button class="tb-pill"><i data-lucide="target"></i>Mode<i data-lucide="chevron-down" class="chev"></i></button>
+              <button class="tb-pill"><i data-lucide="file-text"></i>Select context<i data-lucide="chevron-down" class="chev"></i></button>
+              <button class="sgpt-input__send" aria-label="Send"><i data-lucide="arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
