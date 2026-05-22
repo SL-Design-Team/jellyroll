@@ -36,15 +36,17 @@
   .panel-frame .ws__header { grid-column: 1 / -1; background: var(--sl-blue-1000); }
   .panel-frame .ws__rail   { background: var(--sl-blue-1000); }
   .panel-frame .ws__body   { display: flex; align-items: center; justify-content: center; color: var(--color-text-subtle); font: 400 13px/22px var(--font-sans); }
-  /* Draggable divider — wider hit area, thin visual line that thickens on hover */
+  /* Draggable divider */
   .panel-frame .ws__divider {
     position: absolute;
     top: 0; bottom: 0;
-    right: calc(400px - 5px); /* center the 12px hit area over the divider position */
+    right: calc(400px - 5px); /* center 12px hit area over the 2px visual line */
     width: 12px;
     z-index: 3;
     cursor: ew-resize;
   }
+
+  /* Full-height thin gradient line — always visible */
   .panel-frame .ws__divider::before {
     content: '';
     position: absolute;
@@ -53,10 +55,25 @@
     transform: translateX(-50%);
     width: 2px;
     background: linear-gradient(180deg, var(--sl-teal-400) 0%, var(--sl-blue-600) 100%);
-    transition: width 120ms ease;
   }
-  .panel-frame .ws__divider:hover::before {
-    width: 5px;
+
+  /* Short centered grip segment — wider hint, thickens on hover */
+  .panel-frame .ws__divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 72px;
+    width: 4px;
+    border-radius: 3px;
+    background: var(--sl-blue-400);
+    transition: width 120ms ease, background 120ms ease;
+  }
+  .panel-frame .ws__divider:hover::after {
+    width: 8px;
+    border-radius: 4px;
+    background: var(--sl-blue-500);
   }
 
   /* ─── Panel shell ─────────────────────────────────── */
