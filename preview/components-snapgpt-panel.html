@@ -42,7 +42,39 @@
     right: 400px;
     width: 2px;
     background: linear-gradient(180deg, var(--sl-teal-400) 0%, var(--sl-blue-600) 100%);
-    z-index: 1;
+    z-index: 3;
+    cursor: ew-resize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Resize handle pill */
+  .ws__divider-handle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 5px 6px;
+    background: var(--sl-white);
+    border: 1.5px solid var(--sl-blue-300);
+    border-radius: 999px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    color: var(--sl-blue-500);
+    font-size: 9px;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .ws__divider-handle svg { width: 10px; height: 10px; flex-shrink: 0; }
+  .ws__divider-handle .divider-pip {
+    width: 1.5px; height: 12px;
+    background: var(--sl-blue-400);
+    border-radius: 1px;
+    flex-shrink: 0;
   }
 
   /* ─── Panel shell ─────────────────────────────────── */
@@ -373,7 +405,13 @@
           <div class="ws__rail"></div>
           <div class="ws__body">workspace (resizes when panel is open)</div>
         </div>
-        <div class="ws__divider"></div>
+        <div class="ws__divider">
+          <div class="ws__divider-handle">
+            <i data-lucide="chevron-left"></i>
+            <span class="divider-pip"></span>
+            <i data-lucide="chevron-right"></i>
+          </div>
+        </div>
 
         <!-- SnapGPT panel -->
         <div class="snapgpt" aria-label="SnapGPT chat panel">
