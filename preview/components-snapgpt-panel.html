@@ -36,47 +36,27 @@
   .panel-frame .ws__header { grid-column: 1 / -1; background: var(--sl-blue-1000); }
   .panel-frame .ws__rail   { background: var(--sl-blue-1000); }
   .panel-frame .ws__body   { display: flex; align-items: center; justify-content: center; color: var(--color-text-subtle); font: 400 13px/22px var(--font-sans); }
+  /* Draggable divider — wider hit area, thin visual line that thickens on hover */
   .panel-frame .ws__divider {
     position: absolute;
     top: 0; bottom: 0;
-    right: 400px;
-    width: 2px;
-    background: linear-gradient(180deg, var(--sl-teal-400) 0%, var(--sl-blue-600) 100%);
+    right: calc(400px - 5px); /* center the 12px hit area over the divider position */
+    width: 12px;
     z-index: 3;
     cursor: ew-resize;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
-  /* Resize handle — subtle grab indicator, not a button */
-  .ws__divider-handle {
+  .panel-frame .ws__divider::before {
+    content: '';
     position: absolute;
-    top: 50%;
+    top: 0; bottom: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    padding: 4px 5px;
-    background: var(--sl-white);
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.18);
-    color: var(--sl-blue-500);
-    line-height: 1;
-    white-space: nowrap;
-    pointer-events: none;
-    user-select: none;
+    transform: translateX(-50%);
+    width: 2px;
+    background: linear-gradient(180deg, var(--sl-teal-400) 0%, var(--sl-blue-600) 100%);
+    transition: width 120ms ease;
   }
-  .ws__divider-handle .arr {
-    font-size: 7px;
-    line-height: 1;
-    display: block;
-  }
-  .ws__divider-handle .divider-pip {
-    width: 1.5px; height: 10px;
-    background: var(--sl-blue-400);
-    border-radius: 1px;
-    flex-shrink: 0;
+  .panel-frame .ws__divider:hover::before {
+    width: 5px;
   }
 
   /* ─── Panel shell ─────────────────────────────────── */
@@ -407,13 +387,7 @@
           <div class="ws__rail"></div>
           <div class="ws__body">workspace (resizes when panel is open)</div>
         </div>
-        <div class="ws__divider">
-          <div class="ws__divider-handle">
-            <span class="arr">&#9664;</span>
-            <span class="divider-pip"></span>
-            <span class="arr">&#9654;</span>
-          </div>
-        </div>
+        <div class="ws__divider"></div>
 
         <!-- SnapGPT panel -->
         <div class="snapgpt" aria-label="SnapGPT chat panel">
