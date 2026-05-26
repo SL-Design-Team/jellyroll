@@ -79,12 +79,13 @@
     color: var(--color-text-body);
     margin-bottom: 6px;
   }
-  .ramp-row { display: flex; gap: 3px; flex-wrap: wrap; }
+  .ramp-row { display: flex; gap: 3px; }
   .ramp-chip {
+    flex: 1;
     display: flex; flex-direction: column; align-items: center; gap: 3px;
   }
   .ramp-chip .chip-swatch {
-    width: 44px; height: 36px;
+    width: 100%; height: 36px;
     border-radius: var(--radius-sm);
     border: 1px solid rgba(0,0,0,0.06);
   }
