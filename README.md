@@ -83,7 +83,19 @@ jellyroll-design-system/
 
 ## For AI coding agents
 
-The design system is published live from [`SL-Design-Team/jellyroll`](https://github.com/SL-Design-Team/jellyroll) — the repo is the source of truth, not a frozen export. Any AI coding agent that can fetch URLs (Claude Code, Cursor, etc.) can pull the agent-oriented context with this prompt:
+### Claude Code slash command (recommended)
+
+Copy `.claude/commands/jellyroll.md` from this repo into your project's `.claude/commands/` folder. Then in any Claude Code session:
+
+```
+/jellyroll <describe what you want built>
+```
+
+The command loads the full preview file index, fetches the live token CSS and relevant component specs, and produces a standalone HTML file with pixel-fidelity to the design system. No URL wrangling required.
+
+### Manual prompt (Cursor, Copilot, other agents)
+
+The design system is published live from [`SL-Design-Team/jellyroll`](https://github.com/SL-Design-Team/jellyroll) — the repo is the source of truth, not a frozen export. Any AI coding agent that can fetch URLs can pull the agent-oriented context with this prompt:
 
 ```
 Read the JellyRoll design system at https://sl-design-team.github.io/jellyroll/README.md,
@@ -93,7 +105,7 @@ relate to what you're building.
 Implement: <describe what you want built>
 ```
 
-The README on the live site is addressed to coding agents — read it first and follow its guidance for pixel-fidelity recreation. The repo includes the full token CSS, every preview HTML file (inline styles + Lucide icon usage), the Acherus Grotesque webfonts, and brand assets. Browse the rendered gallery at <https://sl-design-team.github.io/jellyroll/> to see component names + previews; each tile's URL maps directly to a fetchable file under `/preview/`.
+The repo includes the full token CSS, every preview HTML file (inline styles + Lucide icon usage), the Acherus Grotesque webfonts, and brand assets. Browse the rendered gallery at <https://sl-design-team.github.io/jellyroll/> to see component names + previews; each tile's URL maps directly to a fetchable file under `/preview/`.
 
 Because the source of truth is the live repo, what you fetch is always current — no stale tarball drift.
 

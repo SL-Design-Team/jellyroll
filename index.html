@@ -1886,16 +1886,16 @@
           </div>
           <div class="gs-role">
             <h3><span class="r-icon"><i data-lucide="cpu"></i></span>AI coding agents</h3>
-            <p class="r-intro">Point your agent at the live repo — always current, no stale bundle.</p>
-<pre class="code-block"><span class="tk-comment"># Paste into Claude Code or any agent that fetches URLs</span>
-Read the JellyRoll design system at
-<span class="tk-str">https://sl-design-team.github.io/jellyroll/README.md</span>,
-then fetch the full token CSS at
-<span class="tk-str">https://sl-design-team.github.io/jellyroll/colors_and_type.css</span>.
-Browse the gallery index at
-<span class="tk-str">https://sl-design-team.github.io/jellyroll/</span>
-to find the preview file names that match what you're
-building, then fetch those files at
+            <p class="r-intro">Copy the slash command into your project — one command builds anything in the system.</p>
+<pre class="code-block"><span class="tk-comment"># 1. Copy .claude/commands/jellyroll.md from this repo into your project</span>
+<span class="tk-comment">#    (Claude Code picks it up automatically as /jellyroll)</span>
+
+<span class="tk-comment"># 2. Use it</span>
+<span class="tk-var">/jellyroll</span> <span class="tk-str">&lt;describe what you want built&gt;</span></pre>
+            <p class="r-intro" style="margin-top:12px;font-size:12px;color:var(--color-text-subtle)">No Claude Code? Paste this into any agent that fetches URLs:</p>
+<pre class="code-block" style="font-size:11px">Read <span class="tk-str">https://sl-design-team.github.io/jellyroll/README.md</span>,
+fetch <span class="tk-str">https://sl-design-team.github.io/jellyroll/colors_and_type.css</span>,
+then fetch relevant preview files at
 <span class="tk-str">https://sl-design-team.github.io/jellyroll/preview/&lt;name&gt;.html</span>.
 Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre>
           </div>
