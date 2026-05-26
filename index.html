@@ -1172,6 +1172,39 @@
     text-decoration: underline;
     text-underline-offset: 2px;
   }
+  /* Segmented control — inline on dark card */
+  .gs-agent-tabs {
+    margin: 4px 0 12px;
+    --sc-border: rgba(156,179,225,0.25);
+    --sc-text: var(--sl-white);
+    --sc-text-muted: var(--sl-grey-400);
+    --sc-hover-bg: rgba(255,255,255,0.06);
+    --sc-h: 26px;
+    --sc-pad: 2px;
+    display: inline-flex;
+    align-items: stretch;
+    padding: var(--sc-pad);
+    border: 1px solid var(--sc-border);
+    border-radius: 4px;
+    font: 800 12px/16px var(--font-sans);
+  }
+  .gs-agent-tabs .sc__item {
+    height: calc(var(--sc-h) - var(--sc-pad) * 2 - 2px);
+    padding: 0 12px;
+    border: 0;
+    border-radius: 3px;
+    background: transparent;
+    color: var(--sc-text-muted);
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background 150ms, color 150ms;
+    font: inherit;
+    white-space: nowrap;
+  }
+  .gs-agent-tabs .sc__item:hover { color: var(--sc-text); background: var(--sc-hover-bg); }
+  .gs-agent-tabs .sc__item.selected { background: var(--sl-blue-600); color: var(--sl-white); }
+  .gs-agent-tabs .sc__item.selected:hover { background: var(--sl-blue-700); }
   .gs-role a:hover { color: var(--sl-white); }
 
   .section { margin-top: 44px; scroll-margin-top: calc(var(--topbar-h) + 16px); }
@@ -1886,18 +1919,24 @@
           </div>
           <div class="gs-role">
             <h3><span class="r-icon"><i data-lucide="cpu"></i></span>AI coding agents</h3>
-            <p class="r-intro">Copy the slash command into your project — one command builds anything in the system.</p>
-<pre class="code-block"><span class="tk-comment"># 1. Copy .claude/commands/jellyroll.md from this repo into your project</span>
+            <div class="sc sc--inverse sc--sm gs-agent-tabs" role="radiogroup" aria-label="Agent type">
+              <button class="sc__item selected" data-tab="claude" onclick="switchAgentTab(this,'claude')">Claude Code</button>
+              <button class="sc__item" data-tab="other" onclick="switchAgentTab(this,'other')">Other agents</button>
+            </div>
+            <div class="gs-agent-panel" id="gs-tab-claude">
+<pre class="code-block"><span class="tk-comment"># 1. Copy .claude/commands/jellyroll.md into your project</span>
 <span class="tk-comment">#    (Claude Code picks it up automatically as /jellyroll)</span>
 
 <span class="tk-comment"># 2. Use it</span>
 <span class="tk-var">/jellyroll</span> <span class="tk-str">&lt;describe what you want built&gt;</span></pre>
-            <p class="r-intro" style="margin-top:12px;font-size:12px;color:var(--color-text-subtle)">No Claude Code? Paste this into any agent that fetches URLs:</p>
-<pre class="code-block" style="font-size:11px">Read <span class="tk-str">https://sl-design-team.github.io/jellyroll/README.md</span>,
+            </div>
+            <div class="gs-agent-panel" id="gs-tab-other" style="display:none">
+<pre class="code-block">Read <span class="tk-str">https://sl-design-team.github.io/jellyroll/README.md</span>,
 fetch <span class="tk-str">https://sl-design-team.github.io/jellyroll/colors_and_type.css</span>,
-then fetch relevant preview files at
+then fetch relevant previews at
 <span class="tk-str">https://sl-design-team.github.io/jellyroll/preview/&lt;name&gt;.html</span>.
 Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre>
+            </div>
           </div>
         </div>
 
@@ -3088,6 +3127,13 @@ Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre
   // Initial route
   applyHash();
 })();
+
+function switchAgentTab(btn, tab) {
+  btn.closest('.gs-role').querySelectorAll('.sc__item').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  btn.closest('.gs-role').querySelectorAll('.gs-agent-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('gs-tab-' + tab).style.display = '';
+}
 </script>
 
 </body>
