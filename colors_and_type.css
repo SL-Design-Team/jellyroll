@@ -170,7 +170,7 @@
   --color-surface-raised: var(--sl-white);      /* cards, drawers — floats above canvas */
   --color-surface-sunken: var(--sl-grey-100);   /* pressed-in, anchored sections */
   --color-surface-overlay: var(--sl-white);     /* modals, popovers — highest plane */
-  --color-surface-navbar: var(--sl-blue-900);   /* global nav — dark navy, always */
+  --color-surface-navbar: var(--sl-blue-1000);  /* global nav — deepest navy, always */
 
   /* Background tokens */
   --color-background-primary: var(--sl-blue-600);

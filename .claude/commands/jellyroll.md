@@ -27,6 +27,8 @@ JellyRoll is SnapLogic's enterprise design system (106 components, patterns, and
 
 Use the index below to find the preview files that match what you're building. The preview HTML is the spec for structure, spacing, states, and token usage — read each file carefully before implementing.
 
+> **Always fetch `components-global-header` when building any screen that includes a top navigation bar.** The header background is `--sl-blue-1000` (not `--sl-blue-900`). Do not rely on training knowledge for this value — read the preview file.
+
 ### 3. Produce the HTML file
 
 - Use CSS custom properties from `colors_and_type.css` — never hardcode hex values
