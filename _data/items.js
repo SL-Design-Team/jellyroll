@@ -411,6 +411,17 @@ window.JELLYROLL_DATA = {
           }
         },
         {
+          file: "preview/components-tooltip.html",
+          name: "Tooltip",
+          tagline: "Short label or description surfaced on hover or focus.",
+          meta: {
+            anatomy: "Dark navy pill (Indigo-900 fill, white 12/16 text, 4px radius, 5×10px padding) · 5px triangle arrow pointing at the trigger · max-width 240px.",
+            options: "Placement: top (default), bottom, left, right. Variants: default (single line) · rich (bold title + muted body, up to 2 lines). Works on any focusable trigger.",
+            usage: "Use to label icon-only controls, surface truncated text, or add a short explanation to a disabled element. Keep copy to one short sentence — for more detail, use a Popover. Never put interactive content (links, buttons) inside a tooltip.",
+            behaviors: "Appears after a 300ms hover delay; disappears immediately on mouse-out. Also shows on keyboard focus so it is accessible without a pointer. For disabled triggers, wrap the trigger in a container that handles the hover — the button itself cannot receive hover events when disabled."
+          }
+        },
+        {
           file: "preview/components-tree-select.html",
           name: "Tree select",
           tagline: "Hierarchical picker — folders, snaplexes, org units.",

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Primitives · Tooltip</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 28px; }
+
+  /* ─── TOOLTIP ─────────────────────────────────────────────
+     Non-interactive overlay that surfaces a short label or
+     description for an element on hover or keyboard focus.
+     Dark navy fill, white text, 4px radius, subtle drop-shadow.
+     Arrow (6×4px triangle) points toward the trigger.
+
+     Placement: top (default) · bottom · left · right
+     Width: auto up to 240px, then wraps.
+  */
+  .sl-tooltip-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sl-tooltip {
+    position: absolute;
+    z-index: 100;
+    background: var(--sl-indigo-900);
+    color: var(--sl-white);
+    font: 500 12px/16px var(--font-sans);
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    max-width: 240px;
+    white-space: normal;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(3,26,72,0.18);
+    opacity: 0;
+    transition: opacity 120ms ease-out, transform 120ms ease-out;
+  }
+
+  /* Arrow shared */
+  .sl-tooltip::after {
+    content: "";
+    position: absolute;
+    width: 0; height: 0;
+    border: 5px solid transparent;
+  }
+
+  /* Top (default) */
+  .sl-tooltip--top {
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+  }
+  .sl-tooltip--top::after {
+    top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border-top-color: var(--sl-indigo-900);
+    border-bottom: none;
+  }
+
+  /* Bottom */
+  .sl-tooltip--bottom {
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+  }
+  .sl-tooltip--bottom::after {
+    bottom: 100%; left: 50%;
+    transform: translateX(-50%);
+    border-bottom-color: var(--sl-indigo-900);
+    border-top: none;
+  }
+
+  /* Left */
+  .sl-tooltip--left {
+    right: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%) translateX(4px);
+  }
+  .sl-tooltip--left::after {
+    left: 100%; top: 50%;
+    transform: translateY(-50%);
+    border-left-color: var(--sl-indigo-900);
+    border-right: none;
+  }
+
+  /* Right */
+  .sl-tooltip--right {
+    left: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-4px);
+  }
+  .sl-tooltip--right::after {
+    right: 100%; top: 50%;
+    transform: translateY(-50%);
+    border-right-color: var(--sl-indigo-900);
+    border-left: none;
+  }
+
+  /* Visible state — show on trigger hover/focus */
+  .sl-tooltip-wrap:hover .sl-tooltip,
+  .sl-tooltip-wrap:focus-within .sl-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .sl-tooltip-wrap:hover .sl-tooltip--bottom,
+  .sl-tooltip-wrap:focus-within .sl-tooltip--bottom {
+    transform: translateX(-50%) translateY(0);
+  }
+  .sl-tooltip-wrap:hover .sl-tooltip--left,
+  .sl-tooltip-wrap:focus-within .sl-tooltip--left {
+    transform: translateY(-50%) translateX(0);
+  }
+  .sl-tooltip-wrap:hover .sl-tooltip--right,
+  .sl-tooltip-wrap:focus-within .sl-tooltip--right {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  /* ─── Demo triggers ─────────────────────────────────────── */
+  .demo-row {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .demo-row--spread {
+    justify-content: space-between;
+  }
+  .demo-label {
+    font: 800 11px/14px var(--font-sans);
+    color: var(--color-text-subtle);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* Trigger styles */
+  .trigger-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 14px;
+    height: 32px;
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    background: var(--sl-white);
+    color: var(--color-text-body);
+    font: 800 13px/20px var(--font-sans);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .trigger-btn:hover { border-color: var(--sl-blue-600); color: var(--sl-blue-600); }
+  .trigger-btn:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(9,129,127,0.18); border-color: var(--sl-teal-600); }
+  .trigger-btn svg { width: 14px; height: 14px; flex: none; stroke-width: 2; }
+
+  .trigger-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    background: var(--sl-white);
+    color: var(--color-text-subtle);
+    cursor: pointer;
+  }
+  .trigger-icon:hover { border-color: var(--sl-blue-600); color: var(--sl-blue-600); }
+  .trigger-icon:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(9,129,127,0.18); border-color: var(--sl-teal-600); }
+  .trigger-icon svg { width: 14px; height: 14px; flex: none; stroke-width: 2; }
+
+  /* Rich tooltip variant */
+  .sl-tooltip--rich {
+    padding: 10px 12px;
+    max-width: 220px;
+    white-space: normal;
+  }
+  .sl-tooltip--rich .tt-title {
+    font: 800 12px/16px var(--font-sans);
+    margin-bottom: 3px;
+  }
+  .sl-tooltip--rich .tt-body {
+    font: 400 11px/15px var(--font-sans);
+    color: rgba(255,255,255,0.72);
+  }
+
+  /* Disabled-trigger demo */
+  .trigger-btn[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .sl-tooltip-wrap--disabled { cursor: not-allowed; }
+  .sl-tooltip-wrap--disabled .trigger-btn { pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Placement -->
+  <div>
+    <div class="demo-label">Placement</div>
+    <div class="demo-row demo-row--spread" style="padding: 20px 0;">
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-btn" type="button">Top</button>
+        <div class="sl-tooltip sl-tooltip--top" role="tooltip">Appears above the trigger</div>
+      </div>
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-btn" type="button">Bottom</button>
+        <div class="sl-tooltip sl-tooltip--bottom" role="tooltip">Appears below the trigger</div>
+      </div>
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-btn" type="button">Left</button>
+        <div class="sl-tooltip sl-tooltip--left" role="tooltip">Appears to the left</div>
+      </div>
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-btn" type="button">Right</button>
+        <div class="sl-tooltip sl-tooltip--right" role="tooltip">Appears to the right</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Icon-only triggers -->
+  <div>
+    <div class="demo-label">Icon-only buttons</div>
+    <div class="demo-row">
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-icon" type="button" aria-label="Settings">
+          <i data-lucide="settings"></i>
+        </button>
+        <div class="sl-tooltip sl-tooltip--top" role="tooltip">Settings</div>
+      </div>
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-icon" type="button" aria-label="Download">
+          <i data-lucide="download"></i>
+        </button>
+        <div class="sl-tooltip sl-tooltip--top" role="tooltip">Download</div>
+      </div>
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-icon" type="button" aria-label="Copy to clipboard">
+          <i data-lucide="copy"></i>
+        </button>
+        <div class="sl-tooltip sl-tooltip--top" role="tooltip">Copy to clipboard</div>
+      </div>
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-icon" type="button" aria-label="Delete">
+          <i data-lucide="trash-2"></i>
+        </button>
+        <div class="sl-tooltip sl-tooltip--top" role="tooltip">Delete</div>
+      </div>
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-icon" type="button" aria-label="More options">
+          <i data-lucide="more-horizontal"></i>
+        </button>
+        <div class="sl-tooltip sl-tooltip--top" role="tooltip">More options</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Rich tooltip -->
+  <div>
+    <div class="demo-label">Rich tooltip</div>
+    <div class="demo-row">
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-btn" type="button">
+          <i data-lucide="info"></i>
+          Pipeline status
+        </button>
+        <div class="sl-tooltip sl-tooltip--top sl-tooltip--rich" role="tooltip">
+          <div class="tt-title">Running</div>
+          <div class="tt-body">Started 3 min ago · 12,450 records processed · Salesforce → Snowflake</div>
+        </div>
+      </div>
+
+      <div class="sl-tooltip-wrap">
+        <button class="trigger-btn" type="button">
+          <i data-lucide="key-round"></i>
+          API key
+        </button>
+        <div class="sl-tooltip sl-tooltip--top sl-tooltip--rich" role="tooltip">
+          <div class="tt-title">Scope: read-only</div>
+          <div class="tt-body">Expires in 14 days. Rotate before expiry to avoid pipeline failures.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Disabled trigger -->
+  <div>
+    <div class="demo-label">Disabled trigger</div>
+    <div class="demo-row">
+
+      <div class="sl-tooltip-wrap sl-tooltip-wrap--disabled">
+        <button class="trigger-btn" type="button" aria-disabled="true">
+          <i data-lucide="play"></i>
+          Run pipeline
+        </button>
+        <div class="sl-tooltip sl-tooltip--top" role="tooltip">Requires Snaplex to be online</div>
+      </div>
+
+      <div class="sl-tooltip-wrap sl-tooltip-wrap--disabled">
+        <button class="trigger-btn" type="button" aria-disabled="true">
+          <i data-lucide="share-2"></i>
+          Publish
+        </button>
+        <div class="sl-tooltip sl-tooltip--top" role="tooltip">Save your changes before publishing</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>
