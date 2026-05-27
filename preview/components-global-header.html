@@ -87,6 +87,28 @@
   .gh .waffle-btn:hover { background: rgba(255,255,255,0.10); }
   .gh .waffle-btn span { width: 4px; height: 4px; background: rgba(255,255,255,0.85); border-radius: 999px; }
 
+  /* Combo loader bar — sits on the bottom edge of the global header */
+  .gh-combo-outer {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 5px;
+    overflow: hidden;
+    animation: gh-combo-fill 4s linear forwards;
+  }
+  .gh-combo-inner {
+    position: absolute;
+    width: 200%; height: 5px;
+    background: linear-gradient(to right, #0B9D9B 0% 45%, #0841B4 54% 60%, #0B9D9B 65%);
+    animation: gh-combo-walk 1s infinite linear;
+  }
+  @keyframes gh-combo-fill {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(0); }
+  }
+  @keyframes gh-combo-walk {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+
   .anatomy { font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); padding: 14px 0 0; display: flex; flex-direction: column; gap: 4px; }
   .anatomy strong { color: var(--sl-indigo-900); font-weight: 800; }
 </style>
@@ -114,6 +136,7 @@
         <span></span><span></span><span></span>
         <span></span><span></span><span></span>
       </div>
+      <div class="gh-combo-outer"><div class="gh-combo-inner"></div></div>
     </header>
     <div class="anatomy">
       <span><strong>Anchors</strong> — each affordance opens a separate component:</span>
@@ -124,6 +147,13 @@
       <span>waffle (3×3 dots) → <strong>Product launcher</strong></span>
     </div>
   </div>
-  <script>lucide.createIcons();</script>
+  <script>
+    lucide.createIcons();
+    const outer = document.querySelector('.gh-combo-outer');
+    const inner = document.querySelector('.gh-combo-inner');
+    if (outer && inner) {
+      outer.addEventListener('animationend', () => { inner.style.animation = 'none'; });
+    }
+  </script>
 </body>
 </html>
