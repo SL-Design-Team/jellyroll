@@ -38,7 +38,13 @@
     pointer-events: none;
     box-shadow: 0 2px 8px rgba(3,26,72,0.18);
     opacity: 0;
-    transition: opacity 120ms ease-out, transform 120ms ease-out;
+    /* Appear: 300ms delay so accidental hovers don't flash the tooltip.
+       Disappear: no delay — hide immediately when pointer leaves. */
+    transition: opacity 120ms ease-out 300ms, transform 120ms ease-out 300ms;
+  }
+  /* Remove delay on hide so it feels snappy on mouse-out */
+  .sl-tooltip-wrap:not(:hover):not(:focus-within) .sl-tooltip {
+    transition: opacity 80ms ease-in 0ms, transform 80ms ease-in 0ms;
   }
 
   /* Arrow shared */
@@ -188,6 +194,71 @@
     color: rgba(255,255,255,0.72);
   }
 
+  /* Timing demo */
+  .timing-row {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .timing-card {
+    flex: 1;
+    min-width: 140px;
+    background: var(--sl-grey-50);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+  }
+  .timing-card .tc-value {
+    font: 800 20px/24px var(--font-mono);
+    color: var(--color-text-body);
+    margin-bottom: 2px;
+  }
+  .timing-card .tc-label {
+    font: 500 11px/14px var(--font-sans);
+    color: var(--color-text-subtle);
+    margin-bottom: 6px;
+  }
+  .timing-card .tc-desc {
+    font: 400 11px/15px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+
+  /* Tooltip vs alt text table */
+  .vs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font: 400 12px/17px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .vs-table th {
+    font: 800 11px/14px var(--font-sans);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0 10px 8px 0;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .vs-table td {
+    padding: 8px 10px 8px 0;
+    vertical-align: top;
+    border-bottom: 1px solid var(--sl-grey-100);
+  }
+  .vs-table tr:last-child td { border-bottom: none; }
+  .vs-table td:first-child { font-weight: 500; color: var(--color-text-subtle); width: 28%; }
+  .tag-pill {
+    display: inline-block;
+    font: 800 10px/12px var(--font-sans);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 999px;
+    margin-right: 4px;
+  }
+  .tag-pill--tooltip { background: var(--sl-blue-50); color: var(--sl-blue-700); }
+  .tag-pill--alt    { background: var(--sl-teal-50); color: var(--sl-teal-700); }
+
   /* Disabled-trigger demo */
   .trigger-btn[aria-disabled="true"] {
     opacity: 0.45;
@@ -324,6 +395,78 @@
       </div>
 
     </div>
+  </div>
+
+  <!-- Timing -->
+  <div>
+    <div class="demo-label">Timing</div>
+    <div class="timing-row">
+
+      <div class="timing-card">
+        <div class="tc-value">300ms</div>
+        <div class="tc-label">Hover delay</div>
+        <div class="tc-desc">Wait before showing — prevents accidental flash on fast mouse moves.</div>
+      </div>
+
+      <div class="timing-card">
+        <div class="tc-value">120ms</div>
+        <div class="tc-label">Appear</div>
+        <div class="tc-desc">Fade in with a slight upward slide so the tooltip feels intentional, not instant.</div>
+      </div>
+
+      <div class="timing-card">
+        <div class="tc-value">80ms</div>
+        <div class="tc-label">Dismiss</div>
+        <div class="tc-desc">Disappears immediately on mouse-out — no delay, no linger.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Tooltip vs alt text -->
+  <div>
+    <div class="demo-label">Tooltip vs alt text</div>
+    <table class="vs-table">
+      <thead>
+        <tr>
+          <th>Situation</th>
+          <th>Use</th>
+          <th>Why</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Icon-only button</td>
+          <td><span class="tag-pill tag-pill--tooltip">Tooltip</span> + <code>aria-label</code></td>
+          <td>Label is available to screen readers via <code>aria-label</code>; tooltip serves sighted mouse users.</td>
+        </tr>
+        <tr>
+          <td>Decorative image</td>
+          <td><span class="tag-pill tag-pill--alt">alt=""</span></td>
+          <td>Empty alt hides it from assistive tech. A tooltip on a purely decorative element adds noise.</td>
+        </tr>
+        <tr>
+          <td>Informative image</td>
+          <td><span class="tag-pill tag-pill--alt">alt="…"</span></td>
+          <td>Alt text is always available — tooltips require hover and are invisible on touch devices.</td>
+        </tr>
+        <tr>
+          <td>Disabled control with reason</td>
+          <td><span class="tag-pill tag-pill--tooltip">Tooltip</span></td>
+          <td>Explains why the action is unavailable. Wrap in a focusable container so keyboard users can reach it.</td>
+        </tr>
+        <tr>
+          <td>Complex chart or diagram</td>
+          <td><span class="tag-pill tag-pill--alt">alt="…"</span> or <code>aria-describedby</code></td>
+          <td>Tooltips truncate at 240px and are not discoverable by touch. Use visible caption or linked description instead.</td>
+        </tr>
+        <tr>
+          <td>Truncated text in a table cell</td>
+          <td><span class="tag-pill tag-pill--tooltip">Tooltip</span></td>
+          <td>Surfaces the full string on hover. Keep content identical to the truncated text — no extra information.</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
 </div>
