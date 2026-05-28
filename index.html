@@ -1926,12 +1926,17 @@
               <button class="sc__item" data-tab="other" onclick="switchAgentTab(this,'other')">Other agents</button>
             </div>
             <div class="gs-agent-panel" id="gs-tab-claude">
-              <p style="margin-bottom:10px;font-size:11px;color:var(--sl-grey-400)">Get the command file at <a href="https://github.com/SL-Design-Team/jellyroll/tree/main/.claude/" target="_blank" rel="noopener" style="color:var(--sl-blue-200);text-underline-offset:2px">github.com/SL-Design-Team/jellyroll/.claude/</a></p>
-<pre class="code-block"><span class="tk-comment"># 1. Copy .claude/commands/jellyroll.md into your project</span>
-<span class="tk-comment">#    (Claude Code picks it up automatically as /jellyroll)</span>
+              <p style="margin-bottom:10px;font-size:11px;color:var(--sl-grey-400)">Install once. <code>/jellyroll</code> then works in any Claude Code session — no need to clone this repo. Source lives at <a href="https://github.com/SL-Design-Team/jellyroll/blob/main/.claude/commands/jellyroll.md" target="_blank" rel="noopener" style="color:var(--sl-blue-200);text-underline-offset:2px">.claude/commands/jellyroll.md</a>.</p>
+<pre class="code-block"><span class="tk-comment"># 1. One-line install (global, any project)</span>
+mkdir -p ~/.claude/commands &amp;&amp; curl -sL \
+  https://raw.githubusercontent.com/SL-Design-Team/jellyroll/main/.claude/commands/jellyroll.md \
+  -o ~/.claude/commands/jellyroll.md
 
-<span class="tk-comment"># 2. Use it</span>
-<span class="tk-var">/jellyroll</span> <span class="tk-str">&lt;describe what you want built&gt;</span></pre>
+<span class="tk-comment"># 2. Use it — HTML output by default</span>
+<span class="tk-var">/jellyroll</span> <span class="tk-str">build a connection list page with a KPI row and a status table</span>
+
+<span class="tk-comment"># 2b. Or get a React (.tsx) component — just say so</span>
+<span class="tk-var">/jellyroll</span> <span class="tk-str">build a React component for the search overlay</span></pre>
             </div>
             <div class="gs-agent-panel" id="gs-tab-other" style="display:none">
 <pre class="code-block">Read <span class="tk-str">https://sl-design-team.github.io/jellyroll/README.md</span>,
