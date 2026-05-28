@@ -11,6 +11,7 @@
   .panel.dark { background: var(--sl-blue-900); }
   .panel.light { background: var(--sl-grey-100); border: 1px solid var(--sl-grey-300); }
   .panel img { height: 40px; }
+  .panel img.mark { height: 48px; }
   .meta { text-align:center; font-size: 10px; color: var(--color-text-subtle); font-family: var(--font-mono); margin-top: 6px; }
 </style>
 </head>
@@ -24,6 +25,18 @@
       </div>
       <div>
         <div class="panel light"><img src="../assets/logo-white.png" alt="SnapLogic" style="filter: invert(1) brightness(0.2);" /></div>
+        <div class="meta">on grey-100 (inverted)</div>
+      </div>
+    </div>
+
+    <div class="row-label" style="margin-top:16px;"><span class="name">Logo mark</span><span class="meta">Round mark only — no wordmark</span></div>
+    <div class="stage">
+      <div>
+        <div class="panel dark"><img class="mark" src="../assets/logo-mark-white.png" alt="SnapLogic mark" /></div>
+        <div class="meta">on indigo-1000</div>
+      </div>
+      <div>
+        <div class="panel light"><img class="mark" src="../assets/logo-mark-white.png" alt="SnapLogic mark" style="filter: invert(1) brightness(0.2);" /></div>
         <div class="meta">on grey-100 (inverted)</div>
       </div>
     </div>
