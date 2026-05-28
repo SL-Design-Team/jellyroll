@@ -113,9 +113,9 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/colors-semantic-text.html",
           name: "Semantic text",
-          tagline: "Body, subtle, link, success, danger, warning, discovery, AI.",
+          tagline: "Body, subtle, link, status, information, discovery, accents.",
           meta: {
-            usage: "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-600 (success), Red-600 (danger), Yellow-600 (warning). Discovery uses Yellow-500; AI uses the dedicated SL AI ramp — purple is reserved for Discovery only, not for AI."
+            usage: "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-800 (success), Orange-700 (warning), Red-700 (alert/error). Information uses Indigo-700; Discovery uses Purple-700. AI uses the dedicated SL AI ramp — never substitute purple for AI."
           }
         },
       ]

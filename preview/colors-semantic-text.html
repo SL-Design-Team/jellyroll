@@ -6,25 +6,269 @@
 <link rel="stylesheet" href="../colors_and_type.css" />
 <link rel="stylesheet" href="card.css" />
 <style>
-  .stack { display: flex; flex-direction: column; gap: 12px; }
-  .row { display: grid; grid-template-columns: 28px 1fr 160px; align-items: center; gap: 14px; padding: 10px 14px; background: var(--sl-grey-100); border-radius: var(--radius-sm); }
-  .dot { width: 20px; height: 20px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06); }
-  .label { font-size: 14px; font-weight: 800; }
-  .token { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-subtle); text-align: right; }
+  .card { gap: 20px; }
+
+  /* ── Specimen: foundational tokens in a realistic vignette ── */
+  .specimen {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 20px;
+    padding: 18px 20px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-sm);
+  }
+  .specimen .heading {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    line-height: 1.2;
+    margin: 0 0 6px;
+  }
+  .specimen .body {
+    font-size: 13px;
+    color: var(--color-text-body);
+    line-height: 1.5;
+    margin: 0 0 10px;
+  }
+  .specimen .body a {
+    color: var(--color-text-link);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .specimen .subtle {
+    font-size: 11px;
+    color: var(--color-text-subtle);
+    margin: 0 0 8px;
+  }
+  .specimen .disabled {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-disabled);
+    margin: 0;
+  }
+  .specimen .annot {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-subtle);
+  }
+  .specimen .annot .tag { display: flex; align-items: center; gap: 6px; }
+  .specimen .annot .dot { width: 8px; height: 8px; border-radius: 999px; flex: none; }
+  .specimen .annot .tag b { font-family: var(--font-sans); font-weight: 800; color: var(--color-text-body); }
+
+  /* ── Inverse strip ── */
+  .inverse-strip {
+    background: var(--color-surface-navbar);
+    color: var(--color-text-inverse);
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .inverse-strip .mono { font-family: var(--font-mono); font-size: 10px; font-weight: 400; opacity: 0.7; }
+
+  /* ── Link states row ── */
+  .link-states {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .link-states .ls {
+    padding: 12px 14px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .link-states .ls .sample {
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .link-states .ls .meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-subtle);
+  }
+
+  /* ── Status & meaning grid ── */
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .status-tile {
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .status-tile .label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .status-tile .label svg { width: 14px; height: 14px; flex: none; }
+  .status-tile .meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-subtle);
+    line-height: 1.4;
+  }
+  .status-tile.success     { background: var(--sl-green-100); }
+  .status-tile.success .label     { color: var(--color-text-success); }
+  .status-tile.warning     { background: var(--sl-orange-100); }
+  .status-tile.warning .label     { color: var(--color-text-warning); }
+  .status-tile.alert       { background: var(--sl-red-100); }
+  .status-tile.alert .label       { color: var(--color-text-alert); }
+  .status-tile.information { background: var(--sl-indigo-100); }
+  .status-tile.information .label { color: var(--color-text-information); }
+  .status-tile.discovery   { background: var(--sl-purple-100); }
+  .status-tile.discovery .label   { color: var(--color-text-discovery); }
+
+  /* ── Accent palette ── */
+  .accent-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 6px;
+  }
+  .accent-cell {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-100);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px;
+  }
+  .accent-cell .Aa {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .accent-cell .name {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
 </style>
 </head>
 <body>
   <div class="card">
-    <div class="row-label"><span class="name">Text colors</span><span class="meta">color.text.*</span></div>
-    <div class="stack">
-      <div class="row"><div class="dot" style="background: var(--color-text-body)"></div><span class="label" style="color: var(--color-text-body)">Body — primary content text</span><span class="token">text.body · #031A48</span></div>
-      <div class="row"><div class="dot" style="background: var(--color-text-subtle)"></div><span class="label" style="color: var(--color-text-subtle)">Subtle — secondary captions</span><span class="token">text.subtle · #7D8695</span></div>
-      <div class="row"><div class="dot" style="background: var(--color-text-disabled)"></div><span class="label" style="color: var(--color-text-disabled)">Disabled</span><span class="token">text.disabled · #B0B9C8</span></div>
-      <div class="row"><div class="dot" style="background: var(--color-text-link)"></div><span class="label" style="color: var(--color-text-link)">Link — Blue 600</span><span class="token">text.link · #0841B4</span></div>
-      <div class="row"><div class="dot" style="background: var(--color-text-success)"></div><span class="label" style="color: var(--color-text-success)">Success</span><span class="token">text.success · #014B10</span></div>
-      <div class="row"><div class="dot" style="background: var(--color-text-alert)"></div><span class="label" style="color: var(--color-text-alert)">Alert / error</span><span class="token">text.alert · #B61631</span></div>
-      <div class="row"><div class="dot" style="background: var(--sl-yellow-500)"></div><span class="label" style="color: var(--sl-yellow-500)">Discovery — exploration / new features</span><span class="token">text.discovery · yellow-500</span></div>
+
+    <!-- Foundational tokens in context -->
+    <div class="row-label">
+      <span class="name">Foundational</span>
+      <span class="meta">body · heading · subtle · link · disabled</span>
+    </div>
+    <div class="specimen">
+      <div>
+        <h2 class="heading">Connection details</h2>
+        <p class="body">Configure how your pipeline authenticates with the data source. <a href="#">View setup guide</a> for step-by-step instructions.</p>
+        <p class="subtle">Last verified 2 hours ago · automatic refresh</p>
+        <p class="disabled">Field name (disabled)</p>
+      </div>
+      <div class="annot">
+        <div class="tag"><span class="dot" style="background: var(--color-text-heading)"></span><b>Heading</b> · indigo-900</div>
+        <div class="tag"><span class="dot" style="background: var(--color-text-body)"></span><b>Body</b> · indigo-900</div>
+        <div class="tag"><span class="dot" style="background: var(--color-text-link)"></span><b>Link</b> · blue-600</div>
+        <div class="tag"><span class="dot" style="background: var(--color-text-subtle)"></span><b>Subtle</b> · grey-700</div>
+        <div class="tag"><span class="dot" style="background: var(--color-text-disabled)"></span><b>Disabled</b> · grey-500</div>
+        <div class="tag"><span class="dot" style="background: var(--color-text-selected)"></span><b>Selected</b> · blue-600</div>
+      </div>
+    </div>
+
+    <!-- Inverse -->
+    <div class="inverse-strip">
+      <span>Inverse text on dark surfaces (navbar, modals on dark)</span>
+      <span class="mono">text.inverse · #FFFFFF</span>
+    </div>
+
+    <!-- Link states -->
+    <div class="row-label">
+      <span class="name">Link states</span>
+      <span class="meta">default · hover · pressed</span>
+    </div>
+    <div class="link-states">
+      <div class="ls">
+        <span class="sample" style="color: var(--color-text-link)">Default link</span>
+        <span class="meta">text.link · blue-600 · #0841B4</span>
+      </div>
+      <div class="ls">
+        <span class="sample" style="color: var(--color-text-link-hover)">Hover link</span>
+        <span class="meta">text.link-hover · teal-600 · #09817F</span>
+      </div>
+      <div class="ls">
+        <span class="sample" style="color: var(--color-text-link-pressed)">Pressed link</span>
+        <span class="meta">text.link-pressed · teal-400 · #6BB3B2</span>
+      </div>
+    </div>
+
+    <!-- Status / meaning -->
+    <div class="row-label">
+      <span class="name">Status &amp; meaning</span>
+      <span class="meta">5 tokens · paired with matching surface tints</span>
+    </div>
+    <div class="status-grid">
+      <div class="status-tile success">
+        <div class="label"><i data-lucide="check-circle-2"></i> Success</div>
+        <div class="meta">text.success<br/>green-800<br/>#014B10</div>
+      </div>
+      <div class="status-tile warning">
+        <div class="label"><i data-lucide="alert-triangle"></i> Warning</div>
+        <div class="meta">text.warning<br/>orange-700<br/>#C75209</div>
+      </div>
+      <div class="status-tile alert">
+        <div class="label"><i data-lucide="alert-octagon"></i> Alert</div>
+        <div class="meta">text.alert<br/>red-700<br/>#B61631</div>
+      </div>
+      <div class="status-tile information">
+        <div class="label"><i data-lucide="info"></i> Information</div>
+        <div class="meta">text.information<br/>indigo-700<br/>#26386A</div>
+      </div>
+      <div class="status-tile discovery">
+        <div class="label"><i data-lucide="sparkles"></i> Discovery</div>
+        <div class="meta">text.discovery<br/>purple-700<br/>#4E2B6A</div>
+      </div>
+    </div>
+
+    <!-- Accent palette -->
+    <div class="row-label">
+      <span class="name">Accent palette</span>
+      <span class="meta">color.text.accent-* · for tags, charts, categorical labels</span>
+    </div>
+    <div class="accent-grid">
+      <div class="accent-cell"><div class="Aa" style="color: var(--color-text-accent-blue)">Aa</div><div class="name">Blue</div></div>
+      <div class="accent-cell"><div class="Aa" style="color: var(--color-text-accent-teal)">Aa</div><div class="name">Teal</div></div>
+      <div class="accent-cell"><div class="Aa" style="color: var(--color-text-accent-indigo)">Aa</div><div class="name">Indigo</div></div>
+      <div class="accent-cell"><div class="Aa" style="color: var(--color-text-accent-orange)">Aa</div><div class="name">Orange</div></div>
+      <div class="accent-cell" style="background: var(--sl-indigo-1000)"><div class="Aa" style="color: var(--color-text-accent-yellow)">Aa</div><div class="name" style="color: var(--sl-grey-300)">Yellow</div></div>
+      <div class="accent-cell"><div class="Aa" style="color: var(--color-text-accent-purple)">Aa</div><div class="name">Purple</div></div>
+      <div class="accent-cell"><div class="Aa" style="color: var(--color-text-accent-green)">Aa</div><div class="name">Green</div></div>
+      <div class="accent-cell"><div class="Aa" style="color: var(--color-text-accent-red)">Aa</div><div class="name">Red</div></div>
+      <div class="accent-cell"><div class="Aa" style="color: var(--color-text-accent-pink)">Aa</div><div class="name">Pink</div></div>
+      <div class="accent-cell"><div class="Aa" style="color: var(--color-text-accent-grey)">Aa</div><div class="name">Grey</div></div>
     </div>
   </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>lucide.createIcons();</script>
 </body>
 </html>
