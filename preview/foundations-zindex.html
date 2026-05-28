@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Z-index scale</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .card { gap: 16px; }
+
+  .stage {
+    position: relative;
+    height: 280px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    perspective: 600px;
+  }
+  .layer {
+    position: absolute;
+    width: 70%;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    box-shadow: 0 4px 10px rgba(38, 40, 44, 0.10);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--color-text-body);
+  }
+  .layer .num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-subtle);
+    font-weight: 400;
+  }
+  .l-base    { top: 18px;  left: 30px;  z-index: 1; }
+  .l-dropdown{ top: 50px;  left: 50px;  z-index: 2; background: var(--sl-blue-50); }
+  .l-sticky  { top: 82px;  left: 70px;  z-index: 3; background: var(--sl-teal-50); }
+  .l-overlay { top: 114px; left: 90px;  z-index: 4; background: var(--sl-indigo-100); }
+  .l-modal   { top: 146px; left: 110px; z-index: 5; background: var(--sl-purple-100); }
+  .l-popover { top: 178px; left: 130px; z-index: 6; background: var(--sl-orange-100); }
+  .l-tooltip { top: 210px; left: 150px; z-index: 7; background: var(--sl-yellow-100); }
+  .l-toast   { top: 242px; left: 50%; transform: translateX(-50%); z-index: 8; background: var(--sl-green-100); width: 240px; }
+
+  .scale-table {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 4px 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: var(--sl-grey-100);
+    padding: 10px 14px;
+    border-radius: var(--radius-xs);
+  }
+  .scale-table .lbl { color: var(--color-text-body); font-weight: 800; }
+  .scale-table .val { color: var(--color-text-subtle); text-align: right; }
+</style>
+</head>
+<body>
+  <div class="card">
+
+    <div class="row-label">
+      <span class="name">Z-index layers</span>
+      <span class="meta">8-step scale · 0 → 1600</span>
+    </div>
+
+    <div class="stage">
+      <div class="layer l-base">Base<span class="num">--z-base · 0</span></div>
+      <div class="layer l-dropdown">Dropdown<span class="num">--z-dropdown · 1000</span></div>
+      <div class="layer l-sticky">Sticky<span class="num">--z-sticky · 1100</span></div>
+      <div class="layer l-overlay">Overlay<span class="num">--z-overlay · 1200</span></div>
+      <div class="layer l-modal">Modal<span class="num">--z-modal · 1300</span></div>
+      <div class="layer l-popover">Popover<span class="num">--z-popover · 1400</span></div>
+      <div class="layer l-tooltip">Tooltip<span class="num">--z-tooltip · 1500</span></div>
+      <div class="layer l-toast">Toast<span class="num">--z-toast · 1600</span></div>
+    </div>
+
+    <div class="scale-table">
+      <span class="lbl">--z-base</span>          <span class="val">0</span>
+      <span class="lbl">--z-dropdown</span>      <span class="val">1000</span>
+      <span class="lbl">--z-sticky</span>        <span class="val">1100</span>
+      <span class="lbl">--z-overlay</span>       <span class="val">1200</span>
+      <span class="lbl">--z-modal</span>         <span class="val">1300</span>
+      <span class="lbl">--z-popover</span>       <span class="val">1400</span>
+      <span class="lbl">--z-tooltip</span>       <span class="val">1500</span>
+      <span class="lbl">--z-toast</span>         <span class="val">1600</span>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Breakpoints</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .card { gap: 16px; }
+
+  .scale {
+    position: relative;
+    height: 110px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-sm);
+    padding: 16px 12px 28px;
+  }
+  .axis {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 18px;
+    height: 2px;
+    background: var(--sl-grey-400);
+    border-radius: 999px;
+  }
+  .tick {
+    position: absolute;
+    bottom: 14px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .tick .dot { width: 10px; height: 10px; border-radius: 999px; background: var(--sl-blue-600); }
+  .tick .lbl { font-size: 11px; font-weight: 800; color: var(--color-text-body); }
+  .tick .px  { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-subtle); }
+
+  /* positions reflect 0 → ~1400 mapping across the bar */
+  .t-sm  { left: 22%; }
+  .t-md  { left: 38%; }
+  .t-lg  { left: 64%; }
+  .t-xl  { left: 86%; }
+
+  .device-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .device {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: var(--shadow-raised);
+  }
+  .device .frame {
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .device.sm .frame { height: 36px; }
+  .device.md .frame { height: 44px; }
+  .device.lg .frame { height: 52px; }
+  .device.xl .frame { height: 60px; }
+  .device .name { font-size: 12px; font-weight: 800; }
+  .device .px   { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-subtle); }
+
+  .note {
+    font-size: 11px;
+    color: var(--color-text-subtle);
+    background: var(--sl-yellow-100);
+    border-radius: var(--radius-xs);
+    padding: 8px 12px;
+    line-height: 1.5;
+  }
+  .note b { color: var(--color-text-body); font-weight: 800; }
+</style>
+</head>
+<body>
+  <div class="card">
+
+    <div class="row-label">
+      <span class="name">Breakpoints</span>
+      <span class="meta">sm · md · lg · xl</span>
+    </div>
+
+    <div class="scale">
+      <div class="axis"></div>
+      <div class="tick t-sm"><span class="dot"></span><span class="lbl">sm</span><span class="px">640px</span></div>
+      <div class="tick t-md"><span class="dot"></span><span class="lbl">md</span><span class="px">768px</span></div>
+      <div class="tick t-lg"><span class="dot"></span><span class="lbl">lg</span><span class="px">1024px</span></div>
+      <div class="tick t-xl"><span class="dot"></span><span class="lbl">xl</span><span class="px">1280px</span></div>
+    </div>
+
+    <div class="device-row">
+      <div class="device sm"><div class="frame">sm</div><div class="name">Phone</div><div class="px">≥ 640px</div></div>
+      <div class="device md"><div class="frame">md</div><div class="name">Tablet</div><div class="px">≥ 768px</div></div>
+      <div class="device lg"><div class="frame">lg</div><div class="name">Laptop</div><div class="px">≥ 1024px</div></div>
+      <div class="device xl"><div class="frame">xl</div><div class="name">Desktop</div><div class="px">≥ 1280px</div></div>
+    </div>
+
+    <div class="note">
+      <b>Note:</b> CSS custom properties can't be referenced inside <code>@media</code> queries. Use <code>--bp-*</code> tokens from JS (matchMedia, ResizeObserver) so the scale stays single-sourced; mirror the same numeric values in SCSS or your CSS-in-JS layer for media query authoring.
+    </div>
+  </div>
+</body>
+</html>

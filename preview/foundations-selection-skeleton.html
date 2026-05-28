@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Selection & skeleton</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .card { gap: 20px; }
+
+  .selection-demo {
+    padding: 14px 16px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-sm);
+    line-height: 1.6;
+    color: var(--color-text-body);
+    font-size: 13px;
+  }
+  .selection-demo p { margin: 0; }
+  /* pre-applied "fake selection" so the visual shows even without dragging */
+  .selection-demo .hl {
+    background: var(--color-selection-bg);
+    color: var(--color-selection-text);
+    padding: 0 1px;
+    border-radius: 1px;
+  }
+  .selection-demo .hint {
+    font-size: 11px;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    margin-top: 8px;
+    display: block;
+  }
+
+  .skeleton-card {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: var(--shadow-raised);
+  }
+  .sk-row {
+    height: 14px;
+    border-radius: var(--radius-xs);
+    background: linear-gradient(
+      90deg,
+      var(--color-skeleton) 0%,
+      var(--color-skeleton-pulse) 50%,
+      var(--color-skeleton) 100%
+    );
+    background-size: 200% 100%;
+    animation: pulse 1400ms infinite var(--ease-standard);
+  }
+  .sk-row.title  { height: 18px; width: 55%; }
+  .sk-row.line-1 { width: 95%; }
+  .sk-row.line-2 { width: 75%; }
+  .sk-row.line-3 { width: 40%; }
+
+  @keyframes pulse {
+    0%   { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+
+  .legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .legend .pair {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-xs);
+  }
+  .legend .lbl { font-size: 11px; font-weight: 800; color: var(--color-text-body); }
+  .legend .val { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-subtle); }
+  .legend .chip { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: middle; margin-right: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); }
+</style>
+</head>
+<body>
+  <div class="card">
+
+    <div class="row-label">
+      <span class="name">Text selection</span>
+      <span class="meta">--color-selection-bg · --color-selection-text</span>
+    </div>
+    <div class="selection-demo">
+      <p>Highlighting text in any SnapLogic surface tints the selection with <span class="hl">--color-selection-bg (Blue-200)</span> and keeps the foreground readable at <span class="hl">--color-selection-text (Indigo-900)</span>.</p>
+      <span class="hint">Try it — select any text in this card to see the live token in action.</span>
+    </div>
+
+    <div class="row-label">
+      <span class="name">Skeleton loader</span>
+      <span class="meta">--color-skeleton · --color-skeleton-pulse</span>
+    </div>
+    <div class="skeleton-card">
+      <div class="sk-row title"></div>
+      <div class="sk-row line-1"></div>
+      <div class="sk-row line-2"></div>
+      <div class="sk-row line-3"></div>
+    </div>
+
+    <div class="legend">
+      <div class="pair">
+        <span class="lbl"><span class="chip" style="background: var(--color-selection-bg)"></span>Selection bg</span>
+        <span class="val">--color-selection-bg · blue-200 · #CED9F0</span>
+      </div>
+      <div class="pair">
+        <span class="lbl"><span class="chip" style="background: var(--color-selection-text)"></span>Selection text</span>
+        <span class="val">--color-selection-text · indigo-900 · #131C35</span>
+      </div>
+      <div class="pair">
+        <span class="lbl"><span class="chip" style="background: var(--color-skeleton)"></span>Skeleton base</span>
+        <span class="val">--color-skeleton · grey-200 · #EBEDF1</span>
+      </div>
+      <div class="pair">
+        <span class="lbl"><span class="chip" style="background: var(--color-skeleton-pulse)"></span>Skeleton pulse</span>
+        <span class="val">--color-skeleton-pulse · grey-100 · #F5F6F8</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

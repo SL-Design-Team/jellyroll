@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Motion · Duration & easing</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .card { gap: 20px; }
+
+  .durations { display: grid; grid-template-columns: 90px 1fr 110px; gap: 8px 14px; align-items: center; }
+  .durations .name { font-weight: 800; font-size: 13px; color: var(--color-text-body); }
+  .durations .track {
+    position: relative;
+    height: 28px;
+    background: var(--sl-grey-100);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+  .durations .ball {
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: var(--sl-blue-600);
+    transform: translate(0, -50%);
+    animation: slide 2400ms infinite var(--ease-standard);
+  }
+  .durations .ball.fast   { animation-duration: 1200ms; animation-timing-function: var(--ease-standard); }
+  .durations .ball.normal { animation-duration: 2000ms; animation-timing-function: var(--ease-standard); }
+  .durations .ball.slow   { animation-duration: 3200ms; animation-timing-function: var(--ease-standard); }
+  .durations .meta { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-subtle); text-align: right; }
+
+  @keyframes slide {
+    0%   { left: 4px;  background: var(--sl-blue-600); }
+    45%  { left: calc(100% - 24px); background: var(--sl-teal-600); }
+    55%  { left: calc(100% - 24px); background: var(--sl-teal-600); }
+    100% { left: 4px;  background: var(--sl-blue-600); }
+  }
+
+  .eases { display: grid; grid-template-columns: 110px 1fr 160px; gap: 8px 14px; align-items: center; }
+  .eases .name { font-weight: 800; font-size: 13px; }
+  .eases svg { width: 100%; height: 56px; }
+  .eases .curve { fill: none; stroke: var(--sl-blue-600); stroke-width: 2; }
+  .eases .grid { fill: none; stroke: var(--sl-grey-300); stroke-width: 1; stroke-dasharray: 2 3; }
+  .eases .meta { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-subtle); text-align: right; line-height: 1.4; }
+
+  .recipe {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-body);
+    background: var(--sl-grey-100);
+    padding: 10px 12px;
+    border-radius: var(--radius-xs);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+
+    <div class="row-label">
+      <span class="name">Duration</span>
+      <span class="meta">--duration-fast · normal · slow</span>
+    </div>
+    <div class="durations">
+      <div class="name">Fast</div>
+      <div class="track"><div class="ball fast"></div></div>
+      <div class="meta">120ms · hover tints</div>
+
+      <div class="name">Normal</div>
+      <div class="track"><div class="ball normal"></div></div>
+      <div class="meta">200ms · default</div>
+
+      <div class="name">Slow</div>
+      <div class="track"><div class="ball slow"></div></div>
+      <div class="meta">320ms · drawers, modals</div>
+    </div>
+
+    <div class="row-label">
+      <span class="name">Easing</span>
+      <span class="meta">--ease-standard · in · out</span>
+    </div>
+    <div class="eases">
+      <div class="name">Standard</div>
+      <svg viewBox="0 0 100 56" preserveAspectRatio="none">
+        <path class="grid" d="M0,56 L100,56 M0,0 L100,0" />
+        <path class="curve" d="M0,56 C40,56 60,0 100,0" />
+      </svg>
+      <div class="meta">cubic-bezier(0.4, 0, 0.2, 1)<br/>default for most transitions</div>
+
+      <div class="name">Ease-in</div>
+      <svg viewBox="0 0 100 56" preserveAspectRatio="none">
+        <path class="grid" d="M0,56 L100,56 M0,0 L100,0" />
+        <path class="curve" d="M0,56 C40,56 100,56 100,0" />
+      </svg>
+      <div class="meta">cubic-bezier(0.4, 0, 1, 1)<br/>exits, dismissals</div>
+
+      <div class="name">Ease-out</div>
+      <svg viewBox="0 0 100 56" preserveAspectRatio="none">
+        <path class="grid" d="M0,56 L100,56 M0,0 L100,0" />
+        <path class="curve" d="M0,56 C0,0 60,0 100,0" />
+      </svg>
+      <div class="meta">cubic-bezier(0, 0, 0.2, 1)<br/>entrances, reveals</div>
+    </div>
+
+    <div class="recipe">transition: opacity var(--duration-normal) var(--ease-standard);</div>
+  </div>
+</body>
+</html>

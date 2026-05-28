@@ -45,6 +45,36 @@ window.JELLYROLL_TOKENS = {
     { name: "--shadow-focus-ring",     value: "0 0 0 3px rgba(9, 129, 127, 0.35)",   role: "Focus halo — Teal-600 at 35% alpha" },
     { name: "--shadow-inset-sunken",   value: "inset 0 1px 2px rgba(38, 40, 44, 0.08)", role: "Sunken surface inner shadow" },
   ],
+  "preview/foundations-motion.html": [
+    { name: "--duration-fast",   value: "120ms", role: "Microinteractions, hover tints" },
+    { name: "--duration-normal", value: "200ms", role: "Default for state transitions, dropdowns" },
+    { name: "--duration-slow",   value: "320ms", role: "Drawers, modals, large surface entrances" },
+    { name: "--ease-standard",   value: "cubic-bezier(0.4, 0, 0.2, 1)", role: "Default curve — accelerate then decelerate" },
+    { name: "--ease-in",         value: "cubic-bezier(0.4, 0, 1, 1)",   role: "Exits and dismissals" },
+    { name: "--ease-out",        value: "cubic-bezier(0, 0, 0.2, 1)",   role: "Entrances and reveals" },
+  ],
+  "preview/foundations-zindex.html": [
+    { name: "--z-base",     value: "0",    role: "Resting plane" },
+    { name: "--z-dropdown", value: "1000", role: "Select menus, combobox lists" },
+    { name: "--z-sticky",   value: "1100", role: "Sticky table headers, pinned bars" },
+    { name: "--z-overlay",  value: "1200", role: "Drawer scrim, page-level overlays" },
+    { name: "--z-modal",    value: "1300", role: "Modal dialogs" },
+    { name: "--z-popover",  value: "1400", role: "Popovers — sit above modals" },
+    { name: "--z-tooltip",  value: "1500", role: "Tooltips — sit above popovers" },
+    { name: "--z-toast",    value: "1600", role: "Toasts — never occluded" },
+  ],
+  "preview/foundations-breakpoints.html": [
+    { name: "--bp-sm", value: "640px",  role: "Phone — narrow viewports" },
+    { name: "--bp-md", value: "768px",  role: "Tablet" },
+    { name: "--bp-lg", value: "1024px", role: "Laptop — standard product width" },
+    { name: "--bp-xl", value: "1280px", role: "Desktop — wide canvases" },
+  ],
+  "preview/foundations-selection-skeleton.html": [
+    { name: "--color-selection-bg",   value: "#CED9F0", role: "Text-highlight fill — Blue-200" },
+    { name: "--color-selection-text", value: "#131C35", role: "Text-highlight foreground — Indigo-900" },
+    { name: "--color-skeleton",       value: "#EBEDF1", role: "Skeleton base — Grey-200" },
+    { name: "--color-skeleton-pulse", value: "#F5F6F8", role: "Skeleton pulse band — Grey-100" },
+  ],
 
   // ── 02 Color ──────────────────────────────────────────────────────
   "preview/colors-all-ramps.html": [

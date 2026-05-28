@@ -86,6 +86,38 @@ window.JELLYROLL_DATA = {
           meta: {
             usage: "Acherus Grotesque is the system sans across every weight. Reach for the mono stack only inside code blocks, tokens, JSON snippets, and timestamps. Italic is reserved for placeholders (Light Italic 300) and the rare in-line citation — never used for emphasis."
           }
+        },
+        {
+          file: "preview/foundations-motion.html",
+          name: "Motion",
+          tagline: "Durations and easings for transitions and animations.",
+          meta: {
+            usage: "Compose transitions from one `--duration-*` (Fast 120ms, Normal 200ms, Slow 320ms) and one `--ease-*` curve (Standard, In, Out). Default to `--duration-normal var(--ease-standard)` for hover and state changes; use `--duration-slow var(--ease-out)` for entrances like drawers and modals; use `--ease-in` for exits. Avoid bespoke durations — consistency across the product matters more than per-component tuning."
+          }
+        },
+        {
+          file: "preview/foundations-zindex.html",
+          name: "Z-index",
+          tagline: "8-step stacking scale — base through toast.",
+          meta: {
+            usage: "Use `--z-*` tokens instead of literal z-index values. The scale runs Base (0), Dropdown (1000), Sticky (1100), Overlay (1200), Modal (1300), Popover (1400), Tooltip (1500), Toast (1600). Tooltips sit above popovers because they can appear inside popovers; toasts sit highest so they're never occluded. Never set z-index outside this scale."
+          }
+        },
+        {
+          file: "preview/foundations-breakpoints.html",
+          name: "Breakpoints",
+          tagline: "Viewport widths — sm 640, md 768, lg 1024, xl 1280.",
+          meta: {
+            usage: "The breakpoint scale targets four common widths. Because CSS custom properties cannot be used inside `@media` queries, the `--bp-*` tokens are exposed for JS (matchMedia, ResizeObserver) and the same numbers should be mirrored in your SCSS or CSS-in-JS layer for media query authoring. Mobile-first: write base styles for the smallest viewport and add `min-width` media queries to step up."
+          }
+        },
+        {
+          file: "preview/foundations-selection-skeleton.html",
+          name: "Selection & skeleton",
+          tagline: "Text highlight and loading placeholder colors.",
+          meta: {
+            usage: "`--color-selection-bg` and `--color-selection-text` style the browser's text-highlight via a global `::selection` rule — no per-component wiring needed. Use `--color-skeleton` (resting) and `--color-skeleton-pulse` (animated band) for loading placeholders; pair with `--duration-slow` and a 1400ms shimmer to avoid drawing too much attention. Skeletons should match the eventual content's geometry — same row heights, same line widths."
+          }
         }
       ]
     },
