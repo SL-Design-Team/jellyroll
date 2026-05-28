@@ -177,12 +177,13 @@
   --color-background-primary-hover: linear-gradient(112.63deg, #0B9D9B 12.38%, #0841B4 137.46%);
   --color-background-primary-pressed: var(--sl-teal-400);
   --color-background-secondary: var(--sl-white);
-  --color-background-secondary-hover: var(--sl-white);
+  --color-background-secondary-hover: var(--sl-grey-100);
   --color-background-secondary-pressed: var(--sl-teal-200);
   --color-background-input: var(--sl-grey-100);
   --color-background-disabled: var(--sl-grey-200);
   --color-background-subtle: var(--sl-grey-100);
   --color-background-alert: var(--sl-red-100);
+  --color-background-warning: var(--sl-orange-100);
   --color-background-success: var(--sl-green-100);
   --color-background-discovery: var(--sl-purple-100);
   --color-background-information: var(--sl-indigo-100);
@@ -197,6 +198,7 @@
   --color-text-link: var(--sl-blue-600);
   --color-text-link-hover: var(--sl-teal-600);
   --color-text-link-pressed: var(--sl-teal-400);
+  --color-text-link-visited: var(--sl-blue-800);
   --color-text-alert: var(--sl-red-700);
   --color-text-warning: var(--sl-orange-700);
   --color-text-success: var(--sl-green-800);
@@ -214,13 +216,19 @@
   --color-text-accent-grey: var(--sl-grey-600);
 
   /* Borders & strokes */
-  --color-border-default: var(--sl-grey-400);   /* card default — 1px Grey-3/68768A approximated */
-  --color-border-subtle: var(--sl-grey-300);
+  --color-border-default: var(--sl-grey-400);   /* button outlines, dividers */
+  --color-border-subtle: var(--sl-grey-300);    /* card borders */
   --color-border-strong: var(--sl-indigo-900);
   --color-border-focus: var(--sl-teal-600);     /* focus ring — high-contrast teal */
   --color-border-selected: var(--sl-blue-600);
   --color-border-hover: var(--sl-blue-600);
-  --color-border-error: var(--sl-red-600);
+  --color-border-disabled: var(--sl-grey-300);
+  --color-border-error: var(--sl-red-600);      /* legacy alias of alert — kept for backward compat */
+  --color-border-alert: var(--sl-red-600);
+  --color-border-warning: var(--sl-orange-600);
+  --color-border-success: var(--sl-green-600);
+  --color-border-information: var(--sl-indigo-600);
+  --color-border-discovery: var(--sl-purple-600);
 
   /* Interaction (hover/pressed overlays for clickable rows) */
   --color-interaction-hovered: var(--sl-blue-200);
@@ -341,7 +349,9 @@
   --field-height-md: 40px;       /* default */
   --field-height-lg: 48px;
   --field-padding-x: 12px;
+  --field-padding-y-sm: 6px;
   --field-padding-y-md: 8px;
+  --field-padding-y-lg: 12px;
   --field-radius: var(--radius-sm);
   --field-font: 400 14px/22px var(--font-sans);
 
@@ -364,6 +374,9 @@
   --field-text-disabled: var(--sl-blue-300);
   --field-text-readonly: var(--sl-grey-800);
   --field-text-placeholder: var(--sl-grey-700);
+  --field-text-error:    var(--sl-red-700);
+  --field-text-warning:  var(--sl-orange-700);
+  --field-text-success:  var(--sl-green-800);
 
   /* Standardized focus halo — use on every focusable control */
   --ring-focus: 0 0 0 2px rgba(9, 129, 127, 0.25);
@@ -378,7 +391,52 @@
 
   /* Validation timing */
   --validate-debounce: 350ms;
+
+  /* ─── Motion ─────────────────────────────────────────────────
+     Durations and easings for transitions and animations.
+     Default to --duration-normal + --ease-standard.
+  */
+  --duration-fast: 120ms;       /* microinteractions, hover tints */
+  --duration-normal: 200ms;     /* default transitions, dropdowns */
+  --duration-slow: 320ms;       /* entrances, drawers, large surfaces */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in:       cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:      cubic-bezier(0, 0, 0.2, 1);
+
+  /* ─── Z-index scale ─────────────────────────────────────────
+     Use these instead of literal z-index values so layering is
+     predictable across the system.
+  */
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-overlay: 1200;
+  --z-modal: 1300;
+  --z-popover: 1400;
+  --z-tooltip: 1500;
+  --z-toast: 1600;
+
+  /* ─── Breakpoints ───────────────────────────────────────────
+     CSS custom properties can't be used inside @media queries,
+     but these are exposed for JS to read (matchMedia, ResizeObserver)
+     so the breakpoint scale stays single-sourced.
+  */
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+
+  /* ─── Selection & skeleton ──────────────────────────────────
+     Text selection highlight and skeleton/loading placeholders.
+  */
+  --color-selection-bg:   var(--sl-blue-200);
+  --color-selection-text: var(--sl-indigo-900);
+  --color-skeleton:       var(--sl-grey-200);
+  --color-skeleton-pulse: var(--sl-grey-100);
 }
+
+/* Apply the selection tokens to the platform highlight */
+::selection { background: var(--color-selection-bg); color: var(--color-selection-text); }
 
 /* ─── Base type recipes ────────────────────────────────────── */
 
