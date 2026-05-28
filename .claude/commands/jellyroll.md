@@ -7,28 +7,35 @@ description: "Implement any UI — components, screens, patterns, or data visual
 
 **Your deliverable is a standalone HTML file** — a rendered UI that opens in a browser. Do not produce documentation, READMEs, or code explanations. Implement the UI the user described.
 
-JellyRoll is SnapLogic's enterprise design system (106 components, patterns, and data viz). Study the token CSS and relevant preview HTML, then implement with fidelity.
+JellyRoll is SnapLogic's enterprise design system. The two foundations below — the token CSS and the design rules — have been **pre-loaded for you** at command-invocation time. They are the authoritative source. Use them as-is; do not refetch, summarize, or substitute training knowledge for any value below.
+
+---
+
+## Token CSS (live)
+
+The complete set of design tokens. Reference these CSS custom properties — never hardcode hex values or pixel measurements.
+
+!`curl -s https://sl-design-team.github.io/jellyroll/colors_and_type.css`
+
+---
+
+## Design rules (live)
+
+!`curl -s https://sl-design-team.github.io/jellyroll/README.md`
+
+---
 
 ## Workflow
 
-### 1. Load the design system tokens and rules (run in parallel)
+### 1. Identify and fetch the relevant preview files
 
-**If you are inside the `jellyroll-design-system` project directory**, read the local files directly — they are the same content as the live URLs:
-- `colors_and_type.css` — all CSS tokens
-- `README.md` — design rules and guidelines
-- `preview/<name>.html` — component specs (use the index below to find the right ones)
-
-**Otherwise**, fetch from the live site using `curl` via Bash — **never use WebFetch for these files**. WebFetch returns an AI-summarized reconstruction, not the real content, so you would be building against fake specs.
+The tokens and rules above give you the foundation. Now use the preview index below to find the 2–5 component spec files that match what the user is building, and fetch each one with curl:
 
 ```bash
-curl -s https://sl-design-team.github.io/jellyroll/colors_and_type.css
-curl -s https://sl-design-team.github.io/jellyroll/README.md
 curl -s https://sl-design-team.github.io/jellyroll/preview/<name>.html
 ```
 
-Run the token CSS and README fetches in parallel, then fetch the preview files in parallel after identifying which ones you need.
-
-### 2. Identify and fetch 2–5 relevant preview files
+**Never use WebFetch for these files** — it returns an AI-summarized reconstruction, not the real content. Always use `curl` via Bash. Run multiple fetches in parallel.
 
 Use the index below to find the preview files that match what you're building. **This step is non-optional.** You may not implement any component before reading its preview HTML — your training knowledge of "what a header looks like" or "what a left nav looks like" is wrong for this system. The preview HTML is the spec for structure, spacing, states, and token usage.
 
@@ -42,7 +49,41 @@ If you cannot name the files you fetched, stop and fetch them — do not proceed
 > **Always fetch `brand-logo` when rendering the SnapLogic brand mark.** Do NOT substitute a Lucide icon, an emoji, a colored square, or a made-up wordmark — the brand mark is a specific PNG hosted at the live URL (see Assets section below).
 > **Always fetch `components-left-nav` when building any sidebar navigation.** The treatment, spacing, hover states, and selection style are specific to this system.
 
-### 3. Produce the HTML file
+#### Default chrome — every full screen has header AND collapsible left nav
+
+If the user asks for a **screen, page, app, dashboard, view, layout, workspace, or any full product canvas** (anything other than a single isolated component), default to the standard SnapLogic chrome:
+
+1. **Global header** at the top — fetch `components-global-header.html`. The header is **never** just a logo + app name. Every header must include all of the following affordances, in this left-to-right order:
+   1. **Brand** — logo mark (PNG at the absolute URL — see Assets) + app name
+   2. **Environment picker** — `box` icon + environment name + `chevron-down`, with hover state
+   3. Flex spacer
+   4. **SnapGPT label** — "Snap" + gradient-text "GPT" affordance
+   5. **Search** — `search` icon button (opens search overlay)
+   6. **Notifications** — `bell` icon button with red dot indicator (opens notifications panel)
+   7. **User menu** — circular avatar with user initial (opens user menu dropdown)
+   8. **Product launcher** — 3×3 dot waffle grid (opens product launcher)
+   9. **Combo loader bar** — 5px gradient hairline on the bottom edge
+
+   Do not omit any of these. The header is canonical — if you ship a header with only the brand and avatar, the result is incomplete. Render every affordance even if the surrounding screen content is sparse.
+
+2. **Collapsible left nav** along the side — fetch `components-left-nav.html`. The nav has two states per the preview spec:
+   - **Expanded** (240px wide, default at desktop) — icons + labels
+   - **Minimized** (56px wide) — icons only
+   Include both states and a toggle control so the user can collapse/expand it. Default to the expanded state on first render.
+
+3. **Main content area** with the requested content
+
+The header + left nav are not optional embellishments — they're how SnapLogic product UIs are composed. Do not omit them just because the user didn't enumerate them. Do not ship a non-collapsible nav or a header missing affordances. Only skip or simplify the chrome if the user explicitly says one of:
+
+- "just the `<component>`" / "only the `<component>`"
+- "without the header" / "without the nav" / "without the chrome"
+- "isolated" / "standalone component" / "just the card"
+- "nav doesn't need to collapse" / "static nav"
+- "minimal header" / "just the brand"
+
+When in doubt, include the full chrome with all header affordances and a collapsible nav.
+
+### 2. Produce the HTML file
 
 - Use CSS custom properties from `colors_and_type.css` — never hardcode hex values
 - Link or inline tokens so the file is self-contained:
