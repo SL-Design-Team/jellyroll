@@ -1,11 +1,11 @@
 ---
 name: jellyroll
-description: "Implement any UI — components, screens, patterns, or data visualizations — using the live JellyRoll SnapLogic design system with pixel-perfect token fidelity. Use this skill whenever the user wants to build, create, implement, design, update, or style any UI in the SnapLogic product context: buttons, forms, modals, tables, nav, dashboards, AI interaction patterns, data viz. Also trigger for use the design system, SnapLogic design, JellyRoll, or any request to match SnapLogic's look and feel. Always fetch the live system before implementing." 
+description: "Implement any UI — components, screens, patterns, or data visualizations — using the live JellyRoll SnapLogic design system with pixel-perfect token fidelity. Output is a standalone HTML file by default, or a React (.tsx) component when the user mentions React/JSX/TSX/Next.js. Use this skill whenever the user wants to build, create, implement, design, update, or style any UI in the SnapLogic product context: buttons, forms, modals, tables, nav, dashboards, AI interaction patterns, data viz. Also trigger for use the design system, SnapLogic design, JellyRoll, or any request to match SnapLogic's look and feel. Always fetch the live system before implementing." 
 ---
 
 # JellyRoll Design System
 
-**Your deliverable is a standalone HTML file** — a rendered UI that opens in a browser. Do not produce documentation, READMEs, or code explanations. Implement the UI the user described.
+**Your deliverable is a UI implementation** — a standalone HTML file by default, or a React component when the user opts in (see "Output mode" below). Do not produce documentation, READMEs, or code explanations. Implement the UI the user described.
 
 JellyRoll is SnapLogic's enterprise design system. The two foundations below — the token CSS and the design rules — have been **pre-loaded for you** at command-invocation time. They are the authoritative source. Use them as-is; do not refetch, summarize, or substitute training knowledge for any value below.
 
@@ -83,10 +83,21 @@ The header + left nav are not optional embellishments — they're how SnapLogic 
 
 When in doubt, include the full chrome with all header affordances and a collapsible nav.
 
-### 2. Produce the HTML file
+### 2. Produce the deliverable
+
+The output mode depends on what the user asked for. **HTML is the default.** Switch to React only when the user's prompt contains one of these triggers (case-insensitive):
+
+- "React" / "in React" / "as a React component"
+- "JSX" / "TSX"
+- ".jsx" / ".tsx"
+- "Next.js" / "NextJS"
+
+#### HTML mode (default)
+
+Produce a single self-contained `.html` file.
 
 - Use CSS custom properties from `colors_and_type.css` — never hardcode hex values
-- Link or inline tokens so the file is self-contained:
+- Link tokens at the top of the document:
   ```html
   <link rel="stylesheet" href="https://sl-design-team.github.io/jellyroll/colors_and_type.css" />
   <link rel="stylesheet" href="https://sl-design-team.github.io/jellyroll/fonts.css" />
@@ -95,6 +106,33 @@ When in doubt, include the full chrome with all header affordances and a collaps
 - Use Lucide icons via CDN (`https://unpkg.com/lucide@latest`)
 - Include hover, focus, active, and disabled states
 - Follow the quick rules from the README (sentence case, no decorative gradients, border-based card selection, etc.)
+
+#### React mode (opt-in via trigger words above)
+
+Produce a single `.tsx` file. Use `.jsx` only if the user explicitly says "JavaScript" or "JSX without TypeScript"; default to TypeScript.
+
+- **Components**: functional, typed props with a `Props` interface where relevant
+- **Icons**: `lucide-react` package, NOT the CDN script
+  ```tsx
+  import { Search, Bell, ChevronDown } from 'lucide-react';
+  ```
+- **Styles**: embed CSS via a `<style>` element rendered inside the component, referencing design tokens with `var(--...)`. This keeps the deliverable single-file and portable across CRA, Vite, and Next.js. Do NOT use Tailwind, styled-components, emotion, or CSS Modules — they require build setup the dev may not have.
+- **Tokens**: still reference the live design system via CSS variables (`var(--sl-blue-1000)`, `var(--color-text-body)`, etc.). The dev wires the token stylesheet at the app root.
+- **Header comment**: every React deliverable starts with this block:
+  ```tsx
+  /**
+   * Requires the JellyRoll token stylesheet at the app root (e.g. in index.html, _app.tsx, or layout.tsx):
+   *   <link rel="stylesheet" href="https://sl-design-team.github.io/jellyroll/colors_and_type.css" />
+   *   <link rel="stylesheet" href="https://sl-design-team.github.io/jellyroll/fonts.css" />
+   *
+   * Install icons: npm install lucide-react
+   */
+  ```
+- **Structure for full screens**: when the chrome rule applies, render `<GlobalHeader />` and `<LeftNav />` as separate functional components in the same file, with the main content between them.
+- **States**: hover, focus, active, disabled — same expectations as HTML mode. Use pseudo-classes in the embedded CSS, not React state machinery, for these.
+- **Asset URLs**: same rewrite table as HTML mode — `../assets/...` → absolute live-site URL.
+
+All other rules apply equally in React mode: the chrome default (header with all affordances + collapsible nav), the `Fetched: ...` confirmation line, the design rules from the README, and the preview files as the source of structure.
 
 ### Assets — rewrite relative paths to absolute URLs
 
