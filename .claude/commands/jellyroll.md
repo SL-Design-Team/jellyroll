@@ -18,10 +18,15 @@ JellyRoll is SnapLogic's enterprise design system (106 components, patterns, and
 - `README.md` — design rules and guidelines
 - `preview/<name>.html` — component specs (use the index below to find the right ones)
 
-**Otherwise**, fetch from the live site:
-- Rules: `https://sl-design-team.github.io/jellyroll/README.md`
-- Tokens: `https://sl-design-team.github.io/jellyroll/colors_and_type.css`
-- Previews: `https://sl-design-team.github.io/jellyroll/preview/<name>.html`
+**Otherwise**, fetch from the live site using `curl` via Bash — **never use WebFetch for these files**. WebFetch returns an AI-summarized reconstruction, not the real content, so you would be building against fake specs.
+
+```bash
+curl -s https://sl-design-team.github.io/jellyroll/colors_and_type.css
+curl -s https://sl-design-team.github.io/jellyroll/README.md
+curl -s https://sl-design-team.github.io/jellyroll/preview/<name>.html
+```
+
+Run the token CSS and README fetches in parallel, then fetch the preview files in parallel after identifying which ones you need.
 
 ### 2. Identify and fetch 2–5 relevant preview files
 
