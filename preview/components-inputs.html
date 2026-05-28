@@ -9,12 +9,12 @@
   .field { display: flex; flex-direction: column; gap: 4px; }
   .field label { font-size: 14px; font-weight: 800; color: var(--sl-indigo-900); }
   .field .err { font-size: 12px; color: var(--color-text-alert); font-weight: 400; }
-  .sl-input { font: 400 14px/22px var(--font-sans); height: 40px; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--sl-grey-400); background: var(--sl-white); color: var(--sl-indigo-900); outline: none; }
-  .sl-input::placeholder { font-style: italic; font-weight: 300; color: var(--color-text-subtle); }
-  .sl-input.hover { border-color: var(--sl-blue-600); }
-  .sl-input.focus { border-color: var(--sl-teal-600); box-shadow: 0 0 0 2px rgba(9,129,127,0.18); }
-  .sl-input.error { border-color: var(--sl-red-600); }
-  .sl-input.disabled { background: var(--sl-blue-100); color: var(--color-text-disabled); border-color: var(--sl-grey-300); }
+  .sl-input { font: var(--field-font); height: var(--field-height-md); padding: var(--field-padding-y-md) var(--field-padding-x); border-radius: var(--field-radius); border: 1px solid var(--field-border-default); background: var(--field-bg-default); color: var(--field-text-default); outline: none; }
+  .sl-input::placeholder { font-style: italic; font-weight: 300; color: var(--field-text-placeholder); }
+  .sl-input.hover { border-color: var(--field-border-hover); }
+  .sl-input.focus { border-color: var(--field-border-focus); box-shadow: 0 0 0 2px rgba(9,129,127,0.18); }
+  .sl-input.error { border-color: var(--field-border-error); background: var(--field-bg-error); }
+  .sl-input.disabled { background: var(--field-bg-disabled); color: var(--field-text-disabled); border-color: var(--field-border-disabled); }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
 </style>
 </head>
