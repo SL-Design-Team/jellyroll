@@ -52,7 +52,7 @@ Use the index below to find the preview files that match what you're building. T
 ## Preview file index
 
 ### Foundations
-`type-scale` · `type-faces` · `spacing-scale` · `spacing-radius` · `spacing-shadows` · `foundations-tokens`
+`type-scale` · `type-faces` · `spacing-scale` · `spacing-radius` · `spacing-shadows` · `foundations-tokens` · `foundations-motion` · `foundations-zindex` · `foundations-breakpoints` · `foundations-selection-skeleton`
 
 ### Color
 `colors-all-ramps` · `colors-semantic-text` · `colors-surfaces` · `colors-gradient-brand`
