@@ -85,7 +85,28 @@ jellyroll-design-system/
 
 ### Claude Code slash command (recommended)
 
-Copy `.claude/commands/jellyroll.md` from this repo into your project's `.claude/commands/` folder. Then in any Claude Code session:
+Copy `.claude/commands/jellyroll.md` and `.claude/commands/jellyroll-setup.md` from this repo into your **global** commands folder (`~/.claude/commands/`). The commands then work in any project.
+
+**One-time setup** — the skill fetches live tokens via `curl` and needs permission to do so silently. Run this once after copying the files:
+
+```
+/jellyroll-setup
+```
+
+This adds the required allow rule to `~/.claude/settings.json`. You only need to do it once across all your projects. If you prefer to add it manually:
+
+```json
+// ~/.claude/settings.json
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s https://sl-design-team.github.io/jellyroll/*)"
+    ]
+  }
+}
+```
+
+Then in any Claude Code session:
 
 ```
 /jellyroll <describe what you want built>

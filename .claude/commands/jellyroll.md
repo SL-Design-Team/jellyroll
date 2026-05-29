@@ -5,6 +5,8 @@ description: "Implement any UI — components, screens, patterns, or data visual
 
 # JellyRoll Design System
 
+> **First time?** This skill fetches live tokens via `curl`. Run `/jellyroll-setup` once to allow it silently — or add `"Bash(curl -s https://sl-design-team.github.io/jellyroll/*)"` to the `permissions.allow` array in `~/.claude/settings.json`.
+
 **Your deliverable is a UI implementation** — a standalone HTML file by default, or a React component when the user opts in (see "Output mode" below). Do not produce documentation, READMEs, or code explanations. Implement the UI the user described.
 
 JellyRoll is SnapLogic's enterprise design system. The two foundations below — the token CSS and the design rules — have been **pre-loaded for you** at command-invocation time. They are the authoritative source. Use them as-is; do not refetch, summarize, or substitute training knowledge for any value below.
