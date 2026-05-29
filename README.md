@@ -2,6 +2,55 @@
 
 The design system for **SnapLogic** — an enterprise iPaaS for connecting applications, data, and AI agents. JellyRoll is the source of truth for Designer, Admin Manager, Monitor, AutoSync, APIM, and the Pattern Catalog.
 
+## For AI coding agents
+
+### Claude Code slash command (recommended)
+
+Copy `.claude/commands/jellyroll.md` and `.claude/commands/jellyroll-setup.md` from this repo into your **global** commands folder (`~/.claude/commands/`). The commands then work in any project.
+
+**One-time setup** — the skill fetches live tokens via `curl` and needs permission to do so silently. Run this once after copying the files:
+
+```
+/jellyroll-setup
+```
+
+This adds the required allow rule to `~/.claude/settings.json`. You only need to do it once across all your projects. If you prefer to add it manually:
+
+```json
+// ~/.claude/settings.json
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s https://sl-design-team.github.io/jellyroll/*)"
+    ]
+  }
+}
+```
+
+Then in any Claude Code session:
+
+```
+/jellyroll <describe what you want built>
+```
+
+The command loads the full preview file index, fetches the live token CSS and relevant component specs, and produces a standalone HTML file with pixel-fidelity to the design system. No URL wrangling required.
+
+### Manual prompt (Cursor, Copilot, other agents)
+
+The design system is published live from [`SL-Design-Team/jellyroll`](https://github.com/SL-Design-Team/jellyroll) — the repo is the source of truth, not a frozen export. Any AI coding agent that can fetch URLs can pull the agent-oriented context with this prompt:
+
+```
+Read the JellyRoll design system at https://sl-design-team.github.io/jellyroll/README.md,
+then fetch the token CSS at https://sl-design-team.github.io/jellyroll/colors_and_type.css
+and any preview files at https://sl-design-team.github.io/jellyroll/preview/<name>.html that
+relate to what you're building.
+Implement: <describe what you want built>
+```
+
+The repo includes the full token CSS, every preview HTML file (inline styles + Lucide icon usage), the Acherus Grotesque webfonts, and brand assets. Browse the rendered gallery at <https://sl-design-team.github.io/jellyroll/> to see component names + previews; each tile's URL maps directly to a fetchable file under `/preview/`.
+
+Because the source of truth is the live repo, what you fetch is always current — no stale tarball drift.
+
 ## Browse
 
 Open `index.html` in any browser, or run a quick local server:
@@ -80,55 +129,6 @@ jellyroll-design-system/
 | 07 | Patterns              | 17    | Validation, save/discard, AI-assisted input, wizard |
 | 08 | Templates             | 1     | Designer · Empty canvas                             |
 | 09 | Data visualization    | 23    | KPI, sparkline, time series, Sankey, Gantt, hive plot… |
-
-## For AI coding agents
-
-### Claude Code slash command (recommended)
-
-Copy `.claude/commands/jellyroll.md` and `.claude/commands/jellyroll-setup.md` from this repo into your **global** commands folder (`~/.claude/commands/`). The commands then work in any project.
-
-**One-time setup** — the skill fetches live tokens via `curl` and needs permission to do so silently. Run this once after copying the files:
-
-```
-/jellyroll-setup
-```
-
-This adds the required allow rule to `~/.claude/settings.json`. You only need to do it once across all your projects. If you prefer to add it manually:
-
-```json
-// ~/.claude/settings.json
-{
-  "permissions": {
-    "allow": [
-      "Bash(curl -s https://sl-design-team.github.io/jellyroll/*)"
-    ]
-  }
-}
-```
-
-Then in any Claude Code session:
-
-```
-/jellyroll <describe what you want built>
-```
-
-The command loads the full preview file index, fetches the live token CSS and relevant component specs, and produces a standalone HTML file with pixel-fidelity to the design system. No URL wrangling required.
-
-### Manual prompt (Cursor, Copilot, other agents)
-
-The design system is published live from [`SL-Design-Team/jellyroll`](https://github.com/SL-Design-Team/jellyroll) — the repo is the source of truth, not a frozen export. Any AI coding agent that can fetch URLs can pull the agent-oriented context with this prompt:
-
-```
-Read the JellyRoll design system at https://sl-design-team.github.io/jellyroll/README.md,
-then fetch the token CSS at https://sl-design-team.github.io/jellyroll/colors_and_type.css
-and any preview files at https://sl-design-team.github.io/jellyroll/preview/<name>.html that
-relate to what you're building.
-Implement: <describe what you want built>
-```
-
-The repo includes the full token CSS, every preview HTML file (inline styles + Lucide icon usage), the Acherus Grotesque webfonts, and brand assets. Browse the rendered gallery at <https://sl-design-team.github.io/jellyroll/> to see component names + previews; each tile's URL maps directly to a fetchable file under `/preview/`.
-
-Because the source of truth is the live repo, what you fetch is always current — no stale tarball drift.
 
 ## Caveats
 
