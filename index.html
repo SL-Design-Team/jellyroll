@@ -1928,11 +1928,10 @@
             <div class="gs-agent-panel" id="gs-tab-claude" style="display:none">
               <p style="margin-bottom:10px;font-size:11px;color:var(--sl-grey-400)">Install once. <code>/jellyroll</code> then works in any Claude Code session — no need to clone this repo. Source lives at <a href="https://github.com/SL-Design-Team/jellyroll/blob/main/.claude/commands/jellyroll.md" target="_blank" rel="noopener" style="color:var(--sl-blue-200);text-underline-offset:2px">.claude/commands/jellyroll.md</a>.</p>
 <pre class="code-block"><span class="tk-comment"># 1. Install both skills (global, any project)</span>
-mkdir -p ~/.claude/commands &amp;&amp; \
-  curl -sL https://raw.githubusercontent.com/SL-Design-Team/jellyroll/main/.claude/commands/jellyroll.md \
-    -o ~/.claude/commands/jellyroll.md &amp;&amp; \
-  curl -sL https://raw.githubusercontent.com/SL-Design-Team/jellyroll/main/.claude/commands/jellyroll-setup.md \
-    -o ~/.claude/commands/jellyroll-setup.md
+<span class="tk-prop">BASE</span>=https://raw.githubusercontent.com/SL-Design-Team/jellyroll/main/.claude/commands
+mkdir -p ~/.claude/commands
+curl -sL <span class="tk-var">$BASE</span>/jellyroll.md       -o ~/.claude/commands/jellyroll.md
+curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/commands/jellyroll-setup.md
 
 <span class="tk-comment"># 2. One-time permission setup (run once, works across all projects)</span>
 <span class="tk-var">/jellyroll-setup</span>
@@ -1940,7 +1939,7 @@ mkdir -p ~/.claude/commands &amp;&amp; \
 <span class="tk-comment"># 3. Use it — HTML output by default</span>
 <span class="tk-var">/jellyroll</span> <span class="tk-str">build a connection list page with a KPI row and a status table</span>
 
-<span class="tk-comment"># 3b. Or get a React (.tsx) component — just say so</span>
+<span class="tk-comment"># React component? Just say so</span>
 <span class="tk-var">/jellyroll</span> <span class="tk-str">build a React component for the search overlay</span></pre>
             </div>
             <div class="gs-agent-panel" id="gs-tab-other" style="display:none">
