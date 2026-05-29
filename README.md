@@ -6,34 +6,21 @@ The design system for **SnapLogic** — an enterprise iPaaS for connecting appli
 
 ### Claude Code slash command (recommended)
 
-Copy `.claude/commands/jellyroll.md` and `.claude/commands/jellyroll-setup.md` from this repo into your **global** commands folder (`~/.claude/commands/`). The commands then work in any project.
+```bash
+# 1. Install both skills (global, any project)
+BASE=https://raw.githubusercontent.com/SL-Design-Team/jellyroll/main/.claude/commands
+mkdir -p ~/.claude/commands
+curl -sL $BASE/jellyroll.md       -o ~/.claude/commands/jellyroll.md
+curl -sL $BASE/jellyroll-setup.md -o ~/.claude/commands/jellyroll-setup.md
 
-**One-time setup** — the skill fetches live tokens via `curl` and needs permission to do so silently. Run this once after copying the files:
-
-```
+# 2. One-time permission setup (run once, works across all projects)
 /jellyroll-setup
+
+# 3. Use it
+/jellyroll build a connection list page with a KPI row and a status table
 ```
 
-This adds the required allow rule to `~/.claude/settings.json`. You only need to do it once across all your projects. If you prefer to add it manually:
-
-```json
-// ~/.claude/settings.json
-{
-  "permissions": {
-    "allow": [
-      "Bash(curl -s https://sl-design-team.github.io/jellyroll/*)"
-    ]
-  }
-}
-```
-
-Then in any Claude Code session:
-
-```
-/jellyroll <describe what you want built>
-```
-
-The command loads the full preview file index, fetches the live token CSS and relevant component specs, and produces a standalone HTML file with pixel-fidelity to the design system. No URL wrangling required.
+`/jellyroll-setup` adds `Bash(curl -s https://sl-design-team.github.io/jellyroll/*)` to your `~/.claude/settings.json` so the skill can fetch live tokens without prompting. Run it once — it's a no-op if already configured. Or add the rule manually if you prefer.
 
 ### Manual prompt (Cursor, Copilot, other agents)
 
