@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Agent recovery</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 28px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* ─── RECOVERY CARD SHELL ─────────────────────────────────── */
+  .recovery-card {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    width: 420px;
+    font-family: var(--font-sans);
+  }
+
+  /* ─── ERROR BANNER ────────────────────────────────────────── */
+  .error-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .error-banner--misunderstood { background: var(--sl-yellow-50, #FFFBEB); border-bottom-color: var(--sl-yellow-200); }
+  .error-banner--tool-fail     { background: var(--sl-red-50, #FEF2F2);   border-bottom-color: var(--sl-red-200); }
+  .error-banner--partial       { background: var(--sl-orange-50, #FFF7ED); border-bottom-color: var(--sl-orange-200); }
+
+  .error-banner__icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex: none; margin-top: 1px;
+  }
+  .error-banner__icon svg { width: 14px; height: 14px; }
+  .error-banner--misunderstood .error-banner__icon { background: var(--sl-yellow-100); color: var(--sl-yellow-700); }
+  .error-banner--tool-fail     .error-banner__icon { background: var(--sl-red-100);    color: var(--sl-red-600); }
+  .error-banner--partial       .error-banner__icon { background: var(--sl-orange-100); color: var(--sl-orange-600); }
+
+  .error-banner__body { flex: 1; min-width: 0; }
+  .error-banner__what {
+    font: 800 13px/18px var(--font-sans);
+    margin-bottom: 1px;
+  }
+  .error-banner--misunderstood .error-banner__what { color: var(--sl-yellow-900); }
+  .error-banner--tool-fail     .error-banner__what { color: var(--sl-red-800); }
+  .error-banner--partial       .error-banner__what { color: var(--sl-orange-900); }
+
+  .error-banner__why {
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-subtle);
+    margin-bottom: 6px;
+  }
+  .error-banner__next {
+    font: 800 11px/16px var(--font-sans);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 3px;
+  }
+
+  /* ─── RECOVERY BODY ───────────────────────────────────────── */
+  .recovery-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Editable prompt (path A) */
+  .prompt-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .prompt-label {
+    font: 800 11px/14px var(--font-sans);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .prompt-field {
+    width: 100%;
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-body);
+    padding: 8px 10px;
+    border: 1.5px solid var(--sl-yellow-400);
+    border-radius: var(--radius-sm);
+    outline: none;
+    background: var(--sl-white);
+    resize: vertical;
+    min-height: 64px;
+    box-shadow: 0 0 0 3px rgba(202,138,4,0.12);
+    box-sizing: border-box;
+  }
+  .prompt-field:focus { border-color: var(--sl-yellow-500); }
+
+  /* Tool failure detail (path B) */
+  .tool-detail {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 4px 10px;
+    padding: 10px 12px;
+    background: var(--sl-grey-50, #F9F9FB);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-xs);
+    font: 400 11px/16px var(--font-sans);
+  }
+  .tool-detail dt { font: 800 10px/16px var(--font-mono); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.05em; }
+  .tool-detail dd { margin: 0; color: var(--color-text-body); font-family: var(--font-mono); }
+  .tool-detail dd.error { color: var(--sl-red-700); }
+
+  /* Step list (path C — partial success) */
+  .step-list { display: flex; flex-direction: column; gap: 0; }
+  .step-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--sl-grey-100);
+    font: 400 12px/18px var(--font-sans);
+  }
+  .step-row:last-child { border-bottom: none; }
+  .step-dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex: none;
+  }
+  .step-dot svg { width: 10px; height: 10px; }
+  .step-dot--done    { background: var(--sl-green-100); color: var(--sl-green-600); }
+  .step-dot--failed  { background: var(--sl-red-100);   color: var(--sl-red-600); }
+  .step-dot--pending { background: var(--sl-grey-100);  }
+  .step-dot--pending::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--sl-grey-400); }
+  .step-row-label { flex: 1; }
+  .step-row--done    .step-row-label { color: var(--color-text-subtle); }
+  .step-row--failed  .step-row-label { color: var(--sl-red-700); font-weight: 800; }
+  .step-row--pending .step-row-label { color: var(--color-text-subtle); }
+  .step-row-tag {
+    font: 800 10px/14px var(--font-sans);
+    padding: 1px 6px; border-radius: 999px;
+  }
+  .step-row-tag--done    { background: var(--sl-green-100); color: var(--sl-green-700); }
+  .step-row-tag--failed  { background: var(--sl-red-100);   color: var(--sl-red-700); }
+  .step-row-tag--pending { background: var(--sl-grey-100);  color: var(--sl-grey-600); }
+
+  /* ─── FOOTER ACTIONS ──────────────────────────────────────── */
+  .recovery-footer {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-50, #F9F9FB);
+  }
+  .footer-spacer { flex: 1; }
+
+  /* ─── BUTTONS ─────────────────────────────────────────────── */
+  .sl-btn {
+    font: 800 11px/16px var(--font-sans);
+    padding: 3px 10px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: background 150ms, color 150ms, border-color 150ms;
+    white-space: nowrap;
+  }
+  .sl-btn svg { width: 11px; height: 11px; flex: none; }
+  .sl-btn--primary      { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .sl-btn--primary:hover { background: var(--sl-blue-700); }
+  .sl-btn--secondary    { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .sl-btn--secondary:hover { border-color: var(--sl-teal-600); color: var(--sl-teal-600); }
+  .sl-btn--ghost        { background: transparent; color: var(--color-text-body); border-color: var(--sl-grey-300); }
+  .sl-btn--ghost:hover  { background: var(--sl-grey-100); }
+  .sl-btn--danger-ghost { background: transparent; color: var(--sl-red-600); border-color: var(--sl-red-300); }
+  .sl-btn--danger-ghost:hover { background: var(--sl-red-50, #FEF2F2); }
+
+  /* ─── SPEC ────────────────────────────────────────────────── */
+  .spec { display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="row-label">
+    <span class="name">Agent recovery</span>
+    <span class="meta">3 distinct paths — misunderstood · tool failure · partial success</span>
+  </div>
+
+  <!-- ── PATH A: MISUNDERSTOOD REQUEST ──────────────────────── -->
+  <div>
+    <div class="section-h">Path A — Misunderstood request <span class="meta">fix the prompt, try again</span></div>
+    <div class="recovery-card">
+      <div class="error-banner error-banner--misunderstood">
+        <span class="error-banner__icon"><i data-lucide="help-circle"></i></span>
+        <div class="error-banner__body">
+          <div class="error-banner__what">Request not understood</div>
+          <div class="error-banner__why">The agent could not determine which calendar to check — your account has 3 connected calendars with no default set.</div>
+          <div class="error-banner__next">What to try</div>
+          Clarify your request below and resubmit.
+        </div>
+      </div>
+      <div class="recovery-body">
+        <div class="prompt-edit">
+          <div class="prompt-label">Your original request</div>
+          <textarea class="prompt-field">Find open slots this week and draft outreach emails for my top Salesforce opps.</textarea>
+        </div>
+        <div style="font:400 11px/16px var(--font-sans);color:var(--color-text-subtle);display:flex;align-items:flex-start;gap:6px;">
+          <i data-lucide="lightbulb" style="width:12px;height:12px;color:var(--sl-yellow-600);margin-top:2px;flex:none;"></i>
+          Try specifying which calendar: "…check my <strong>Work</strong> calendar for open slots…"
+        </div>
+      </div>
+      <div class="recovery-footer">
+        <button class="sl-btn sl-btn--ghost"><i data-lucide="x"></i> Cancel</button>
+        <span class="footer-spacer"></span>
+        <button class="sl-btn sl-btn--primary"><i data-lucide="refresh-cw"></i> Try again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PATH B: TOOL CALL FAILURE ──────────────────────────── -->
+  <div>
+    <div class="section-h">Path B — Tool call failure <span class="meta">fix the tool boundary, retry or skip</span></div>
+    <div class="recovery-card">
+      <div class="error-banner error-banner--tool-fail">
+        <span class="error-banner__icon"><i data-lucide="plug-zap"></i></span>
+        <div class="error-banner__body">
+          <div class="error-banner__what">Salesforce API unavailable</div>
+          <div class="error-banner__why">The connection returned a 503 Service Unavailable. This is an issue with the external system, not your request.</div>
+          <div class="error-banner__next">What to try</div>
+          Retry the tool call, or skip this step and continue with the rest of the plan.
+        </div>
+      </div>
+      <div class="recovery-body">
+        <dl class="tool-detail">
+          <dt>Tool</dt>    <dd>salesforce.query</dd>
+          <dt>Status</dt>  <dd class="error">503 Service Unavailable</dd>
+          <dt>Attempted</dt><dd>3 retries over 45s</dd>
+          <dt>Step</dt>    <dd>1 of 4 — no steps completed yet</dd>
+        </dl>
+      </div>
+      <div class="recovery-footer">
+        <button class="sl-btn sl-btn--ghost"><i data-lucide="x"></i> Stop</button>
+        <span class="footer-spacer"></span>
+        <button class="sl-btn sl-btn--secondary"><i data-lucide="skip-forward"></i> Skip and continue</button>
+        <button class="sl-btn sl-btn--primary"><i data-lucide="refresh-cw"></i> Retry tool</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PATH C: PARTIAL SUCCESS ────────────────────────────── -->
+  <div>
+    <div class="section-h">Path C — Partial success <span class="meta">completed steps locked · choose how to proceed</span></div>
+    <div class="recovery-card">
+      <div class="error-banner error-banner--partial">
+        <span class="error-banner__icon"><i data-lucide="git-branch"></i></span>
+        <div class="error-banner__body">
+          <div class="error-banner__what">Stopped at step 3 of 4</div>
+          <div class="error-banner__why">Email generation failed — the AI model returned an empty response. Steps 1 and 2 completed successfully.</div>
+          <div class="error-banner__next">What to try</div>
+          Retry from the failed step, skip it, or stop here.
+        </div>
+      </div>
+      <div class="recovery-body">
+        <div class="step-list">
+          <div class="step-row step-row--done">
+            <span class="step-dot step-dot--done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="step-row-label">Search Salesforce opportunities</span>
+            <span class="step-row-tag step-row-tag--done">Done</span>
+          </div>
+          <div class="step-row step-row--done">
+            <span class="step-dot step-dot--done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="step-row-label">Check calendar for conflicts</span>
+            <span class="step-row-tag step-row-tag--done">Done</span>
+          </div>
+          <div class="step-row step-row--failed">
+            <span class="step-dot step-dot--failed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+            <span class="step-row-label">Draft outreach email for top 3 contacts</span>
+            <span class="step-row-tag step-row-tag--failed">Failed</span>
+          </div>
+          <div class="step-row step-row--pending">
+            <span class="step-dot step-dot--pending"></span>
+            <span class="step-row-label">Send emails and log activity in CRM</span>
+            <span class="step-row-tag step-row-tag--pending">Waiting</span>
+          </div>
+        </div>
+      </div>
+      <div class="recovery-footer">
+        <button class="sl-btn sl-btn--ghost"><i data-lucide="x"></i> Stop here</button>
+        <span class="footer-spacer"></span>
+        <button class="sl-btn sl-btn--secondary"><i data-lucide="skip-forward"></i> Skip and continue</button>
+        <button class="sl-btn sl-btn--primary"><i data-lucide="refresh-cw"></i> Retry from step 3</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <dl class="spec">
+    <dt>Path A</dt>      <dd>Yellow · misunderstood prompt → editable textarea + hint + Try again</dd>
+    <dt>Path B</dt>      <dd>Red · tool call failure → tool detail (tool, status, retries, step) + Retry tool / Skip and continue</dd>
+    <dt>Path C</dt>      <dd>Orange · partial success → step-by-step status list (Done / Failed / Waiting) + Retry from step N / Skip and continue / Stop here</dd>
+    <dt>3-part message</dt><dd>What happened · why · what to try next — no generic "Something went wrong"</dd>
+    <dt>Completed steps</dt><dd>Always shown as locked Done — never lost on retry</dd>
+  </dl>
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

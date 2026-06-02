@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Agent plan</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 24px; }
+
+  /* ─── SECTION HEADER ──────────────────────────────────────── */
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* ─── PLAN CARD SHELL ─────────────────────────────────────── */
+  .agent-plan {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    max-width: 520px;
+  }
+
+  /* ─── PLAN HEADER ─────────────────────────────────────────── */
+  .agent-plan__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-white);
+  }
+  .agent-plan__header .snapgpt-icon {
+    width: 20px; height: 20px; flex: none;
+  }
+  .agent-plan__title {
+    font: 800 14px/20px var(--font-sans);
+    color: var(--sl-indigo-900);
+    flex: 1;
+  }
+  .agent-plan__status-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font: 800 11px/14px var(--font-sans);
+    background: var(--ai-tint);
+    color: var(--ai-accent);
+  }
+
+  /* ─── STEP LIST ───────────────────────────────────────────── */
+  .agent-plan__steps {
+    list-style: none;
+    margin: 0; padding: 8px 0;
+  }
+
+  .agent-plan__step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 16px;
+    position: relative;
+    transition: background 120ms;
+  }
+  .agent-plan__step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 27px;
+    top: 32px;
+    bottom: -2px;
+    width: 1px;
+    background: var(--sl-grey-200);
+  }
+
+  /* Running step gets left accent + tint bg */
+  .agent-plan__step--running {
+    background: var(--ai-tint);
+    border-left: 2px solid var(--ai-accent);
+    padding-left: 14px;
+  }
+
+  /* ─── STEP INDICATOR ──────────────────────────────────────── */
+  .step-indicator {
+    flex: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .step-indicator--pending {
+    background: var(--sl-grey-200);
+  }
+  .step-indicator--pending::after {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--sl-grey-400);
+  }
+  .step-indicator--complete {
+    background: var(--sl-green-100);
+  }
+  .step-indicator--complete svg {
+    width: 12px; height: 12px;
+    color: var(--sl-green-600);
+    stroke-width: 2.5;
+  }
+
+  /* AI spinner — comet tail, ai variant */
+  .sl-spinner {
+    --sl-spin-thick: 1.25px;
+    position: relative;
+    display: inline-block;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    color: var(--ai-accent);
+    background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
+    -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+            mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+    animation: sl-spin 1.1s linear infinite;
+    flex: none;
+  }
+  .sl-spinner::after {
+    content: ''; position: absolute; top: 0; left: 50%;
+    width: var(--sl-spin-thick); height: var(--sl-spin-thick);
+    border-radius: 50%; background: currentColor;
+    transform: translateX(-50%);
+  }
+  @keyframes sl-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .sl-spinner { animation-duration: 2.8s; } }
+
+  /* Small spinner in status pill */
+  .sl-spinner--xs { width: 10px; height: 10px; --sl-spin-thick: 1px; }
+
+  /* ─── STEP BODY ───────────────────────────────────────────── */
+  .step-body { flex: 1; min-width: 0; }
+  .step-num {
+    font: 800 10px/12px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+  .step-label {
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .agent-plan__step--complete .step-label {
+    color: var(--color-text-subtle);
+  }
+  .agent-plan__step--running .step-label {
+    font-weight: 800;
+    color: var(--ai-accent);
+  }
+  .step-actions {
+    display: flex; gap: 8px;
+    margin-top: 2px;
+  }
+  .step-action-link {
+    font: 400 11px/16px var(--font-sans);
+    color: var(--sl-blue-600);
+    text-decoration: none;
+    cursor: pointer;
+    background: none; border: none; padding: 0;
+  }
+  .step-action-link:hover { text-decoration: underline; }
+  .step-action-link--danger { color: var(--sl-red-600); }
+  /* Reveal on hover only */
+  .agent-plan__step:not(.agent-plan__step--running):not(.agent-plan__step--complete) .step-actions {
+    opacity: 0;
+    transition: opacity 120ms;
+  }
+  .agent-plan__step:hover .step-actions { opacity: 1; }
+
+  /* ─── PLAN FOOTER ─────────────────────────────────────────── */
+  .agent-plan__footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-50, #F9F9FB);
+  }
+
+  /* ─── BUTTONS ─────────────────────────────────────────────── */
+  .sl-btn {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 11px; line-height: 16px;
+    padding: 3px 10px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: background-color 150ms, color 150ms, border-color 150ms;
+  }
+  .sl-btn svg { width: 11px; height: 11px; stroke-width: 2; flex: none; }
+  .sl-btn--primary { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .sl-btn--primary:hover { background: var(--sl-blue-700); border-color: var(--sl-blue-700); }
+  .sl-btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .sl-btn--secondary:hover { border-color: var(--sl-teal-600); color: var(--sl-teal-600); }
+  .sl-btn--danger-ghost { background: transparent; color: var(--sl-red-600); border-color: var(--sl-red-300); }
+  .sl-btn--danger-ghost:hover { background: var(--sl-red-50, #FEF2F2); border-color: var(--sl-red-500); }
+
+  /* ─── SPEC BOX ────────────────────────────────────────────── */
+  .spec { display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="row-label">
+    <span class="name">Agent plan</span>
+    <span class="meta">plan-and-execute · review / approve / executing</span>
+  </div>
+
+  <!-- ── STATE 1: REVIEW PLAN ──────────────────────────────── -->
+  <div>
+    <div class="section-h">Review plan <span class="meta">before execution — user approves, edits, or removes steps</span></div>
+    <div class="agent-plan">
+      <div class="agent-plan__header">
+        <img class="snapgpt-icon" src="https://sl-design-team.github.io/jellyroll/assets/snapgpt-icon.svg" alt="SnapGPT" />
+        <span class="agent-plan__title">Review plan</span>
+        <span class="agent-plan__status-pill">
+          <span data-lucide="list-checks" style="width:11px;height:11px;"></span>
+          4 steps
+        </span>
+      </div>
+
+      <ul class="agent-plan__steps">
+        <li class="agent-plan__step">
+          <span class="step-indicator step-indicator--pending"></span>
+          <div class="step-body">
+            <div class="step-num">Step 1</div>
+            <div class="step-label">Search Salesforce for open opportunities &gt; $50k</div>
+            <div class="step-actions">
+              <button class="step-action-link">Edit</button>
+              <button class="step-action-link step-action-link--danger">Remove</button>
+            </div>
+          </div>
+        </li>
+        <li class="agent-plan__step">
+          <span class="step-indicator step-indicator--pending"></span>
+          <div class="step-body">
+            <div class="step-num">Step 2</div>
+            <div class="step-label">Check calendar for conflicts this week</div>
+            <div class="step-actions">
+              <button class="step-action-link">Edit</button>
+              <button class="step-action-link step-action-link--danger">Remove</button>
+            </div>
+          </div>
+        </li>
+        <li class="agent-plan__step">
+          <span class="step-indicator step-indicator--pending"></span>
+          <div class="step-body">
+            <div class="step-num">Step 3</div>
+            <div class="step-label">Draft outreach email for top 3 contacts</div>
+            <div class="step-actions">
+              <button class="step-action-link">Edit</button>
+              <button class="step-action-link step-action-link--danger">Remove</button>
+            </div>
+          </div>
+        </li>
+        <li class="agent-plan__step">
+          <span class="step-indicator step-indicator--pending"></span>
+          <div class="step-body">
+            <div class="step-num">Step 4</div>
+            <div class="step-label">Send emails and log activity in CRM</div>
+            <div class="step-actions">
+              <button class="step-action-link">Edit</button>
+              <button class="step-action-link step-action-link--danger">Remove</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="agent-plan__footer">
+        <button class="sl-btn sl-btn--primary">
+          <span data-lucide="check" style="width:14px;height:14px;"></span>
+          Approve plan
+        </button>
+        <button class="sl-btn sl-btn--secondary">Edit plan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── STATE 2: EXECUTING ────────────────────────────────── -->
+  <div>
+    <div class="section-h">Executing <span class="meta">step 1 complete · step 2 running · steps 3–4 still editable</span></div>
+    <div class="agent-plan">
+      <div class="agent-plan__header">
+        <img class="snapgpt-icon" src="https://sl-design-team.github.io/jellyroll/assets/snapgpt-icon.svg" alt="SnapGPT" />
+        <span class="agent-plan__title">Executing plan</span>
+        <span class="agent-plan__status-pill">
+          <span class="sl-spinner sl-spinner--xs"></span>
+          Step 2 of 4
+        </span>
+      </div>
+
+      <ul class="agent-plan__steps">
+        <!-- Complete -->
+        <li class="agent-plan__step agent-plan__step--complete">
+          <span class="step-indicator step-indicator--complete">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div class="step-body">
+            <div class="step-num">Step 1 · Done</div>
+            <div class="step-label">Search Salesforce for open opportunities &gt; $50k</div>
+          </div>
+        </li>
+
+        <!-- Running -->
+        <li class="agent-plan__step agent-plan__step--running">
+          <span class="sl-spinner"></span>
+          <div class="step-body">
+            <div class="step-num">Step 2 · Running</div>
+            <div class="step-label">Checking calendar…</div>
+          </div>
+        </li>
+
+        <!-- Pending — still editable -->
+        <li class="agent-plan__step">
+          <span class="step-indicator step-indicator--pending"></span>
+          <div class="step-body">
+            <div class="step-num">Step 3</div>
+            <div class="step-label">Draft outreach email for top 3 contacts</div>
+            <div class="step-actions">
+              <button class="step-action-link">Edit</button>
+              <button class="step-action-link step-action-link--danger">Remove</button>
+            </div>
+          </div>
+        </li>
+        <li class="agent-plan__step">
+          <span class="step-indicator step-indicator--pending"></span>
+          <div class="step-body">
+            <div class="step-num">Step 4</div>
+            <div class="step-label">Send emails and log activity in CRM</div>
+            <div class="step-actions">
+              <button class="step-action-link">Edit</button>
+              <button class="step-action-link step-action-link--danger">Remove</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="agent-plan__footer">
+        <button class="sl-btn sl-btn--secondary">
+          <span data-lucide="pause" style="width:14px;height:14px;"></span>
+          Pause
+        </button>
+        <button class="sl-btn sl-btn--danger-ghost">
+          <span data-lucide="square" style="width:14px;height:14px;"></span>
+          Stop
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── SPEC ──────────────────────────────────────────────── -->
+  <dl class="spec">
+    <dt>States</dt>       <dd>pending · running · complete</dd>
+    <dt>Tokens</dt>       <dd><code>--ai-accent</code> · <code>--ai-tint</code> · <code>--sl-green-100/600</code> · <code>--sl-grey-200/400</code></dd>
+    <dt>Spinner</dt>      <dd>Comet-tail, <code>--ai-accent</code>, 20px, 1.1s rotate</dd>
+    <dt>Edit / Remove</dt><dd>Visible on row hover only (opacity 0 → 1); hidden on complete and running steps</dd>
+    <dt>Running step</dt> <dd>2px left border <code>--ai-accent</code> · <code>--ai-tint</code> background · bold label</dd>
+    <dt>Connector line</dt><dd>1px <code>--sl-grey-200</code> pseudo-element between steps</dd>
+  </dl>
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

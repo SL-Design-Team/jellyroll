@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Agent activity panel</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 24px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* ─── PANEL SHELL ─────────────────────────────────────────── */
+  .activity-panel {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    width: 360px;
+    font-family: var(--font-sans);
+  }
+
+  /* ─── PANEL HEADER ────────────────────────────────────────── */
+  .activity-panel__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-white);
+  }
+  .activity-panel__title {
+    font: 800 13px/18px var(--font-sans);
+    color: var(--sl-indigo-900);
+    flex: 1;
+  }
+  .activity-panel__count {
+    font: 800 10px/14px var(--font-sans);
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--ai-tint);
+    color: var(--ai-accent);
+  }
+
+  /* AI spinner */
+  .sl-spinner {
+    --sl-spin-thick: 1px;
+    position: relative;
+    display: inline-block;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    color: var(--ai-accent);
+    background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
+    -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+            mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+    animation: sl-spin 1.1s linear infinite;
+    flex: none;
+  }
+  .sl-spinner::after {
+    content: ''; position: absolute; top: 0; left: 50%;
+    width: var(--sl-spin-thick); height: var(--sl-spin-thick);
+    border-radius: 50%; background: currentColor;
+    transform: translateX(-50%);
+  }
+  @keyframes sl-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .sl-spinner { animation-duration: 2.8s; } }
+
+  /* ─── SECTION GROUPS ──────────────────────────────────────── */
+  .activity-group { }
+  .activity-group__label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px 4px;
+    font: 800 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--sl-grey-50, #F9F9FB);
+    border-bottom: 1px solid var(--sl-grey-100);
+  }
+  .activity-group__label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex: none;
+  }
+  .dot--running  { background: var(--ai-accent); }
+  .dot--done     { background: var(--sl-green-500); }
+  .dot--blocked  { background: var(--sl-orange-600); }
+  .dot--queued   { background: var(--sl-grey-400); }
+
+  /* ─── ACTIVITY ITEMS ──────────────────────────────────────── */
+  .activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--sl-grey-100);
+    cursor: pointer;
+    transition: background 100ms;
+    position: relative;
+  }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-item:hover { background: var(--sl-grey-50, #F9F9FB); }
+
+  /* Running item accent */
+  .activity-item--running {
+    background: var(--ai-tint);
+    border-left: 2px solid var(--ai-accent);
+    padding-left: 12px;
+  }
+  .activity-item--running:hover { background: var(--ai-tint); }
+
+  /* Blocked item accent */
+  .activity-item--blocked {
+    background: var(--sl-orange-50, #FFF7ED);
+    border-left: 2px solid var(--sl-orange-500);
+    padding-left: 12px;
+  }
+  .activity-item--blocked:hover { background: var(--sl-orange-50, #FFF7ED); }
+
+  /* ─── TOOL ICON ───────────────────────────────────────────── */
+  .tool-icon {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex: none;
+    margin-top: 1px;
+  }
+  .tool-icon svg { width: 13px; height: 13px; }
+  .tool-icon--ai       { background: var(--ai-tint);     color: var(--ai-accent); }
+  .tool-icon--crm      { background: var(--sl-grey-100); color: var(--color-text-subtle); }
+  .tool-icon--calendar { background: var(--sl-grey-100); color: var(--color-text-subtle); }
+  .tool-icon--email    { background: var(--sl-grey-100); color: var(--color-text-subtle); }
+  .tool-icon--done     { background: var(--sl-green-100);   color: var(--sl-green-600); }
+  .tool-icon--blocked  { background: var(--sl-orange-100);  color: var(--sl-orange-600); }
+  .tool-icon--queued   { background: var(--sl-grey-100);    color: var(--sl-grey-400); }
+
+  /* ─── ITEM BODY ───────────────────────────────────────────── */
+  .item-body { flex: 1; min-width: 0; }
+  .item-action {
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .activity-item--running .item-action { font-weight: 800; color: var(--ai-accent); }
+  .activity-item--blocked .item-action { font-weight: 800; color: var(--sl-orange-700); }
+  .activity-item--done .item-action    { color: var(--color-text-subtle); }
+
+  .item-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 1px;
+  }
+  .item-tool {
+    font: 400 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+  }
+  .item-ts {
+    font: 400 10px/14px var(--font-mono);
+    color: var(--color-text-subtle);
+    margin-left: auto;
+  }
+  .item-sep { color: var(--sl-grey-300); font-size: 10px; }
+
+  /* Result summary chip */
+  .item-result {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    margin-top: 3px;
+    padding: 1px 6px;
+    border-radius: var(--radius-xs);
+    font: 400 10px/14px var(--font-mono);
+    background: var(--sl-green-100);
+    color: var(--sl-green-700);
+  }
+  .item-result--blocked {
+    background: var(--sl-orange-100);
+    color: var(--sl-orange-700);
+  }
+
+  /* Expand chevron — points down (collapsed), up (expanded) */
+  .item-expand {
+    color: var(--color-text-subtle);
+    flex: none;
+    margin-top: 4px;
+    transition: transform 150ms;
+  }
+  .item-expand svg { width: 12px; height: 12px; }
+  .activity-item:hover .item-expand { color: var(--color-text-body); }
+  .item-expand--open { transform: rotate(180deg); }
+
+  /* ─── EXPANDED TOOL DISCLOSURE (inline) ──────────────────── */
+  .tool-disclosure {
+    margin: 0 14px 10px 50px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-xs);
+    overflow: hidden;
+    font-size: 11px;
+  }
+  .tool-disclosure__row {
+    display: flex;
+    padding: 5px 10px;
+    gap: 8px;
+    border-bottom: 1px solid var(--sl-grey-100);
+    align-items: baseline;
+  }
+  .tool-disclosure__row:last-child { border-bottom: none; }
+  .tool-disclosure__key {
+    font: 800 10px/16px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex: none;
+    width: 52px;
+  }
+  .tool-disclosure__val {
+    font: 400 11px/16px var(--font-mono);
+    color: var(--color-text-body);
+    word-break: break-all;
+  }
+  .tool-disclosure__val .copy-btn {
+    background: none; border: none; padding: 0 0 0 6px;
+    color: var(--sl-blue-500); cursor: pointer; font-size: 10px;
+  }
+  .tool-disclosure__val .copy-btn:hover { text-decoration: underline; }
+
+  /* ─── PANEL FOOTER ────────────────────────────────────────── */
+  .activity-panel__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-50, #F9F9FB);
+  }
+  .footer-status {
+    display: flex; align-items: center; gap: 5px;
+    font: 400 11px/16px var(--font-sans);
+    color: var(--color-text-subtle);
+  }
+  .footer-link {
+    font: 800 11px/16px var(--font-sans);
+    color: var(--sl-blue-600);
+    background: none; border: none; cursor: pointer; padding: 0;
+  }
+  .footer-link:hover { text-decoration: underline; }
+
+  /* ─── SPEC ────────────────────────────────────────────────── */
+  .spec { display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+
+  /* layout: two panels side by side */
+  .two-up { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="row-label">
+    <span class="name">Agent activity panel</span>
+    <span class="meta">activity stream · separate from chat · done / running / blocked / queued</span>
+  </div>
+
+  <div class="two-up">
+
+    <!-- ── PANEL A: mid-run, nothing expanded ─────────────── -->
+    <div>
+      <div class="section-h">In progress <span class="meta">collapsed items — hover to expand</span></div>
+      <div class="activity-panel">
+        <div class="activity-panel__header">
+          <span class="sl-spinner"></span>
+          <span class="activity-panel__title">Activity</span>
+          <span class="activity-panel__count">4 actions</span>
+        </div>
+
+        <!-- Done -->
+        <div class="activity-group">
+          <div class="activity-group__label">
+            <span class="dot dot--done"></span> Done
+          </div>
+          <div class="activity-item activity-item--done">
+            <span class="tool-icon tool-icon--done">
+              <i data-lucide="check"></i>
+            </span>
+            <div class="item-body">
+              <div class="item-action">Queried Salesforce opportunities</div>
+              <div class="item-meta">
+                <span class="item-tool">salesforce.query</span>
+                <span class="item-sep">·</span>
+                <span class="item-result">14 results</span>
+                <span class="item-ts">0:12</span>
+              </div>
+            </div>
+            <span class="item-expand"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+
+        <!-- In progress -->
+        <div class="activity-group">
+          <div class="activity-group__label">
+            <span class="dot dot--running"></span> In progress
+          </div>
+          <div class="activity-item activity-item--running">
+            <span class="tool-icon tool-icon--ai">
+              <i data-lucide="calendar"></i>
+            </span>
+            <div class="item-body">
+              <div class="item-action">Checking calendar availability…</div>
+              <div class="item-meta">
+                <span class="item-tool">google.calendar</span>
+                <span class="item-ts">0:31</span>
+              </div>
+            </div>
+            <span class="sl-spinner"></span>
+          </div>
+        </div>
+
+        <!-- Blocked -->
+        <div class="activity-group">
+          <div class="activity-group__label">
+            <span class="dot dot--blocked"></span> Blocked
+          </div>
+          <div class="activity-item activity-item--blocked">
+            <span class="tool-icon tool-icon--blocked">
+              <i data-lucide="alert-triangle"></i>
+            </span>
+            <div class="item-body">
+              <div class="item-action">Draft outreach email</div>
+              <div class="item-meta">
+                <span class="item-tool">openai.complete</span>
+                <span class="item-sep">·</span>
+                <span class="item-result item-result--blocked">Rate limited</span>
+                <span class="item-ts">0:28</span>
+              </div>
+            </div>
+            <span class="item-expand"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+
+        <!-- Queued -->
+        <div class="activity-group">
+          <div class="activity-group__label">
+            <span class="dot dot--queued"></span> Queued
+          </div>
+          <div class="activity-item">
+            <span class="tool-icon tool-icon--queued">
+              <i data-lucide="mail"></i>
+            </span>
+            <div class="item-body">
+              <div class="item-action">Send emails and log to CRM</div>
+              <div class="item-meta">
+                <span class="item-tool">gmail.send · salesforce.create</span>
+              </div>
+            </div>
+            <span class="item-expand"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+
+        <div class="activity-panel__footer">
+          <span class="footer-status">
+            <span class="sl-spinner"></span>
+            Running step 2 of 4
+          </span>
+          <button class="footer-link">View full log</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL B: done item expanded showing tool disclosure ─ -->
+    <div>
+      <div class="section-h">Expanded item <span class="meta">tool call + response visible inline</span></div>
+      <div class="activity-panel">
+        <div class="activity-panel__header">
+          <i data-lucide="check-circle-2" style="width:14px;height:14px;color:var(--sl-green-600);"></i>
+          <span class="activity-panel__title">Activity</span>
+          <span class="activity-panel__count" style="background:var(--sl-green-100);color:var(--sl-green-700);">4 done</span>
+        </div>
+
+        <!-- Done, collapsed -->
+        <div class="activity-group">
+          <div class="activity-group__label">
+            <span class="dot dot--done"></span> Done · 4 actions
+          </div>
+
+          <div class="activity-item activity-item--done">
+            <span class="tool-icon tool-icon--done"><i data-lucide="check"></i></span>
+            <div class="item-body">
+              <div class="item-action">Queried Salesforce opportunities</div>
+              <div class="item-meta">
+                <span class="item-tool">salesforce.query</span>
+                <span class="item-sep">·</span>
+                <span class="item-result">14 results</span>
+                <span class="item-ts">0:12</span>
+              </div>
+            </div>
+            <span class="item-expand item-expand--open"><i data-lucide="chevron-down"></i></span>
+          </div>
+          <!-- Expanded disclosure -->
+          <div class="tool-disclosure">
+            <div class="tool-disclosure__row">
+              <span class="tool-disclosure__key">Tool</span>
+              <span class="tool-disclosure__val">salesforce.query</span>
+            </div>
+            <div class="tool-disclosure__row">
+              <span class="tool-disclosure__key">Request</span>
+              <span class="tool-disclosure__val">SELECT Id, Name, Amount FROM Opportunity WHERE Amount &gt; 50000 AND StageName != 'Closed'</span>
+            </div>
+            <div class="tool-disclosure__row">
+              <span class="tool-disclosure__key">Response</span>
+              <span class="tool-disclosure__val">14 records · top: Acme Corp $220k, Beta LLC $180k…
+                <button class="copy-btn">View all</button>
+              </span>
+            </div>
+          </div>
+
+          <div class="activity-item activity-item--done">
+            <span class="tool-icon tool-icon--calendar"><i data-lucide="calendar"></i></span>
+            <div class="item-body">
+              <div class="item-action">Checked calendar — 3 slots found</div>
+              <div class="item-meta">
+                <span class="item-tool">google.calendar</span>
+                <span class="item-sep">·</span>
+                <span class="item-result">Tue 2pm, Wed 10am, Fri 3pm</span>
+                <span class="item-ts">0:31</span>
+              </div>
+            </div>
+            <span class="item-expand"><i data-lucide="chevron-down"></i></span>
+          </div>
+
+          <div class="activity-item activity-item--done">
+            <span class="tool-icon tool-icon--done"><i data-lucide="check"></i></span>
+            <div class="item-body">
+              <div class="item-action">Drafted 3 outreach emails</div>
+              <div class="item-meta">
+                <span class="item-tool">openai.complete</span>
+                <span class="item-ts">1:04</span>
+              </div>
+            </div>
+            <span class="item-expand"><i data-lucide="chevron-down"></i></span>
+          </div>
+
+          <div class="activity-item activity-item--done">
+            <span class="tool-icon tool-icon--done"><i data-lucide="check"></i></span>
+            <div class="item-body">
+              <div class="item-action">Sent emails · logged 3 CRM activities</div>
+              <div class="item-meta">
+                <span class="item-tool">gmail.send · salesforce.create</span>
+                <span class="item-ts">1:22</span>
+              </div>
+            </div>
+            <span class="item-expand"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+
+        <div class="activity-panel__footer">
+          <span class="footer-status" style="color:var(--sl-green-700);">
+            <i data-lucide="check-circle-2" style="width:12px;height:12px;"></i>
+            Completed in 1m 22s
+          </span>
+          <button class="footer-link">View full log</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end two-up -->
+
+  <div class="divider"></div>
+
+  <dl class="spec">
+    <dt>Sections</dt>    <dd>Done · In progress · Blocked · Queued — only non-empty sections render</dd>
+    <dt>Running item</dt><dd>2px left border <code>--ai-accent</code> · <code>--ai-tint</code> bg · inline spinner</dd>
+    <dt>Blocked item</dt><dd>2px left border <code>--sl-orange-500</code> · orange-50 bg</dd>
+    <dt>Expand</dt>      <dd>Chevron rotates 90° · tool disclosure renders inline below the row</dd>
+    <dt>Tool disclosure</dt><dd>Tool name · request payload · truncated response · "View all" link</dd>
+    <dt>Separator</dt>   <dd>Distinct from SnapGPT chat thread — linked but never merged into one stream</dd>
+  </dl>
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -750,6 +750,51 @@ window.JELLYROLL_DATA = {
       name: "Patterns",
       items: [
         {
+          file: "preview/patterns-agent-activity-panel.html",
+          name: "Agent activity panel",
+          tagline: "Activity stream of agent tool calls — separate from the chat thread.",
+          meta: {
+            usage: "Use to surface what an agent is doing as it runs, grouped into Done, In progress, Blocked, and Queued. Kept distinct from the SnapGPT chat thread — linked but never merged into one stream. Only non-empty sections render.",
+            behaviors: "The running item carries a 2px `--ai-accent` left border, the AI tint, and an inline spinner; blocked items use an orange left border. Clicking an item expands an inline tool disclosure with the tool name, request payload, and truncated response plus a `View all` link. The footer tracks overall progress (`Running step 2 of 4` → `Completed in 1m 22s`)."
+          }
+        },
+        {
+          file: "preview/patterns-agent-plan.html",
+          name: "Agent plan",
+          tagline: "Plan-and-execute flow — review, approve, then watch steps run.",
+          meta: {
+            usage: "Use when an agent proposes a multi-step plan the user should review before it runs. In the review state the user can approve the whole plan or edit/remove individual steps; during execution, completed steps lock while still-pending steps remain editable.",
+            behaviors: "Steps move through pending → running → complete. Edit/Remove links appear on row hover and are hidden on running and completed steps. The running step gets a 2px `--ai-accent` left border, AI tint, bold label, and comet-tail spinner. The footer swaps from Approve / Edit (review) to Pause / Stop (executing)."
+          }
+        },
+        {
+          file: "preview/patterns-agent-recovery.html",
+          name: "Agent recovery",
+          tagline: "Three distinct recovery paths — misunderstood, tool failure, partial success.",
+          meta: {
+            usage: "Use when an agent run goes wrong. Three paths: (A) misunderstood request — yellow, with an editable prompt and a Try again; (B) tool call failure — red, with tool detail (tool, status, retries, step) and Retry tool / Skip and continue; (C) partial success — orange, with a step-by-step status list and Retry from step N / Skip / Stop here.",
+            behaviors: "Every recovery message is 3-part — what happened · why · what to try next — never a generic `Something went wrong`. Completed steps are always preserved as locked Done rows and are never lost on retry."
+          }
+        },
+        {
+          file: "preview/patterns-agent-step-override.html",
+          name: "Agent step override",
+          tagline: "Mid-execution controls — pause, resume, modify, skip, stop.",
+          meta: {
+            usage: "Use to give the user control over an agent mid-run. The executing state shows Pause + Stop, with Edit/Skip on hover for pending steps; pausing exposes Resume / Modify / Stop on the active step; modifying opens an inline text input (no modal); skipping dims and strikes through the step.",
+            behaviors: "The paused active step takes a yellow border and background; modifying takes a blue border, background, and a focused input with Save / Cancel. Skipped steps drop to 45% opacity with a struck-through label. Completed steps are locked — only upcoming steps ever show Edit / Skip."
+          }
+        },
+        {
+          file: "preview/patterns-agent-tool-disclosure.html",
+          name: "Agent tool disclosure",
+          tagline: "Inline tool call + response — collapsed or expanded, success or error.",
+          meta: {
+            usage: "Use to show a single agent tool call inline in the chat thread or inside an activity-panel item. Collapsed shows the tool icon, tool name, and a summary chip; expanded reveals the request payload and a truncated response with copy / view full.",
+            behaviors: "The chevron rotates up on expand. Success uses a green treatment; error uses a red trigger with an error message and Retry + Skip step affordances. Placed inline between chat messages or inside an activity panel item expansion."
+          }
+        },
+        {
           file: "preview/patterns-ai-confidence.html",
           name: "AI confidence",
           tagline: "Visual treatment for AI output the user should sanity-check.",

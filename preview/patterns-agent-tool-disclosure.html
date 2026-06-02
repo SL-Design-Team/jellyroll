@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Agent tool disclosure</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 24px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .two-up { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+
+  /* ─── CHAT CONTEXT (messages above/below) ─────────────────── */
+  .chat-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 340px;
+    padding: 14px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+  }
+
+  /* Message rows */
+  .msg { display: flex; flex-direction: column; gap: 4px; }
+  .msg__meta {
+    display: flex; align-items: center; gap: 8px;
+    font: 400 11px/16px var(--font-mono);
+    color: var(--color-text-subtle);
+  }
+  .msg__avatar {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .msg__avatar svg { width: 14px; height: 14px; }
+  .msg--user .msg__avatar { background: var(--sl-blue-100); color: var(--sl-blue-600); }
+  .msg--ai   .msg__avatar { background: var(--sl-blue-100); color: var(--sl-blue-600); }
+
+  .msg__bubble {
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font: 400 13px/20px var(--font-sans);
+    color: var(--sl-indigo-900);
+  }
+  .msg__bubble p { margin: 0; }
+  .msg--user .msg__bubble { background: var(--sl-grey-100); }
+  .msg--ai   .msg__bubble {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  /* ─── TOOL DISCLOSURE CARD ────────────────────────────────── */
+  .tool-disclosure {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--sl-white);
+    font-family: var(--font-sans);
+  }
+
+  /* Collapsed row — always visible */
+  .tool-disclosure__trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    cursor: pointer;
+    background: var(--ai-tint);
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background 100ms;
+  }
+  .tool-disclosure__trigger:hover { background: var(--sl-ai-200, #e0e3f8); }
+
+  .tool-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--ai-accent);
+    color: var(--sl-white);
+    flex: none;
+  }
+  .tool-icon svg { width: 11px; height: 11px; }
+
+  .trigger-label {
+    flex: 1;
+    font: 800 11px/16px var(--font-sans);
+    color: var(--ai-accent);
+  }
+  .trigger-chip {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font: 400 10px/14px var(--font-mono);
+    background: var(--sl-white);
+    color: var(--ai-accent);
+    border: 1px solid var(--sl-ai-300, #b8bee8);
+  }
+  .trigger-chevron {
+    color: var(--ai-accent);
+    transition: transform 150ms;
+    flex: none;
+  }
+  .trigger-chevron svg { width: 12px; height: 12px; }
+  .tool-disclosure--open .trigger-chevron { transform: rotate(180deg); }
+  .tool-disclosure--open .tool-disclosure__trigger { border-bottom: 1px solid var(--sl-grey-200); }
+  .tool-disclosure--error .tool-disclosure__trigger { background: var(--sl-red-50, #FEF2F2); }
+  .tool-disclosure--error .tool-disclosure__trigger:hover { background: var(--sl-red-100); }
+
+  /* Expanded body */
+  .tool-disclosure__body {
+    display: none;
+    flex-direction: column;
+  }
+  .tool-disclosure--open .tool-disclosure__body { display: flex; }
+
+  .disclosure-row {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 4px 10px;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--sl-grey-100);
+    align-items: baseline;
+  }
+  .disclosure-row:last-child { border-bottom: none; }
+
+  .disclosure-key {
+    font: 800 10px/16px var(--font-mono);
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .disclosure-val {
+    font: 400 11px/16px var(--font-mono);
+    color: var(--color-text-body);
+    word-break: break-all;
+  }
+  .disclosure-val--muted { color: var(--color-text-subtle); }
+
+  /* Copy / view link */
+  .disclosure-action {
+    display: inline-flex; align-items: center; gap: 3px;
+    margin-top: 3px;
+    font: 400 10px/14px var(--font-sans);
+    color: var(--sl-blue-600);
+    background: none; border: none; padding: 0; cursor: pointer;
+  }
+  .disclosure-action:hover { text-decoration: underline; }
+  .disclosure-action svg { width: 10px; height: 10px; }
+
+  /* Status badge inside disclosure */
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font: 800 10px/14px var(--font-sans);
+  }
+  .status-badge--success { background: var(--sl-green-100); color: var(--sl-green-700); }
+  .status-badge--error   { background: var(--sl-red-100);   color: var(--sl-red-700); }
+  .status-badge svg { width: 10px; height: 10px; }
+
+  /* ─── BUTTONS ─────────────────────────────────────────────── */
+  .sl-btn {
+    font: 800 11px/16px var(--font-sans);
+    padding: 3px 10px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: background 150ms, color 150ms, border-color 150ms;
+  }
+  .sl-btn svg { width: 11px; height: 11px; flex: none; }
+  .sl-btn--primary { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .sl-btn--primary:hover { background: var(--sl-blue-700); }
+  .sl-btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .sl-btn--secondary:hover { border-color: var(--sl-teal-600); color: var(--sl-teal-600); }
+  .sl-btn--danger-ghost { background: transparent; color: var(--sl-red-600); border-color: var(--sl-red-300); }
+  .sl-btn--danger-ghost:hover { background: var(--sl-red-50, #FEF2F2); }
+
+  /* ─── SPEC ────────────────────────────────────────────────── */
+  .spec { display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="row-label">
+    <span class="name">Agent tool disclosure</span>
+    <span class="meta">inline in chat · collapsed / expanded · success / error</span>
+  </div>
+
+  <div class="two-up">
+
+    <!-- ── CONTEXT: inline in chat thread ─────────────────── -->
+    <div>
+      <div class="section-h">In chat context <span class="meta">tool call surfaces between messages</span></div>
+      <div class="chat-thread">
+
+        <!-- User message -->
+        <div class="msg msg--user">
+          <div class="msg__meta">
+            <span class="msg__avatar"><i data-lucide="user"></i></span>
+            You
+          </div>
+          <div class="msg__bubble">
+            <p>Find my top 3 open Salesforce opportunities this quarter.</p>
+          </div>
+        </div>
+
+        <!-- Tool disclosure — collapsed -->
+        <div class="tool-disclosure">
+          <button class="tool-disclosure__trigger">
+            <span class="tool-icon"><i data-lucide="database"></i></span>
+            <span class="trigger-label">Called Salesforce API</span>
+            <span class="trigger-chip">14 results</span>
+            <span class="trigger-chevron"><i data-lucide="chevron-down"></i></span>
+          </button>
+        </div>
+
+        <!-- AI response -->
+        <div class="msg msg--ai">
+          <div class="msg__meta">
+            <img src="https://sl-design-team.github.io/jellyroll/assets/snapgpt-icon.svg" style="width:24px;height:24px;" alt="SnapGPT" />
+            SnapGPT
+          </div>
+          <div class="msg__bubble">
+            <p>Here are your top 3 open opportunities this quarter:</p>
+            <ol style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:2px;">
+              <li>Acme Corp — $220,000 · Closing Jun 30</li>
+              <li>Beta LLC — $180,000 · Closing Jul 15</li>
+              <li>Cascade Inc — $95,000 · Closing Jun 28</li>
+            </ol>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── STATES: collapsed + two expanded variants ──────── -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Collapsed -->
+      <div>
+        <div class="section-h">Collapsed <span class="meta">default — summary chip visible</span></div>
+        <div class="tool-disclosure" style="width:300px;">
+          <button class="tool-disclosure__trigger">
+            <span class="tool-icon"><i data-lucide="database"></i></span>
+            <span class="trigger-label">Called Salesforce API</span>
+            <span class="trigger-chip">14 results</span>
+            <span class="trigger-chevron"><i data-lucide="chevron-down"></i></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Expanded — success -->
+      <div>
+        <div class="section-h">Expanded · success <span class="meta">request + response visible</span></div>
+        <div class="tool-disclosure tool-disclosure--open" style="width:300px;">
+          <button class="tool-disclosure__trigger">
+            <span class="tool-icon"><i data-lucide="database"></i></span>
+            <span class="trigger-label">Called Salesforce API</span>
+            <span class="status-badge status-badge--success">
+              <i data-lucide="check"></i> 200 OK
+            </span>
+            <span class="trigger-chevron"><i data-lucide="chevron-down"></i></span>
+          </button>
+          <div class="tool-disclosure__body">
+            <div class="disclosure-row">
+              <span class="disclosure-key">Tool</span>
+              <span class="disclosure-val">salesforce.query</span>
+            </div>
+            <div class="disclosure-row">
+              <span class="disclosure-key">Request</span>
+              <div>
+                <span class="disclosure-val">SELECT Id, Name, Amount FROM Opportunity WHERE Amount &gt; 50000 AND CloseDate = THIS_QUARTER</span>
+                <br/>
+                <button class="disclosure-action"><i data-lucide="copy"></i> Copy</button>
+              </div>
+            </div>
+            <div class="disclosure-row">
+              <span class="disclosure-key">Response</span>
+              <div>
+                <span class="disclosure-val disclosure-val--muted">14 records · Acme Corp $220k, Beta LLC $180k, Cascade Inc $95k…</span>
+                <br/>
+                <button class="disclosure-action"><i data-lucide="external-link"></i> View full response</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expanded — error -->
+      <div>
+        <div class="section-h">Expanded · error <span class="meta">failure — retry affordance</span></div>
+        <div class="tool-disclosure tool-disclosure--open tool-disclosure--error" style="width:300px;">
+          <button class="tool-disclosure__trigger">
+            <span class="tool-icon" style="background:var(--sl-red-500);"><i data-lucide="database"></i></span>
+            <span class="trigger-label" style="color:var(--sl-red-700);">Salesforce API failed</span>
+            <span class="status-badge status-badge--error">
+              <i data-lucide="alert-circle"></i> 429
+            </span>
+            <span class="trigger-chevron" style="color:var(--sl-red-600);"><i data-lucide="chevron-down"></i></span>
+          </button>
+          <div class="tool-disclosure__body">
+            <div class="disclosure-row">
+              <span class="disclosure-key">Tool</span>
+              <span class="disclosure-val">salesforce.query</span>
+            </div>
+            <div class="disclosure-row">
+              <span class="disclosure-key">Error</span>
+              <span class="disclosure-val" style="color:var(--sl-red-700);">Rate limit exceeded. Retry after 30s.</span>
+            </div>
+            <div class="disclosure-row">
+              <span class="disclosure-key">Action</span>
+              <div style="display:flex;gap:6px;margin-top:2px;">
+                <button class="sl-btn sl-btn--primary"><i data-lucide="refresh-cw"></i> Retry</button>
+                <button class="sl-btn sl-btn--secondary">Skip step</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <dl class="spec">
+    <dt>Collapsed</dt>   <dd>Tool icon (circle) · tool name · summary chip · chevron-down</dd>
+    <dt>Expanded</dt>    <dd>Chevron rotates up · request payload · truncated response · copy / view full</dd>
+    <dt>Background</dt>  <dd><code>--ai-tint</code> on trigger row — visually distinct from user and AI message bubbles</dd>
+    <dt>Success</dt>     <dd>Green <code>200 OK</code> badge · response preview + "View full response" link</dd>
+    <dt>Error</dt>       <dd>Red trigger · error message · Retry + Skip step affordances</dd>
+    <dt>Placement</dt>   <dd>Inline between chat messages, or inside activity panel item expansion</dd>
+  </dl>
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

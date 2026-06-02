@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Patterns · Agent step override</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 28px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .two-up { display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; }
+
+  /* ─── PLAN CARD SHELL (reused from agent-plan) ────────────── */
+  .agent-plan {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    width: 400px;
+  }
+  .agent-plan__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--sl-grey-200);
+    background: var(--sl-white);
+  }
+  .agent-plan__title { font: 800 14px/20px var(--font-sans); color: var(--sl-indigo-900); flex: 1; }
+  .agent-plan__status-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 999px;
+    font: 800 11px/14px var(--font-sans);
+    background: var(--ai-tint); color: var(--ai-accent);
+  }
+  .agent-plan__status-pill--paused {
+    background: var(--sl-yellow-100); color: var(--sl-yellow-800);
+  }
+
+  /* ─── STEP LIST ───────────────────────────────────────────── */
+  .agent-plan__steps { list-style: none; margin: 0; padding: 8px 0; }
+  .agent-plan__step {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 16px;
+    position: relative;
+    transition: background 120ms;
+  }
+  .agent-plan__step:not(:last-child)::after {
+    content: ''; position: absolute;
+    left: 27px; top: 32px; bottom: -2px;
+    width: 1px; background: var(--sl-grey-200);
+  }
+
+  /* Running */
+  .agent-plan__step--running {
+    background: var(--ai-tint);
+    border-left: 2px solid var(--ai-accent);
+    padding-left: 14px;
+  }
+  /* Paused */
+  .agent-plan__step--paused {
+    background: var(--sl-yellow-50, #FFFBEB);
+    border-left: 2px solid var(--sl-yellow-500);
+    padding-left: 14px;
+  }
+  /* Modifying (inline edit) */
+  .agent-plan__step--modifying {
+    background: var(--sl-blue-50, #EFF6FF);
+    border-left: 2px solid var(--sl-blue-400);
+    padding-left: 14px;
+    flex-direction: column;
+    gap: 8px;
+  }
+  /* Skipped */
+  .agent-plan__step--skipped { opacity: 0.45; }
+  .agent-plan__step--skipped .step-label { text-decoration: line-through; }
+
+  /* ─── STEP INDICATORS ─────────────────────────────────────── */
+  .step-indicator {
+    flex: none; width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .step-indicator--pending { background: var(--sl-grey-200); }
+  .step-indicator--pending::after {
+    content: ''; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--sl-grey-400);
+  }
+  .step-indicator--complete { background: var(--sl-green-100); }
+  .step-indicator--complete svg { width: 12px; height: 12px; color: var(--sl-green-600); stroke-width: 2.5; }
+  .step-indicator--paused { background: var(--sl-yellow-100); }
+  .step-indicator--paused svg { width: 12px; height: 12px; color: var(--sl-yellow-700); }
+  .step-indicator--skipped { background: var(--sl-grey-100); }
+  .step-indicator--skipped svg { width: 12px; height: 12px; color: var(--sl-grey-400); }
+
+  /* AI spinner */
+  .sl-spinner {
+    --sl-spin-thick: 1.25px;
+    position: relative; display: inline-block;
+    width: 20px; height: 20px; border-radius: 50%;
+    color: var(--ai-accent);
+    background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
+    -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+            mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+    animation: sl-spin 1.1s linear infinite; flex: none;
+  }
+  .sl-spinner::after {
+    content: ''; position: absolute; top: 0; left: 50%;
+    width: var(--sl-spin-thick); height: var(--sl-spin-thick);
+    border-radius: 50%; background: currentColor; transform: translateX(-50%);
+  }
+  @keyframes sl-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .sl-spinner { animation-duration: 2.8s; } }
+  .sl-spinner--xs { width: 10px; height: 10px; --sl-spin-thick: 1px; }
+
+  /* ─── STEP BODY ───────────────────────────────────────────── */
+  .step-body { flex: 1; min-width: 0; }
+  .step-num { font: 800 10px/12px var(--font-mono); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+  .step-label { font: 400 13px/20px var(--font-sans); color: var(--color-text-body); }
+  .agent-plan__step--complete .step-label { color: var(--color-text-subtle); }
+  .agent-plan__step--running .step-label  { font-weight: 800; color: var(--ai-accent); }
+  .agent-plan__step--paused .step-label   { font-weight: 800; color: var(--sl-yellow-800); }
+
+  /* Hover-reveal edit/remove on pending steps */
+  .step-actions { display: flex; gap: 8px; margin-top: 2px; }
+  .agent-plan__step:not(.agent-plan__step--running):not(.agent-plan__step--complete):not(.agent-plan__step--paused):not(.agent-plan__step--modifying):not(.agent-plan__step--skipped) .step-actions {
+    opacity: 0; transition: opacity 120ms;
+  }
+  .agent-plan__step:hover .step-actions { opacity: 1; }
+  .step-action-link {
+    font: 400 11px/16px var(--font-sans); color: var(--sl-blue-600);
+    background: none; border: none; padding: 0; cursor: pointer;
+  }
+  .step-action-link:hover { text-decoration: underline; }
+  .step-action-link--danger { color: var(--sl-red-600); }
+
+  /* ─── PAUSED OVERRIDE CONTROLS ───────────────────────────── */
+  .pause-controls {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 6px; flex-wrap: wrap;
+  }
+
+  /* ─── INLINE EDIT (modifying state) ──────────────────────── */
+  .modify-header {
+    display: flex; align-items: center; gap: 8px;
+    width: 100%;
+  }
+  .modify-input {
+    flex: 1;
+    font: 400 13px/20px var(--font-sans);
+    color: var(--color-text-body);
+    padding: 5px 10px;
+    border: 1.5px solid var(--sl-blue-400);
+    border-radius: var(--radius-sm);
+    outline: none;
+    background: var(--sl-white);
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+  }
+  .modify-actions { display: flex; gap: 6px; margin-top: 4px; justify-content: flex-end; }
+
+  /* ─── BUTTONS ─────────────────────────────────────────────── */
+  .sl-btn {
+    font: 800 11px/16px var(--font-sans);
+    padding: 3px 10px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: background 150ms, color 150ms, border-color 150ms;
+    white-space: nowrap;
+  }
+  .sl-btn svg { width: 11px; height: 11px; flex: none; }
+  .sl-btn--primary   { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .sl-btn--primary:hover { background: var(--sl-blue-700); }
+  .sl-btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .sl-btn--secondary:hover { border-color: var(--sl-teal-600); color: var(--sl-teal-600); }
+  .sl-btn--warning   { background: var(--sl-yellow-500); color: var(--sl-yellow-1000); border-color: var(--sl-yellow-500); }
+  .sl-btn--warning:hover { background: var(--sl-yellow-600); }
+  .sl-btn--ghost     { background: transparent; color: var(--color-text-body); border-color: var(--sl-grey-300); }
+  .sl-btn--ghost:hover { background: var(--sl-grey-100); }
+  .sl-btn--danger-ghost { background: transparent; color: var(--sl-red-600); border-color: var(--sl-red-300); }
+  .sl-btn--danger-ghost:hover { background: var(--sl-red-50, #FEF2F2); }
+
+  /* ─── PLAN FOOTER ─────────────────────────────────────────── */
+  .agent-plan__footer {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--sl-grey-200);
+    background: var(--sl-grey-50, #F9F9FB);
+  }
+
+  /* ─── SPEC ────────────────────────────────────────────────── */
+  .spec { display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="row-label">
+    <span class="name">Agent step override</span>
+    <span class="meta">pause · resume · modify · skip · stop — mid-execution controls</span>
+  </div>
+
+  <div class="two-up">
+
+    <!-- ── STATE 1: EXECUTING (controls visible) ──────────── -->
+    <div>
+      <div class="section-h">Executing <span class="meta">Pause / Skip next / Stop available during run</span></div>
+      <div class="agent-plan">
+        <div class="agent-plan__header">
+          <img src="https://sl-design-team.github.io/jellyroll/assets/snapgpt-icon.svg" style="width:20px;height:20px;" alt="SnapGPT" />
+          <span class="agent-plan__title">Executing plan</span>
+          <span class="agent-plan__status-pill">
+            <span class="sl-spinner sl-spinner--xs"></span>
+            Step 2 of 4
+          </span>
+        </div>
+        <ul class="agent-plan__steps">
+          <li class="agent-plan__step agent-plan__step--complete">
+            <span class="step-indicator step-indicator--complete">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <div class="step-body">
+              <div class="step-num">Step 1 · Done</div>
+              <div class="step-label">Search Salesforce for open opportunities &gt; $50k</div>
+            </div>
+          </li>
+          <li class="agent-plan__step agent-plan__step--running">
+            <span class="sl-spinner"></span>
+            <div class="step-body">
+              <div class="step-num">Step 2 · Running</div>
+              <div class="step-label">Checking calendar…</div>
+            </div>
+          </li>
+          <li class="agent-plan__step">
+            <span class="step-indicator step-indicator--pending"></span>
+            <div class="step-body">
+              <div class="step-num">Step 3</div>
+              <div class="step-label">Draft outreach email for top 3 contacts</div>
+              <div class="step-actions">
+                <button class="step-action-link">Edit</button>
+                <button class="step-action-link step-action-link--danger">Skip</button>
+              </div>
+            </div>
+          </li>
+          <li class="agent-plan__step">
+            <span class="step-indicator step-indicator--pending"></span>
+            <div class="step-body">
+              <div class="step-num">Step 4</div>
+              <div class="step-label">Send emails and log activity in CRM</div>
+              <div class="step-actions">
+                <button class="step-action-link">Edit</button>
+                <button class="step-action-link step-action-link--danger">Skip</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="agent-plan__footer">
+          <button class="sl-btn sl-btn--secondary">
+            <i data-lucide="pause"></i> Pause
+          </button>
+          <button class="sl-btn sl-btn--danger-ghost">
+            <i data-lucide="square"></i> Stop
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STATE 2: PAUSED ────────────────────────────────── -->
+    <div>
+      <div class="section-h">Paused <span class="meta">active step suspended — Resume / Modify / Cancel</span></div>
+      <div class="agent-plan">
+        <div class="agent-plan__header">
+          <img src="https://sl-design-team.github.io/jellyroll/assets/snapgpt-icon.svg" style="width:20px;height:20px;" alt="SnapGPT" />
+          <span class="agent-plan__title">Paused</span>
+          <span class="agent-plan__status-pill agent-plan__status-pill--paused">
+            <i data-lucide="pause" style="width:10px;height:10px;"></i>
+            Step 2 of 4
+          </span>
+        </div>
+        <ul class="agent-plan__steps">
+          <li class="agent-plan__step agent-plan__step--complete">
+            <span class="step-indicator step-indicator--complete">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <div class="step-body">
+              <div class="step-num">Step 1 · Done</div>
+              <div class="step-label">Search Salesforce for open opportunities &gt; $50k</div>
+            </div>
+          </li>
+          <!-- Paused step -->
+          <li class="agent-plan__step agent-plan__step--paused">
+            <span class="step-indicator step-indicator--paused">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="4" x2="6" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/></svg>
+            </span>
+            <div class="step-body">
+              <div class="step-num">Step 2 · Paused</div>
+              <div class="step-label">Checking calendar for conflicts this week</div>
+              <div class="pause-controls">
+                <button class="sl-btn sl-btn--warning">
+                  <i data-lucide="play"></i> Resume
+                </button>
+                <button class="sl-btn sl-btn--secondary">
+                  <i data-lucide="pencil"></i> Modify
+                </button>
+                <button class="sl-btn sl-btn--danger-ghost">
+                  <i data-lucide="square"></i> Stop
+                </button>
+              </div>
+            </div>
+          </li>
+          <li class="agent-plan__step">
+            <span class="step-indicator step-indicator--pending"></span>
+            <div class="step-body">
+              <div class="step-num">Step 3</div>
+              <div class="step-label">Draft outreach email for top 3 contacts</div>
+              <div class="step-actions">
+                <button class="step-action-link">Edit</button>
+                <button class="step-action-link step-action-link--danger">Skip</button>
+              </div>
+            </div>
+          </li>
+          <li class="agent-plan__step">
+            <span class="step-indicator step-indicator--pending"></span>
+            <div class="step-body">
+              <div class="step-num">Step 4</div>
+              <div class="step-label">Send emails and log activity in CRM</div>
+              <div class="step-actions">
+                <button class="step-action-link">Edit</button>
+                <button class="step-action-link step-action-link--danger">Skip</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="agent-plan__footer" style="color:var(--sl-yellow-800);font:400 11px/16px var(--font-sans);">
+          <i data-lucide="info" style="width:13px;height:13px;color:var(--sl-yellow-600);"></i>
+          Paused after step 1 completed. Completed steps are locked.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── STATE 3: MODIFYING A PENDING STEP ────────────────── -->
+  <div>
+    <div class="section-h">Modifying a pending step <span class="meta">inline edit — no modal, no restart required</span></div>
+    <div class="agent-plan" style="width:400px;">
+      <div class="agent-plan__header">
+        <img src="https://sl-design-team.github.io/jellyroll/assets/snapgpt-icon.svg" style="width:20px;height:20px;" alt="SnapGPT" />
+        <span class="agent-plan__title">Paused</span>
+        <span class="agent-plan__status-pill agent-plan__status-pill--paused">
+          <i data-lucide="pause" style="width:10px;height:10px;"></i>
+          Step 2 of 4
+        </span>
+      </div>
+      <ul class="agent-plan__steps">
+        <li class="agent-plan__step agent-plan__step--complete">
+          <span class="step-indicator step-indicator--complete">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div class="step-body">
+            <div class="step-num">Step 1 · Done</div>
+            <div class="step-label">Search Salesforce for open opportunities &gt; $50k</div>
+          </div>
+        </li>
+        <li class="agent-plan__step agent-plan__step--paused">
+          <span class="step-indicator step-indicator--paused">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="4" x2="6" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/></svg>
+          </span>
+          <div class="step-body">
+            <div class="step-num">Step 2 · Paused</div>
+            <div class="step-label">Checking calendar for conflicts this week</div>
+          </div>
+        </li>
+        <!-- Modifying step 3 inline -->
+        <li class="agent-plan__step agent-plan__step--modifying">
+          <div class="modify-header">
+            <span class="step-indicator step-indicator--pending" style="flex:none;"></span>
+            <div style="flex:1;min-width:0;">
+              <div class="step-num">Step 3 · Editing</div>
+              <input class="modify-input" type="text" value="Draft personalised email for Acme Corp only — keep it under 150 words" />
+            </div>
+          </div>
+          <div class="modify-actions">
+            <button class="sl-btn sl-btn--ghost">Cancel</button>
+            <button class="sl-btn sl-btn--primary">
+              <i data-lucide="check"></i> Save step
+            </button>
+          </div>
+        </li>
+        <li class="agent-plan__step">
+          <span class="step-indicator step-indicator--pending"></span>
+          <div class="step-body">
+            <div class="step-num">Step 4</div>
+            <div class="step-label">Send emails and log activity in CRM</div>
+            <div class="step-actions">
+              <button class="step-action-link">Edit</button>
+              <button class="step-action-link step-action-link--danger">Skip</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <div class="agent-plan__footer" style="color:var(--sl-blue-700);font:400 11px/16px var(--font-sans);">
+        <i data-lucide="pencil" style="width:13px;height:13px;color:var(--sl-blue-400);"></i>
+        Edit step 3 then resume — completed steps are unaffected.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STATE 4: SKIPPED STEP ─────────────────────────────── -->
+  <div>
+    <div class="section-h">After skip <span class="meta">skipped step struck through and dimmed — execution continues</span></div>
+    <div class="agent-plan" style="width:400px;">
+      <div class="agent-plan__header">
+        <img src="https://sl-design-team.github.io/jellyroll/assets/snapgpt-icon.svg" style="width:20px;height:20px;" alt="SnapGPT" />
+        <span class="agent-plan__title">Executing plan</span>
+        <span class="agent-plan__status-pill">
+          <span class="sl-spinner sl-spinner--xs"></span>
+          Step 4 of 4
+        </span>
+      </div>
+      <ul class="agent-plan__steps">
+        <li class="agent-plan__step agent-plan__step--complete">
+          <span class="step-indicator step-indicator--complete">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div class="step-body">
+            <div class="step-num">Step 1 · Done</div>
+            <div class="step-label">Search Salesforce for open opportunities &gt; $50k</div>
+          </div>
+        </li>
+        <li class="agent-plan__step agent-plan__step--complete">
+          <span class="step-indicator step-indicator--complete">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div class="step-body">
+            <div class="step-num">Step 2 · Done</div>
+            <div class="step-label">Check calendar for conflicts this week</div>
+          </div>
+        </li>
+        <li class="agent-plan__step agent-plan__step--skipped">
+          <span class="step-indicator step-indicator--skipped">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </span>
+          <div class="step-body">
+            <div class="step-num">Step 3 · Skipped</div>
+            <div class="step-label">Draft outreach email for top 3 contacts</div>
+          </div>
+        </li>
+        <li class="agent-plan__step agent-plan__step--running">
+          <span class="sl-spinner"></span>
+          <div class="step-body">
+            <div class="step-num">Step 4 · Running</div>
+            <div class="step-label">Logging activity in CRM…</div>
+          </div>
+        </li>
+      </ul>
+      <div class="agent-plan__footer">
+        <button class="sl-btn sl-btn--secondary">
+          <i data-lucide="pause"></i> Pause
+        </button>
+        <button class="sl-btn sl-btn--danger-ghost">
+          <i data-lucide="square"></i> Stop
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <dl class="spec">
+    <dt>Executing</dt>  <dd>Pause + Stop in footer · pending steps show Edit / Skip on hover</dd>
+    <dt>Paused</dt>     <dd>Yellow border + bg on active step · Resume / Modify / Stop inline · completed steps locked</dd>
+    <dt>Modifying</dt>  <dd>Blue border + bg · inline text input with focus ring · Save / Cancel · no modal</dd>
+    <dt>Skipped</dt>    <dd>Step dimmed to 45% opacity · label struck through · <code>×</code> indicator · execution continues</dd>
+    <dt>Locked steps</dt><dd>Completed steps never show Edit / Skip — only upcoming steps are editable</dd>
+  </dl>
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>
