@@ -32,7 +32,7 @@
     display: inline-flex; align-items: center; gap: 4px;
     padding: 2px 8px; border-radius: 999px;
     font: 800 11px/14px var(--font-sans);
-    background: var(--ai-tint); color: var(--ai-accent);
+    background: var(--sl-blue-100); color: var(--sl-blue-600);
   }
   .agent-plan__status-pill--paused {
     background: var(--sl-yellow-100); color: var(--sl-yellow-800);
@@ -54,8 +54,8 @@
 
   /* Running */
   .agent-plan__step--running {
-    background: var(--ai-tint);
-    border-left: 2px solid var(--ai-accent);
+    background: var(--sl-blue-100);
+    border-left: 2px solid var(--sl-blue-600);
     padding-left: 14px;
   }
   /* Paused */
@@ -100,7 +100,7 @@
     --sl-spin-thick: 1.25px;
     position: relative; display: inline-block;
     width: 20px; height: 20px; border-radius: 50%;
-    color: var(--ai-accent);
+    color: var(--sl-blue-600);
     background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
     -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
             mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
@@ -120,7 +120,7 @@
   .step-num { font: 800 10px/12px var(--font-mono); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
   .step-label { font: 400 13px/20px var(--font-sans); color: var(--color-text-body); }
   .agent-plan__step--complete .step-label { color: var(--color-text-subtle); }
-  .agent-plan__step--running .step-label  { font-weight: 800; color: var(--ai-accent); }
+  .agent-plan__step--running .step-label  { font-weight: 800; color: var(--sl-blue-600); }
   .agent-plan__step--paused .step-label   { font-weight: 800; color: var(--sl-yellow-800); }
 
   /* Hover-reveal edit/remove on pending steps */

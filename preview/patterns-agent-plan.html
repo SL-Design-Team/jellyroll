@@ -44,8 +44,8 @@
     padding: 2px 8px;
     border-radius: 999px;
     font: 800 11px/14px var(--font-sans);
-    background: var(--ai-tint);
-    color: var(--ai-accent);
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-600);
   }
 
   /* ─── STEP LIST ───────────────────────────────────────────── */
@@ -74,8 +74,8 @@
 
   /* Running step gets left accent + tint bg */
   .agent-plan__step--running {
-    background: var(--ai-tint);
-    border-left: 2px solid var(--ai-accent);
+    background: var(--sl-blue-100);
+    border-left: 2px solid var(--sl-blue-600);
     padding-left: 14px;
   }
 
@@ -112,7 +112,7 @@
     display: inline-block;
     width: 20px; height: 20px;
     border-radius: 50%;
-    color: var(--ai-accent);
+    color: var(--sl-blue-600);
     background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
     -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
             mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
@@ -149,7 +149,7 @@
   }
   .agent-plan__step--running .step-label {
     font-weight: 800;
-    color: var(--ai-accent);
+    color: var(--sl-blue-600);
   }
   .step-actions {
     display: flex; gap: 8px;
@@ -364,10 +364,10 @@
   <!-- ── SPEC ──────────────────────────────────────────────── -->
   <dl class="spec">
     <dt>States</dt>       <dd>pending · running · complete</dd>
-    <dt>Tokens</dt>       <dd><code>--ai-accent</code> · <code>--ai-tint</code> · <code>--sl-green-100/600</code> · <code>--sl-grey-200/400</code></dd>
-    <dt>Spinner</dt>      <dd>Comet-tail, <code>--ai-accent</code>, 20px, 1.1s rotate</dd>
+    <dt>Tokens</dt>       <dd><code>--sl-blue-600</code> · <code>--sl-blue-100</code> · <code>--sl-green-100/600</code> · <code>--sl-grey-200/400</code></dd>
+    <dt>Spinner</dt>      <dd>Comet-tail, <code>--sl-blue-600</code>, 20px, 1.1s rotate</dd>
     <dt>Edit / Remove</dt><dd>Visible on row hover only (opacity 0 → 1); hidden on complete and running steps</dd>
-    <dt>Running step</dt> <dd>2px left border <code>--ai-accent</code> · <code>--ai-tint</code> background · bold label</dd>
+    <dt>Running step</dt> <dd>2px left border <code>--sl-blue-600</code> · <code>--sl-blue-100</code> background · bold label</dd>
     <dt>Connector line</dt><dd>1px <code>--sl-grey-200</code> pseudo-element between steps</dd>
   </dl>
 </div>
