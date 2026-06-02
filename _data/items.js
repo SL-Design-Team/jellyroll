@@ -755,7 +755,7 @@ window.JELLYROLL_DATA = {
           tagline: "Activity stream of agent tool calls — separate from the chat thread.",
           meta: {
             usage: "Use to surface what an agent is doing as it runs, grouped into Done, In progress, Blocked, and Queued. Kept distinct from the SnapGPT chat thread — linked but never merged into one stream. Only non-empty sections render.",
-            behaviors: "The running item carries a 2px `--ai-accent` left border, the AI tint, and an inline spinner; blocked items use an orange left border. Clicking an item expands an inline tool disclosure with the tool name, request payload, and truncated response plus a `View all` link. The footer tracks overall progress (`Running step 2 of 4` → `Completed in 1m 22s`)."
+            behaviors: "The running item carries a 2px `--sl-blue-600` left border, a `--sl-blue-100` tint, and an inline spinner; blocked items use an orange left border. Clicking an item expands an inline tool disclosure with the tool name, request payload, and truncated response plus a `View all` link. The footer tracks overall progress (`Running step 2 of 4` → `Completed in 1m 22s`)."
           }
         },
         {

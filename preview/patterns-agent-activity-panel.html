@@ -40,8 +40,8 @@
     font: 800 10px/14px var(--font-sans);
     padding: 1px 7px;
     border-radius: 999px;
-    background: var(--ai-tint);
-    color: var(--ai-accent);
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-600);
   }
 
   /* AI spinner */
@@ -51,7 +51,7 @@
     display: inline-block;
     width: 14px; height: 14px;
     border-radius: 50%;
-    color: var(--ai-accent);
+    color: var(--sl-blue-600);
     background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
     -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
             mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
@@ -86,7 +86,7 @@
     border-radius: 50%;
     flex: none;
   }
-  .dot--running  { background: var(--ai-accent); }
+  .dot--running  { background: var(--sl-blue-600); }
   .dot--done     { background: var(--sl-green-500); }
   .dot--blocked  { background: var(--sl-orange-600); }
   .dot--queued   { background: var(--sl-grey-400); }
@@ -107,11 +107,11 @@
 
   /* Running item accent */
   .activity-item--running {
-    background: var(--ai-tint);
-    border-left: 2px solid var(--ai-accent);
+    background: var(--sl-blue-100);
+    border-left: 2px solid var(--sl-blue-600);
     padding-left: 12px;
   }
-  .activity-item--running:hover { background: var(--ai-tint); }
+  .activity-item--running:hover { background: var(--sl-blue-100); }
 
   /* Blocked item accent */
   .activity-item--blocked {
@@ -130,7 +130,7 @@
     margin-top: 1px;
   }
   .tool-icon svg { width: 13px; height: 13px; }
-  .tool-icon--ai       { background: var(--ai-tint);     color: var(--ai-accent); }
+  .tool-icon--ai       { background: var(--sl-blue-100);     color: var(--sl-blue-600); }
   .tool-icon--crm      { background: var(--sl-grey-100); color: var(--color-text-subtle); }
   .tool-icon--calendar { background: var(--sl-grey-100); color: var(--color-text-subtle); }
   .tool-icon--email    { background: var(--sl-grey-100); color: var(--color-text-subtle); }
@@ -147,7 +147,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .activity-item--running .item-action { font-weight: 800; color: var(--ai-accent); }
+  .activity-item--running .item-action { font-weight: 800; color: var(--sl-blue-600); }
   .activity-item--blocked .item-action { font-weight: 800; color: var(--sl-orange-700); }
   .activity-item--done .item-action    { color: var(--color-text-subtle); }
 
@@ -476,7 +476,7 @@
 
   <dl class="spec">
     <dt>Sections</dt>    <dd>Done · In progress · Blocked · Queued — only non-empty sections render</dd>
-    <dt>Running item</dt><dd>2px left border <code>--ai-accent</code> · <code>--ai-tint</code> bg · inline spinner</dd>
+    <dt>Running item</dt><dd>2px left border <code>--sl-blue-600</code> · <code>--sl-blue-100</code> bg · inline spinner</dd>
     <dt>Blocked item</dt><dd>2px left border <code>--sl-orange-500</code> · orange-50 bg</dd>
     <dt>Expand</dt>      <dd>Chevron rotates 90° · tool disclosure renders inline below the row</dd>
     <dt>Tool disclosure</dt><dd>Tool name · request payload · truncated response · "View all" link</dd>
