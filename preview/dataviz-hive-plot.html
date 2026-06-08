@@ -67,6 +67,16 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Hive plot",
+  "section": "Data visualization",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-hive-plot.html",
+  "tagline": "Krzywinski-style 2- or 3-axis hive — categorical layout for many-to-many.",
+  "usage": "Use when the network has natural axis categories — Sources → Pipelines → Destinations (3-axis) or Sources ↔ Destinations (2-axis). Axis positions are log-scale by degree. Edge color follows the source axis; never connect nodes on the same axis.",
+  "behaviors": "Selection highlights one node with a dashed halo, brightens 1-hop neighbors, and dims the rest. The optional `node ribbons` variant uses concentric rings to encode a secondary metric (volume tiers) — use rings OR tick labels, never both."
+}
+</script>
 </head>
 <body>
   <div class="card">

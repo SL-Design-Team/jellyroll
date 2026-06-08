@@ -81,6 +81,21 @@
   .legend .val { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-subtle); }
   .legend .chip { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: middle; margin-right: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Selection & skeleton",
+  "section": "Foundations",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-selection-skeleton.html",
+  "tagline": "Text highlight and loading placeholder colors.",
+  "usage": "`--color-selection-bg` and `--color-selection-text` style the browser's text-highlight via a global `::selection` rule — no per-component wiring needed. Use `--color-skeleton` (resting) and `--color-skeleton-pulse` (animated band) for loading placeholders; pair with `--duration-slow` and a 1400ms shimmer to avoid drawing too much attention. Skeletons should match the eventual content's geometry — same row heights, same line widths.",
+  "tokens": [
+    "--color-selection-bg",
+    "--color-selection-text",
+    "--color-skeleton",
+    "--color-skeleton-pulse"
+  ]
+}
+</script>
 </head>
 <body>
   <div class="card">

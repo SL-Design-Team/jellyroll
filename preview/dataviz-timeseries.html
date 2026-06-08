@@ -17,7 +17,19 @@
   .ts-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
   .ts-head .t { font: 800 14px/18px var(--font-sans); color: var(--sl-indigo-900); }
   .ts-head .sub { font: 400 12px/16px var(--font-sans); color: var(--color-text-subtle); }
-</style></head><body>
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Time series",
+  "section": "Data visualization",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-timeseries.html",
+  "tagline": "Line chart over time — single or multi-line.",
+  "anatomy": "X axis is time, ascending left to right. 1.5px lines using the categorical palette. Grid lines Grey-200; axis labels Grey-700. Markers on data points appear on hover.",
+  "usage": "Use for any over-time trend with 1–5 series. For more than 5 series, use small multiples. For percentages of a total over time, use Stacked area instead.",
+  "behaviors": "Hover snaps a crosshair to the nearest x value and shows a multi-series tooltip. Click-drag selects a range and zooms in; double-click resets the zoom."
+}
+</script>
+</head><body>
   <div class="card">
     <div class="row-label"><span class="name">Time series</span><span class="meta">line over time · axis · gridlines · legend · tooltip</span></div>
     <div class="ts-wrap">

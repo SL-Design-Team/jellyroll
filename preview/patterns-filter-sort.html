@@ -199,6 +199,16 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Filter, sort, faceted search",
+  "section": "Patterns",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-filter-sort.html",
+  "tagline": "Combined filter bar above a Table — applied filters render as Chips.",
+  "usage": "Use above any data-dense Table. Filter controls live in a single horizontal bar; applied filters render as removable Chips below the bar. Sort lives in the column headers (click to sort, click again to reverse).",
+  "behaviors": "Filter changes update the table in 150ms debounce. Chips remove their filter when their `×` is clicked. A `Clear all` link appears once two or more filters are active. URL params encode the filter state so the view is shareable."
+}
+</script>
 </head>
 <body>
   <div class="card">

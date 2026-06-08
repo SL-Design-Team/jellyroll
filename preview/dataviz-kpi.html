@@ -29,7 +29,19 @@
   .kpi .delta.flat { color: #7D8695; }
   .kpi .compare { font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
   .kpi .spark { margin-top: 4px; }
-</style></head><body>
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "KPI card",
+  "section": "Data visualization",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-kpi.html",
+  "tagline": "Single big number, label, optional trend chip and sparkline.",
+  "anatomy": "Card · 10/14 ExtraBold uppercase label · 32–48px ExtraBold value · optional sparkline below · optional `+/-` trend chip.",
+  "usage": "Use for one number that matters — total pipelines, success rate, throughput. Pair with a trend so the user reads it as motion, not a static value. For multiple related numbers, use a small-multiple of KPI cards rather than one card with several values.",
+  "behaviors": "Hover surfaces the underlying time window in a tooltip. Click navigates to the drill-down view."
+}
+</script>
+</head><body>
   <div class="card">
     <div class="row-label"><span class="name">KPI card</span><span class="meta">big number + trend delta + period · the unit of a dashboard</span></div>
     <div class="kpi-row">

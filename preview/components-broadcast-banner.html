@@ -103,6 +103,18 @@
   .spec dd { margin: 0; color: var(--color-text-subtle); }
   .spec dd b { color: var(--color-text-body); }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Broadcast banner",
+  "section": "Composed components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-broadcast-banner.html",
+  "tagline": "Full-width system message across the top of the app.",
+  "anatomy": "Strip spanning the canvas · leading status icon · message text · optional inline action link · trailing `×` dismiss.",
+  "options": "Tones: neutral / info / warning / danger. Dismissible or persistent. With or without action.",
+  "usage": "Use for system-wide announcements — maintenance windows, license issues, broad outages. Never use for per-record errors (use a Toast) or for ephemeral feedback. Persistent banners must include a `Learn more` link.",
+  "behaviors": "Dismiss is per-user and per-banner-id; the banner does not re-appear on next load until the id changes. Tone color sets the background tint and the leading icon."
+}
+</script>
 </head>
 <body>
   <div class="card">

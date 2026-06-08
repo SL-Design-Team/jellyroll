@@ -54,6 +54,18 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "JSON editor",
+  "section": "Advanced editors",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-json-editor.html",
+  "tagline": "Tree + raw view of a JSON document with inline edit.",
+  "anatomy": "Toolbar with mode toggle (Tree / Raw) · main pane · in Tree mode each row is a key with a typed editor on the right; in Raw mode it falls back to the Code editor with JSON highlighting.",
+  "options": "Tree, Raw, Diff (when comparing to a baseline). Read-only mode for output JSON.",
+  "usage": "Use for any user-edited JSON — pipeline configuration, account credentials, custom payloads. Diff mode pairs naturally with the Save / discard pattern.",
+  "behaviors": "Switching from Tree to Raw preserves edits; switching back validates and surfaces parse errors inline. Add / remove / reorder operations in Tree mode update the underlying JSON immediately."
+}
+</script>
 </head>
 <body>
   <div class="card">

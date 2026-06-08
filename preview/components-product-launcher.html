@@ -121,6 +121,17 @@
   }
   .feedback:hover { color: var(--sl-white); }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Product launcher (waffle)",
+  "section": "Composed components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-product-launcher.html",
+  "tagline": "Grid of product tiles surfaced from the waffle icon in the global header.",
+  "anatomy": "Trigger: 24px waffle icon in the global header · popover with a 3-column grid · each tile shows the product's gradient circle, name, and one-line description. Footer shows the release-notes card.",
+  "usage": "Use as the only cross-product launcher. Do not duplicate it in the Left nav or in product-specific menus. Tiles are sorted by frequency of use, with newly-released products marked by a `New` badge for 30 days.",
+  "behaviors": "Hover bumps a tile's background to Blue-50. Click navigates to the product's home, opening in the same tab unless Shift is held."
+}
+</script>
 </head>
 <body>
   <div class="card">

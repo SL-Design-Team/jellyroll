@@ -32,7 +32,17 @@
   .empty .t { font: 800 16px/22px var(--font-sans); color: var(--sl-indigo-900); }
   .empty .s { font: 400 13px/19px var(--font-sans); color: var(--color-text-subtle); max-width: 320px; }
   .empty .cta { font: 800 13px/18px var(--font-sans); color: var(--sl-blue-600); padding: 8px 14px; border: 1.5px solid var(--sl-blue-600); border-radius: var(--radius-sm); cursor: pointer; margin-top: 8px; }
-</style></head><body>
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Chart empty state",
+  "section": "Data visualization",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-empty.html",
+  "tagline": "No-data message inside the chart area — never a blank canvas.",
+  "usage": "Use when a chart's query returns no rows. Render a centered icon (`bar-chart-3-off` or similar) + a one-line message explaining why (`No runs in the selected window`) + a `Clear filters` action if the empty state is filter-induced."
+}
+</script>
+</head><body>
   <div class="card">
     <div class="row-label"><span class="name">Chart empty state</span><span class="meta">no-data · filtered-out · error variants</span></div>
     <div class="grid">

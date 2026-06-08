@@ -59,6 +59,25 @@
   .scale-table .lbl { color: var(--color-text-body); font-weight: 800; }
   .scale-table .val { color: var(--color-text-subtle); text-align: right; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Z-index",
+  "section": "Foundations",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-zindex.html",
+  "tagline": "8-step stacking scale — base through toast.",
+  "usage": "Use `--z-*` tokens instead of literal z-index values. The scale runs Base (0), Dropdown (1000), Sticky (1100), Overlay (1200), Modal (1300), Popover (1400), Tooltip (1500), Toast (1600). Tooltips sit above popovers because they can appear inside popovers; toasts sit highest so they're never occluded. Never set z-index outside this scale.",
+  "tokens": [
+    "--z-base",
+    "--z-dropdown",
+    "--z-sticky",
+    "--z-overlay",
+    "--z-modal",
+    "--z-popover",
+    "--z-tooltip",
+    "--z-toast"
+  ]
+}
+</script>
 </head>
 <body>
   <div class="card">

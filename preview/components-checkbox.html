@@ -30,6 +30,18 @@
   .cb.disabled.selected { background: var(--sl-blue-200); border-color: var(--sl-blue-200); }
   .cb.disabled.selected::after { border-color: var(--sl-blue-400); }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Checkbox",
+  "section": "Building blocks",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-checkbox.html",
+  "tagline": "Binary selection with optional indeterminate state.",
+  "anatomy": "16px square · 1.5px Grey-400 border · 2px radius · label to the right (14/22). Checked: Blue-600 fill with white Lucide check. Indeterminate: Blue-600 fill with white horizontal dash.",
+  "options": "States: unchecked, checked, indeterminate, disabled, error. Sizes: default 16px, small 14px.",
+  "usage": "Use for boolean selections in forms and for selecting rows in a table or list. For a single optional yes/no, prefer a Toggle. Indeterminate is reserved for the parent of a partially-selected group.",
+  "behaviors": "Click anywhere on the box or label toggles. Space toggles when focused. Disabled drops opacity to 0.5 and removes the pointer. Focus ring matches the global 3px Teal-600 halo."
+}
+</script>
 </head>
 <body>
   <div class="card">

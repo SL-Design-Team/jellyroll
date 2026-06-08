@@ -14,7 +14,24 @@
   .rule-good, .rule-bad { padding: 6px 10px; border-radius: var(--radius-sm); font: 500 12px/17px var(--font-sans); margin-bottom: 6px; }
   .rule-good { background: var(--sl-green-100); color: var(--sl-green-800); border-left: 3px solid var(--sl-green-600); }
   .rule-bad { background: var(--sl-red-100); color: var(--sl-red-900); border-left: 3px solid var(--sl-red-600); }
-</style></head>
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Status colors",
+  "section": "Color",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-status.html",
+  "tagline": "Green / Yellow / Red / Blue mapping for pipeline run states.",
+  "usage": "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite.",
+  "tokens": [
+    "--sl-green-600",
+    "--sl-red-600",
+    "--sl-yellow-600",
+    "--sl-blue-600",
+    "--sl-grey-500"
+  ]
+}
+</script>
+</head>
 <body>
   <div class="card">
     <div class="row-label"><span class="name">Status in data viz</span><span class="meta">when a chart encodes status, pull from semantic tokens — not the vibrant categorical</span></div>

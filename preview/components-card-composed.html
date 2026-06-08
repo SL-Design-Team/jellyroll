@@ -108,6 +108,18 @@
   .note b { color: var(--color-text-body); }
   .col-label { font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-subtle); margin-bottom: 6px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Composed cards",
+  "section": "Composed components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-card-composed.html",
+  "tagline": "The Card surface assembled from building blocks — pipeline, stat, and resource cards.",
+  "anatomy": "Built on the Card surface: a header (title + sub + icon Buttons), an optional status Badge, a meta row, and a footer split by a 1px Grey-200 rule (Avatar + owner left, an action Button right). Stat and resource variants swap the body for a metric value + sparkline, or an icon tile + Avatar group.",
+  "options": "Pipeline card (status Badge + schedule + owner + view action) · stat card (label + value + trend Badge + sparkline) · resource card (icon tile + Badge + Avatar group + open action). Default and selected states.",
+  "usage": "Use one card per object — a single pipeline, connection, or metric. For a list of many objects, use a Table instead. Compose the contents from existing building blocks (Buttons, Badge, Avatar) rather than inventing new chrome; inherit the surface, padding, and selection treatment from the Card building block.",
+  "behaviors": "Selection uses the 3px Blue-600 border from the Card surface — never a fill. Hover raises the border to 1.5px Blue-600. The `more` icon button opens the Menu. Card width is intrinsic or grid-driven; cards do not stretch to fill their parent."
+}
+</script>
 </head>
 <body>
   <div class="card">

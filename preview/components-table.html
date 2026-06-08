@@ -324,6 +324,27 @@
     color: var(--color-text-body); flex: 1; width: 100%;
   }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Table",
+  "section": "Composed components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-table.html",
+  "tagline": "Dense data table — the dominant shape for Manager and Monitor.",
+  "anatomy": "Toolbar (count + text-button actions left, search + icon buttons right) · 40px header row with Label 14/22 ExtraBold cells, subtle vertical dividers, sort arrow only on the active column, per-column filter-funnel button to the left of the label · 40px data rows (Compact, default) with Body 14/22 Regular text · 1px Grey-200 row dividers · 12px horizontal cell padding · 40px left checkbox column · 80px right action column with right-aligned dots-vertical (always visible) · pagination footer.",
+  "options": "Toolbar configuration uses two small popovers anchored to the right-side icons: Display (row spacing — Expanded 48 / Compact 40 / Dense 32 — row striping, auto-refresh) and Columns (per-column show/hide checkboxes + drag-to-reorder). Per-column filters open from the funnel button on the column header itself (search input, multi-select checklist, or numeric range, depending on the column type). All changes apply instantly — no Apply/Cancel commit step. Sortable columns (single active sort), resizable columns with a 60px minimum, fluid % column widths down to an 800px table minimum (horizontal scroll inside the component below that), sticky header, sticky first column, bulk selection, expandable rows, inline edit.",
+  "usage": "Use for any list of structured records — pipelines, snaps, accounts, tasks. Tables scale to thousands of rows with pagination or virtual scroll. For 5 or fewer items, prefer a list of Cards.",
+  "behaviors": "Sort: click a sortable header to cycle asc → desc → unsorted (restoring original order); only the active column shows an arrow. Filter: click the funnel on a column header to open a per-column filter popover; the funnel turns blue while a filter is active and rows that don't match are hidden instantly. Selection: click the row checkbox to toggle; the header checkbox selects all when any are unselected and clears all otherwise; selecting flips the toolbar count to `N selected` and brings in selection actions (Delete / Clone / Stop / More). Row hover swaps the background to Grey-100. Selected row uses Blue-100. Display popover row-spacing radios apply live as you click. Columns popover checkboxes can't leave zero columns visible; drag handles reorder both the popover list and the actual table columns in lockstep.",
+  "tokens": [
+    "--sl-grey-100",
+    "--sl-blue-100",
+    "--sl-grey-200",
+    "--sl-grey-300",
+    "--color-text-body",
+    "--color-text-subtle",
+    "--sl-blue-600"
+  ]
+}
+</script>
 </head>
 <body>
   <div class="card">

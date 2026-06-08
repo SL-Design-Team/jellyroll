@@ -13,7 +13,18 @@
   .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
   .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
 
-</style></head><body>
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Sankey diagram",
+  "section": "Data visualization",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-sankey.html",
+  "tagline": "Flow from sources to destinations — ribbon width = volume.",
+  "usage": "Use to expose record flow Sources → Pipelines → Destinations or any other many-to-many flow. Ribbon width encodes volume; node height encodes total throughput at that node. For 2-axis flows, prefer Hive plot.",
+  "behaviors": "Hover highlights a ribbon and dims the rest, surfacing the per-flow volume."
+}
+</script>
+</head><body>
   <div class="card">
     <div class="row-label"><span class="name">Sankey diagram</span><span class="meta">record flow from sources → pipelines → destinations · width = volume</span></div>
     <div class="panel">

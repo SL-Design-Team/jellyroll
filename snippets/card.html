@@ -1,0 +1,29 @@
+<!--
+  JellyRoll · Card — clean copy-paste snippet (the surface building block).
+  White fill, 1px Grey-300 hairline, 4px radius, 16px padding, raised shadow.
+  Selection is a thicker border — never a background fill. Compose content
+  (headers, Buttons, Badge, Avatar) on top. Demo: /preview/components-card.html
+  Composed examples: /preview/components-card-composed.html
+  Requires the token CSS: https://sl-design-team.github.io/jellyroll/colors_and_type.css
+-->
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  .sl-card {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    box-shadow: var(--shadow-raised);
+  }
+  /* Interactive cards: hover raises the border; selected goes thicker. */
+  .sl-card--interactive { cursor: pointer; transition: border-color 150ms ease-out, box-shadow 150ms ease-out; }
+  .sl-card--interactive:hover { border: 1.5px solid var(--sl-blue-600); box-shadow: var(--shadow-raised-hover); }
+  .sl-card.is-selected { border: 3px solid var(--sl-blue-600); padding: 14px; }   /* compensate 2px for thicker border */
+</style>
+
+<!-- Bare surface -->
+<div class="sl-card">Card content</div>
+
+<!-- Interactive + selected -->
+<div class="sl-card sl-card--interactive">Hover me</div>
+<div class="sl-card is-selected">Selected</div>

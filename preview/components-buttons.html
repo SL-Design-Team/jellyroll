@@ -170,6 +170,30 @@
   .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
   .divider { height: 1px; background: var(--sl-grey-200); }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Buttons",
+  "section": "Building blocks",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-buttons.html",
+  "tagline": "Verb-led actions in primary, secondary, tertiary, and destructive variants.",
+  "anatomy": "Label (sentence case, 1–3 words) · optional leading or trailing 16px icon · 1.5px transparent or colored border · 4px radius. Heights: lg 40px, md 36px, sm 28px. Icon-only buttons are square at the same height.",
+  "options": "Variants: primary (filled blue), secondary (white with blue border), tertiary/text (no border, underline on hover), destructive (red fill). Sizes: lg / md / sm. Icon-only variant for each.",
+  "usage": "One primary per screen for the single most important action. Secondary for supporting actions. Tertiary/text for low-emphasis actions inside dense forms or tables. Destructive only for irreversible operations — pair with a confirm modal.",
+  "behaviors": "Primary hover applies the teal→blue gradient (`--color-background-primary-hover`) — not a darker blue. Pressed = Teal-400. Secondary stays white on hover; only border + text shift blue → teal. Tertiary underlines on hover. Press never uses transforms — color only. Disabled drops to Blue-200 with white text and removes the pointer.",
+  "tokens": [
+    "--color-background-primary",
+    "--color-background-primary-hover",
+    "--color-background-primary-pressed",
+    "--color-background-disabled",
+    "--color-background-secondary",
+    "--color-background-secondary-hover",
+    "--color-border-default",
+    "--color-border-focus",
+    "--radius-sm",
+    "--shadow-focus-ring"
+  ]
+}
+</script>
 </head>
 <body>
   <div class="card">

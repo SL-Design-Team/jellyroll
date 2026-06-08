@@ -140,6 +140,18 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Date picker",
+  "section": "Building blocks",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-date-picker.html",
+  "tagline": "Calendar dropdown attached to an input for picking a date or range.",
+  "anatomy": "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill.",
+  "options": "Single date or range; min/max bounds; disabled dates; locale-aware first-day-of-week and format.",
+  "usage": "Use for any date input where the user benefits from seeing a calendar. For purely typed dates (e.g., dates a backend system fills in), use a plain Input with a date mask.",
+  "behaviors": "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill."
+}
+</script>
 </head>
 <body>
   <div class="card">

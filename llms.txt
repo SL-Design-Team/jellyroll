@@ -1,0 +1,171 @@
+# JellyRoll · SnapLogic Design System
+
+> SnapLogic's code-first design system. The live repo is the source of truth: token CSS, one self-contained preview HTML per asset, webfonts, and brand assets. Fetch the token CSS and the relevant preview files before implementing a component.
+
+The structured catalog (every component with anatomy, usage, and tokens as JSON) 
+is at [jellyroll.json](https://sl-design-team.github.io/jellyroll/jellyroll.json). The complete token system 
+(color ramps, semantic tokens, spacing, radii, shadows, type) is at 
+[colors_and_type.css](https://sl-design-team.github.io/jellyroll/colors_and_type.css). Each preview HTML is 
+self-contained — inline component CSS, token usage, and markup. Prefer semantic 
+tokens over raw ramp variables. Sentence case; no emoji; Lucide icons only.
+
+## Foundations
+
+The rules every component inherits — design tokens, spacing, motion, elevation, and accessibility.
+
+- [Accessibility](https://sl-design-team.github.io/jellyroll/preview/foundations-accessibility.html): WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.
+- [Iconography](https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html): 202 outlined line icons — 24×24 viewbox, currentColor stroke.
+- [Radius](https://sl-design-team.github.io/jellyroll/preview/spacing-radius.html): Restrained corners: 2 / 4 / 6–8 / 999px.
+- [Shadows](https://sl-design-team.github.io/jellyroll/preview/spacing-shadows.html): Light, blueish, low-spread — borders carry more weight than shadows in this system.
+- [Spacing](https://sl-design-team.github.io/jellyroll/preview/spacing-scale.html): Strict 4-pt grid: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.
+- [Tokens](https://sl-design-team.github.io/jellyroll/preview/foundations-tokens.html): All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.
+- [Surfaces](https://sl-design-team.github.io/jellyroll/preview/colors-surfaces.html): Navbar · Canvas · Sunken · Raised · Overlay — five elevation planes.
+- [Type scale](https://sl-design-team.github.io/jellyroll/preview/type-scale.html): Display through Micro — eight steps with set line heights and weight conventions.
+- [Type specimen](https://sl-design-team.github.io/jellyroll/preview/type-faces.html): Acherus Grotesque, weights 200–900, plus the SF Mono code font.
+- [Motion](https://sl-design-team.github.io/jellyroll/preview/foundations-motion.html): Durations and easings for transitions and animations.
+- [Z-index](https://sl-design-team.github.io/jellyroll/preview/foundations-zindex.html): 8-step stacking scale — base through toast.
+- [Breakpoints](https://sl-design-team.github.io/jellyroll/preview/foundations-breakpoints.html): Viewport widths — sm 640, md 768, lg 1024, xl 1280.
+- [Selection & skeleton](https://sl-design-team.github.io/jellyroll/preview/foundations-selection-skeleton.html): Text highlight and loading placeholder colors.
+
+## Color
+
+The complete color system — the brand gradient, ten ramps, and the semantic tokens built on them.
+
+- [Color ramps](https://sl-design-team.github.io/jellyroll/preview/colors-all-ramps.html): Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.
+- [Brand gradient](https://sl-design-team.github.io/jellyroll/preview/colors-gradient-brand.html): linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.
+- [Semantic text](https://sl-design-team.github.io/jellyroll/preview/colors-semantic-text.html): Body, subtle, link, status, information, discovery, accents.
+- [Palette · Categorical](https://sl-design-team.github.io/jellyroll/preview/dataviz-categorical.html): Five-color chart palette for unordered categories — designed for light and dark backgrounds.
+- [Palette · Diverging](https://sl-design-team.github.io/jellyroll/preview/dataviz-diverging.html): Two-hue chart ramps for values around a meaningful midpoint.
+- [Palette · Sequential](https://sl-design-team.github.io/jellyroll/preview/dataviz-sequential.html): Single-hue chart ramps for ordered values — counts, magnitudes, percentages.
+- [Status colors](https://sl-design-team.github.io/jellyroll/preview/dataviz-status.html): Green / Yellow / Red / Blue mapping for pipeline run states.
+
+## Brand
+
+The SnapLogic logo and brand marks, and how to apply them.
+
+- [Logo](https://sl-design-team.github.io/jellyroll/preview/brand-logo.html): SnapLogic wordmark + snap-icon. White-on-dark version supplied.
+
+## Building blocks
+
+Single-purpose controls — each does one job. The atoms you compose with.
+
+- [Avatar](https://sl-design-team.github.io/jellyroll/preview/components-avatar.html): User identity glyph — initials, photo, or fallback icon.
+- [Badge](https://sl-design-team.github.io/jellyroll/preview/components-badges.html): Compact status or metadata pill, 10px ExtraBold uppercase.
+- [Buttons](https://sl-design-team.github.io/jellyroll/preview/components-buttons.html): Verb-led actions in primary, secondary, tertiary, and destructive variants.
+- [Card](https://sl-design-team.github.io/jellyroll/preview/components-card.html): White surface with a 1px Grey-300 border. Borders — not shadow — indicate selection.
+- [Checkbox](https://sl-design-team.github.io/jellyroll/preview/components-checkbox.html): Binary selection with optional indeterminate state.
+- [Chip](https://sl-design-team.github.io/jellyroll/preview/components-chip.html): Selectable or removable label for filters, tags, and multi-select values.
+- [Combobox](https://sl-design-team.github.io/jellyroll/preview/components-combobox.html): Input combined with a filtered dropdown for very long or open-ended lists.
+- [Date picker](https://sl-design-team.github.io/jellyroll/preview/components-date-picker.html): Calendar dropdown attached to an input for picking a date or range.
+- [Field anatomy](https://sl-design-team.github.io/jellyroll/preview/components-field-anatomy.html): Label, optional indicator, control, help text, error — in that order.
+- [Field states](https://sl-design-team.github.io/jellyroll/preview/components-field-states.html): Rest, hover, focus, filled, disabled, read-only, error, AI-generating, AI-review.
+- [Inputs](https://sl-design-team.github.io/jellyroll/preview/components-inputs.html): Standard 40px-tall single-line text input.
+- [Multi-select](https://sl-design-team.github.io/jellyroll/preview/components-multi-select.html): Select-style trigger that accepts multiple values rendered as chips.
+- [Notification dot](https://sl-design-team.github.io/jellyroll/preview/components-notification-dot.html): 8px red dot anchored to the top-right of an icon or avatar.
+- [Number input](https://sl-design-team.github.io/jellyroll/preview/components-number.html): Numeric input with optional stepper and unit suffix.
+- [Password field](https://sl-design-team.github.io/jellyroll/preview/components-password.html): Masked input with a show/hide toggle.
+- [Radio](https://sl-design-team.github.io/jellyroll/preview/components-radio.html): Single-choice from a small visible set.
+- [Search field](https://sl-design-team.github.io/jellyroll/preview/components-search-field.html): Input with a leading search icon and a clear-on-typed affordance.
+- [Segmented control](https://sl-design-team.github.io/jellyroll/preview/components-segmented-control.html): Compact horizontal switch for 2–5 mutually exclusive options.
+- [Select](https://sl-design-team.github.io/jellyroll/preview/components-select.html): Single-choice dropdown with searchable + grouped variants.
+- [Skeleton loader](https://sl-design-team.github.io/jellyroll/preview/components-skeleton.html): Pulsing grey shape standing in for loading content.
+- [Slider](https://sl-design-team.github.io/jellyroll/preview/components-slider.html): Drag to pick a value or a range from a continuous track.
+- [Spinner](https://sl-design-team.github.io/jellyroll/preview/components-spinner.html): Comet-tail loader — a tapered ring on a 1.1s rotation.
+- [Status atom](https://sl-design-team.github.io/jellyroll/preview/components-status.html): 6px colored dot + label — the minimal status indicator.
+- [Text area](https://sl-design-team.github.io/jellyroll/preview/components-textarea.html): Multi-line text input. Auto-grows by default; resize handle on demand.
+- [Toggle](https://sl-design-team.github.io/jellyroll/preview/components-toggle.html): On/off switch for a setting that takes effect immediately.
+- [Tooltip](https://sl-design-team.github.io/jellyroll/preview/components-tooltip.html): Short label or description surfaced on hover or focus.
+- [Tree select](https://sl-design-team.github.io/jellyroll/preview/components-tree-select.html): Hierarchical picker — folders, snaplexes, org units.
+
+## Composed components
+
+Several building blocks assembled into a complete piece of the interface.
+
+- [Avatar group](https://sl-design-team.github.io/jellyroll/preview/components-avatar-group.html): Stack of overlapping avatars with overflow count.
+- [Broadcast banner](https://sl-design-team.github.io/jellyroll/preview/components-broadcast-banner.html): Full-width system message across the top of the app.
+- [Composed cards](https://sl-design-team.github.io/jellyroll/preview/components-card-composed.html): The Card surface assembled from building blocks — pipeline, stat, and resource cards.
+- [Drawer](https://sl-design-team.github.io/jellyroll/preview/components-drawer.html): Side panel that slides in from the right for details or secondary tasks.
+- [Environment picker](https://sl-design-team.github.io/jellyroll/preview/components-env-picker.html): Switcher for the active environment (Dev / Stage / Prod).
+- [File upload](https://sl-design-team.github.io/jellyroll/preview/components-file-upload.html): Drop zone, browse button, and progress.
+- [Form row](https://sl-design-team.github.io/jellyroll/preview/components-form-row.html): Horizontal label + control + help layout used inside forms.
+- [Form section](https://sl-design-team.github.io/jellyroll/preview/components-form-section.html): Grouped fields under a heading + optional description.
+- [Global header](https://sl-design-team.github.io/jellyroll/preview/components-global-header.html): The dark Indigo-1000 chrome that spans every product.
+- [Left nav](https://sl-design-team.github.io/jellyroll/preview/components-left-nav.html): Contextual product navigation — collapsible to icons-only.
+- [Menu](https://sl-design-team.github.io/jellyroll/preview/components-menu.html): Light, button-anchored action menu for commands and single-select.
+- [Modal](https://sl-design-team.github.io/jellyroll/preview/components-modal.html): Overlay surface for confirms, focused tasks, and destructive actions.
+- [Notifications](https://sl-design-team.github.io/jellyroll/preview/components-notifications.html): Notification center surfaced from the global bell icon.
+- [Product launcher (waffle)](https://sl-design-team.github.io/jellyroll/preview/components-product-launcher.html): Grid of product tiles surfaced from the waffle icon in the global header.
+- [Search overlay](https://sl-design-team.github.io/jellyroll/preview/components-search-overlay.html): Full-page search modal triggered from anywhere by `⌘ K`.
+- [SnapGPT panel](https://sl-design-team.github.io/jellyroll/preview/components-snapgpt-panel.html): AI assistant side panel — woven through the suite as the AI accent.
+- [Stepper](https://sl-design-team.github.io/jellyroll/preview/components-stepper.html): Numbered progress through a multi-step flow.
+- [Table](https://sl-design-team.github.io/jellyroll/preview/components-table.html): Dense data table — the dominant shape for Manager and Monitor.
+- [Tabs](https://sl-design-team.github.io/jellyroll/preview/components-tabs.html): Horizontal tab bar that swaps views inside a single surface.
+- [Toast](https://sl-design-team.github.io/jellyroll/preview/components-toast.html): Transient message anchored bottom-right.
+- [User menu](https://sl-design-team.github.io/jellyroll/preview/components-user-menu.html): Avatar in the global header opens an account + preferences popover.
+
+## Patterns
+
+Reusable flows that combine components to solve a recurring product problem.
+
+- [Agent activity panel](https://sl-design-team.github.io/jellyroll/preview/patterns-agent-activity-panel.html): Activity stream of agent tool calls — separate from the chat thread.
+- [Agent plan](https://sl-design-team.github.io/jellyroll/preview/patterns-agent-plan.html): Plan-and-execute flow — review, approve, then watch steps run.
+- [Agent recovery](https://sl-design-team.github.io/jellyroll/preview/patterns-agent-recovery.html): Three distinct recovery paths — misunderstood, tool failure, partial success.
+- [Agent step override](https://sl-design-team.github.io/jellyroll/preview/patterns-agent-step-override.html): Mid-execution controls — pause, resume, modify, skip, stop.
+- [Agent tool disclosure](https://sl-design-team.github.io/jellyroll/preview/patterns-agent-tool-disclosure.html): Inline tool call + response — collapsed or expanded, success or error.
+- [AI confidence](https://sl-design-team.github.io/jellyroll/preview/patterns-ai-confidence.html): Visual treatment for AI output the user should sanity-check.
+- [AI-assisted input](https://sl-design-team.github.io/jellyroll/preview/patterns-ai-assisted-input.html): Field with an inline AI generate button.
+- [Bulk selection](https://sl-design-team.github.io/jellyroll/preview/patterns-bulk-selection.html): Header checkbox + per-row checkbox + sticky action bar.
+- [Destructive confirm](https://sl-design-team.github.io/jellyroll/preview/patterns-destructive-confirm.html): Modal with positive-phrasing button labels.
+- [Drag and drop](https://sl-design-team.github.io/jellyroll/preview/patterns-drag-drop.html): Drop affordances on canvas, lists, and tables.
+- [Drawer + SnapGPT](https://sl-design-team.github.io/jellyroll/preview/patterns-drawer-snapgpt.html): SnapGPT panel composed inside a Drawer surface.
+- [Editable AI output](https://sl-design-team.github.io/jellyroll/preview/patterns-editable-ai-output.html): AI-generated content the user can review and edit before accepting.
+- [Empty states](https://sl-design-team.github.io/jellyroll/preview/patterns-empty-states.html): First-run, no-results, and after-clear states.
+- [Error states](https://sl-design-team.github.io/jellyroll/preview/patterns-error-states.html): Page-level, surface-level, and inline error layouts.
+- [Filter, sort, faceted search](https://sl-design-team.github.io/jellyroll/preview/patterns-filter-sort.html): Combined filter bar above a Table — applied filters render as Chips.
+- [Form validation](https://sl-design-team.github.io/jellyroll/preview/patterns-form-validation.html): Inline error messages — specific, never generic.
+- [Inline editing](https://sl-design-team.github.io/jellyroll/preview/patterns-inline-editing.html): Click a value to edit in place — no dedicated edit screen.
+- [Keyboard shortcuts](https://sl-design-team.github.io/jellyroll/preview/patterns-keyboard-shortcuts.html): Shortcut conventions across the suite.
+- [Pagination](https://sl-design-team.github.io/jellyroll/preview/patterns-pagination.html): Page number controls + page size selector for long tables.
+- [Save / discard](https://sl-design-team.github.io/jellyroll/preview/patterns-save-discard.html): Sticky action bar that surfaces when the user has unsaved changes.
+- [Undo via toast](https://sl-design-team.github.io/jellyroll/preview/patterns-undo-toast.html): Reversible destructive actions skip the confirm modal and offer Undo in the toast.
+- [Wizard / multi-step flow](https://sl-design-team.github.io/jellyroll/preview/patterns-wizard.html): Stepper-driven flow for onboarding and complex setup.
+
+## Data visualization
+
+Chart and graph types, with guidance on when to use each.
+
+- [Bar chart](https://sl-design-team.github.io/jellyroll/preview/dataviz-bar.html): Vertical or horizontal bars — ranking and discrete comparisons.
+- [Calendar heatmap](https://sl-design-team.github.io/jellyroll/preview/dataviz-calendar.html): GitHub-style daily heatmap over a quarter or year.
+- [Chart empty state](https://sl-design-team.github.io/jellyroll/preview/dataviz-empty.html): No-data message inside the chart area — never a blank canvas.
+- [Chart loading state](https://sl-design-team.github.io/jellyroll/preview/dataviz-loading.html): Skeleton bars and lines while a chart fetches.
+- [Combo (bar + line)](https://sl-design-team.github.io/jellyroll/preview/dataviz-combo.html): Bars and a line on a single chart with dual axes.
+- [Donut chart](https://sl-design-team.github.io/jellyroll/preview/dataviz-donut.html): Proportion of total across 3–5 categories.
+- [Gauge](https://sl-design-team.github.io/jellyroll/preview/dataviz-gauge.html): Arc showing a single value against a known range — capacity, utilization.
+- [Heatmap](https://sl-design-team.github.io/jellyroll/preview/dataviz-heatmap.html): Two-axis matrix of values colored by a sequential ramp.
+- [Histogram](https://sl-design-team.github.io/jellyroll/preview/dataviz-histogram.html): Distribution of a numeric value — bin width chosen by the chart.
+- [Hive plot](https://sl-design-team.github.io/jellyroll/preview/dataviz-hive-plot.html): Krzywinski-style 2- or 3-axis hive — categorical layout for many-to-many.
+- [KPI card](https://sl-design-team.github.io/jellyroll/preview/dataviz-kpi.html): Single big number, label, optional trend chip and sparkline.
+- [Sankey diagram](https://sl-design-team.github.io/jellyroll/preview/dataviz-sankey.html): Flow from sources to destinations — ribbon width = volume.
+- [Sparkline](https://sl-design-team.github.io/jellyroll/preview/dataviz-sparkline.html): Small inline trend line — no axes, no labels.
+- [Stacked area](https://sl-design-team.github.io/jellyroll/preview/dataviz-stacked.html): Time series where the layers stack to show share of total.
+- [Swim-lane Gantt](https://sl-design-team.github.io/jellyroll/preview/dataviz-gantt.html): Pipeline runs along a timeline — color = final status.
+- [Time series](https://sl-design-team.github.io/jellyroll/preview/dataviz-timeseries.html): Line chart over time — single or multi-line.
+- [Usage rules](https://sl-design-team.github.io/jellyroll/preview/dataviz-usage.html): When to reach for each chart type — and when not to.
+
+## Advanced editors
+
+Specialized multi-field editors for SnapLogic's configuration surfaces.
+
+- [API parameter builder](https://sl-design-team.github.io/jellyroll/preview/components-api-param-builder.html): Build a REST request — path, query, headers, body.
+- [Code editor](https://sl-design-team.github.io/jellyroll/preview/components-code-editor.html): Embedded Monaco-style code editor — JSON, JS, SQL, Python.
+- [Connection picker](https://sl-design-team.github.io/jellyroll/preview/components-connection-picker.html): Multi-step picker for selecting a connection or creating one inline.
+- [Dynamic repeater](https://sl-design-team.github.io/jellyroll/preview/components-dynamic-repeater.html): Field group the user can duplicate N times.
+- [JSON editor](https://sl-design-team.github.io/jellyroll/preview/components-json-editor.html): Tree + raw view of a JSON document with inline edit.
+- [Key/value editor](https://sl-design-team.github.io/jellyroll/preview/components-key-value-editor.html): Inline editor for headers, params, and other flat dicts.
+- [Schema builder](https://sl-design-team.github.io/jellyroll/preview/components-schema-builder.html): Visual editor for JSON schemas — output specs, payload shapes.
+
+## Templates
+
+Full-page starting points — complete screens assembled from components and patterns.
+
+- [Designer · Empty canvas](https://sl-design-team.github.io/jellyroll/preview/templates-designer.html): Full Designer template — global header, left rail, canvas, toolbar, properties panel.

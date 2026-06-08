@@ -27,14 +27,22 @@ curl -sL $BASE/jellyroll-setup.md -o ~/.claude/commands/jellyroll-setup.md
 The design system is published live from [`SL-Design-Team/jellyroll`](https://github.com/SL-Design-Team/jellyroll) — the repo is the source of truth, not a frozen export. Any AI coding agent that can fetch URLs can pull the agent-oriented context with this prompt:
 
 ```
-Read the JellyRoll design system at https://sl-design-team.github.io/jellyroll/README.md,
-then fetch the token CSS at https://sl-design-team.github.io/jellyroll/colors_and_type.css
-and any preview files at https://sl-design-team.github.io/jellyroll/preview/<name>.html that
-relate to what you're building.
+Read the JellyRoll index for agents at https://sl-design-team.github.io/jellyroll/llms.txt,
+fetch the token CSS at https://sl-design-team.github.io/jellyroll/colors_and_type.css,
+and pull the preview files at https://sl-design-team.github.io/jellyroll/preview/<name>.html
+(or the bare snippets at /snippets/<name>.html) for whatever you're building.
 Implement: <describe what you want built>
 ```
 
-The repo includes the full token CSS, every preview HTML file (inline styles + Lucide icon usage), the Acherus Grotesque webfonts, and brand assets. Browse the rendered gallery at <https://sl-design-team.github.io/jellyroll/> to see component names + previews; each tile's URL maps directly to a fetchable file under `/preview/`.
+**Agent-readable entry points** (all served live):
+
+- **[`llms.txt`](https://sl-design-team.github.io/jellyroll/llms.txt)** — index of the whole system: every component grouped by section, with one-line descriptions and links. Start here.
+- **[`jellyroll.json`](https://sl-design-team.github.io/jellyroll/jellyroll.json)** — the structured catalog: each asset's anatomy / options / usage / behaviors and its token list, as parseable JSON (no HTML scraping).
+- **`colors_and_type.css`** — the token source of truth (10 ramps, semantic tokens, spacing, radii, shadows, type).
+- **`preview/<name>.html`** — the canonical full demo of each component (every state and variant). Each also carries a `<script type="application/json" id="jellyroll-meta">` block in its `<head>`.
+- **`snippets/<name>.html`** — chrome-free, copy-paste blocks (reusable CSS + canonical markup, real `:hover`/`:active` states). A curated subset; see [`snippets/README.md`](https://sl-design-team.github.io/jellyroll/snippets/README.md).
+
+Browse the rendered gallery at <https://sl-design-team.github.io/jellyroll/> to see component names + previews; each tile's URL maps directly to a fetchable file under `/preview/`.
 
 Because the source of truth is the live repo, what you fetch is always current — no stale tarball drift.
 

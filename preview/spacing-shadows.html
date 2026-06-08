@@ -14,6 +14,23 @@
   .tile-overlay { box-shadow: var(--shadow-overlay); }
   .tile-focus { box-shadow: var(--shadow-focus-ring); border: 1px solid var(--sl-teal-600); }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Shadows",
+  "section": "Foundations",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/spacing-shadows.html",
+  "tagline": "Light, blueish, low-spread — borders carry more weight than shadows in this system.",
+  "usage": "Resting card shadow is `0 2px 4px rgba(206, 217, 240, 0.8)` — literally a tint of Blue-200. Modals use `0 8px 24px rgba(38, 40, 44, 0.18)`. Focus rings use a 3px Teal-600 halo at 35% alpha. No heavy drop shadows, no neumorphism, no glow.",
+  "tokens": [
+    "--shadow-raised",
+    "--shadow-raised-hover",
+    "--shadow-overlay",
+    "--shadow-overlay-strong",
+    "--shadow-focus-ring",
+    "--shadow-inset-sunken"
+  ]
+}
+</script>
 </head>
 <body>
   <div class="card" style="background: var(--sl-grey-100)">

@@ -29,7 +29,18 @@
   .bar.fail    { background: var(--sl-red-200);    color: var(--sl-red-900); }
   .bar.running { background: var(--sl-blue-200);   color: var(--sl-blue-800); }
   .bar.warn    { background: var(--sl-orange-200); color: var(--sl-orange-900); }
-</style></head><body>
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Swim-lane Gantt",
+  "section": "Data visualization",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-gantt.html",
+  "tagline": "Pipeline runs along a timeline — color = final status.",
+  "usage": "Use for run-history visualization in Monitor. One row per pipeline; bars are run durations colored by final status (pastel-200 bg + dark-800 text). A continuous `streaming` lane marks realtime pipelines.",
+  "behaviors": "Hover lifts the bar and surfaces run id, duration, status, snaplex. Click drills into the run's detail view."
+}
+</script>
+</head><body>
   <div class="card">
     <div class="row-label"><span class="name">Swim-lane Gantt</span><span class="meta">one row per pipeline · run durations along time</span></div>
     <div class="panel">

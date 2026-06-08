@@ -118,6 +118,16 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Bulk selection",
+  "section": "Patterns",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-bulk-selection.html",
+  "tagline": "Header checkbox + per-row checkbox + sticky action bar.",
+  "usage": "Use on any Table where the user may operate on more than one row at a time — delete, archive, tag, move. The header row swaps to a `N selected · actions` bar once at least one row is selected.",
+  "behaviors": "Header checkbox cycles unchecked → all-selected → indeterminate (when only some rows are selected). Shift+click on a row selects the range between the last selection and the clicked row. The action bar persists across pagination — the user's selection is preserved when the page changes."
+}
+</script>
 </head>
 <body>
   <div class="card">

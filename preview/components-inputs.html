@@ -17,6 +17,33 @@
   .sl-input.disabled { background: var(--field-bg-disabled); color: var(--field-text-disabled); border-color: var(--field-border-disabled); }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Inputs",
+  "section": "Building blocks",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-inputs.html",
+  "tagline": "Standard 40px-tall single-line text input.",
+  "anatomy": "Label above (14/22 ExtraBold) · field (40px tall, 8px top/bottom × 12px left/right padding, 1.5px Grey-300 border, 4px radius) · optional help text below (12/18 Grey-700) · optional inline error.",
+  "options": "Sizes: default 40px, compact 32px. States: rest, hover, focus, filled, disabled, read-only, error. Optional leading or trailing icon slot.",
+  "usage": "Use for short single-line input — names, emails, IDs. Placeholder is Light Italic and describes the shape (`dd/mm/yyyy`, `Search snaps`), not an exhortation. Help text clarifies expectations rather than restating the label.",
+  "behaviors": "Border shifts Grey-300 → Blue-600 on focus and pairs with the 3px Teal-600 35% focus halo. Error state replaces the border with Red-600 and shows an inline message. Disabled drops opacity and removes the pointer; read-only loses the border but keeps the value selectable.",
+  "tokens": [
+    "--field-bg-default",
+    "--field-bg-error",
+    "--field-bg-disabled",
+    "--field-border-default",
+    "--field-border-hover",
+    "--field-border-focus",
+    "--field-border-error",
+    "--field-border-disabled",
+    "--field-text-default",
+    "--field-text-placeholder",
+    "--field-text-disabled",
+    "--field-radius",
+    "--field-height-md"
+  ]
+}
+</script>
 </head>
 <body>
   <div class="card">

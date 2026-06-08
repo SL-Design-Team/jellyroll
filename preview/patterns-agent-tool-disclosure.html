@@ -192,6 +192,16 @@
   .spec dd { margin: 0; color: var(--color-text-subtle); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Agent tool disclosure",
+  "section": "Patterns",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-agent-tool-disclosure.html",
+  "tagline": "Inline tool call + response — collapsed or expanded, success or error.",
+  "usage": "Use to show a single agent tool call inline in the chat thread or inside an activity-panel item. Collapsed shows the tool icon, tool name, and a summary chip; expanded reveals the request payload and a truncated response with copy / view full.",
+  "behaviors": "The chevron rotates up on expand. Success uses a green treatment; error uses a red trigger with an error message and Retry + Skip step affordances. Placed inline between chat messages or inside an activity panel item expansion."
+}
+</script>
 </head>
 <body>
 <div class="card">

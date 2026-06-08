@@ -13,7 +13,18 @@
   .lg-item { display: flex; align-items: center; gap: 6px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); }
   .lg-dot { width: 10px; height: 10px; border-radius: 2px; }
 
-</style></head><body>
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Combo (bar + line)",
+  "section": "Data visualization",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-combo.html",
+  "tagline": "Bars and a line on a single chart with dual axes.",
+  "usage": "Use when comparing two unlike units that move together — throughput (bars, left axis) vs latency (line, right axis). Color the axes to match their series so readers do not misalign. Never plot more than one of each shape.",
+  "behaviors": "Tooltip aligns to the bar center and shows both values for the same time bucket."
+}
+</script>
+</head><body>
   <div class="card">
     <div class="row-label"><span class="name">Multi-axis combo</span><span class="meta">bars + line with dual y-axes · unlike units on one chart</span></div>
     <div class="panel">

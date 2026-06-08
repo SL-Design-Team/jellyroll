@@ -102,6 +102,16 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Undo via toast",
+  "section": "Patterns",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-undo-toast.html",
+  "tagline": "Reversible destructive actions skip the confirm modal and offer Undo in the toast.",
+  "usage": "Prefer this over a confirm modal whenever the operation is genuinely reversible within a short window — archive a record, remove a list item, dismiss a notification. The toast persists 8 seconds with the Undo link active.",
+  "behaviors": "Acting on Undo reverses the operation immediately and confirms with a second toast (`Pipeline restored`). After 8 seconds the toast auto-dismisses and the operation becomes permanent."
+}
+</script>
 </head>
 <body>
   <div class="card">

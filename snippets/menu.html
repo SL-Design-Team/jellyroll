@@ -1,0 +1,47 @@
+<!--
+  JellyRoll · Menu — clean copy-paste snippet.
+  Light, button-anchored action menu (distinct from the dark header dropdowns).
+  States wired to real :hover / :focus-visible. Full demo: /preview/components-menu.html
+  Requires the token CSS: https://sl-design-team.github.io/jellyroll/colors_and_type.css
+-->
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  .sl-menu {
+    min-width: 200px;
+    background: var(--color-surface-overlay);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-overlay);
+    padding: var(--space-1) 0;
+    font-family: var(--font-sans);
+  }
+  .sl-menu__group {
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--color-text-subtle);
+    padding: var(--space-2) var(--space-3) var(--space-1);
+  }
+  .sl-menu__item {
+    display: flex; align-items: center; gap: var(--space-2);
+    width: 100%; padding: var(--space-2) var(--space-3);
+    font: 500 14px/22px var(--font-sans); color: var(--color-text-body);
+    background: transparent; border: 0; text-align: left; cursor: pointer;
+  }
+  .sl-menu__item svg { width: 16px; height: 16px; stroke-width: 2; flex: none; color: var(--color-text-subtle); }
+  .sl-menu__item:hover, .sl-menu__item:focus-visible { background: var(--sl-grey-100); outline: none; }
+  .sl-menu__item.is-selected { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+  .sl-menu__item--danger { color: var(--sl-red-600); }
+  .sl-menu__item--danger svg { color: var(--sl-red-600); }
+  .sl-menu__item--danger:hover { background: var(--sl-red-100); }
+  .sl-menu__item:disabled { color: var(--sl-grey-400); cursor: not-allowed; }
+  .sl-menu__divider { height: 1px; background: var(--sl-grey-200); margin: var(--space-1) 0; }
+</style>
+
+<!-- Anchor the trigger with aria-haspopup="menu" + aria-expanded; this is the popup. -->
+<div class="sl-menu" role="menu">
+  <button class="sl-menu__item" role="menuitem"><i data-lucide="play"></i>Run</button>
+  <button class="sl-menu__item is-selected" role="menuitem"><i data-lucide="copy"></i>Duplicate</button>
+  <button class="sl-menu__item" role="menuitem" disabled><i data-lucide="download"></i>Export</button>
+  <div class="sl-menu__divider"></div>
+  <button class="sl-menu__item sl-menu__item--danger" role="menuitem"><i data-lucide="trash-2"></i>Delete</button>
+</div>

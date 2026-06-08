@@ -31,6 +31,25 @@
   .sl-btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
   .sl-btn--primary { background: var(--sl-blue-600); color: var(--sl-white); }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Modal",
+  "section": "Composed components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-modal.html",
+  "tagline": "Overlay surface for confirms, focused tasks, and destructive actions.",
+  "anatomy": "Scrim `rgba(9, 30, 66, 0.54)` · panel (white, 6–8px radius, `0 8px 24px rgba(38, 40, 44, 0.18)` shadow) · header (question or noun-title) · body (specific, quotes the object being acted on) · footer (right-aligned actions; primary on the right).",
+  "options": "Sizes: small (confirm), medium (form), large (multi-step). With or without close `×` in the header.",
+  "usage": "Use for confirms (destructive actions), short focused tasks, and content that requires the user's full attention. Do not use for navigation, casual previews, or anything that could live inline. The header is a question or noun-title; the body names the specific object being acted on.",
+  "behaviors": "Esc dismisses (except in unsaved-changes flows). Click outside the panel dismisses unless the modal is confirming a destructive action. Focus traps inside the panel; on close, focus returns to the trigger. Animation: 200ms scrim fade + panel slide-up 8px.",
+  "tokens": [
+    "--color-scrim",
+    "--color-surface-overlay",
+    "--shadow-overlay",
+    "--radius-lg",
+    "--space-6"
+  ]
+}
+</script>
 </head>
 <body>
   <div class="card">

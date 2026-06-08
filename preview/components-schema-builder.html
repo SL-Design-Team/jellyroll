@@ -158,6 +158,18 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Schema builder",
+  "section": "Advanced editors",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-schema-builder.html",
+  "tagline": "Visual editor for JSON schemas — output specs, payload shapes.",
+  "anatomy": "Tree of fields · each field row: name, type, required toggle, default · child fields indented under their parent · `+` adds a child or sibling depending on the focused row.",
+  "options": "Output schema, input schema, request body, response body. Types: string, number, boolean, object, array, enum.",
+  "usage": "Use anywhere the user defines a structured payload — Snap output schema, custom API responses, webhook contracts. Pair with a sample-data view that validates against the schema as the user types.",
+  "behaviors": "Changing a parent type between object / array shows/hides the child editor. Required fields surface a red dot in the tree. Validation errors appear inline next to the offending row."
+}
+</script>
 </head>
 <body>
   <div class="card">

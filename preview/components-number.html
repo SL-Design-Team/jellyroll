@@ -76,6 +76,18 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Number input",
+  "section": "Building blocks",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-number.html",
+  "tagline": "Numeric input with optional stepper and unit suffix.",
+  "anatomy": "Field · optional stepper (chevron-up / chevron-down stacked on the right) · optional unit suffix inside the field (e.g., `MB`, `ms`).",
+  "options": "Plain, with stepper, with unit. Integer or decimal precision. Min/max/step bounds.",
+  "usage": "Use for bounded numeric values — counts, timeouts, sizes. Use with a unit suffix when the unit clarifies meaning. For unbounded text-like numerics (phone, ID), use a plain Input.",
+  "behaviors": "Arrow up/down increments by step; Shift+arrow by 10× step. Steppers respect min/max bounds and disable at the limits. Pasting non-numeric input is rejected silently. Decimal separator matches the user's locale."
+}
+</script>
 </head>
 <body>
   <div class="card">

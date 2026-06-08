@@ -38,6 +38,17 @@
   .item svg { width: 18px; height: 18px; color: rgba(255,255,255,0.62); stroke-width: 1.75; }
   .item:hover svg { color: var(--sl-teal-300); }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "User menu",
+  "section": "Composed components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-user-menu.html",
+  "tagline": "Avatar in the global header opens an account + preferences popover.",
+  "anatomy": "Trigger: 32px avatar · popover with the user's name and email · org switcher · `Account`, `Preferences`, `Documentation`, `Sign out` rows.",
+  "usage": "Use as the single location for personal account actions. Org-level admin (users, billing, integrations) belongs in the Admin Manager product, not here.",
+  "behaviors": "Click outside or Esc closes. Org switcher swaps the active org and refreshes the page (or routes home if the current page does not exist in the new org)."
+}
+</script>
 </head>
 <body>
   <div class="card">

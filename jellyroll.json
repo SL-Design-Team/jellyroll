@@ -1,0 +1,1900 @@
+{
+  "name": "JellyRoll · SnapLogic Design System",
+  "summary": "SnapLogic's code-first design system. The live repo is the source of truth: token CSS, one self-contained preview HTML per asset, webfonts, and brand assets. Fetch the token CSS and the relevant preview files before implementing a component.",
+  "site": "https://sl-design-team.github.io/jellyroll/",
+  "tokensCss": "https://sl-design-team.github.io/jellyroll/colors_and_type.css",
+  "sections": [
+    {
+      "num": "01",
+      "id": "foundations",
+      "name": "Foundations",
+      "description": "The rules every component inherits — design tokens, spacing, motion, elevation, and accessibility.",
+      "items": [
+        {
+          "name": "Accessibility",
+          "file": "preview/foundations-accessibility.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-accessibility.html",
+          "tagline": "WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.",
+          "usage": "Apply these guidelines to every SnapLogic surface. All components in JellyRoll are built to meet WCAG 2.1 AA as a baseline. When building new components or patterns, review the keyboard interaction, focus management, and ARIA sections before implementation.",
+          "behaviors": "The page covers the four POUR principles, contrast ratios for core token pairings, keyboard interaction patterns, semantic HTML vs ARIA guidance, form labeling rules, image alt text requirements, focus management for modals and drawers, a testing checklist, and links to external resources."
+        },
+        {
+          "name": "Iconography",
+          "file": "preview/brand-iconography.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html",
+          "tagline": "202 outlined line icons — 24×24 viewbox, currentColor stroke.",
+          "anatomy": "Each icon is a 24×24 SVG with `viewBox=\"0 0 24 24\"`, 2px stroke, rounded caps and joins, and `stroke=\"currentColor\"` so it inherits text color. No fills (except a single white-fill contrast detail in one icon).",
+          "options": "Sizes: 24px default, 16px inline / dense contexts, 20px nav rail. Outlined glyphs by default; filled status pictograms (running check, failed dot, sticky star) are the only exception. Click any icon in the gallery to copy its name.",
+          "usage": "Pick the icon whose metaphor matches the action or object directly — never invent a custom mark. Drop the SVG inline (or reference via `<svg><use href=\"icons/{name}.svg\">`) so it picks up the surrounding text color. For vendor logos (AWS, Salesforce, GitHub) the system falls back to Font Awesome 6 brands at matching stroke weight.",
+          "behaviors": "Icon-only buttons require an explicit `aria-label`. Icons paired with text take `aria-hidden=\"true\"` so screen readers don't read them twice. The icon inherits `currentColor` from its parent — never hardcode a tint."
+        },
+        {
+          "name": "Radius",
+          "file": "preview/spacing-radius.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/spacing-radius.html",
+          "tagline": "Restrained corners: 2 / 4 / 6–8 / 999px.",
+          "usage": "Use 2px for small inline elements (badges, chips), 4px as the default for cards and buttons, 6–8px for large surfaces and modals, and 999px for pill tags only. Never invent intermediate values.",
+          "tokens": [
+            {
+              "name": "--radius-xs",
+              "value": "2px",
+              "role": "Small inline elements (badges, chips, tags)"
+            },
+            {
+              "name": "--radius-sm",
+              "value": "4px",
+              "role": "Cards and buttons — system default"
+            },
+            {
+              "name": "--radius-md",
+              "value": "6px",
+              "role": "Mid-size surfaces"
+            },
+            {
+              "name": "--radius-lg",
+              "value": "8px",
+              "role": "Large surfaces and modals"
+            },
+            {
+              "name": "--radius-pill",
+              "value": "999px",
+              "role": "Pill tags, toggle tracks, status dots"
+            }
+          ]
+        },
+        {
+          "name": "Shadows",
+          "file": "preview/spacing-shadows.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/spacing-shadows.html",
+          "tagline": "Light, blueish, low-spread — borders carry more weight than shadows in this system.",
+          "usage": "Resting card shadow is `0 2px 4px rgba(206, 217, 240, 0.8)` — literally a tint of Blue-200. Modals use `0 8px 24px rgba(38, 40, 44, 0.18)`. Focus rings use a 3px Teal-600 halo at 35% alpha. No heavy drop shadows, no neumorphism, no glow.",
+          "tokens": [
+            {
+              "name": "--shadow-raised",
+              "value": "0 2px 4px rgba(206, 217, 240, 0.8)",
+              "role": "Card resting — a tint of Blue-200"
+            },
+            {
+              "name": "--shadow-raised-hover",
+              "value": "0 4px 8px rgba(206, 217, 240, 1)",
+              "role": "Card hover"
+            },
+            {
+              "name": "--shadow-overlay",
+              "value": "0 8px 24px rgba(38, 40, 44, 0.18)",
+              "role": "Modal / popover"
+            },
+            {
+              "name": "--shadow-overlay-strong",
+              "value": "0 12px 32px rgba(38, 40, 44, 0.28)",
+              "role": "Top-of-stack overlay"
+            },
+            {
+              "name": "--shadow-focus-ring",
+              "value": "0 0 0 3px rgba(9, 129, 127, 0.35)",
+              "role": "Focus halo — Teal-600 at 35% alpha"
+            },
+            {
+              "name": "--shadow-inset-sunken",
+              "value": "inset 0 1px 2px rgba(38, 40, 44, 0.08)",
+              "role": "Sunken surface inner shadow"
+            }
+          ]
+        },
+        {
+          "name": "Spacing",
+          "file": "preview/spacing-scale.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/spacing-scale.html",
+          "tagline": "Strict 4-pt grid: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.",
+          "usage": "Use `--space-*` tokens for every margin, padding, and gap. Never hardcode pixel values. Layout containers use 64px horizontal padding, frame headers use 48px top/bottom padding, cards use 16px internal padding, and inputs use 8px top/bottom × 12px left/right for a 40px-tall field.",
+          "tokens": [
+            {
+              "name": "--space-0",
+              "value": "0px",
+              "role": "Zero (flush)"
+            },
+            {
+              "name": "--space-1",
+              "value": "4px",
+              "role": "Smallest gap — between tightly-coupled atoms"
+            },
+            {
+              "name": "--space-2",
+              "value": "8px",
+              "role": "Default gap between sibling atoms"
+            },
+            {
+              "name": "--space-3",
+              "value": "12px",
+              "role": "Input horizontal padding"
+            },
+            {
+              "name": "--space-4",
+              "value": "16px",
+              "role": "Card padding — the system's default"
+            },
+            {
+              "name": "--space-5",
+              "value": "20px",
+              "role": "Mid-density grouping"
+            },
+            {
+              "name": "--space-6",
+              "value": "24px",
+              "role": "Section internal padding"
+            },
+            {
+              "name": "--space-8",
+              "value": "32px",
+              "role": "Between unrelated content blocks"
+            },
+            {
+              "name": "--space-10",
+              "value": "40px",
+              "role": "Page-level vertical rhythm"
+            },
+            {
+              "name": "--space-12",
+              "value": "48px",
+              "role": "Frame header top/bottom padding"
+            },
+            {
+              "name": "--space-16",
+              "value": "64px",
+              "role": "Layout container horizontal padding"
+            },
+            {
+              "name": "--space-20",
+              "value": "80px",
+              "role": "Top-level page spacing"
+            }
+          ]
+        },
+        {
+          "name": "Tokens",
+          "file": "preview/foundations-tokens.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-tokens.html",
+          "tagline": "All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.",
+          "usage": "Import `colors_and_type.css` and reference tokens by name in your CSS or inline styles. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code. Raw ramp tokens (`--sl-blue-600`) are appropriate only when building new semantic tokens or one-off brand moments."
+        },
+        {
+          "name": "Surfaces",
+          "file": "preview/colors-surfaces.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/colors-surfaces.html",
+          "tagline": "Navbar · Canvas · Sunken · Raised · Overlay — five elevation planes.",
+          "usage": "Compose interfaces from five surfaces. Navbar (Indigo-1000) carries the dark global chrome only. Canvas (white) is the default page. Sunken (Grey-100) nests inside Canvas for inline panels. Raised (white + shadow) lifts cards and drawers. Overlay sits on top for modals and popovers. Use elevation to organize complexity, not for decoration.",
+          "tokens": [
+            {
+              "name": "--color-surface-primary",
+              "value": "#FFFFFF",
+              "role": "Canvas — default page background"
+            },
+            {
+              "name": "--color-surface-raised",
+              "value": "#FFFFFF",
+              "role": "Cards and drawers (with shadow)"
+            },
+            {
+              "name": "--color-surface-sunken",
+              "value": "#F5F6F8",
+              "role": "Pressed-in section (Grey-100)"
+            },
+            {
+              "name": "--color-surface-overlay",
+              "value": "#FFFFFF",
+              "role": "Modal / popover"
+            },
+            {
+              "name": "--color-surface-navbar",
+              "value": "#031A48",
+              "role": "Global navbar (Indigo-1000)"
+            },
+            {
+              "name": "--color-scrim",
+              "value": "rgba(9, 30, 66, 0.54)",
+              "role": "Modal scrim (no backdrop blur)"
+            }
+          ]
+        },
+        {
+          "name": "Type scale",
+          "file": "preview/type-scale.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/type-scale.html",
+          "tagline": "Display through Micro — eight steps with set line heights and weight conventions.",
+          "usage": "Use these eight steps for every text element. Body and labels are 14/22 Regular; headings step up from Card Title 18 to Display 56. Labels and headings sit at ExtraBold (800); body at Regular (400). The contrast between thin body and chunky labels is the system's signature — do not introduce intermediate weights for emphasis.",
+          "tokens": [
+            {
+              "name": "--font-sans",
+              "value": "'Acherus Grotesque', system-ui, 'SF Pro', 'Segoe UI', sans-serif",
+              "role": "Body, labels, headings"
+            },
+            {
+              "name": "--font-mono",
+              "value": "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+              "role": "Code, tokens, JSON, timestamps"
+            }
+          ]
+        },
+        {
+          "name": "Type specimen",
+          "file": "preview/type-faces.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/type-faces.html",
+          "tagline": "Acherus Grotesque, weights 200–900, plus the SF Mono code font.",
+          "usage": "Acherus Grotesque is the system sans across every weight. Reach for the mono stack only inside code blocks, tokens, JSON snippets, and timestamps. Italic is reserved for placeholders (Light Italic 300) and the rare in-line citation — never used for emphasis.",
+          "tokens": [
+            {
+              "name": "--font-sans",
+              "value": "'Acherus Grotesque', system-ui, 'SF Pro', 'Segoe UI', sans-serif",
+              "role": "Body, labels, headings"
+            },
+            {
+              "name": "--font-mono",
+              "value": "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+              "role": "Code, tokens, JSON, timestamps"
+            }
+          ]
+        },
+        {
+          "name": "Motion",
+          "file": "preview/foundations-motion.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-motion.html",
+          "tagline": "Durations and easings for transitions and animations.",
+          "usage": "Compose transitions from one `--duration-*` (Fast 120ms, Normal 200ms, Slow 320ms) and one `--ease-*` curve (Standard, In, Out). Default to `--duration-normal var(--ease-standard)` for hover and state changes; use `--duration-slow var(--ease-out)` for entrances like drawers and modals; use `--ease-in` for exits. Avoid bespoke durations — consistency across the product matters more than per-component tuning.",
+          "tokens": [
+            {
+              "name": "--duration-fast",
+              "value": "120ms",
+              "role": "Microinteractions, hover tints"
+            },
+            {
+              "name": "--duration-normal",
+              "value": "200ms",
+              "role": "Default for state transitions, dropdowns"
+            },
+            {
+              "name": "--duration-slow",
+              "value": "320ms",
+              "role": "Drawers, modals, large surface entrances"
+            },
+            {
+              "name": "--ease-standard",
+              "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+              "role": "Default curve — accelerate then decelerate"
+            },
+            {
+              "name": "--ease-in",
+              "value": "cubic-bezier(0.4, 0, 1, 1)",
+              "role": "Exits and dismissals"
+            },
+            {
+              "name": "--ease-out",
+              "value": "cubic-bezier(0, 0, 0.2, 1)",
+              "role": "Entrances and reveals"
+            }
+          ]
+        },
+        {
+          "name": "Z-index",
+          "file": "preview/foundations-zindex.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-zindex.html",
+          "tagline": "8-step stacking scale — base through toast.",
+          "usage": "Use `--z-*` tokens instead of literal z-index values. The scale runs Base (0), Dropdown (1000), Sticky (1100), Overlay (1200), Modal (1300), Popover (1400), Tooltip (1500), Toast (1600). Tooltips sit above popovers because they can appear inside popovers; toasts sit highest so they're never occluded. Never set z-index outside this scale.",
+          "tokens": [
+            {
+              "name": "--z-base",
+              "value": "0",
+              "role": "Resting plane"
+            },
+            {
+              "name": "--z-dropdown",
+              "value": "1000",
+              "role": "Select menus, combobox lists"
+            },
+            {
+              "name": "--z-sticky",
+              "value": "1100",
+              "role": "Sticky table headers, pinned bars"
+            },
+            {
+              "name": "--z-overlay",
+              "value": "1200",
+              "role": "Drawer scrim, page-level overlays"
+            },
+            {
+              "name": "--z-modal",
+              "value": "1300",
+              "role": "Modal dialogs"
+            },
+            {
+              "name": "--z-popover",
+              "value": "1400",
+              "role": "Popovers — sit above modals"
+            },
+            {
+              "name": "--z-tooltip",
+              "value": "1500",
+              "role": "Tooltips — sit above popovers"
+            },
+            {
+              "name": "--z-toast",
+              "value": "1600",
+              "role": "Toasts — never occluded"
+            }
+          ]
+        },
+        {
+          "name": "Breakpoints",
+          "file": "preview/foundations-breakpoints.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-breakpoints.html",
+          "tagline": "Viewport widths — sm 640, md 768, lg 1024, xl 1280.",
+          "usage": "The breakpoint scale targets four common widths. Because CSS custom properties cannot be used inside `@media` queries, the `--bp-*` tokens are exposed for JS (matchMedia, ResizeObserver) and the same numbers should be mirrored in your SCSS or CSS-in-JS layer for media query authoring. Mobile-first: write base styles for the smallest viewport and add `min-width` media queries to step up.",
+          "tokens": [
+            {
+              "name": "--bp-sm",
+              "value": "640px",
+              "role": "Phone — narrow viewports"
+            },
+            {
+              "name": "--bp-md",
+              "value": "768px",
+              "role": "Tablet"
+            },
+            {
+              "name": "--bp-lg",
+              "value": "1024px",
+              "role": "Laptop — standard product width"
+            },
+            {
+              "name": "--bp-xl",
+              "value": "1280px",
+              "role": "Desktop — wide canvases"
+            }
+          ]
+        },
+        {
+          "name": "Selection & skeleton",
+          "file": "preview/foundations-selection-skeleton.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-selection-skeleton.html",
+          "tagline": "Text highlight and loading placeholder colors.",
+          "usage": "`--color-selection-bg` and `--color-selection-text` style the browser's text-highlight via a global `::selection` rule — no per-component wiring needed. Use `--color-skeleton` (resting) and `--color-skeleton-pulse` (animated band) for loading placeholders; pair with `--duration-slow` and a 1400ms shimmer to avoid drawing too much attention. Skeletons should match the eventual content's geometry — same row heights, same line widths.",
+          "tokens": [
+            {
+              "name": "--color-selection-bg",
+              "value": "#CED9F0",
+              "role": "Text-highlight fill — Blue-200"
+            },
+            {
+              "name": "--color-selection-text",
+              "value": "#131C35",
+              "role": "Text-highlight foreground — Indigo-900"
+            },
+            {
+              "name": "--color-skeleton",
+              "value": "#EBEDF1",
+              "role": "Skeleton base — Grey-200"
+            },
+            {
+              "name": "--color-skeleton-pulse",
+              "value": "#F5F6F8",
+              "role": "Skeleton pulse band — Grey-100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "num": "02",
+      "id": "color",
+      "name": "Color",
+      "description": "The complete color system — the brand gradient, ten ramps, and the semantic tokens built on them.",
+      "items": [
+        {
+          "name": "Color ramps",
+          "file": "preview/colors-all-ramps.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/colors-all-ramps.html",
+          "tagline": "Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.",
+          "usage": "Use the `--sl-{hue}-{step}` tokens directly. Steps 50–400 read as light backgrounds and supporting tints; 500–700 carry semantic meaning; 800–1000 are nav and on-dark text. The 600 step of each ramp is the canonical default. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code.",
+          "tokens": [
+            {
+              "name": "--sl-blue-600",
+              "value": "#0841B4",
+              "role": "Primary brand & action"
+            },
+            {
+              "name": "--sl-teal-600",
+              "value": "#09817F",
+              "role": "Secondary accent — hover, focus"
+            },
+            {
+              "name": "--sl-indigo-600",
+              "value": "#304684",
+              "role": "Information"
+            },
+            {
+              "name": "--sl-orange-600",
+              "value": "#F9660B",
+              "role": "Accent"
+            },
+            {
+              "name": "--sl-yellow-600",
+              "value": "#FBBC04",
+              "role": "Warning"
+            },
+            {
+              "name": "--sl-purple-600",
+              "value": "#623684",
+              "role": "Discovery"
+            },
+            {
+              "name": "--sl-green-600",
+              "value": "#017D1B",
+              "role": "Success"
+            },
+            {
+              "name": "--sl-red-600",
+              "value": "#E31C3D",
+              "role": "Alert / destructive"
+            },
+            {
+              "name": "--sl-pink-600",
+              "value": "#E31C73",
+              "role": "Marketing accent"
+            },
+            {
+              "name": "--sl-grey-600",
+              "value": "#9CA7BA",
+              "role": "Neutral"
+            }
+          ]
+        },
+        {
+          "name": "Brand gradient",
+          "file": "preview/colors-gradient-brand.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/colors-gradient-brand.html",
+          "tagline": "linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.",
+          "usage": "Reserved for hero/marketing surfaces, launcher backgrounds, and brand moments — never for normal UI. Distinct from `--color-background-primary-hover`, which uses a slightly different teal at a 112.63° diagonal for primary-button hover only.",
+          "tokens": [
+            {
+              "name": "--gradient-brand",
+              "value": "linear-gradient(90deg, #008380 29%, #0841B4 100%)",
+              "role": "Horizontal teal → blue brand sweep"
+            },
+            {
+              "name": "--gradient-brand-stop-1",
+              "value": "#008380",
+              "role": "Left stop — teal"
+            },
+            {
+              "name": "--gradient-brand-stop-2",
+              "value": "#0841B4",
+              "role": "Right stop — Blue-600"
+            }
+          ]
+        },
+        {
+          "name": "Semantic text",
+          "file": "preview/colors-semantic-text.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/colors-semantic-text.html",
+          "tagline": "Body, subtle, link, status, information, discovery, accents.",
+          "usage": "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-800 (success), Orange-700 (warning), Red-700 (alert/error). Information uses Indigo-700; Discovery uses Purple-700. AI uses the dedicated SL AI ramp — never substitute purple for AI.",
+          "tokens": [
+            {
+              "name": "--color-text-body",
+              "value": "#131C35",
+              "role": "Default body text — Indigo-900"
+            },
+            {
+              "name": "--color-text-heading",
+              "value": "#131C35",
+              "role": "Headings — Indigo-900"
+            },
+            {
+              "name": "--color-text-subtle",
+              "value": "#7D8695",
+              "role": "Secondary copy, captions — Grey-700"
+            },
+            {
+              "name": "--color-text-disabled",
+              "value": "#B0B9C8",
+              "role": "Disabled labels and values — Grey-500"
+            },
+            {
+              "name": "--color-text-inverse",
+              "value": "#FFFFFF",
+              "role": "Text on dark surfaces (navbar)"
+            },
+            {
+              "name": "--color-text-selected",
+              "value": "#0841B4",
+              "role": "Selected text — Blue-600"
+            },
+            {
+              "name": "--color-text-link",
+              "value": "#0841B4",
+              "role": "Default link — Blue-600"
+            },
+            {
+              "name": "--color-text-link-hover",
+              "value": "#09817F",
+              "role": "Link hover — Teal-600"
+            },
+            {
+              "name": "--color-text-link-pressed",
+              "value": "#6BB3B2",
+              "role": "Link pressed — Teal-400"
+            },
+            {
+              "name": "--color-text-success",
+              "value": "#014B10",
+              "role": "Success message text — Green-800"
+            },
+            {
+              "name": "--color-text-warning",
+              "value": "#C75209",
+              "role": "Warning message text — Orange-700"
+            },
+            {
+              "name": "--color-text-alert",
+              "value": "#B61631",
+              "role": "Error message text — Red-700"
+            },
+            {
+              "name": "--color-text-information",
+              "value": "#26386A",
+              "role": "Informational accent — Indigo-700"
+            },
+            {
+              "name": "--color-text-discovery",
+              "value": "#4E2B6A",
+              "role": "Discovery accent — Purple-700"
+            },
+            {
+              "name": "--color-text-accent-blue",
+              "value": "#0841B4",
+              "role": "Accent text · blue — Blue-600"
+            },
+            {
+              "name": "--color-text-accent-teal",
+              "value": "#09817F",
+              "role": "Accent text · teal — Teal-600"
+            },
+            {
+              "name": "--color-text-accent-indigo",
+              "value": "#304684",
+              "role": "Accent text · indigo — Indigo-600"
+            },
+            {
+              "name": "--color-text-accent-orange",
+              "value": "#F9660B",
+              "role": "Accent text · orange — Orange-600"
+            },
+            {
+              "name": "--color-text-accent-yellow",
+              "value": "#FCC936",
+              "role": "Accent text · yellow — Yellow-500"
+            },
+            {
+              "name": "--color-text-accent-purple",
+              "value": "#623684",
+              "role": "Accent text · purple — Purple-600"
+            },
+            {
+              "name": "--color-text-accent-green",
+              "value": "#017D1B",
+              "role": "Accent text · green — Green-600"
+            },
+            {
+              "name": "--color-text-accent-red",
+              "value": "#E31C3D",
+              "role": "Accent text · red — Red-600"
+            },
+            {
+              "name": "--color-text-accent-pink",
+              "value": "#E31C73",
+              "role": "Accent text · pink — Pink-600"
+            },
+            {
+              "name": "--color-text-accent-grey",
+              "value": "#9CA7BA",
+              "role": "Accent text · grey — Grey-600"
+            }
+          ]
+        },
+        {
+          "name": "Palette · Categorical",
+          "file": "preview/dataviz-categorical.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-categorical.html",
+          "tagline": "Five-color chart palette for unordered categories — designed for light and dark backgrounds.",
+          "usage": "Use the categorical palette only when categories are unordered. The five colors are picked to keep relative perceived weight equal; do not extend with extra colors or you will read order into the order. For more than five categories, use a series of small-multiple charts."
+        },
+        {
+          "name": "Palette · Diverging",
+          "file": "preview/dataviz-diverging.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-diverging.html",
+          "tagline": "Two-hue chart ramps for values around a meaningful midpoint.",
+          "usage": "Use a diverging palette for values that fan out from zero or a target — deltas, sentiment, percent change. The midpoint is always Grey or off-white; ends are color-coded by direction. Pair with a clear legend showing the midpoint and the units."
+        },
+        {
+          "name": "Palette · Sequential",
+          "file": "preview/dataviz-sequential.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-sequential.html",
+          "tagline": "Single-hue chart ramps for ordered values — counts, magnitudes, percentages.",
+          "usage": "Use a sequential ramp when the value has a meaningful order with one extreme. Most often Green (success / volume) or Blue (neutral). Encode larger values with the darker step. For two-sided values around a meaningful zero, use a Diverging palette."
+        },
+        {
+          "name": "Status colors",
+          "file": "preview/dataviz-status.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-status.html",
+          "tagline": "Green / Yellow / Red / Blue mapping for pipeline run states.",
+          "usage": "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite.",
+          "tokens": [
+            {
+              "name": "--sl-green-600",
+              "value": "#017D1B",
+              "role": "Success — pipeline completed"
+            },
+            {
+              "name": "--sl-red-600",
+              "value": "#E31C3D",
+              "role": "Failed"
+            },
+            {
+              "name": "--sl-yellow-600",
+              "value": "#FBBC04",
+              "role": "Warning"
+            },
+            {
+              "name": "--sl-blue-600",
+              "value": "#0841B4",
+              "role": "Running"
+            },
+            {
+              "name": "--sl-grey-500",
+              "value": "#B0B9C8",
+              "role": "Queued / idle"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "num": "03",
+      "id": "brand",
+      "name": "Brand",
+      "description": "The SnapLogic logo and brand marks, and how to apply them.",
+      "items": [
+        {
+          "name": "Logo",
+          "file": "preview/brand-logo.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/brand-logo.html",
+          "tagline": "SnapLogic wordmark + snap-icon. White-on-dark version supplied.",
+          "usage": "Use the white wordmark on the dark navbar and any dark brand surface. The wordmark and snap-icon ship together — do not separate them, recolor them, or pair the wordmark with a non-system glyph. Minimum clear space around the mark is the height of the snap-icon."
+        }
+      ]
+    },
+    {
+      "num": "04",
+      "id": "primitives",
+      "name": "Building blocks",
+      "description": "Single-purpose controls — each does one job. The atoms you compose with.",
+      "items": [
+        {
+          "name": "Avatar",
+          "file": "preview/components-avatar.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-avatar.html",
+          "tagline": "User identity glyph — initials, photo, or fallback icon.",
+          "anatomy": "Circular crop · sizes 20 / 24 / 32 / 40 / 56 / 72 / 96. Background is a deterministic ramp pick based on the name hash; initials in white ExtraBold; photo when present.",
+          "options": "Photo, initials (default), system icon (when no name); with optional status dot anchored bottom-right.",
+          "usage": "Use for any user or system actor reference. Pair with the user's name on first reference; standalone in dense lists. Initials are the first letter of the first and last name (uppercase)."
+        },
+        {
+          "name": "Badge",
+          "file": "preview/components-badges.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-badges.html",
+          "tagline": "Compact status or metadata pill, 10px ExtraBold uppercase.",
+          "anatomy": "Pill at 999px radius · 10/14 ExtraBold uppercase text · 6–8px horizontal padding · 2–4px vertical padding · optional 6px status dot prefix.",
+          "options": "Tones: neutral, info (Blue), success (Green), warning (Yellow), danger (Red), discovery (Yellow-500). Sizes: default, small. With or without leading dot.",
+          "usage": "Use to label state or category at a glance — pipeline status, environment, account tier. Never use to display free-form text or numbers; for those use a Chip or inline count.",
+          "tokens": [
+            {
+              "name": "--radius-pill",
+              "value": "999px",
+              "role": "Pill shape"
+            },
+            {
+              "name": "--font-sans",
+              "value": "'Acherus Grotesque', system-ui, …",
+              "role": "ExtraBold 800 uppercase 10px"
+            },
+            {
+              "name": "--sl-blue-100",
+              "value": "#E6ECF8",
+              "role": "Info badge fill"
+            },
+            {
+              "name": "--sl-green-100",
+              "value": "#E6F2E8",
+              "role": "Success badge fill"
+            },
+            {
+              "name": "--sl-yellow-100",
+              "value": "#FFF8E6",
+              "role": "Warning badge fill"
+            },
+            {
+              "name": "--sl-red-100",
+              "value": "#FCE8EC",
+              "role": "Danger badge fill"
+            },
+            {
+              "name": "--sl-purple-100",
+              "value": "#EFEBF3",
+              "role": "Discovery badge fill"
+            }
+          ]
+        },
+        {
+          "name": "Buttons",
+          "file": "preview/components-buttons.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-buttons.html",
+          "tagline": "Verb-led actions in primary, secondary, tertiary, and destructive variants.",
+          "anatomy": "Label (sentence case, 1–3 words) · optional leading or trailing 16px icon · 1.5px transparent or colored border · 4px radius. Heights: lg 40px, md 36px, sm 28px. Icon-only buttons are square at the same height.",
+          "options": "Variants: primary (filled blue), secondary (white with blue border), tertiary/text (no border, underline on hover), destructive (red fill). Sizes: lg / md / sm. Icon-only variant for each.",
+          "usage": "One primary per screen for the single most important action. Secondary for supporting actions. Tertiary/text for low-emphasis actions inside dense forms or tables. Destructive only for irreversible operations — pair with a confirm modal.",
+          "behaviors": "Primary hover applies the teal→blue gradient (`--color-background-primary-hover`) — not a darker blue. Pressed = Teal-400. Secondary stays white on hover; only border + text shift blue → teal. Tertiary underlines on hover. Press never uses transforms — color only. Disabled drops to Blue-200 with white text and removes the pointer.",
+          "tokens": [
+            {
+              "name": "--color-background-primary",
+              "value": "#0841B4",
+              "role": "Primary button background"
+            },
+            {
+              "name": "--color-background-primary-hover",
+              "value": "linear-gradient(112.63deg, #0B9D9B 12.38%, #0841B4 137.46%)",
+              "role": "Primary hover — teal → blue (distinctive)"
+            },
+            {
+              "name": "--color-background-primary-pressed",
+              "value": "#6BB3B2",
+              "role": "Primary pressed — Teal-400"
+            },
+            {
+              "name": "--color-background-disabled",
+              "value": "#EBEDF1",
+              "role": "Disabled fill"
+            },
+            {
+              "name": "--color-background-secondary",
+              "value": "#FFFFFF",
+              "role": "Secondary button — white fill"
+            },
+            {
+              "name": "--color-background-secondary-hover",
+              "value": "#F5F6F8",
+              "role": "Secondary hover — Grey-100 wash"
+            },
+            {
+              "name": "--color-border-default",
+              "value": "#C4CAD6",
+              "role": "Default border — Grey-400"
+            },
+            {
+              "name": "--color-border-focus",
+              "value": "#09817F",
+              "role": "Focus ring (Teal-600)"
+            },
+            {
+              "name": "--radius-sm",
+              "value": "4px",
+              "role": "Button corner radius"
+            },
+            {
+              "name": "--shadow-focus-ring",
+              "value": "0 0 0 3px rgba(9, 129, 127, 0.35)",
+              "role": "Focus halo"
+            }
+          ]
+        },
+        {
+          "name": "Card",
+          "file": "preview/components-card.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-card.html",
+          "tagline": "White surface with a 1px Grey-300 border. Borders — not shadow — indicate selection.",
+          "anatomy": "White fill · 1px Grey-300 border · 4px radius · 16px internal padding · `--shadow-raised` shadow. Optional header, body, and footer sections.",
+          "options": "Interactive vs static. With or without header / footer slots. With or without media at the top.",
+          "usage": "Use to group a single object's attributes (a pipeline, a snap, a connection). For a list of objects, use a Table. Cards do not stretch to fill their parent — they sit at intrinsic width or in a grid.",
+          "behaviors": "Hover bumps the border to 1.5px Blue-600 and may raise the shadow one step. Selected goes to 3px Blue-600 — same color shift, thicker border. The shadow never increases on selection (that's reserved for hover).",
+          "tokens": [
+            {
+              "name": "--color-surface-raised",
+              "value": "#FFFFFF",
+              "role": "Card fill"
+            },
+            {
+              "name": "--color-border-subtle",
+              "value": "#D7DCE3",
+              "role": "Resting border — 1px Grey-300"
+            },
+            {
+              "name": "--color-border-hover",
+              "value": "#0841B4",
+              "role": "Hover border — 1.5px Blue-600"
+            },
+            {
+              "name": "--color-border-selected",
+              "value": "#0841B4",
+              "role": "Selected border — 3px Blue-600"
+            },
+            {
+              "name": "--radius-sm",
+              "value": "4px",
+              "role": "Card corner radius"
+            },
+            {
+              "name": "--space-4",
+              "value": "16px",
+              "role": "Card internal padding"
+            },
+            {
+              "name": "--shadow-raised",
+              "value": "0 2px 4px rgba(206, 217, 240, 0.8)",
+              "role": "Resting shadow"
+            },
+            {
+              "name": "--shadow-raised-hover",
+              "value": "0 4px 8px rgba(206, 217, 240, 1)",
+              "role": "Hover shadow"
+            }
+          ]
+        },
+        {
+          "name": "Checkbox",
+          "file": "preview/components-checkbox.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-checkbox.html",
+          "tagline": "Binary selection with optional indeterminate state.",
+          "anatomy": "16px square · 1.5px Grey-400 border · 2px radius · label to the right (14/22). Checked: Blue-600 fill with white Lucide check. Indeterminate: Blue-600 fill with white horizontal dash.",
+          "options": "States: unchecked, checked, indeterminate, disabled, error. Sizes: default 16px, small 14px.",
+          "usage": "Use for boolean selections in forms and for selecting rows in a table or list. For a single optional yes/no, prefer a Toggle. Indeterminate is reserved for the parent of a partially-selected group.",
+          "behaviors": "Click anywhere on the box or label toggles. Space toggles when focused. Disabled drops opacity to 0.5 and removes the pointer. Focus ring matches the global 3px Teal-600 halo."
+        },
+        {
+          "name": "Chip",
+          "file": "preview/components-chip.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-chip.html",
+          "tagline": "Selectable or removable label for filters, tags, and multi-select values.",
+          "anatomy": "Pill (4px radius for tag-style, 999px for filter-style) · 12/16 Medium text · optional leading icon · optional trailing `×` remove · 6–10px horizontal padding.",
+          "options": "Static (display only), removable (with `×`), selectable (toggle), with leading icon.",
+          "usage": "Use for free-form labels (tags, applied filters, selected multi-select values). For fixed status enums, use a Badge instead.",
+          "behaviors": "Click the `×` removes; click the chip body toggles selection (where applicable). Removed chips animate out in 100ms with no shift of the remaining row."
+        },
+        {
+          "name": "Combobox",
+          "file": "preview/components-combobox.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-combobox.html",
+          "tagline": "Input combined with a filtered dropdown for very long or open-ended lists.",
+          "anatomy": "Input · trailing chevron · panel of suggestions that updates as the user types. Highlighted match shown bold.",
+          "options": "Single-value, multi-value (chips), async-loaded suggestions, creatable (typed values become new options).",
+          "usage": "Use for 50+ options, async-loaded sets, or open-ended pickers where the user may want to type a value that does not exist yet (tags, custom names). Below 50 options, use a Select.",
+          "behaviors": "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab accepts the current input. For creatable comboboxes, typing a new value and pressing Enter creates it."
+        },
+        {
+          "name": "Date picker",
+          "file": "preview/components-date-picker.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-date-picker.html",
+          "tagline": "Calendar dropdown attached to an input for picking a date or range.",
+          "anatomy": "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill.",
+          "options": "Single date or range; min/max bounds; disabled dates; locale-aware first-day-of-week and format.",
+          "usage": "Use for any date input where the user benefits from seeing a calendar. For purely typed dates (e.g., dates a backend system fills in), use a plain Input with a date mask.",
+          "behaviors": "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill."
+        },
+        {
+          "name": "Field anatomy",
+          "file": "preview/components-field-anatomy.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-field-anatomy.html",
+          "tagline": "Label, optional indicator, control, help text, error — in that order.",
+          "usage": "Reference for the canonical field stack. Label above (14/22 ExtraBold) · optional optional/required indicator · control · help text below (12/18 Grey-700) · inline error in Red-600 with a `circle-alert` icon. Never invert this order, and never put help text above the control."
+        },
+        {
+          "name": "Field states",
+          "file": "preview/components-field-states.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-field-states.html",
+          "tagline": "Rest, hover, focus, filled, disabled, read-only, error, AI-generating, AI-review.",
+          "usage": "Visual reference for every state any field renders in. Use as the contract when implementing a new input variant — every state on this card has an explicit token and should not be invented per-component."
+        },
+        {
+          "name": "Inputs",
+          "file": "preview/components-inputs.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-inputs.html",
+          "tagline": "Standard 40px-tall single-line text input.",
+          "anatomy": "Label above (14/22 ExtraBold) · field (40px tall, 8px top/bottom × 12px left/right padding, 1.5px Grey-300 border, 4px radius) · optional help text below (12/18 Grey-700) · optional inline error.",
+          "options": "Sizes: default 40px, compact 32px. States: rest, hover, focus, filled, disabled, read-only, error. Optional leading or trailing icon slot.",
+          "usage": "Use for short single-line input — names, emails, IDs. Placeholder is Light Italic and describes the shape (`dd/mm/yyyy`, `Search snaps`), not an exhortation. Help text clarifies expectations rather than restating the label.",
+          "behaviors": "Border shifts Grey-300 → Blue-600 on focus and pairs with the 3px Teal-600 35% focus halo. Error state replaces the border with Red-600 and shows an inline message. Disabled drops opacity and removes the pointer; read-only loses the border but keeps the value selectable.",
+          "tokens": [
+            {
+              "name": "--field-bg-default",
+              "value": "#FFFFFF",
+              "role": "Default field fill"
+            },
+            {
+              "name": "--field-bg-error",
+              "value": "#FCE8EC",
+              "role": "Error field fill — Red-100"
+            },
+            {
+              "name": "--field-bg-disabled",
+              "value": "#E6ECF8",
+              "role": "Disabled field fill — Blue-100"
+            },
+            {
+              "name": "--field-border-default",
+              "value": "#C4CAD6",
+              "role": "Default border — Grey-400"
+            },
+            {
+              "name": "--field-border-hover",
+              "value": "#0841B4",
+              "role": "Hover border — Blue-600"
+            },
+            {
+              "name": "--field-border-focus",
+              "value": "#09817F",
+              "role": "Focus border — Teal-600"
+            },
+            {
+              "name": "--field-border-error",
+              "value": "#E31C3D",
+              "role": "Error border — Red-600"
+            },
+            {
+              "name": "--field-border-disabled",
+              "value": "#CED9F0",
+              "role": "Disabled border — Blue-200"
+            },
+            {
+              "name": "--field-text-default",
+              "value": "#131C35",
+              "role": "Typed value — Indigo-900"
+            },
+            {
+              "name": "--field-text-placeholder",
+              "value": "#7D8695",
+              "role": "Placeholder text — Grey-700"
+            },
+            {
+              "name": "--field-text-disabled",
+              "value": "#9CB3E1",
+              "role": "Disabled text — Blue-300"
+            },
+            {
+              "name": "--field-radius",
+              "value": "4px",
+              "role": "Field corner radius"
+            },
+            {
+              "name": "--field-height-md",
+              "value": "40px",
+              "role": "Default field height"
+            }
+          ]
+        },
+        {
+          "name": "Multi-select",
+          "file": "preview/components-multi-select.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-multi-select.html",
+          "tagline": "Select-style trigger that accepts multiple values rendered as chips.",
+          "anatomy": "Trigger field showing selected chips inline · trailing chevron · panel of checkboxes (so the multi-select intent is obvious). Each chip has a remove `×`.",
+          "options": "Plain, searchable, grouped. Optional `Select all` row at the top of the panel.",
+          "usage": "Use when the user can pick more than one value from a bounded list. For free-form text tags, use a Chip input instead. Limit visible chips inline and overflow to `+N more` past a sensible threshold.",
+          "behaviors": "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip."
+        },
+        {
+          "name": "Notification dot",
+          "file": "preview/components-notification-dot.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-notification-dot.html",
+          "tagline": "8px red dot anchored to the top-right of an icon or avatar.",
+          "usage": "Use to mark unread or new items on bell icons, avatars, and menu rows. The dot is decorative — keep an `aria-label` on the parent control describing the count or state. For numeric counts, use a Badge instead."
+        },
+        {
+          "name": "Number input",
+          "file": "preview/components-number.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-number.html",
+          "tagline": "Numeric input with optional stepper and unit suffix.",
+          "anatomy": "Field · optional stepper (chevron-up / chevron-down stacked on the right) · optional unit suffix inside the field (e.g., `MB`, `ms`).",
+          "options": "Plain, with stepper, with unit. Integer or decimal precision. Min/max/step bounds.",
+          "usage": "Use for bounded numeric values — counts, timeouts, sizes. Use with a unit suffix when the unit clarifies meaning. For unbounded text-like numerics (phone, ID), use a plain Input.",
+          "behaviors": "Arrow up/down increments by step; Shift+arrow by 10× step. Steppers respect min/max bounds and disable at the limits. Pasting non-numeric input is rejected silently. Decimal separator matches the user's locale."
+        },
+        {
+          "name": "Password field",
+          "file": "preview/components-password.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-password.html",
+          "tagline": "Masked input with a show/hide toggle.",
+          "anatomy": "Field with the value rendered as bullet characters · trailing eye icon button (Lucide `eye` / `eye-off`) that toggles visibility.",
+          "options": "Plain, with strength meter, with show/hide toggle (default on).",
+          "usage": "Use for any credential or sensitive token. Auto-disable browser auto-fill suggestions only on confirm / current-password fields where the prompt would be misleading.",
+          "behaviors": "Toggling visibility does not refocus the field. The strength meter, when shown, updates on each keystroke and uses Green-600 / Yellow-600 / Red-600 — no numeric score."
+        },
+        {
+          "name": "Radio",
+          "file": "preview/components-radio.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-radio.html",
+          "tagline": "Single-choice from a small visible set.",
+          "anatomy": "16px circle · 1.5px Grey-400 border · label to the right (14/22). Checked: Blue-600 fill with a 6px white center dot.",
+          "options": "States: unselected, selected, disabled, error. Layout: vertical (default) or horizontal.",
+          "usage": "Use for picking one of 2–5 options where all options should be visible at once. Above 5 options, prefer a Select. Below 2 options, this is a toggle, not a radio group.",
+          "behaviors": "Click anywhere on the circle or label selects. Arrow keys move between options within the group; Tab jumps past the group. Selection cannot be cleared by clicking again — the only way out is to choose another value."
+        },
+        {
+          "name": "Search field",
+          "file": "preview/components-search-field.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-search-field.html",
+          "tagline": "Input with a leading search icon and a clear-on-typed affordance.",
+          "anatomy": "Leading Lucide `search-sm` icon · field · trailing clear `×` button that appears once there is text. Placeholder describes the shape (`Search snaps`).",
+          "options": "Default 40px or compact 32px. Inline (chrome) or filled (in dense surfaces).",
+          "usage": "Use for filtering visible content on the current screen. For navigating to results on another screen, use the global Search overlay instead. Debounce input by 150ms before triggering a request.",
+          "behaviors": "Esc clears when focused. Clear button removes text and refocuses the field. On submit (Enter), the request fires immediately, bypassing the debounce."
+        },
+        {
+          "name": "Segmented control",
+          "file": "preview/components-segmented-control.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-segmented-control.html",
+          "tagline": "Compact horizontal switch for 2–5 mutually exclusive options.",
+          "anatomy": "Pill container in Grey-100 · selected segment is white with shadow · text-only or icon + text segments.",
+          "options": "Sizes: default 32px, small 28px. Text-only, icon-only, or icon + text segments.",
+          "usage": "Use to flip between views inside a single surface (list / grid, day / week / month, summary / details). For navigating between unrelated screens, use Tabs. For more than 5 options, use a Select.",
+          "behaviors": "Click selects; arrow keys cycle. Selection animates the white pill across segments in 150ms with no overshoot. Disabled segments drop opacity and reject input."
+        },
+        {
+          "name": "Select",
+          "file": "preview/components-select.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-select.html",
+          "tagline": "Single-choice dropdown with searchable + grouped variants.",
+          "anatomy": "Trigger (same shape as Input) with trailing chevron · panel (white, Raised shadow, 4px radius, max-height with scroll) · options (40px rows, 12px left padding, optional leading icon, current selection marked).",
+          "options": "Variants: standard, searchable, grouped, with icons. Sizes: default 40px, compact 32px.",
+          "usage": "Use for picking one value from 5–50 options. Below 5, prefer a Segmented control or Radio group. Above 50 or for unbounded sets, use a Combobox.",
+          "behaviors": "Click or Space/Enter opens. Arrow keys cycle options; typing jumps to the first match. Selecting closes the panel and updates the trigger. Esc closes without changing the value. The panel anchors to the trigger and flips above when it would clip below."
+        },
+        {
+          "name": "Skeleton loader",
+          "file": "preview/components-skeleton.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-skeleton.html",
+          "tagline": "Pulsing grey shape standing in for loading content.",
+          "anatomy": "Grey-200 fill · 4px radius · animated linear gradient sweep at 1500ms infinite (subtle, low contrast).",
+          "options": "Block (default), text (1em tall), avatar (circle), media (with aspect ratio).",
+          "usage": "Use for loading states on cards, rows, lists, and full views. Match the rough shape of the content that is loading — a row of three skeletons of varying widths suggests a body of text. Never animate aggressively; the sweep should sit at the edge of perception."
+        },
+        {
+          "name": "Slider",
+          "file": "preview/components-slider.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-slider.html",
+          "tagline": "Drag to pick a value or a range from a continuous track.",
+          "anatomy": "4px track · 16px circular thumb · optional tick marks · optional value bubble above thumb. Filled portion Blue-600; unfilled Grey-300.",
+          "options": "Single thumb or range (two thumbs); horizontal default; integer or float steps; optional tick labels.",
+          "usage": "Use for approximate continuous values where exact precision is not required — opacity, zoom, throttling. Pair with a number input alongside when the user may want to type an exact value.",
+          "behaviors": "Click on the track jumps the nearest thumb. Drag, arrow keys, Page Up/Down (large step), Home/End (min/max) all move the thumb. Range thumbs cannot cross. Value bubble appears on hover and during drag."
+        },
+        {
+          "name": "Spinner",
+          "file": "preview/components-spinner.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-spinner.html",
+          "tagline": "Comet-tail loader — a tapered ring on a 1.1s rotation.",
+          "anatomy": "Half-circle arc (180°) with rounded end caps · three trailing dots positioned along the path · rotation 700ms linear infinite.",
+          "options": "Sizes: xs / sm / md / lg / xl. Color variants follow status tokens (default Indigo, success Green, danger Red, AI).",
+          "usage": "Use for in-progress operations under 10 seconds where the user is actively waiting. For longer or background work, use a Skeleton or a progress bar. Never block a whole screen with a centered spinner — prefer skeletons.",
+          "tokens": [
+            {
+              "name": "--ai-accent",
+              "value": "var(--sl-ai-500)",
+              "role": "AI spinner stroke"
+            },
+            {
+              "name": "--color-text-link",
+              "value": "#0841B4",
+              "role": "Default spinner stroke"
+            },
+            {
+              "name": "--color-text-success",
+              "value": "#014B10",
+              "role": "Success spinner"
+            },
+            {
+              "name": "--color-text-alert",
+              "value": "#B61631",
+              "role": "Danger spinner"
+            }
+          ]
+        },
+        {
+          "name": "Status atom",
+          "file": "preview/components-status.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-status.html",
+          "tagline": "6px colored dot + label — the minimal status indicator.",
+          "anatomy": "6px solid circle · 8px gap · short label in 12/18 Regular. Filled dot for running/success/failed/warning/discovery; outlined ring for queued/idle.",
+          "usage": "Use anywhere you need a single status next to a label — table rows, list items, breadcrumbs. For multi-line states with a description, use a Toast or Banner."
+        },
+        {
+          "name": "Text area",
+          "file": "preview/components-textarea.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-textarea.html",
+          "tagline": "Multi-line text input. Auto-grows by default; resize handle on demand.",
+          "anatomy": "Label · field (min 80px tall, same border/radius/padding as Input) · optional help text · optional character counter bottom-right.",
+          "options": "Auto-grow vs fixed height; optional max-height with internal scroll; optional resize handle.",
+          "usage": "Use for free-form text over one line — descriptions, comments, paste targets. Auto-grow by default so the user sees what they have typed. Show a counter only when there is a real character limit.",
+          "behaviors": "Focus and error states match the Input. Resize handle (when shown) is the standard CSS handle in Grey-500. Counter turns Red-600 within 10 characters of the limit."
+        },
+        {
+          "name": "Toggle",
+          "file": "preview/components-toggle.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-toggle.html",
+          "tagline": "On/off switch for a setting that takes effect immediately.",
+          "anatomy": "32×16 pill track · 12px circular thumb · label to the left or right. Track grey when off, Blue-600 when on; thumb white in both states.",
+          "options": "Sizes: default 32×16, small 28×14. With or without inline status text (`On` / `Off`).",
+          "usage": "Use for settings that take effect immediately — feature toggles, autosave, notifications. For form fields that submit later, use a Checkbox.",
+          "behaviors": "Click anywhere on the track or label toggles. Space toggles when focused. Animation is a 150ms slide of the thumb with a colour swap of the track — no bounce or overshoot."
+        },
+        {
+          "name": "Tooltip",
+          "file": "preview/components-tooltip.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-tooltip.html",
+          "tagline": "Short label or description surfaced on hover or focus.",
+          "anatomy": "Dark navy pill (Indigo-900 fill, white 12/16 text, 4px radius, 5×10px padding) · 5px triangle arrow pointing at the trigger · max-width 240px.",
+          "options": "Placement: top (default), bottom, left, right. Variants: default (single line) · rich (bold title + muted body, up to 2 lines). Works on any focusable trigger.",
+          "usage": "Use to label icon-only controls, surface truncated text, or add a short explanation to a disabled element. Keep copy to one short sentence — for more detail, use a Popover. Never put interactive content (links, buttons) inside a tooltip.",
+          "behaviors": "Appears after a 300ms hover delay; disappears immediately on mouse-out. Also shows on keyboard focus so it is accessible without a pointer. For disabled triggers, wrap the trigger in a container that handles the hover — the button itself cannot receive hover events when disabled."
+        },
+        {
+          "name": "Tree select",
+          "file": "preview/components-tree-select.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-tree-select.html",
+          "tagline": "Hierarchical picker — folders, snaplexes, org units.",
+          "anatomy": "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 16px per level. Single or multi-select.",
+          "options": "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches.",
+          "usage": "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
+          "behaviors": "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants."
+        }
+      ]
+    },
+    {
+      "num": "05",
+      "id": "components",
+      "name": "Composed components",
+      "description": "Several building blocks assembled into a complete piece of the interface.",
+      "items": [
+        {
+          "name": "Avatar group",
+          "file": "preview/components-avatar-group.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-avatar-group.html",
+          "tagline": "Stack of overlapping avatars with overflow count.",
+          "anatomy": "Avatars overlap by 8px (default size); the last avatar in the visible set sits leftmost in z-order. Overflow shown as `+N` in a grey avatar.",
+          "options": "Visible count 2–6; overflow shown as `+N` or expanded into a tooltip on hover. Sizes follow Avatar.",
+          "usage": "Use to surface a small set of collaborators or assignees — pipeline owners, mentioned users. Above 6 visible avatars, the row stops being scannable; show only 3–4 and use `+N`."
+        },
+        {
+          "name": "Broadcast banner",
+          "file": "preview/components-broadcast-banner.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-broadcast-banner.html",
+          "tagline": "Full-width system message across the top of the app.",
+          "anatomy": "Strip spanning the canvas · leading status icon · message text · optional inline action link · trailing `×` dismiss.",
+          "options": "Tones: neutral / info / warning / danger. Dismissible or persistent. With or without action.",
+          "usage": "Use for system-wide announcements — maintenance windows, license issues, broad outages. Never use for per-record errors (use a Toast) or for ephemeral feedback. Persistent banners must include a `Learn more` link.",
+          "behaviors": "Dismiss is per-user and per-banner-id; the banner does not re-appear on next load until the id changes. Tone color sets the background tint and the leading icon."
+        },
+        {
+          "name": "Composed cards",
+          "file": "preview/components-card-composed.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-card-composed.html",
+          "tagline": "The Card surface assembled from building blocks — pipeline, stat, and resource cards.",
+          "anatomy": "Built on the Card surface: a header (title + sub + icon Buttons), an optional status Badge, a meta row, and a footer split by a 1px Grey-200 rule (Avatar + owner left, an action Button right). Stat and resource variants swap the body for a metric value + sparkline, or an icon tile + Avatar group.",
+          "options": "Pipeline card (status Badge + schedule + owner + view action) · stat card (label + value + trend Badge + sparkline) · resource card (icon tile + Badge + Avatar group + open action). Default and selected states.",
+          "usage": "Use one card per object — a single pipeline, connection, or metric. For a list of many objects, use a Table instead. Compose the contents from existing building blocks (Buttons, Badge, Avatar) rather than inventing new chrome; inherit the surface, padding, and selection treatment from the Card building block.",
+          "behaviors": "Selection uses the 3px Blue-600 border from the Card surface — never a fill. Hover raises the border to 1.5px Blue-600. The `more` icon button opens the Menu. Card width is intrinsic or grid-driven; cards do not stretch to fill their parent."
+        },
+        {
+          "name": "Drawer",
+          "file": "preview/components-drawer.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-drawer.html",
+          "tagline": "Side panel that slides in from the right for details or secondary tasks.",
+          "anatomy": "Scrim (same token as Modal) · panel slides from right · 400–600px wide depending on content · header with title and close `×` · body · sticky footer for actions.",
+          "options": "Widths: narrow (320), default (480), wide (640). Modal (with scrim) or inline (no scrim, doesn't block the page).",
+          "usage": "Use for details about a selected object (preview, full edit form) or for secondary tasks that can run alongside the main canvas. For confirms, use a Modal. For temporary notifications, use a Toast.",
+          "behaviors": "Slides in 240ms ease-out. Esc closes. Inline variant does not block the canvas — the canvas remains interactive. Modal variant traps focus inside the drawer.",
+          "tokens": [
+            {
+              "name": "--color-scrim",
+              "value": "rgba(9, 30, 66, 0.54)",
+              "role": "Modal-variant scrim"
+            },
+            {
+              "name": "--color-surface-overlay",
+              "value": "#FFFFFF",
+              "role": "Drawer fill"
+            },
+            {
+              "name": "--shadow-overlay",
+              "value": "0 8px 24px rgba(38, 40, 44, 0.18)",
+              "role": "Drawer shadow"
+            }
+          ]
+        },
+        {
+          "name": "Environment picker",
+          "file": "preview/components-env-picker.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-env-picker.html",
+          "tagline": "Switcher for the active environment (Dev / Stage / Prod).",
+          "anatomy": "Pill control in the global header · current env name in 12/16 ExtraBold uppercase · color-coded leading dot (Green for Dev, Yellow for Stage, Red for Prod) · trailing chevron · popover listing all environments the user can access.",
+          "usage": "Use as the global active-env switch. The selected env scopes the page below — pipelines, accounts, configs all filter to it. Prod is intentionally Red to remind operators of the blast radius.",
+          "behaviors": "Click opens the popover. Selecting an env refreshes the page in the new env's scope. A confirm modal interposes when switching into Prod from any other env."
+        },
+        {
+          "name": "File upload",
+          "file": "preview/components-file-upload.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-file-upload.html",
+          "tagline": "Drop zone, browse button, and progress.",
+          "anatomy": "Drop zone (dashed Grey-400 border, 6px radius, Grey-50 fill) · centered prompt with a `Browse` link inside · in-progress list of files showing name, size, progress bar, cancel.",
+          "options": "Single or multiple files; accept filter (mime/extension); max-size validation; auto-upload on drop or queued.",
+          "usage": "Use for any file pickup — including drag-and-drop from the OS. Always allow click-to-browse as a fallback; never hide it. Show progress per file; on completion swap the progress bar for a Green-600 check.",
+          "behaviors": "Drag over the zone bumps the border to Blue-600 and the fill to Blue-100. Drop kicks off the upload. Cancel during upload aborts the request and removes the row. Files that fail validation render with a Red-600 border and the constraint description as the error."
+        },
+        {
+          "name": "Form row",
+          "file": "preview/components-form-row.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-form-row.html",
+          "tagline": "Horizontal label + control + help layout used inside forms.",
+          "anatomy": "Label column (200px, right-aligned, top-aligned) · control column (flex) · help column or inline help below the control. 24px row gap.",
+          "usage": "Use inside the Designer's properties panel and other dense configuration forms where labels and controls must line up across many rows. For looser layouts, use the standard Field anatomy (label above)."
+        },
+        {
+          "name": "Form section",
+          "file": "preview/components-form-section.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-form-section.html",
+          "tagline": "Grouped fields under a heading + optional description.",
+          "anatomy": "Heading (18/28 ExtraBold) · optional 14/22 description · stack of Form rows · 1px Grey-200 divider above the next section.",
+          "usage": "Use to group related fields inside a long form. Sections do not collapse; if collapse is required, use Accordion sections instead."
+        },
+        {
+          "name": "Global header",
+          "file": "preview/components-global-header.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-global-header.html",
+          "tagline": "The dark Indigo-1000 chrome that spans every product.",
+          "anatomy": "56px tall · Indigo-1000 fill · left: waffle launcher + product wordmark · center: contextual search + breadcrumb · right: env picker + notifications + user menu.",
+          "usage": "Use across every product as the only chrome that crosses product boundaries. Never inject product-specific controls into the global header — those belong on the Left nav or the page itself.",
+          "behaviors": "Sticky to the top of the viewport. Hover states on icons use a 12% white overlay; selected states use a 24% white overlay. The waffle launcher opens the Product launcher popover.",
+          "tokens": [
+            {
+              "name": "--color-surface-navbar",
+              "value": "#031A48",
+              "role": "Global navbar background — Indigo-1000"
+            },
+            {
+              "name": "--color-text-inverse",
+              "value": "#FFFFFF",
+              "role": "Text + icons on the navbar"
+            }
+          ]
+        },
+        {
+          "name": "Left nav",
+          "file": "preview/components-left-nav.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-left-nav.html",
+          "tagline": "Contextual product navigation — collapsible to icons-only.",
+          "anatomy": "Vertical rail · 56px or 240px wide depending on state · 20px Lucide icons in the collapsed state · 14/22 labels alongside in the expanded state · section headers in 10px ExtraBold uppercase.",
+          "options": "Collapsed (icons only) or expanded (labels visible). With or without nested item groups.",
+          "usage": "Use as the primary product-level nav inside each app. Designer's snap palette, Manager's org tree, and Monitor's pipeline list all live here. Items represent destinations or scopes — never actions.",
+          "behaviors": "Collapse toggle is persistent per user. Hover on a collapsed item shows the label as a tooltip. Active route is marked with a 3px Blue-600 left border and Blue-100 row background."
+        },
+        {
+          "name": "Menu",
+          "file": "preview/components-menu.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-menu.html",
+          "tagline": "Light, button-anchored action menu for commands and single-select.",
+          "anatomy": "White panel (`--color-surface-overlay`) · 1px Grey-300 hairline · 4px radius · `--shadow-overlay`. Items are 14/22 Medium with 8px/12px padding, an optional 16px leading Lucide icon and trailing `⌘` shortcut. Optional 10px ExtraBold uppercase group labels and 1px Grey-200 dividers.",
+          "options": "Item states: default, hover/focus (Grey-100), selected (Blue-100 fill / Blue-700 text / trailing check), destructive (Red-600), disabled (Grey-400). With or without icons, shortcuts, group labels, and dividers.",
+          "usage": "Use as the light on-canvas action menu anchored to a button — split-button options, row `More` actions, dropdown buttons, single-select pickers. This is distinct from the dark navy header dropdowns (`dropdown.css`), which are reserved for the global header. Keep destructive actions last, below a divider.",
+          "behaviors": "Opens 2px below its trigger and flips above when it would clip the viewport. Width ≥ 200px, growing to the longest item. Trigger carries `aria-haspopup=\"menu\"` + `aria-expanded`; roving focus with ↑/↓, Enter activates, Esc closes and returns focus to the trigger. Sits at `--z-popover`."
+        },
+        {
+          "name": "Modal",
+          "file": "preview/components-modal.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-modal.html",
+          "tagline": "Overlay surface for confirms, focused tasks, and destructive actions.",
+          "anatomy": "Scrim `rgba(9, 30, 66, 0.54)` · panel (white, 6–8px radius, `0 8px 24px rgba(38, 40, 44, 0.18)` shadow) · header (question or noun-title) · body (specific, quotes the object being acted on) · footer (right-aligned actions; primary on the right).",
+          "options": "Sizes: small (confirm), medium (form), large (multi-step). With or without close `×` in the header.",
+          "usage": "Use for confirms (destructive actions), short focused tasks, and content that requires the user's full attention. Do not use for navigation, casual previews, or anything that could live inline. The header is a question or noun-title; the body names the specific object being acted on.",
+          "behaviors": "Esc dismisses (except in unsaved-changes flows). Click outside the panel dismisses unless the modal is confirming a destructive action. Focus traps inside the panel; on close, focus returns to the trigger. Animation: 200ms scrim fade + panel slide-up 8px.",
+          "tokens": [
+            {
+              "name": "--color-scrim",
+              "value": "rgba(9, 30, 66, 0.54)",
+              "role": "Modal scrim (no blur)"
+            },
+            {
+              "name": "--color-surface-overlay",
+              "value": "#FFFFFF",
+              "role": "Modal panel fill"
+            },
+            {
+              "name": "--shadow-overlay",
+              "value": "0 8px 24px rgba(38, 40, 44, 0.18)",
+              "role": "Modal shadow"
+            },
+            {
+              "name": "--radius-lg",
+              "value": "8px",
+              "role": "Modal corner radius"
+            },
+            {
+              "name": "--space-6",
+              "value": "24px",
+              "role": "Modal internal padding"
+            }
+          ]
+        },
+        {
+          "name": "Notifications",
+          "file": "preview/components-notifications.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-notifications.html",
+          "tagline": "Notification center surfaced from the global bell icon.",
+          "anatomy": "Bell icon in the global header with an unread Notification dot · popover panel with grouped rows (Today / This week / Older) · each row has a leading icon, title, snippet, timestamp · trailing `View` link.",
+          "options": "Read / unread state per row. Filter tabs (`All`, `Mentions`, `System`). Mark-all-as-read action.",
+          "usage": "Use as the persistent inbox for any non-urgent event the user should see eventually — pipeline run completes, comment mentions, system updates. For urgent actionable events, also surface a Toast.",
+          "behaviors": "Clicking the bell opens the panel and marks the dot dismissed (but does not auto-mark rows as read). Click a row to navigate to the source object and mark the row read."
+        },
+        {
+          "name": "Product launcher (waffle)",
+          "file": "preview/components-product-launcher.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-product-launcher.html",
+          "tagline": "Grid of product tiles surfaced from the waffle icon in the global header.",
+          "anatomy": "Trigger: 24px waffle icon in the global header · popover with a 3-column grid · each tile shows the product's gradient circle, name, and one-line description. Footer shows the release-notes card.",
+          "usage": "Use as the only cross-product launcher. Do not duplicate it in the Left nav or in product-specific menus. Tiles are sorted by frequency of use, with newly-released products marked by a `New` badge for 30 days.",
+          "behaviors": "Hover bumps a tile's background to Blue-50. Click navigates to the product's home, opening in the same tab unless Shift is held."
+        },
+        {
+          "name": "Search overlay",
+          "file": "preview/components-search-overlay.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-search-overlay.html",
+          "tagline": "Full-page search modal triggered from anywhere by `⌘ K`.",
+          "anatomy": "Centered modal (no scrim — backdrop blur is not used; instead a flat Indigo-1000 60% fill) · search input · grouped results by type (Pipelines / Snaps / Accounts / Docs) · keyboard hint footer.",
+          "usage": "Use as the global navigate-to-result entry point. For filtering content visible on the current screen, use a local Search field instead.",
+          "behaviors": "Opens on `⌘ K` / `Ctrl K` from any page; Esc closes. Up/Down arrows cycle results; Enter activates. Recent searches show on empty input; typing replaces them with live results."
+        },
+        {
+          "name": "SnapGPT panel",
+          "file": "preview/components-snapgpt-panel.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-snapgpt-panel.html",
+          "tagline": "AI assistant side panel — woven through the suite as the AI accent.",
+          "anatomy": "Right-side panel (drawer-style, inline) · header with SnapGPT mark + close · message stream · prompt composer at the bottom · suggested-action chips above the composer.",
+          "usage": "Use as the persistent AI surface inside any product. The panel can suggest snaps, explain errors, generate config — never destructive actions without an explicit confirm. Always present AI output as `Editable AI output` so the user can review and adjust.",
+          "behaviors": "Trigger toggles the panel from the global header SnapGPT icon. Suggestions stream token-by-token; user can stop generation mid-stream. The AI accent (light blue tint) appears on AI-generated content but not on user messages."
+        },
+        {
+          "name": "Stepper",
+          "file": "preview/components-stepper.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-stepper.html",
+          "tagline": "Numbered progress through a multi-step flow.",
+          "anatomy": "Numbered circle (28px) per step · label below or to the right · 1px Grey-300 connector between steps · current is Blue-600 filled · complete is Green-600 with a check · upcoming is Grey-300 outlined.",
+          "options": "Horizontal or vertical. With or without inline descriptions per step. Linear (must complete in order) or freely navigable.",
+          "usage": "Use for tasks broken into 3–7 explicit steps (wizards, onboarding, API setup). For more than 7 steps, reconsider the task. For non-sequential progress, use Tabs or a Stepper variant.",
+          "behaviors": "Click a completed step navigates back to it. Linear steppers reject clicks on future steps. Current step is announced to screen readers as `Step N of M`."
+        },
+        {
+          "name": "Table",
+          "file": "preview/components-table.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-table.html",
+          "tagline": "Dense data table — the dominant shape for Manager and Monitor.",
+          "anatomy": "Toolbar (count + text-button actions left, search + icon buttons right) · 40px header row with Label 14/22 ExtraBold cells, subtle vertical dividers, sort arrow only on the active column, per-column filter-funnel button to the left of the label · 40px data rows (Compact, default) with Body 14/22 Regular text · 1px Grey-200 row dividers · 12px horizontal cell padding · 40px left checkbox column · 80px right action column with right-aligned dots-vertical (always visible) · pagination footer.",
+          "options": "Toolbar configuration uses two small popovers anchored to the right-side icons: Display (row spacing — Expanded 48 / Compact 40 / Dense 32 — row striping, auto-refresh) and Columns (per-column show/hide checkboxes + drag-to-reorder). Per-column filters open from the funnel button on the column header itself (search input, multi-select checklist, or numeric range, depending on the column type). All changes apply instantly — no Apply/Cancel commit step. Sortable columns (single active sort), resizable columns with a 60px minimum, fluid % column widths down to an 800px table minimum (horizontal scroll inside the component below that), sticky header, sticky first column, bulk selection, expandable rows, inline edit.",
+          "usage": "Use for any list of structured records — pipelines, snaps, accounts, tasks. Tables scale to thousands of rows with pagination or virtual scroll. For 5 or fewer items, prefer a list of Cards.",
+          "behaviors": "Sort: click a sortable header to cycle asc → desc → unsorted (restoring original order); only the active column shows an arrow. Filter: click the funnel on a column header to open a per-column filter popover; the funnel turns blue while a filter is active and rows that don't match are hidden instantly. Selection: click the row checkbox to toggle; the header checkbox selects all when any are unselected and clears all otherwise; selecting flips the toolbar count to `N selected` and brings in selection actions (Delete / Clone / Stop / More). Row hover swaps the background to Grey-100. Selected row uses Blue-100. Display popover row-spacing radios apply live as you click. Columns popover checkboxes can't leave zero columns visible; drag handles reorder both the popover list and the actual table columns in lockstep.",
+          "tokens": [
+            {
+              "name": "--sl-grey-100",
+              "value": "#F5F6F8",
+              "role": "Row hover background"
+            },
+            {
+              "name": "--sl-blue-100",
+              "value": "#E6ECF8",
+              "role": "Selected row background"
+            },
+            {
+              "name": "--sl-grey-200",
+              "value": "#EBEDF1",
+              "role": "Row divider + subtle vertical header dividers"
+            },
+            {
+              "name": "--sl-grey-300",
+              "value": "#D7DCE3",
+              "role": "Table border + header bottom border"
+            },
+            {
+              "name": "--color-text-body",
+              "value": "#031A48",
+              "role": "Header label + cell text (Indigo-900)"
+            },
+            {
+              "name": "--color-text-subtle",
+              "value": "#7D8695",
+              "role": "Muted cell text (em-dash placeholders, monospace IDs)"
+            },
+            {
+              "name": "--sl-blue-600",
+              "value": "#0841B4",
+              "role": "Toolbar text-button actions + filter-funnel indicator"
+            }
+          ]
+        },
+        {
+          "name": "Tabs",
+          "file": "preview/components-tabs.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-tabs.html",
+          "tagline": "Horizontal tab bar that swaps views inside a single surface.",
+          "anatomy": "Tab list with a 1px Grey-300 underline · active tab indicator is a 2px Blue-600 underline above the row · 14/22 ExtraBold labels · 12px horizontal padding · 8px vertical.",
+          "options": "Sizes: default, compact. With or without leading icons. With optional badge/count next to the label.",
+          "usage": "Use to swap between views in the same surface that share context (Configuration / Logs / Settings on a pipeline). For independent navigation across pages, use the Left nav.",
+          "behaviors": "Left/Right arrow moves focus; Home/End jump to first/last. Activation on click or Enter (or automatically on focus in `automatic activation` mode). Indicator slides between tabs in 150ms."
+        },
+        {
+          "name": "Toast",
+          "file": "preview/components-toast.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-toast.html",
+          "tagline": "Transient message anchored bottom-right.",
+          "anatomy": "Card (white, Raised shadow, 4px radius) · leading status icon · message (14/22) · optional inline action link · optional dismiss `×`. Stacks vertically with 8px gap.",
+          "options": "Tones: neutral / success / warning / danger. With or without action link (`Undo`, `View`).",
+          "usage": "Use for ephemeral feedback after an action — saves, deletes (with Undo), background process completes. Auto-dismiss after 5s (8s if there is an action link). For errors that need user attention, use a Banner or Modal.",
+          "behaviors": "Slide in from bottom-right in 200ms. Hover pauses the auto-dismiss timer. Stack is FIFO; new toasts push above older ones. Dismiss via `×`, the action, or auto-timeout."
+        },
+        {
+          "name": "User menu",
+          "file": "preview/components-user-menu.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-user-menu.html",
+          "tagline": "Avatar in the global header opens an account + preferences popover.",
+          "anatomy": "Trigger: 32px avatar · popover with the user's name and email · org switcher · `Account`, `Preferences`, `Documentation`, `Sign out` rows.",
+          "usage": "Use as the single location for personal account actions. Org-level admin (users, billing, integrations) belongs in the Admin Manager product, not here.",
+          "behaviors": "Click outside or Esc closes. Org switcher swaps the active org and refreshes the page (or routes home if the current page does not exist in the new org)."
+        }
+      ]
+    },
+    {
+      "num": "06",
+      "id": "patterns",
+      "name": "Patterns",
+      "description": "Reusable flows that combine components to solve a recurring product problem.",
+      "items": [
+        {
+          "name": "Agent activity panel",
+          "file": "preview/patterns-agent-activity-panel.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-agent-activity-panel.html",
+          "tagline": "Activity stream of agent tool calls — separate from the chat thread.",
+          "usage": "Use to surface what an agent is doing as it runs, grouped into Done, In progress, Blocked, and Queued. Kept distinct from the SnapGPT chat thread — linked but never merged into one stream. Only non-empty sections render.",
+          "behaviors": "The running item carries a 2px `--sl-blue-600` left border, a `--sl-blue-100` tint, and an inline spinner; blocked items use an orange left border. Clicking an item expands an inline tool disclosure with the tool name, request payload, and truncated response plus a `View all` link. The footer tracks overall progress (`Running step 2 of 4` → `Completed in 1m 22s`)."
+        },
+        {
+          "name": "Agent plan",
+          "file": "preview/patterns-agent-plan.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-agent-plan.html",
+          "tagline": "Plan-and-execute flow — review, approve, then watch steps run.",
+          "usage": "Use when an agent proposes a multi-step plan the user should review before it runs. In the review state the user can approve the whole plan or edit/remove individual steps; during execution, completed steps lock while still-pending steps remain editable.",
+          "behaviors": "Steps move through pending → running → complete. Edit/Remove links appear on row hover and are hidden on running and completed steps. The running step gets a 2px `--sl-blue-600` left border, a `--sl-blue-100` tint, bold label, and comet-tail spinner. The footer swaps from Approve / Edit (review) to Pause / Stop (executing)."
+        },
+        {
+          "name": "Agent recovery",
+          "file": "preview/patterns-agent-recovery.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-agent-recovery.html",
+          "tagline": "Three distinct recovery paths — misunderstood, tool failure, partial success.",
+          "usage": "Use when an agent run goes wrong. Three paths: (A) misunderstood request — yellow, with an editable prompt and a Try again; (B) tool call failure — red, with tool detail (tool, status, retries, step) and Retry tool / Skip and continue; (C) partial success — orange, with a step-by-step status list and Retry from step N / Skip / Stop here.",
+          "behaviors": "Every recovery message is 3-part — what happened · why · what to try next — never a generic `Something went wrong`. Completed steps are always preserved as locked Done rows and are never lost on retry."
+        },
+        {
+          "name": "Agent step override",
+          "file": "preview/patterns-agent-step-override.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-agent-step-override.html",
+          "tagline": "Mid-execution controls — pause, resume, modify, skip, stop.",
+          "usage": "Use to give the user control over an agent mid-run. The executing state shows Pause + Stop, with Edit/Skip on hover for pending steps; pausing exposes Resume / Modify / Stop on the active step; modifying opens an inline text input (no modal); skipping dims and strikes through the step.",
+          "behaviors": "The paused active step takes a yellow border and background; modifying takes a blue border, background, and a focused input with Save / Cancel. Skipped steps drop to 45% opacity with a struck-through label. Completed steps are locked — only upcoming steps ever show Edit / Skip."
+        },
+        {
+          "name": "Agent tool disclosure",
+          "file": "preview/patterns-agent-tool-disclosure.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-agent-tool-disclosure.html",
+          "tagline": "Inline tool call + response — collapsed or expanded, success or error.",
+          "usage": "Use to show a single agent tool call inline in the chat thread or inside an activity-panel item. Collapsed shows the tool icon, tool name, and a summary chip; expanded reveals the request payload and a truncated response with copy / view full.",
+          "behaviors": "The chevron rotates up on expand. Success uses a green treatment; error uses a red trigger with an error message and Retry + Skip step affordances. Placed inline between chat messages or inside an activity panel item expansion."
+        },
+        {
+          "name": "AI confidence",
+          "file": "preview/patterns-ai-confidence.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-ai-confidence.html",
+          "tagline": "Visual treatment for AI output the user should sanity-check.",
+          "usage": "Use to flag AI output that is below high-confidence threshold — uncertain field mappings, partial generations. The user is asked to confirm or refine before continuing.",
+          "behaviors": "Low-confidence values render in the AI tint with a Yellow-600 left border and a `Review` chip. Confirming the value clears both the tint and the chip; refining re-runs the generation with the user's correction as context."
+        },
+        {
+          "name": "AI-assisted input",
+          "file": "preview/patterns-ai-assisted-input.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-ai-assisted-input.html",
+          "tagline": "Field with an inline AI generate button.",
+          "usage": "Use on free-text fields where AI can offer a useful first draft — pipeline description, error message, recipe name. The user always sees the AI suggestion before it becomes the value.",
+          "behaviors": "Click the AI button to generate; the suggestion streams into the field with the AI tint. Accept commits the value; Reject reverts to what was there. While generating, the field is read-only and the AI tint is visible."
+        },
+        {
+          "name": "Bulk selection",
+          "file": "preview/patterns-bulk-selection.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-bulk-selection.html",
+          "tagline": "Header checkbox + per-row checkbox + sticky action bar.",
+          "usage": "Use on any Table where the user may operate on more than one row at a time — delete, archive, tag, move. The header row swaps to a `N selected · actions` bar once at least one row is selected.",
+          "behaviors": "Header checkbox cycles unchecked → all-selected → indeterminate (when only some rows are selected). Shift+click on a row selects the range between the last selection and the clicked row. The action bar persists across pagination — the user's selection is preserved when the page changes."
+        },
+        {
+          "name": "Destructive confirm",
+          "file": "preview/patterns-destructive-confirm.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-destructive-confirm.html",
+          "tagline": "Modal with positive-phrasing button labels.",
+          "usage": "Use before any irreversible action — deleting a pipeline, removing a connection, ending a session. The modal header is a question (`Are you sure you want to delete this pipeline?`); the body names the object (`'MG-pipeline-Nov2022' will be moved to the Recycle Bin and deleted forever after 30 days.`).",
+          "behaviors": "Buttons use the `Yes, delete` / `No, keep it` pattern — confirming destructive actions uses positive phrasing instead of generic `OK / Cancel`. The destructive button is red and appears on the right; the safe action is on the left."
+        },
+        {
+          "name": "Drag and drop",
+          "file": "preview/patterns-drag-drop.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-drag-drop.html",
+          "tagline": "Drop affordances on canvas, lists, and tables.",
+          "usage": "Use for spatially-meaningful actions — placing a snap on the canvas, reordering pipeline parameters, dragging a file into an upload zone. For purely abstract reordering, prefer up/down buttons inside each row.",
+          "behaviors": "Drop targets bump their border to Blue-600 and their fill to Blue-100 on dragover. Invalid drop targets show a `not-allowed` cursor and reject the drop. After drop, the new item animates into place over 150ms; reorder shifts neighbors out of the way."
+        },
+        {
+          "name": "Drawer + SnapGPT",
+          "file": "preview/patterns-drawer-snapgpt.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-drawer-snapgpt.html",
+          "tagline": "SnapGPT panel composed inside a Drawer surface.",
+          "usage": "Use when the AI assistant needs to operate on a selected object — explain this snap, refactor this pipeline, validate this config. The drawer carries the selected object's identity; SnapGPT operates inside.",
+          "behaviors": "Drawer slides in from the right (default 480px wide); SnapGPT message stream fills the body. Closing the drawer also ends the SnapGPT context for that object — open it again to start fresh."
+        },
+        {
+          "name": "Editable AI output",
+          "file": "preview/patterns-editable-ai-output.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-editable-ai-output.html",
+          "tagline": "AI-generated content the user can review and edit before accepting.",
+          "usage": "Use whenever AI produces content the user is responsible for — generated configs, summaries, queries. The output renders with the AI tint, an explicit `AI-generated` badge, and is fully editable inline before the user commits.",
+          "behaviors": "Editing removes the AI tint progressively as the user touches each field. An `AI` chip in the corner persists until the user explicitly accepts the output. Reject discards the entire generation and reverts to the previous state."
+        },
+        {
+          "name": "Empty states",
+          "file": "preview/patterns-empty-states.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-empty-states.html",
+          "tagline": "First-run, no-results, and after-clear states.",
+          "usage": "Empty states explain why the view is empty and what to do next. First-run states include a primary action (`Create your first pipeline`). No-results states explain that the filter is the cause and offer a `Clear filters` action. After-clear states are minimal — they confirm the action without offering more affordance.",
+          "behaviors": "Illustration is optional and minimal — a flat icon, never a stock illustration of people. The primary action is a Button; secondary actions are text links."
+        },
+        {
+          "name": "Error states",
+          "file": "preview/patterns-error-states.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-error-states.html",
+          "tagline": "Page-level, surface-level, and inline error layouts.",
+          "usage": "Page-level errors (404, 500) take the full canvas with an illustration and a way back. Surface-level errors (a failed list, a broken card) render an error message in place of the failed content with a Retry action. Inline errors (a single failed row) use a Red-600 badge and an inline message.",
+          "behaviors": "All retryable errors include a Retry button; on retry success, the surface returns to normal state without re-rendering surrounding content. Errors never block other parts of the page from working."
+        },
+        {
+          "name": "Filter, sort, faceted search",
+          "file": "preview/patterns-filter-sort.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-filter-sort.html",
+          "tagline": "Combined filter bar above a Table — applied filters render as Chips.",
+          "usage": "Use above any data-dense Table. Filter controls live in a single horizontal bar; applied filters render as removable Chips below the bar. Sort lives in the column headers (click to sort, click again to reverse).",
+          "behaviors": "Filter changes update the table in 150ms debounce. Chips remove their filter when their `×` is clicked. A `Clear all` link appears once two or more filters are active. URL params encode the filter state so the view is shareable."
+        },
+        {
+          "name": "Form validation",
+          "file": "preview/patterns-form-validation.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-form-validation.html",
+          "tagline": "Inline error messages — specific, never generic.",
+          "usage": "Validate on blur for individual fields; on submit for the form as a whole. Error messages describe the constraint, not the symptom — `Must be a valid email address` beats `Invalid input`. Show one error per field at a time; if several violations exist, list the highest-priority one.",
+          "behaviors": "Error state borders the field in Red-600 and surfaces a 12/18 Red-600 message below. On submit, focus jumps to the first invalid field. Clearing the violation removes the error in the same paint frame — no animation."
+        },
+        {
+          "name": "Inline editing",
+          "file": "preview/patterns-inline-editing.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-inline-editing.html",
+          "tagline": "Click a value to edit in place — no dedicated edit screen.",
+          "usage": "Use for fields where the user already sees the value and wants to change it without context-switching — pipeline name, description, account labels. For multi-field changes, use a dedicated edit drawer or modal.",
+          "behaviors": "Hover surfaces a subtle pencil icon. Click activates the editor with the current value selected. Enter or click-outside commits; Esc cancels. Disabled fields render the value with no hover affordance."
+        },
+        {
+          "name": "Keyboard shortcuts",
+          "file": "preview/patterns-keyboard-shortcuts.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-keyboard-shortcuts.html",
+          "tagline": "Shortcut conventions across the suite.",
+          "usage": "Use the suite's keyboard conventions: `⌘ K` opens the global search overlay; `⌘ S` saves; `⌘ /` toggles SnapGPT; `?` opens the shortcut cheat-sheet. Single-key shortcuts (without modifier) only work when no input is focused — never hijack typing.",
+          "behaviors": "All shortcuts surface in the `?` cheat-sheet. Custom shortcuts inside a product (e.g., Designer's `R` for run pipeline) list under their own product section."
+        },
+        {
+          "name": "Pagination",
+          "file": "preview/patterns-pagination.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-pagination.html",
+          "tagline": "Page number controls + page size selector for long tables.",
+          "usage": "Use on Tables over 100 rows. Default page size is 25; allow 10 / 25 / 50 / 100. Show first / last / prev / next plus the current page in a row of pill buttons.",
+          "behaviors": "Clicking a page number jumps to that page. Changing the page size resets to page 1. The pagination bar sticks to the bottom of the table when the user scrolls vertically."
+        },
+        {
+          "name": "Save / discard",
+          "file": "preview/patterns-save-discard.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-save-discard.html",
+          "tagline": "Sticky action bar that surfaces when the user has unsaved changes.",
+          "usage": "Use on any edit surface with multiple fields where the user makes changes gradually — account settings, snap properties, schema editors. The bar pins to the bottom and shows once the form is dirty.",
+          "behaviors": "Save commits and dismisses the bar with a success Toast. Discard reverts to the last-saved state with a confirm modal if there are non-trivial changes. Navigating away while dirty triggers the unsaved-changes confirm modal."
+        },
+        {
+          "name": "Undo via toast",
+          "file": "preview/patterns-undo-toast.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-undo-toast.html",
+          "tagline": "Reversible destructive actions skip the confirm modal and offer Undo in the toast.",
+          "usage": "Prefer this over a confirm modal whenever the operation is genuinely reversible within a short window — archive a record, remove a list item, dismiss a notification. The toast persists 8 seconds with the Undo link active.",
+          "behaviors": "Acting on Undo reverses the operation immediately and confirms with a second toast (`Pipeline restored`). After 8 seconds the toast auto-dismisses and the operation becomes permanent."
+        },
+        {
+          "name": "Wizard / multi-step flow",
+          "file": "preview/patterns-wizard.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-wizard.html",
+          "tagline": "Stepper-driven flow for onboarding and complex setup.",
+          "usage": "Use for tasks that genuinely break into 3–7 sequential steps where each step builds on the last (account setup, pipeline scaffolding, integration onboarding). For shorter flows, use a single Modal with sections. For longer flows, reconsider.",
+          "behaviors": "Stepper at the top tracks progress. `Back` returns without losing values; `Next` validates the current step before advancing. Unsaved-changes confirm appears if the user closes mid-flow."
+        }
+      ]
+    },
+    {
+      "num": "07",
+      "id": "data-viz",
+      "name": "Data visualization",
+      "description": "Chart and graph types, with guidance on when to use each.",
+      "items": [
+        {
+          "name": "Bar chart",
+          "file": "preview/dataviz-bar.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-bar.html",
+          "tagline": "Vertical or horizontal bars — ranking and discrete comparisons.",
+          "anatomy": "Bars at 4px radius on the top edge (vertical) or right edge (horizontal); 1px gap between bars at narrow widths; grid lines Grey-200; axis labels Grey-700.",
+          "usage": "Use horizontal bars when category labels are long (snap names, error types); vertical bars when categories are short and ordered (months, sizes). Sort bars by value unless category order is canonical (months).",
+          "behaviors": "Hover lifts the bar to 1px Blue-600 outline and shows the exact value."
+        },
+        {
+          "name": "Calendar heatmap",
+          "file": "preview/dataviz-calendar.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-calendar.html",
+          "tagline": "GitHub-style daily heatmap over a quarter or year.",
+          "usage": "Use to expose seasonality and weekly patterns across a long window — daily run volume, daily failure counts. The sequential palette goes from Grey-100 (zero) to Green-600 (max), preserving the empty-day reading.",
+          "behaviors": "Hover surfaces the date and value in a tooltip. Click drills into the day's runs."
+        },
+        {
+          "name": "Chart empty state",
+          "file": "preview/dataviz-empty.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-empty.html",
+          "tagline": "No-data message inside the chart area — never a blank canvas.",
+          "usage": "Use when a chart's query returns no rows. Render a centered icon (`bar-chart-3-off` or similar) + a one-line message explaining why (`No runs in the selected window`) + a `Clear filters` action if the empty state is filter-induced."
+        },
+        {
+          "name": "Chart loading state",
+          "file": "preview/dataviz-loading.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-loading.html",
+          "tagline": "Skeleton bars and lines while a chart fetches.",
+          "usage": "Use the chart-shape-matching skeleton — bar chart loading uses Skeleton bars, line chart uses a faint flat line, sparkline uses a thin grey rectangle. Animation is the standard Skeleton pulse, no spinner."
+        },
+        {
+          "name": "Combo (bar + line)",
+          "file": "preview/dataviz-combo.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-combo.html",
+          "tagline": "Bars and a line on a single chart with dual axes.",
+          "usage": "Use when comparing two unlike units that move together — throughput (bars, left axis) vs latency (line, right axis). Color the axes to match their series so readers do not misalign. Never plot more than one of each shape.",
+          "behaviors": "Tooltip aligns to the bar center and shows both values for the same time bucket."
+        },
+        {
+          "name": "Donut chart",
+          "file": "preview/dataviz-donut.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-donut.html",
+          "tagline": "Proportion of total across 3–5 categories.",
+          "anatomy": "Donut (not pie — center stays open for total or label) · max 5 slices · slices ordered by size (largest at 12 o'clock) · legend with values to the right.",
+          "usage": "Use for a small bounded set of categories whose proportion to the whole is the point. Never use for more than 5 categories or trends over time. For stacked proportions over time, use a Stacked area.",
+          "behaviors": "Hover highlights a slice and surfaces value + percent. Click filters the underlying view to that slice (when available)."
+        },
+        {
+          "name": "Gauge",
+          "file": "preview/dataviz-gauge.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-gauge.html",
+          "tagline": "Arc showing a single value against a known range — capacity, utilization.",
+          "anatomy": "240° arc (default) or 180° arc · filled portion uses a sequential ramp · centered value with units below · optional zone bands (good / warning / danger).",
+          "usage": "Use for a single bounded value where 100% is meaningful — disk capacity, license usage, rate-limit budget. For values without a natural ceiling, use a sparkline or a KPI card instead."
+        },
+        {
+          "name": "Heatmap",
+          "file": "preview/dataviz-heatmap.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-heatmap.html",
+          "tagline": "Two-axis matrix of values colored by a sequential ramp.",
+          "usage": "Use for hour-of-day × day-of-week patterns, snap × pipeline performance grids. Cells are square or 1.5:1 wide; sequential palette goes from Grey-50 to the saturated step.",
+          "behaviors": "Hover highlights the row + column and surfaces the exact value."
+        },
+        {
+          "name": "Histogram",
+          "file": "preview/dataviz-histogram.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-histogram.html",
+          "tagline": "Distribution of a numeric value — bin width chosen by the chart.",
+          "usage": "Use for run-duration distribution, payload-size distribution, error-rate distribution. Mark p50/p95/p99 with dashed vertical lines. Bins default to Freedman–Diaconis; allow the user to override for known-quirky data."
+        },
+        {
+          "name": "Hive plot",
+          "file": "preview/dataviz-hive-plot.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-hive-plot.html",
+          "tagline": "Krzywinski-style 2- or 3-axis hive — categorical layout for many-to-many.",
+          "usage": "Use when the network has natural axis categories — Sources → Pipelines → Destinations (3-axis) or Sources ↔ Destinations (2-axis). Axis positions are log-scale by degree. Edge color follows the source axis; never connect nodes on the same axis.",
+          "behaviors": "Selection highlights one node with a dashed halo, brightens 1-hop neighbors, and dims the rest. The optional `node ribbons` variant uses concentric rings to encode a secondary metric (volume tiers) — use rings OR tick labels, never both."
+        },
+        {
+          "name": "KPI card",
+          "file": "preview/dataviz-kpi.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-kpi.html",
+          "tagline": "Single big number, label, optional trend chip and sparkline.",
+          "anatomy": "Card · 10/14 ExtraBold uppercase label · 32–48px ExtraBold value · optional sparkline below · optional `+/-` trend chip.",
+          "usage": "Use for one number that matters — total pipelines, success rate, throughput. Pair with a trend so the user reads it as motion, not a static value. For multiple related numbers, use a small-multiple of KPI cards rather than one card with several values.",
+          "behaviors": "Hover surfaces the underlying time window in a tooltip. Click navigates to the drill-down view."
+        },
+        {
+          "name": "Sankey diagram",
+          "file": "preview/dataviz-sankey.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-sankey.html",
+          "tagline": "Flow from sources to destinations — ribbon width = volume.",
+          "usage": "Use to expose record flow Sources → Pipelines → Destinations or any other many-to-many flow. Ribbon width encodes volume; node height encodes total throughput at that node. For 2-axis flows, prefer Hive plot.",
+          "behaviors": "Hover highlights a ribbon and dims the rest, surfacing the per-flow volume."
+        },
+        {
+          "name": "Sparkline",
+          "file": "preview/dataviz-sparkline.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-sparkline.html",
+          "tagline": "Small inline trend line — no axes, no labels.",
+          "usage": "Use inside KPI cards, table rows, and dense layouts where shape matters more than exact values. Width 60–120px, height 16–24px. Never add axis ticks or labels — the value is the trend.",
+          "behaviors": "Hover surfaces a single tooltip with the value and timestamp at the cursor position."
+        },
+        {
+          "name": "Stacked area",
+          "file": "preview/dataviz-stacked.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-stacked.html",
+          "tagline": "Time series where the layers stack to show share of total.",
+          "usage": "Use when both total and composition over time matter — total runs split by status, throughput split by snap type. Order the stack with the largest/most-stable category at the bottom. Use a sequential or categorical palette consistent with the rest of the page.",
+          "behaviors": "Hover surfaces both the absolute value and the share of total for each layer at the cursor."
+        },
+        {
+          "name": "Swim-lane Gantt",
+          "file": "preview/dataviz-gantt.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-gantt.html",
+          "tagline": "Pipeline runs along a timeline — color = final status.",
+          "usage": "Use for run-history visualization in Monitor. One row per pipeline; bars are run durations colored by final status (pastel-200 bg + dark-800 text). A continuous `streaming` lane marks realtime pipelines.",
+          "behaviors": "Hover lifts the bar and surfaces run id, duration, status, snaplex. Click drills into the run's detail view."
+        },
+        {
+          "name": "Time series",
+          "file": "preview/dataviz-timeseries.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-timeseries.html",
+          "tagline": "Line chart over time — single or multi-line.",
+          "anatomy": "X axis is time, ascending left to right. 1.5px lines using the categorical palette. Grid lines Grey-200; axis labels Grey-700. Markers on data points appear on hover.",
+          "usage": "Use for any over-time trend with 1–5 series. For more than 5 series, use small multiples. For percentages of a total over time, use Stacked area instead.",
+          "behaviors": "Hover snaps a crosshair to the nearest x value and shows a multi-series tooltip. Click-drag selects a range and zooms in; double-click resets the zoom."
+        },
+        {
+          "name": "Usage rules",
+          "file": "preview/dataviz-usage.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-usage.html",
+          "tagline": "When to reach for each chart type — and when not to.",
+          "usage": "Use this card as the decision tree for picking a chart. The default is the simplest visualization that answers the question — a number for a KPI, a sparkline for a trend, a small-multiple grid before a giant chart. Never use a chart to decorate; if the chart does not answer a specific question, remove it."
+        }
+      ]
+    },
+    {
+      "num": "08",
+      "id": "advanced-editors",
+      "name": "Advanced editors",
+      "description": "Specialized multi-field editors for SnapLogic's configuration surfaces.",
+      "items": [
+        {
+          "name": "API parameter builder",
+          "file": "preview/components-api-param-builder.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-api-param-builder.html",
+          "tagline": "Build a REST request — path, query, headers, body.",
+          "anatomy": "Method picker (GET/POST/...) · URL field with inline `{path-param}` chips · tabbed editor for Query / Headers / Body / Auth · response preview below.",
+          "options": "Variants per HTTP method. Body editor mode (Raw / JSON / Form-data / x-www-form-urlencoded).",
+          "usage": "Use anywhere the user builds an outbound HTTP request — REST Snap, webhook test tool, custom API source. Pair with a `Send test request` action that shows the live response in the preview pane.",
+          "behaviors": "Path params chip out automatically from `{name}` segments in the URL. Switching body mode preserves edits where possible; otherwise warns before discarding. Auth tab swaps in the relevant auth fields (Basic, Bearer, OAuth, API key)."
+        },
+        {
+          "name": "Code editor",
+          "file": "preview/components-code-editor.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-code-editor.html",
+          "tagline": "Embedded Monaco-style code editor — JSON, JS, SQL, Python.",
+          "anatomy": "Container with a 1.5px Grey-300 border and 4px radius · 36px-tall toolbar with language picker, format, expand · gutter with line numbers · main editor (SF Mono 13/20) · status bar with cursor position and language.",
+          "options": "Languages: JSON, JavaScript, SQL, Python, plain text. Sizes: inline (200px), default (320px), expanded (full-screen).",
+          "usage": "Use anywhere the user writes more than a single line of code — pipeline expressions, custom SQL, JS snippets. For a one-line expression, use a plain Input with mono font.",
+          "behaviors": "Syntax highlighting and bracket matching per-language. `⌘ /` toggles comment on selection; `⌘ Enter` formats. Errors gutter-mark with Red-600 squiggles; warnings with Yellow-600."
+        },
+        {
+          "name": "Connection picker",
+          "file": "preview/components-connection-picker.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-connection-picker.html",
+          "tagline": "Multi-step picker for selecting a connection or creating one inline.",
+          "anatomy": "Step 1: source type grid (Postgres, Salesforce, REST, etc.) · Step 2: existing connections for the chosen type · Step 3: inline new-connection form when no existing connection fits.",
+          "usage": "Use when a Snap or step needs to bind to a SaaS endpoint or database. Surfaces existing connections first so the user does not re-enter credentials; falls back to inline creation only when needed.",
+          "behaviors": "Step 1 is keyboard-navigable as a grid; arrow keys move the focus, Enter selects. Type-ahead in step 1 filters the grid by source name. Step 3 reuses the Form section + Form row primitives."
+        },
+        {
+          "name": "Dynamic repeater",
+          "file": "preview/components-dynamic-repeater.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-dynamic-repeater.html",
+          "tagline": "Field group the user can duplicate N times.",
+          "anatomy": "Vertical stack of identical sub-forms · each repeat has a remove `×` and a drag handle · `+ Add another` button below the stack.",
+          "options": "Min/max count constraints. Optional `Duplicate` action on each repeat that copies the previous values.",
+          "usage": "Use for ordered lists of structured items — pipeline parameters, mapping rules, conditional branches. For unordered tag-like lists, use a Chip input instead.",
+          "behaviors": "Drag handle reorders; Tab moves through fields then advances to the next repeat. Removing the last repeat leaves the empty add-button visible — never an empty stack with no affordance."
+        },
+        {
+          "name": "JSON editor",
+          "file": "preview/components-json-editor.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-json-editor.html",
+          "tagline": "Tree + raw view of a JSON document with inline edit.",
+          "anatomy": "Toolbar with mode toggle (Tree / Raw) · main pane · in Tree mode each row is a key with a typed editor on the right; in Raw mode it falls back to the Code editor with JSON highlighting.",
+          "options": "Tree, Raw, Diff (when comparing to a baseline). Read-only mode for output JSON.",
+          "usage": "Use for any user-edited JSON — pipeline configuration, account credentials, custom payloads. Diff mode pairs naturally with the Save / discard pattern.",
+          "behaviors": "Switching from Tree to Raw preserves edits; switching back validates and surfaces parse errors inline. Add / remove / reorder operations in Tree mode update the underlying JSON immediately."
+        },
+        {
+          "name": "Key/value editor",
+          "file": "preview/components-key-value-editor.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-key-value-editor.html",
+          "tagline": "Inline editor for headers, params, and other flat dicts.",
+          "anatomy": "Table-like rows · two columns (key, value) · trailing remove · `+ Add` row at the bottom · optional disabled-row checkbox column for skipping entries without removing them.",
+          "options": "Plain k/v, with description column, with disable toggle, with auth/secret masking on the value column.",
+          "usage": "Use for HTTP headers, query params, environment overrides — any short flat dictionary. For nested structures, use the JSON editor.",
+          "behaviors": "Tab from value to the next key (auto-appending a new row when on the last value). Drag-handle column reorders rows. Removing a row leaves no trace; disabling keeps the row but greys it and excludes it from the saved value."
+        },
+        {
+          "name": "Schema builder",
+          "file": "preview/components-schema-builder.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-schema-builder.html",
+          "tagline": "Visual editor for JSON schemas — output specs, payload shapes.",
+          "anatomy": "Tree of fields · each field row: name, type, required toggle, default · child fields indented under their parent · `+` adds a child or sibling depending on the focused row.",
+          "options": "Output schema, input schema, request body, response body. Types: string, number, boolean, object, array, enum.",
+          "usage": "Use anywhere the user defines a structured payload — Snap output schema, custom API responses, webhook contracts. Pair with a sample-data view that validates against the schema as the user types.",
+          "behaviors": "Changing a parent type between object / array shows/hides the child editor. Required fields surface a red dot in the tree. Validation errors appear inline next to the offending row."
+        }
+      ]
+    },
+    {
+      "num": "09",
+      "id": "templates",
+      "name": "Templates",
+      "description": "Full-page starting points — complete screens assembled from components and patterns.",
+      "items": [
+        {
+          "name": "Designer · Empty canvas",
+          "file": "preview/templates-designer.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/templates-designer.html",
+          "tagline": "Full Designer template — global header, left rail, canvas, toolbar, properties panel.",
+          "usage": "Use as the reference layout for the Designer workspace. Composes the Global header, Left nav (snap palette), Canvas, Toolbar (Build / Execution / Configuration / Version Control / Transfer groups), and the right Properties panel. Empty state on the canvas shows the `Create your first pipeline` primary action.",
+          "behaviors": "Toolbar collapses to icons-only (state A) or expands with labels and group headers (state B); the chevron toggles. Left rail can be resized between 200–360px and persists per user. The properties panel is hidden until a snap is selected; selecting one opens it in the right column."
+        }
+      ]
+    }
+  ]
+}

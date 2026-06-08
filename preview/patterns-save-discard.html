@@ -86,6 +86,16 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Save / discard",
+  "section": "Patterns",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-save-discard.html",
+  "tagline": "Sticky action bar that surfaces when the user has unsaved changes.",
+  "usage": "Use on any edit surface with multiple fields where the user makes changes gradually — account settings, snap properties, schema editors. The bar pins to the bottom and shows once the form is dirty.",
+  "behaviors": "Save commits and dismisses the bar with a success Toast. Discard reverts to the last-saved state with a confirm modal if there are non-trivial changes. Navigating away while dirty triggers the unsaved-changes confirm modal."
+}
+</script>
 </head>
 <body>
   <div class="card">

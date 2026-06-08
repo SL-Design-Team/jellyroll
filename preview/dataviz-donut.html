@@ -25,7 +25,19 @@
   .leg-row .dot { width: 12px; height: 12px; border-radius: 2px; }
   .leg-row .num { font-family: ui-monospace, Menlo, monospace; text-align: right; font-weight: 800; }
   .leg-row .pct { font-family: ui-monospace, Menlo, monospace; text-align: right; color: var(--color-text-subtle); }
-</style></head><body>
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Donut chart",
+  "section": "Data visualization",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-donut.html",
+  "tagline": "Proportion of total across 3–5 categories.",
+  "anatomy": "Donut (not pie — center stays open for total or label) · max 5 slices · slices ordered by size (largest at 12 o'clock) · legend with values to the right.",
+  "usage": "Use for a small bounded set of categories whose proportion to the whole is the point. Never use for more than 5 categories or trends over time. For stacked proportions over time, use a Stacked area.",
+  "behaviors": "Hover highlights a slice and surfaces value + percent. Click filters the underlying view to that slice (when available)."
+}
+</script>
+</head><body>
   <div class="card">
     <div class="row-label"><span class="name">Donut chart</span><span class="meta">status distribution · center metric · external legend with values</span></div>
     <div class="donut-grid">

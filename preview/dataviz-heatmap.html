@@ -19,7 +19,18 @@
   .legend-scale { display: flex; align-items: center; gap: 8px; font: 400 11px/14px var(--font-sans); color: var(--color-text-subtle); margin-top: 16px; }
   .scale-row { display: grid; grid-template-columns: repeat(5, 18px); gap: 2px; }
   .scale-row .sw { width: 18px; height: 18px; border-radius: 2px; }
-</style></head><body>
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Heatmap",
+  "section": "Data visualization",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-heatmap.html",
+  "tagline": "Two-axis matrix of values colored by a sequential ramp.",
+  "usage": "Use for hour-of-day × day-of-week patterns, snap × pipeline performance grids. Cells are square or 1.5:1 wide; sequential palette goes from Grey-50 to the saturated step.",
+  "behaviors": "Hover highlights the row + column and surfaces the exact value."
+}
+</script>
+</head><body>
   <div class="card">
     <div class="row-label"><span class="name">Heatmap</span><span class="meta">2D matrix · sequential color scale · cell tooltip on hover</span></div>
     <div class="panel">

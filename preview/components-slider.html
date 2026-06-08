@@ -28,6 +28,18 @@
   .sl-thumb.error { background: var(--sl-red-600); box-shadow: 0 0 0 1px var(--sl-red-600); }
   .scale-labels { display: flex; justify-content: space-between; margin-top: 4px; font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Slider",
+  "section": "Building blocks",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-slider.html",
+  "tagline": "Drag to pick a value or a range from a continuous track.",
+  "anatomy": "4px track · 16px circular thumb · optional tick marks · optional value bubble above thumb. Filled portion Blue-600; unfilled Grey-300.",
+  "options": "Single thumb or range (two thumbs); horizontal default; integer or float steps; optional tick labels.",
+  "usage": "Use for approximate continuous values where exact precision is not required — opacity, zoom, throttling. Pair with a number input alongside when the user may want to type an exact value.",
+  "behaviors": "Click on the track jumps the nearest thumb. Drag, arrow keys, Page Up/Down (large step), Home/End (min/max) all move the thumb. Range thumbs cannot cross. Value bubble appears on hover and during drag."
+}
+</script>
 </head>
 <body>
   <div class="card">

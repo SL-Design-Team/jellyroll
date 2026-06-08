@@ -9,6 +9,27 @@
   .card { width: 100%; gap: 24px; }
   .ramp { display: flex; flex-direction: column; gap: 4px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Color ramps",
+  "section": "Color",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/colors-all-ramps.html",
+  "tagline": "Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.",
+  "usage": "Use the `--sl-{hue}-{step}` tokens directly. Steps 50–400 read as light backgrounds and supporting tints; 500–700 carry semantic meaning; 800–1000 are nav and on-dark text. The 600 step of each ramp is the canonical default. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code.",
+  "tokens": [
+    "--sl-blue-600",
+    "--sl-teal-600",
+    "--sl-indigo-600",
+    "--sl-orange-600",
+    "--sl-yellow-600",
+    "--sl-purple-600",
+    "--sl-green-600",
+    "--sl-red-600",
+    "--sl-pink-600",
+    "--sl-grey-600"
+  ]
+}
+</script>
 </head>
 <body>
   <div class="card">

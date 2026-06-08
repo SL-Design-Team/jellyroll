@@ -114,6 +114,18 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Menu",
+  "section": "Composed components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-menu.html",
+  "tagline": "Light, button-anchored action menu for commands and single-select.",
+  "anatomy": "White panel (`--color-surface-overlay`) · 1px Grey-300 hairline · 4px radius · `--shadow-overlay`. Items are 14/22 Medium with 8px/12px padding, an optional 16px leading Lucide icon and trailing `⌘` shortcut. Optional 10px ExtraBold uppercase group labels and 1px Grey-200 dividers.",
+  "options": "Item states: default, hover/focus (Grey-100), selected (Blue-100 fill / Blue-700 text / trailing check), destructive (Red-600), disabled (Grey-400). With or without icons, shortcuts, group labels, and dividers.",
+  "usage": "Use as the light on-canvas action menu anchored to a button — split-button options, row `More` actions, dropdown buttons, single-select pickers. This is distinct from the dark navy header dropdowns (`dropdown.css`), which are reserved for the global header. Keep destructive actions last, below a divider.",
+  "behaviors": "Opens 2px below its trigger and flips above when it would clip the viewport. Width ≥ 200px, growing to the longest item. Trigger carries `aria-haspopup=\"menu\"` + `aria-expanded`; roving focus with ↑/↓, Enter activates, Esc closes and returns focus to the trigger. Sits at `--z-popover`."
+}
+</script>
 </head>
 <body>
   <div class="card">

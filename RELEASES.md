@@ -2,7 +2,22 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
-## 2026-06-08
+## 2026-06-08 · Agent-readable assets
+
+Made JellyRoll easier for AI coding agents to read and consume. New `scripts/build-agent-assets.js` derives everything below from the catalog source of truth (`_data/items.js` + `_data/tokens.js`) — re-run it after editing the data.
+
+### Generated
+- **`llms.txt`** — an [llmstxt.org](https://llmstxt.org) index of the whole system: every component grouped by section with one-line descriptions and links. The recommended starting point for agents.
+- **`jellyroll.json`** — the structured catalog: each asset's anatomy / options / usage / behaviors and token list as parseable JSON, so agents don't have to scrape HTML.
+- **Inline metadata** — every preview now carries a `<script type="application/json" id="jellyroll-meta">` block in its `<head>` (inert in the gallery, readable by agents fetching the raw file).
+
+### Hand-authored
+- **`snippets/`** — chrome-free, copy-paste blocks (reusable CSS + canonical markup, with real `:hover` / `:active` / `:disabled` states). Starter set: Button, Card, Menu; more added incrementally.
+
+### Docs
+- README "For AI coding agents" and `CLAUDE.md` now point at `llms.txt`, `jellyroll.json`, and `snippets/`, and document the generator.
+
+## 2026-06-08 · Design system updates
 
 ### Information architecture
 - **Renamed two sections for clarity:** _Primitives_ → **Building blocks**, _Components_ → **Composed components**. Internal ids are unchanged, so existing links and anchors still work.

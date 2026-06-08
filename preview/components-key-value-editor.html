@@ -149,6 +149,18 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Key/value editor",
+  "section": "Advanced editors",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-key-value-editor.html",
+  "tagline": "Inline editor for headers, params, and other flat dicts.",
+  "anatomy": "Table-like rows · two columns (key, value) · trailing remove · `+ Add` row at the bottom · optional disabled-row checkbox column for skipping entries without removing them.",
+  "options": "Plain k/v, with description column, with disable toggle, with auth/secret masking on the value column.",
+  "usage": "Use for HTTP headers, query params, environment overrides — any short flat dictionary. For nested structures, use the JSON editor.",
+  "behaviors": "Tab from value to the next key (auto-appending a new row when on the last value). Drag-handle column reorders rows. Removing a row leaves no trace; disabling keeps the row but greys it and excludes it from the saved value."
+}
+</script>
 </head>
 <body>
   <div class="card">

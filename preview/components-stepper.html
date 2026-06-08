@@ -62,6 +62,18 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Stepper",
+  "section": "Composed components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-stepper.html",
+  "tagline": "Numbered progress through a multi-step flow.",
+  "anatomy": "Numbered circle (28px) per step · label below or to the right · 1px Grey-300 connector between steps · current is Blue-600 filled · complete is Green-600 with a check · upcoming is Grey-300 outlined.",
+  "options": "Horizontal or vertical. With or without inline descriptions per step. Linear (must complete in order) or freely navigable.",
+  "usage": "Use for tasks broken into 3–7 explicit steps (wizards, onboarding, API setup). For more than 7 steps, reconsider the task. For non-sequential progress, use Tabs or a Stepper variant.",
+  "behaviors": "Click a completed step navigates back to it. Linear steppers reject clicks on future steps. Current step is announced to screen readers as `Step N of M`."
+}
+</script>
 </head>
 <body>
   <div class="card">

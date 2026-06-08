@@ -57,6 +57,23 @@
     line-height: 1.5;
   }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Motion",
+  "section": "Foundations",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-motion.html",
+  "tagline": "Durations and easings for transitions and animations.",
+  "usage": "Compose transitions from one `--duration-*` (Fast 120ms, Normal 200ms, Slow 320ms) and one `--ease-*` curve (Standard, In, Out). Default to `--duration-normal var(--ease-standard)` for hover and state changes; use `--duration-slow var(--ease-out)` for entrances like drawers and modals; use `--ease-in` for exits. Avoid bespoke durations — consistency across the product matters more than per-component tuning.",
+  "tokens": [
+    "--duration-fast",
+    "--duration-normal",
+    "--duration-slow",
+    "--ease-standard",
+    "--ease-in",
+    "--ease-out"
+  ]
+}
+</script>
 </head>
 <body>
   <div class="card">

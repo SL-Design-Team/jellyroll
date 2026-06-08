@@ -27,6 +27,18 @@
   .radio.disabled { border-color: var(--sl-grey-300); background: var(--sl-grey-100); }
   .radio.disabled.selected::after { background: var(--sl-grey-400); }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Radio",
+  "section": "Building blocks",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-radio.html",
+  "tagline": "Single-choice from a small visible set.",
+  "anatomy": "16px circle · 1.5px Grey-400 border · label to the right (14/22). Checked: Blue-600 fill with a 6px white center dot.",
+  "options": "States: unselected, selected, disabled, error. Layout: vertical (default) or horizontal.",
+  "usage": "Use for picking one of 2–5 options where all options should be visible at once. Above 5 options, prefer a Select. Below 2 options, this is a toggle, not a radio group.",
+  "behaviors": "Click anywhere on the circle or label selects. Arrow keys move between options within the group; Tab jumps past the group. Selection cannot be cleared by clicking again — the only way out is to choose another value."
+}
+</script>
 </head>
 <body>
   <div class="card">

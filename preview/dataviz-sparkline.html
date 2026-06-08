@@ -30,7 +30,18 @@
   .spark-card .label { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.06em; }
   .spark-card .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .spark-card .value { font: 800 22px/24px var(--font-sans); color: var(--sl-indigo-900); font-variant-numeric: tabular-nums; }
-</style></head><body>
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Sparkline",
+  "section": "Data visualization",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-sparkline.html",
+  "tagline": "Small inline trend line — no axes, no labels.",
+  "usage": "Use inside KPI cards, table rows, and dense layouts where shape matters more than exact values. Width 60–120px, height 16–24px. Never add axis ticks or labels — the value is the trend.",
+  "behaviors": "Hover surfaces a single tooltip with the value and timestamp at the cursor position."
+}
+</script>
+</head><body>
   <div class="card">
     <div class="row-label"><span class="name">Sparkline</span><span class="meta">inline mini-trend · no axis · use in tables and KPI cards</span></div>
     <div class="spark-grid">

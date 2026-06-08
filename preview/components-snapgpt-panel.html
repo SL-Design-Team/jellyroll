@@ -416,6 +416,17 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "SnapGPT panel",
+  "section": "Composed components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-snapgpt-panel.html",
+  "tagline": "AI assistant side panel — woven through the suite as the AI accent.",
+  "anatomy": "Right-side panel (drawer-style, inline) · header with SnapGPT mark + close · message stream · prompt composer at the bottom · suggested-action chips above the composer.",
+  "usage": "Use as the persistent AI surface inside any product. The panel can suggest snaps, explain errors, generate config — never destructive actions without an explicit confirm. Always present AI output as `Editable AI output` so the user can review and adjust.",
+  "behaviors": "Trigger toggles the panel from the global header SnapGPT icon. Suggestions stream token-by-token; user can stop generation mid-stream. The AI accent (light blue tint) appears on AI-generated content but not on user messages."
+}
+</script>
 </head>
 <body>
   <div class="card">

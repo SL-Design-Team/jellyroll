@@ -202,6 +202,16 @@
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Drag and drop",
+  "section": "Patterns",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-drag-drop.html",
+  "tagline": "Drop affordances on canvas, lists, and tables.",
+  "usage": "Use for spatially-meaningful actions — placing a snap on the canvas, reordering pipeline parameters, dragging a file into an upload zone. For purely abstract reordering, prefer up/down buttons inside each row.",
+  "behaviors": "Drop targets bump their border to Blue-600 and their fill to Blue-100 on dragover. Invalid drop targets show a `not-allowed` cursor and reject the drop. After drop, the new item animates into place over 150ms; reorder shifts neighbors out of the way."
+}
+</script>
 </head>
 <body>
   <div class="card">
