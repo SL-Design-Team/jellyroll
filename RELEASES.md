@@ -2,6 +2,12 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
+## 2026-06-08 · Catalog refinements
+
+- **Date picker** → Composed components. It composes a distinct Calendar widget on top of an input, unlike the list-backed pickers (Select, Combobox, Multi-select, Tree select), which remain single-control Building blocks.
+- **Menu** → Building blocks. It's the action-list primitive itself, not an assembly of distinct components.
+- **Field anatomy** and **Field states** are now nested under **Inputs** in the left nav. Presentation only — they remain standalone items in the grid, search, and `jellyroll.json`.
+
 ## 2026-06-08 · Agent-readable assets
 
 Made JellyRoll easier for AI coding agents to read and consume. New `scripts/build-agent-assets.js` derives everything below from the catalog source of truth (`_data/items.js` + `_data/tokens.js`) — re-run it after editing the data.

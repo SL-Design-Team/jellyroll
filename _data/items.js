@@ -284,19 +284,9 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "preview/components-date-picker.html",
-          name: "Date picker",
-          tagline: "Calendar dropdown attached to an input for picking a date or range.",
-          meta: {
-            anatomy: "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill.",
-            options: "Single date or range; min/max bounds; disabled dates; locale-aware first-day-of-week and format.",
-            usage: "Use for any date input where the user benefits from seeing a calendar. For purely typed dates (e.g., dates a backend system fills in), use a plain Input with a date mask.",
-            behaviors: "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill."
-          }
-        },
-        {
           file: "preview/components-field-anatomy.html",
           name: "Field anatomy",
+          parent: "preview/components-inputs.html",
           tagline: "Label, optional indicator, control, help text, error — in that order.",
           meta: {
             usage: "Reference for the canonical field stack. Label above (14/22 ExtraBold) · optional optional/required indicator · control · help text below (12/18 Grey-700) · inline error in Red-600 with a `circle-alert` icon. Never invert this order, and never put help text above the control."
@@ -305,6 +295,7 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/components-field-states.html",
           name: "Field states",
+          parent: "preview/components-inputs.html",
           tagline: "Rest, hover, focus, filled, disabled, read-only, error, AI-generating, AI-review.",
           meta: {
             usage: "Visual reference for every state any field renders in. Use as the contract when implementing a new input variant — every state on this card has an explicit token and should not be invented per-component."
@@ -319,6 +310,17 @@ window.JELLYROLL_DATA = {
             options: "Sizes: default 40px, compact 32px. States: rest, hover, focus, filled, disabled, read-only, error. Optional leading or trailing icon slot.",
             usage: "Use for short single-line input — names, emails, IDs. Placeholder is Light Italic and describes the shape (`dd/mm/yyyy`, `Search snaps`), not an exhortation. Help text clarifies expectations rather than restating the label.",
             behaviors: "Border shifts Grey-300 → Blue-600 on focus and pairs with the 3px Teal-600 35% focus halo. Error state replaces the border with Red-600 and shows an inline message. Disabled drops opacity and removes the pointer; read-only loses the border but keeps the value selectable."
+          }
+        },
+        {
+          file: "preview/components-menu.html",
+          name: "Menu",
+          tagline: "Light, button-anchored action menu for commands and single-select.",
+          meta: {
+            anatomy: "White panel (`--color-surface-overlay`) · 1px Grey-300 hairline · 4px radius · `--shadow-overlay`. Items are 14/22 Medium with 8px/12px padding, an optional 16px leading Lucide icon and trailing `⌘` shortcut. Optional 10px ExtraBold uppercase group labels and 1px Grey-200 dividers.",
+            options: "Item states: default, hover/focus (Grey-100), selected (Blue-100 fill / Blue-700 text / trailing check), destructive (Red-600), disabled (Grey-400). With or without icons, shortcuts, group labels, and dividers.",
+            usage: "Use as the light on-canvas action menu anchored to a button — split-button options, row `More` actions, dropdown buttons, single-select pickers. This is distinct from the dark navy header dropdowns (`dropdown.css`), which are reserved for the global header. Keep destructive actions last, below a divider.",
+            behaviors: "Opens 2px below its trigger and flips above when it would clip the viewport. Width ≥ 200px, growing to the longest item. Trigger carries `aria-haspopup=\"menu\"` + `aria-expanded`; roving focus with ↑/↓, Enter activates, Esc closes and returns focus to the trigger. Sits at `--z-popover`."
           }
         },
         {
@@ -531,6 +533,17 @@ window.JELLYROLL_DATA = {
           }
         },
         {
+          file: "preview/components-date-picker.html",
+          name: "Date picker",
+          tagline: "Calendar dropdown attached to an input for picking a date or range.",
+          meta: {
+            anatomy: "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill.",
+            options: "Single date or range; min/max bounds; disabled dates; locale-aware first-day-of-week and format.",
+            usage: "Use for any date input where the user benefits from seeing a calendar. For purely typed dates (e.g., dates a backend system fills in), use a plain Input with a date mask.",
+            behaviors: "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill."
+          }
+        },
+        {
           file: "preview/components-drawer.html",
           name: "Drawer",
           tagline: "Side panel that slides in from the right for details or secondary tasks.",
@@ -599,17 +612,6 @@ window.JELLYROLL_DATA = {
             options: "Collapsed (icons only) or expanded (labels visible). With or without nested item groups.",
             usage: "Use as the primary product-level nav inside each app. Designer's snap palette, Manager's org tree, and Monitor's pipeline list all live here. Items represent destinations or scopes — never actions.",
             behaviors: "Collapse toggle is persistent per user. Hover on a collapsed item shows the label as a tooltip. Active route is marked with a 3px Blue-600 left border and Blue-100 row background."
-          }
-        },
-        {
-          file: "preview/components-menu.html",
-          name: "Menu",
-          tagline: "Light, button-anchored action menu for commands and single-select.",
-          meta: {
-            anatomy: "White panel (`--color-surface-overlay`) · 1px Grey-300 hairline · 4px radius · `--shadow-overlay`. Items are 14/22 Medium with 8px/12px padding, an optional 16px leading Lucide icon and trailing `⌘` shortcut. Optional 10px ExtraBold uppercase group labels and 1px Grey-200 dividers.",
-            options: "Item states: default, hover/focus (Grey-100), selected (Blue-100 fill / Blue-700 text / trailing check), destructive (Red-600), disabled (Grey-400). With or without icons, shortcuts, group labels, and dividers.",
-            usage: "Use as the light on-canvas action menu anchored to a button — split-button options, row `More` actions, dropdown buttons, single-select pickers. This is distinct from the dark navy header dropdowns (`dropdown.css`), which are reserved for the global header. Keep destructive actions last, below a divider.",
-            behaviors: "Opens 2px below its trigger and flips above when it would clip the viewport. Width ≥ 200px, growing to the longest item. Trigger carries `aria-haspopup=\"menu\"` + `aria-expanded`; roving focus with ↑/↓, Enter activates, Esc closes and returns focus to the trigger. Sits at `--z-popover`."
           }
         },
         {

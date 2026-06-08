@@ -898,16 +898,6 @@
           "behaviors": "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab accepts the current input. For creatable comboboxes, typing a new value and pressing Enter creates it."
         },
         {
-          "name": "Date picker",
-          "file": "preview/components-date-picker.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/components-date-picker.html",
-          "tagline": "Calendar dropdown attached to an input for picking a date or range.",
-          "anatomy": "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill.",
-          "options": "Single date or range; min/max bounds; disabled dates; locale-aware first-day-of-week and format.",
-          "usage": "Use for any date input where the user benefits from seeing a calendar. For purely typed dates (e.g., dates a backend system fills in), use a plain Input with a date mask.",
-          "behaviors": "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill."
-        },
-        {
           "name": "Field anatomy",
           "file": "preview/components-field-anatomy.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/components-field-anatomy.html",
@@ -997,6 +987,16 @@
               "role": "Default field height"
             }
           ]
+        },
+        {
+          "name": "Menu",
+          "file": "preview/components-menu.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-menu.html",
+          "tagline": "Light, button-anchored action menu for commands and single-select.",
+          "anatomy": "White panel (`--color-surface-overlay`) · 1px Grey-300 hairline · 4px radius · `--shadow-overlay`. Items are 14/22 Medium with 8px/12px padding, an optional 16px leading Lucide icon and trailing `⌘` shortcut. Optional 10px ExtraBold uppercase group labels and 1px Grey-200 dividers.",
+          "options": "Item states: default, hover/focus (Grey-100), selected (Blue-100 fill / Blue-700 text / trailing check), destructive (Red-600), disabled (Grey-400). With or without icons, shortcuts, group labels, and dividers.",
+          "usage": "Use as the light on-canvas action menu anchored to a button — split-button options, row `More` actions, dropdown buttons, single-select pickers. This is distinct from the dark navy header dropdowns (`dropdown.css`), which are reserved for the global header. Keep destructive actions last, below a divider.",
+          "behaviors": "Opens 2px below its trigger and flips above when it would clip the viewport. Width ≥ 200px, growing to the longest item. Trigger carries `aria-haspopup=\"menu\"` + `aria-expanded`; roving focus with ↑/↓, Enter activates, Esc closes and returns focus to the trigger. Sits at `--z-popover`."
         },
         {
           "name": "Multi-select",
@@ -1211,6 +1211,16 @@
           "behaviors": "Selection uses the 3px Blue-600 border from the Card surface — never a fill. Hover raises the border to 1.5px Blue-600. The `more` icon button opens the Menu. Card width is intrinsic or grid-driven; cards do not stretch to fill their parent."
         },
         {
+          "name": "Date picker",
+          "file": "preview/components-date-picker.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-date-picker.html",
+          "tagline": "Calendar dropdown attached to an input for picking a date or range.",
+          "anatomy": "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill.",
+          "options": "Single date or range; min/max bounds; disabled dates; locale-aware first-day-of-week and format.",
+          "usage": "Use for any date input where the user benefits from seeing a calendar. For purely typed dates (e.g., dates a backend system fills in), use a plain Input with a date mask.",
+          "behaviors": "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill."
+        },
+        {
           "name": "Drawer",
           "file": "preview/components-drawer.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/components-drawer.html",
@@ -1302,16 +1312,6 @@
           "options": "Collapsed (icons only) or expanded (labels visible). With or without nested item groups.",
           "usage": "Use as the primary product-level nav inside each app. Designer's snap palette, Manager's org tree, and Monitor's pipeline list all live here. Items represent destinations or scopes — never actions.",
           "behaviors": "Collapse toggle is persistent per user. Hover on a collapsed item shows the label as a tooltip. Active route is marked with a 3px Blue-600 left border and Blue-100 row background."
-        },
-        {
-          "name": "Menu",
-          "file": "preview/components-menu.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/components-menu.html",
-          "tagline": "Light, button-anchored action menu for commands and single-select.",
-          "anatomy": "White panel (`--color-surface-overlay`) · 1px Grey-300 hairline · 4px radius · `--shadow-overlay`. Items are 14/22 Medium with 8px/12px padding, an optional 16px leading Lucide icon and trailing `⌘` shortcut. Optional 10px ExtraBold uppercase group labels and 1px Grey-200 dividers.",
-          "options": "Item states: default, hover/focus (Grey-100), selected (Blue-100 fill / Blue-700 text / trailing check), destructive (Red-600), disabled (Grey-400). With or without icons, shortcuts, group labels, and dividers.",
-          "usage": "Use as the light on-canvas action menu anchored to a button — split-button options, row `More` actions, dropdown buttons, single-select pickers. This is distinct from the dark navy header dropdowns (`dropdown.css`), which are reserved for the global header. Keep destructive actions last, below a divider.",
-          "behaviors": "Opens 2px below its trigger and flips above when it would clip the viewport. Width ≥ 200px, growing to the longest item. Trigger carries `aria-haspopup=\"menu\"` + `aria-expanded`; roving focus with ↑/↓, Enter activates, Esc closes and returns focus to the trigger. Sits at `--z-popover`."
         },
         {
           "name": "Modal",
