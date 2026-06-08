@@ -2,56 +2,89 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Components · Card</title>
+<title>Building blocks · Card</title>
 <link rel="stylesheet" href="../colors_and_type.css" />
 <link rel="stylesheet" href="card.css" />
 <style>
-  .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-  .pipe-card { padding: 16px; border-radius: var(--radius-sm); background: var(--sl-white); display:flex; flex-direction:column; gap: 12px; min-height: 200px; box-shadow: var(--shadow-raised); }
-  .pipe-card.default  { border: 1px solid var(--sl-grey-400); }
-  .pipe-card.hover    { border: 1.5px solid var(--sl-blue-600); }
-  .pipe-card.selected { border: 3px solid var(--sl-blue-600); padding: 14px; }
-  .ph { display:flex; justify-content: space-between; align-items: center; }
-  .ph .t { font: 800 14px/20px var(--font-sans); color: var(--sl-indigo-900); }
-  .ph .acts { display: flex; gap: 8px; color: var(--color-text-subtle); font-size: 12px; }
-  .meta { font: 800 10px/14px var(--font-sans); color: var(--color-text-subtle); display: flex; gap: 8px; align-items:center; }
-  .meta::before { content: ''; width: 12px; height: 12px; border-radius: 2px; background: var(--sl-blue-200); display:inline-block; }
-  .stage { font: 800 10px/14px var(--font-sans); color: var(--sl-indigo-700); }
-  .body { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .card { gap: 24px; width: 100%; }
+
+  /* ─── CARD SURFACE ──────────────────────────────────────────
+     The building block: just the surface. White fill, 1px
+     Grey-300 hairline, 4px radius, 16px padding, raised shadow.
+     Selection is shown with a thicker border — never a fill.
+     Content (headers, actions, data) is composed on top — see
+     the "Composed cards" component for assembled examples. */
+  .sl-card {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    box-shadow: var(--shadow-raised);
+    min-height: 150px;
+  }
+  .sl-card.hover    { border: 1.5px solid var(--sl-blue-600); }
+  .sl-card.selected { border: 3px solid var(--sl-blue-600); padding: 13.5px; }
+
+  /* ─── SLOTS (structure only — no data) ──────────────────────
+     Communicates the optional header / body / footer regions
+     without any domain content. */
+  .sl-card--slots { display: flex; flex-direction: column; gap: 12px; min-height: 200px; }
+  .slot {
+    border: 1px dashed var(--sl-grey-300);
+    border-radius: var(--radius-xs);
+    color: var(--color-text-subtle);
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    background: var(--sl-grey-50, #FAFBFC);
+  }
+  .slot--header { height: 40px; }
+  .slot--body   { flex: 1; align-items: flex-start; padding-top: 10px; }
+  .slot--footer { height: 44px; justify-content: flex-end; }
+
+  /* ─── LAYOUT ────────────────────────────────────────────────── */
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
   .label { font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-subtle); margin-bottom: 6px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .note { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .note b { color: var(--color-text-body); }
 </style>
 </head>
 <body>
   <div class="card">
-    <div class="row-label"><span class="name">Card states</span><span class="meta">default · hover · selected</span></div>
-    <div class="row">
-      <div>
-        <div class="label">Default</div>
-        <div class="pipe-card default">
-          <div class="ph"><div class="t">Integration name</div><div class="acts">☆ ✎ ⋮</div></div>
-          <div class="meta">Auto synchronize</div>
-          <div class="stage">Repeats every 5 mins</div>
-          <div class="body">Owner: Maddie Golbaz<br/>Created 09:23 PM, Nov 12 2022</div>
+    <div class="row-label"><span class="name">Card</span><span class="meta">surface · states · slots</span></div>
+
+    <!-- ═══ STATES ═══════════════════════════════════════════ -->
+    <div>
+      <div class="section-h">States <span class="meta">default · hover · selected — border only, never a fill</span></div>
+      <div class="row3">
+        <div><div class="label">Default</div><div class="sl-card"></div></div>
+        <div><div class="label">Hover</div><div class="sl-card hover"></div></div>
+        <div><div class="label">Selected</div><div class="sl-card selected"></div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══ SLOTS ════════════════════════════════════════════ -->
+    <div>
+      <div class="section-h">Slots <span class="meta">optional header · body · footer — structure only</span></div>
+      <div class="row3">
+        <div class="sl-card sl-card--slots">
+          <div class="slot slot--header">Header</div>
+          <div class="slot slot--body">Body</div>
+          <div class="slot slot--footer">Footer</div>
         </div>
       </div>
-      <div>
-        <div class="label">Hover</div>
-        <div class="pipe-card hover">
-          <div class="ph"><div class="t">Integration name</div><div class="acts">☆ ✎ ⋮</div></div>
-          <div class="meta">Auto synchronize</div>
-          <div class="stage">Repeats every 5 mins</div>
-          <div class="body">Owner: Maddie Golbaz<br/>Created 09:23 PM, Nov 12 2022</div>
-        </div>
-      </div>
-      <div>
-        <div class="label">Selected</div>
-        <div class="pipe-card selected">
-          <div class="ph"><div class="t">Integration name</div><div class="acts">☆ ✎ ⋮</div></div>
-          <div class="meta">Auto synchronize</div>
-          <div class="stage">Repeats every 5 mins</div>
-          <div class="body">Owner: Maddie Golbaz<br/>Created 09:23 PM, Nov 12 2022</div>
-        </div>
-      </div>
+    </div>
+
+    <div class="note">
+      <b>This is the surface only.</b> Headers, actions, status, and data are composed on top of it from other building blocks (Buttons, Badge, Avatar). For assembled, real-world examples — pipeline cards, stat cards, resource cards — see the <b>Composed cards</b> component.
     </div>
   </div>
 </body>

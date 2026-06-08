@@ -10,6 +10,7 @@ window.JELLYROLL_DATA = {
       num: "01",
       id: "foundations",
       name: "Foundations",
+      description: "The rules every component inherits — design tokens, spacing, motion, elevation, and accessibility.",
       items: [
         {
           file: "preview/foundations-accessibility.html",
@@ -125,21 +126,22 @@ window.JELLYROLL_DATA = {
       num: "02",
       id: "color",
       name: "Color",
+      description: "The complete color system — the brand gradient, ten ramps, and the semantic tokens built on them.",
       items: [
-        {
-          file: "preview/colors-gradient-brand.html",
-          name: "Brand gradient",
-          tagline: "linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.",
-          meta: {
-            usage: "Reserved for hero/marketing surfaces, launcher backgrounds, and brand moments — never for normal UI. Distinct from `--color-background-primary-hover`, which uses a slightly different teal at a 112.63° diagonal for primary-button hover only."
-          }
-        },
         {
           file: "preview/colors-all-ramps.html",
           name: "Color ramps",
           tagline: "Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.",
           meta: {
             usage: "Use the `--sl-{hue}-{step}` tokens directly. Steps 50–400 read as light backgrounds and supporting tints; 500–700 carry semantic meaning; 800–1000 are nav and on-dark text. The 600 step of each ramp is the canonical default. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code."
+          }
+        },
+        {
+          file: "preview/colors-gradient-brand.html",
+          name: "Brand gradient",
+          tagline: "linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.",
+          meta: {
+            usage: "Reserved for hero/marketing surfaces, launcher backgrounds, and brand moments — never for normal UI. Distinct from `--color-background-primary-hover`, which uses a slightly different teal at a 112.63° diagonal for primary-button hover only."
           }
         },
         {
@@ -150,12 +152,45 @@ window.JELLYROLL_DATA = {
             usage: "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-800 (success), Orange-700 (warning), Red-700 (alert/error). Information uses Indigo-700; Discovery uses Purple-700. AI uses the dedicated SL AI ramp — never substitute purple for AI."
           }
         },
+        {
+          file: "preview/dataviz-categorical.html",
+          name: "Palette · Categorical",
+          tagline: "Five-color chart palette for unordered categories — designed for light and dark backgrounds.",
+          meta: {
+            usage: "Use the categorical palette only when categories are unordered. The five colors are picked to keep relative perceived weight equal; do not extend with extra colors or you will read order into the order. For more than five categories, use a series of small-multiple charts."
+          }
+        },
+        {
+          file: "preview/dataviz-diverging.html",
+          name: "Palette · Diverging",
+          tagline: "Two-hue chart ramps for values around a meaningful midpoint.",
+          meta: {
+            usage: "Use a diverging palette for values that fan out from zero or a target — deltas, sentiment, percent change. The midpoint is always Grey or off-white; ends are color-coded by direction. Pair with a clear legend showing the midpoint and the units."
+          }
+        },
+        {
+          file: "preview/dataviz-sequential.html",
+          name: "Palette · Sequential",
+          tagline: "Single-hue chart ramps for ordered values — counts, magnitudes, percentages.",
+          meta: {
+            usage: "Use a sequential ramp when the value has a meaningful order with one extreme. Most often Green (success / volume) or Blue (neutral). Encode larger values with the darker step. For two-sided values around a meaningful zero, use a Diverging palette."
+          }
+        },
+        {
+          file: "preview/dataviz-status.html",
+          name: "Status colors",
+          tagline: "Green / Yellow / Red / Blue mapping for pipeline run states.",
+          meta: {
+            usage: "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite."
+          }
+        }
       ]
     },
     {
       num: "03",
       id: "brand",
       name: "Brand",
+      description: "The SnapLogic logo and brand marks, and how to apply them.",
       items: [
         {
           file: "preview/brand-logo.html",
@@ -164,13 +199,14 @@ window.JELLYROLL_DATA = {
           meta: {
             usage: "Use the white wordmark on the dark navbar and any dark brand surface. The wordmark and snap-icon ship together — do not separate them, recolor them, or pair the wordmark with a non-system glyph. Minimum clear space around the mark is the height of the snap-icon."
           }
-        },
+        }
       ]
     },
     {
       num: "04",
       id: "primitives",
-      name: "Primitives",
+      name: "Building blocks",
+      description: "Single-purpose controls — each does one job. The atoms you compose with.",
       items: [
         {
           file: "preview/components-avatar.html",
@@ -180,16 +216,6 @@ window.JELLYROLL_DATA = {
             anatomy: "Circular crop · sizes 20 / 24 / 32 / 40 / 56 / 72 / 96. Background is a deterministic ramp pick based on the name hash; initials in white ExtraBold; photo when present.",
             options: "Photo, initials (default), system icon (when no name); with optional status dot anchored bottom-right.",
             usage: "Use for any user or system actor reference. Pair with the user's name on first reference; standalone in dense lists. Initials are the first letter of the first and last name (uppercase)."
-          }
-        },
-        {
-          file: "preview/components-avatar-group.html",
-          name: "Avatar group",
-          tagline: "Stack of overlapping avatars with overflow count.",
-          meta: {
-            anatomy: "Avatars overlap by 8px (default size); the last avatar in the visible set sits leftmost in z-order. Overflow shown as `+N` in a grey avatar.",
-            options: "Visible count 2–6; overflow shown as `+N` or expanded into a tooltip on hover. Sizes follow Avatar.",
-            usage: "Use to surface a small set of collaborators or assignees — pipeline owners, mentioned users. Above 6 visible avatars, the row stops being scannable; show only 3–4 and use `+N`."
           }
         },
         {
@@ -211,6 +237,17 @@ window.JELLYROLL_DATA = {
             options: "Variants: primary (filled blue), secondary (white with blue border), tertiary/text (no border, underline on hover), destructive (red fill). Sizes: lg / md / sm. Icon-only variant for each.",
             usage: "One primary per screen for the single most important action. Secondary for supporting actions. Tertiary/text for low-emphasis actions inside dense forms or tables. Destructive only for irreversible operations — pair with a confirm modal.",
             behaviors: "Primary hover applies the teal→blue gradient (`--color-background-primary-hover`) — not a darker blue. Pressed = Teal-400. Secondary stays white on hover; only border + text shift blue → teal. Tertiary underlines on hover. Press never uses transforms — color only. Disabled drops to Blue-200 with white text and removes the pointer."
+          }
+        },
+        {
+          file: "preview/components-card.html",
+          name: "Card",
+          tagline: "White surface with a 1px Grey-300 border. Borders — not shadow — indicate selection.",
+          meta: {
+            anatomy: "White fill · 1px Grey-300 border · 4px radius · 16px internal padding · `--shadow-raised` shadow. Optional header, body, and footer sections.",
+            options: "Interactive vs static. With or without header / footer slots. With or without media at the top.",
+            usage: "Use to group a single object's attributes (a pipeline, a snap, a connection). For a list of objects, use a Table. Cards do not stretch to fill their parent — they sit at intrinsic width or in a grid.",
+            behaviors: "Hover bumps the border to 1.5px Blue-600 and may raise the shadow one step. Selected goes to 3px Blue-600 — same color shift, thicker border. The shadow never increases on selection (that's reserved for hover)."
           }
         },
         {
@@ -271,17 +308,6 @@ window.JELLYROLL_DATA = {
           tagline: "Rest, hover, focus, filled, disabled, read-only, error, AI-generating, AI-review.",
           meta: {
             usage: "Visual reference for every state any field renders in. Use as the contract when implementing a new input variant — every state on this card has an explicit token and should not be invented per-component."
-          }
-        },
-        {
-          file: "preview/components-file-upload.html",
-          name: "File upload",
-          tagline: "Drop zone, browse button, and progress.",
-          meta: {
-            anatomy: "Drop zone (dashed Grey-400 border, 6px radius, Grey-50 fill) · centered prompt with a `Browse` link inside · in-progress list of files showing name, size, progress bar, cancel.",
-            options: "Single or multiple files; accept filter (mime/extension); max-size validation; auto-upload on drop or queued.",
-            usage: "Use for any file pickup — including drag-and-drop from the OS. Always allow click-to-browse as a fallback; never hide it. Show progress per file; on completion swap the progress bar for a Green-600 check.",
-            behaviors: "Drag over the zone bumps the border to Blue-600 and the fill to Blue-100. Drop kicks off the upload. Cancel during upload aborts the request and removes the row. Files that fail validation render with a Red-600 border and the constraint description as the error."
           }
         },
         {
@@ -404,7 +430,7 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/components-spinner.html",
           name: "Spinner",
-          tagline: "Half-arc rotation with trailing ellipsis dots.",
+          tagline: "Comet-tail loader — a tapered ring on a 1.1s rotation.",
           meta: {
             anatomy: "Half-circle arc (180°) with rounded end caps · three trailing dots positioned along the path · rotation 700ms linear infinite.",
             options: "Sizes: xs / sm / md / lg / xl. Color variants follow status tokens (default Indigo, success Green, danger Red, AI).",
@@ -469,8 +495,19 @@ window.JELLYROLL_DATA = {
     {
       num: "05",
       id: "components",
-      name: "Components",
+      name: "Composed components",
+      description: "Several building blocks assembled into a complete piece of the interface.",
       items: [
+        {
+          file: "preview/components-avatar-group.html",
+          name: "Avatar group",
+          tagline: "Stack of overlapping avatars with overflow count.",
+          meta: {
+            anatomy: "Avatars overlap by 8px (default size); the last avatar in the visible set sits leftmost in z-order. Overflow shown as `+N` in a grey avatar.",
+            options: "Visible count 2–6; overflow shown as `+N` or expanded into a tooltip on hover. Sizes follow Avatar.",
+            usage: "Use to surface a small set of collaborators or assignees — pipeline owners, mentioned users. Above 6 visible avatars, the row stops being scannable; show only 3–4 and use `+N`."
+          }
+        },
         {
           file: "preview/components-broadcast-banner.html",
           name: "Broadcast banner",
@@ -483,14 +520,14 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "preview/components-card.html",
-          name: "Card",
-          tagline: "White surface with a 1px Grey-300 border. Borders — not shadow — indicate selection.",
+          file: "preview/components-card-composed.html",
+          name: "Composed cards",
+          tagline: "The Card surface assembled from building blocks — pipeline, stat, and resource cards.",
           meta: {
-            anatomy: "White fill · 1px Grey-300 border · 4px radius · 16px internal padding · `--shadow-raised` shadow. Optional header, body, and footer sections.",
-            options: "Interactive vs static. With or without header / footer slots. With or without media at the top.",
-            usage: "Use to group a single object's attributes (a pipeline, a snap, a connection). For a list of objects, use a Table. Cards do not stretch to fill their parent — they sit at intrinsic width or in a grid.",
-            behaviors: "Hover bumps the border to 1.5px Blue-600 and may raise the shadow one step. Selected goes to 3px Blue-600 — same color shift, thicker border. The shadow never increases on selection (that's reserved for hover)."
+            anatomy: "Built on the Card surface: a header (title + sub + icon Buttons), an optional status Badge, a meta row, and a footer split by a 1px Grey-200 rule (Avatar + owner left, an action Button right). Stat and resource variants swap the body for a metric value + sparkline, or an icon tile + Avatar group.",
+            options: "Pipeline card (status Badge + schedule + owner + view action) · stat card (label + value + trend Badge + sparkline) · resource card (icon tile + Badge + Avatar group + open action). Default and selected states.",
+            usage: "Use one card per object — a single pipeline, connection, or metric. For a list of many objects, use a Table instead. Compose the contents from existing building blocks (Buttons, Badge, Avatar) rather than inventing new chrome; inherit the surface, padding, and selection treatment from the Card building block.",
+            behaviors: "Selection uses the 3px Blue-600 border from the Card surface — never a fill. Hover raises the border to 1.5px Blue-600. The `more` icon button opens the Menu. Card width is intrinsic or grid-driven; cards do not stretch to fill their parent."
           }
         },
         {
@@ -512,6 +549,17 @@ window.JELLYROLL_DATA = {
             anatomy: "Pill control in the global header · current env name in 12/16 ExtraBold uppercase · color-coded leading dot (Green for Dev, Yellow for Stage, Red for Prod) · trailing chevron · popover listing all environments the user can access.",
             usage: "Use as the global active-env switch. The selected env scopes the page below — pipelines, accounts, configs all filter to it. Prod is intentionally Red to remind operators of the blast radius.",
             behaviors: "Click opens the popover. Selecting an env refreshes the page in the new env's scope. A confirm modal interposes when switching into Prod from any other env."
+          }
+        },
+        {
+          file: "preview/components-file-upload.html",
+          name: "File upload",
+          tagline: "Drop zone, browse button, and progress.",
+          meta: {
+            anatomy: "Drop zone (dashed Grey-400 border, 6px radius, Grey-50 fill) · centered prompt with a `Browse` link inside · in-progress list of files showing name, size, progress bar, cancel.",
+            options: "Single or multiple files; accept filter (mime/extension); max-size validation; auto-upload on drop or queued.",
+            usage: "Use for any file pickup — including drag-and-drop from the OS. Always allow click-to-browse as a fallback; never hide it. Show progress per file; on completion swap the progress bar for a Green-600 check.",
+            behaviors: "Drag over the zone bumps the border to Blue-600 and the fill to Blue-100. Drop kicks off the upload. Cancel during upload aborts the request and removes the row. Files that fail validation render with a Red-600 border and the constraint description as the error."
           }
         },
         {
@@ -551,6 +599,17 @@ window.JELLYROLL_DATA = {
             options: "Collapsed (icons only) or expanded (labels visible). With or without nested item groups.",
             usage: "Use as the primary product-level nav inside each app. Designer's snap palette, Manager's org tree, and Monitor's pipeline list all live here. Items represent destinations or scopes — never actions.",
             behaviors: "Collapse toggle is persistent per user. Hover on a collapsed item shows the label as a tooltip. Active route is marked with a 3px Blue-600 left border and Blue-100 row background."
+          }
+        },
+        {
+          file: "preview/components-menu.html",
+          name: "Menu",
+          tagline: "Light, button-anchored action menu for commands and single-select.",
+          meta: {
+            anatomy: "White panel (`--color-surface-overlay`) · 1px Grey-300 hairline · 4px radius · `--shadow-overlay`. Items are 14/22 Medium with 8px/12px padding, an optional 16px leading Lucide icon and trailing `⌘` shortcut. Optional 10px ExtraBold uppercase group labels and 1px Grey-200 dividers.",
+            options: "Item states: default, hover/focus (Grey-100), selected (Blue-100 fill / Blue-700 text / trailing check), destructive (Red-600), disabled (Grey-400). With or without icons, shortcuts, group labels, and dividers.",
+            usage: "Use as the light on-canvas action menu anchored to a button — split-button options, row `More` actions, dropdown buttons, single-select pickers. This is distinct from the dark navy header dropdowns (`dropdown.css`), which are reserved for the global header. Keep destructive actions last, below a divider.",
+            behaviors: "Opens 2px below its trigger and flips above when it would clip the viewport. Width ≥ 200px, growing to the longest item. Trigger carries `aria-haspopup=\"menu\"` + `aria-expanded`; roving focus with ↑/↓, Enter activates, Esc closes and returns focus to the trigger. Sits at `--z-popover`."
           }
         },
         {
@@ -663,91 +722,9 @@ window.JELLYROLL_DATA = {
     },
     {
       num: "06",
-      id: "advanced-editors",
-      name: "Advanced editors",
-      items: [
-        {
-          file: "preview/components-api-param-builder.html",
-          name: "API parameter builder",
-          tagline: "Build a REST request — path, query, headers, body.",
-          meta: {
-            anatomy: "Method picker (GET/POST/...) · URL field with inline `{path-param}` chips · tabbed editor for Query / Headers / Body / Auth · response preview below.",
-            options: "Variants per HTTP method. Body editor mode (Raw / JSON / Form-data / x-www-form-urlencoded).",
-            usage: "Use anywhere the user builds an outbound HTTP request — REST Snap, webhook test tool, custom API source. Pair with a `Send test request` action that shows the live response in the preview pane.",
-            behaviors: "Path params chip out automatically from `{name}` segments in the URL. Switching body mode preserves edits where possible; otherwise warns before discarding. Auth tab swaps in the relevant auth fields (Basic, Bearer, OAuth, API key)."
-          }
-        },
-        {
-          file: "preview/components-code-editor.html",
-          name: "Code editor",
-          tagline: "Embedded Monaco-style code editor — JSON, JS, SQL, Python.",
-          meta: {
-            anatomy: "Container with a 1.5px Grey-300 border and 4px radius · 36px-tall toolbar with language picker, format, expand · gutter with line numbers · main editor (SF Mono 13/20) · status bar with cursor position and language.",
-            options: "Languages: JSON, JavaScript, SQL, Python, plain text. Sizes: inline (200px), default (320px), expanded (full-screen).",
-            usage: "Use anywhere the user writes more than a single line of code — pipeline expressions, custom SQL, JS snippets. For a one-line expression, use a plain Input with mono font.",
-            behaviors: "Syntax highlighting and bracket matching per-language. `⌘ /` toggles comment on selection; `⌘ Enter` formats. Errors gutter-mark with Red-600 squiggles; warnings with Yellow-600."
-          }
-        },
-        {
-          file: "preview/components-connection-picker.html",
-          name: "Connection picker",
-          tagline: "Multi-step picker for selecting a connection or creating one inline.",
-          meta: {
-            anatomy: "Step 1: source type grid (Postgres, Salesforce, REST, etc.) · Step 2: existing connections for the chosen type · Step 3: inline new-connection form when no existing connection fits.",
-            usage: "Use when a Snap or step needs to bind to a SaaS endpoint or database. Surfaces existing connections first so the user does not re-enter credentials; falls back to inline creation only when needed.",
-            behaviors: "Step 1 is keyboard-navigable as a grid; arrow keys move the focus, Enter selects. Type-ahead in step 1 filters the grid by source name. Step 3 reuses the Form section + Form row primitives."
-          }
-        },
-        {
-          file: "preview/components-dynamic-repeater.html",
-          name: "Dynamic repeater",
-          tagline: "Field group the user can duplicate N times.",
-          meta: {
-            anatomy: "Vertical stack of identical sub-forms · each repeat has a remove `×` and a drag handle · `+ Add another` button below the stack.",
-            options: "Min/max count constraints. Optional `Duplicate` action on each repeat that copies the previous values.",
-            usage: "Use for ordered lists of structured items — pipeline parameters, mapping rules, conditional branches. For unordered tag-like lists, use a Chip input instead.",
-            behaviors: "Drag handle reorders; Tab moves through fields then advances to the next repeat. Removing the last repeat leaves the empty add-button visible — never an empty stack with no affordance."
-          }
-        },
-        {
-          file: "preview/components-json-editor.html",
-          name: "JSON editor",
-          tagline: "Tree + raw view of a JSON document with inline edit.",
-          meta: {
-            anatomy: "Toolbar with mode toggle (Tree / Raw) · main pane · in Tree mode each row is a key with a typed editor on the right; in Raw mode it falls back to the Code editor with JSON highlighting.",
-            options: "Tree, Raw, Diff (when comparing to a baseline). Read-only mode for output JSON.",
-            usage: "Use for any user-edited JSON — pipeline configuration, account credentials, custom payloads. Diff mode pairs naturally with the Save / discard pattern.",
-            behaviors: "Switching from Tree to Raw preserves edits; switching back validates and surfaces parse errors inline. Add / remove / reorder operations in Tree mode update the underlying JSON immediately."
-          }
-        },
-        {
-          file: "preview/components-key-value-editor.html",
-          name: "Key/value editor",
-          tagline: "Inline editor for headers, params, and other flat dicts.",
-          meta: {
-            anatomy: "Table-like rows · two columns (key, value) · trailing remove · `+ Add` row at the bottom · optional disabled-row checkbox column for skipping entries without removing them.",
-            options: "Plain k/v, with description column, with disable toggle, with auth/secret masking on the value column.",
-            usage: "Use for HTTP headers, query params, environment overrides — any short flat dictionary. For nested structures, use the JSON editor.",
-            behaviors: "Tab from value to the next key (auto-appending a new row when on the last value). Drag-handle column reorders rows. Removing a row leaves no trace; disabling keeps the row but greys it and excludes it from the saved value."
-          }
-        },
-        {
-          file: "preview/components-schema-builder.html",
-          name: "Schema builder",
-          tagline: "Visual editor for JSON schemas — output specs, payload shapes.",
-          meta: {
-            anatomy: "Tree of fields · each field row: name, type, required toggle, default · child fields indented under their parent · `+` adds a child or sibling depending on the focused row.",
-            options: "Output schema, input schema, request body, response body. Types: string, number, boolean, object, array, enum.",
-            usage: "Use anywhere the user defines a structured payload — Snap output schema, custom API responses, webhook contracts. Pair with a sample-data view that validates against the schema as the user types.",
-            behaviors: "Changing a parent type between object / array shows/hides the child editor. Required fields surface a red dot in the tree. Validation errors appear inline next to the offending row."
-          }
-        }
-      ]
-    },
-    {
-      num: "07",
       id: "patterns",
       name: "Patterns",
+      description: "Reusable flows that combine components to solve a recurring product problem.",
       items: [
         {
           file: "preview/patterns-agent-activity-panel.html",
@@ -950,25 +927,10 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "08",
-      id: "templates",
-      name: "Templates",
-      items: [
-        {
-          file: "preview/templates-designer.html",
-          name: "Designer · Empty canvas",
-          tagline: "Full Designer template — global header, left rail, canvas, toolbar, properties panel.",
-          meta: {
-            usage: "Use as the reference layout for the Designer workspace. Composes the Global header, Left nav (snap palette), Canvas, Toolbar (Build / Execution / Configuration / Version Control / Transfer groups), and the right Properties panel. Empty state on the canvas shows the `Create your first pipeline` primary action.",
-            behaviors: "Toolbar collapses to icons-only (state A) or expands with labels and group headers (state B); the chevron toggles. Left rail can be resized between 200–360px and persists per user. The properties panel is hidden until a snap is selected; selecting one opens it in the right column."
-          }
-        }
-      ]
-    },
-    {
-      num: "09",
+      num: "07",
       id: "data-viz",
       name: "Data visualization",
+      description: "Chart and graph types, with guidance on when to use each.",
       items: [
         {
           file: "preview/dataviz-bar.html",
@@ -1126,40 +1088,102 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "10",
-      id: "dataviz-colors",
-      name: "Dataviz · Colors",
+      num: "08",
+      id: "advanced-editors",
+      name: "Advanced editors",
+      description: "Specialized multi-field editors for SnapLogic's configuration surfaces.",
       items: [
         {
-          file: "preview/dataviz-categorical.html",
-          name: "Palette · Categorical",
-          tagline: "Five-color palette for unordered categories — designed for light and dark backgrounds.",
+          file: "preview/components-api-param-builder.html",
+          name: "API parameter builder",
+          tagline: "Build a REST request — path, query, headers, body.",
           meta: {
-            usage: "Use the categorical palette only when categories are unordered. The five colors are picked to keep relative perceived weight equal; do not extend with extra colors or you will read order into the order. For more than five categories, use a series of small-multiple charts."
+            anatomy: "Method picker (GET/POST/...) · URL field with inline `{path-param}` chips · tabbed editor for Query / Headers / Body / Auth · response preview below.",
+            options: "Variants per HTTP method. Body editor mode (Raw / JSON / Form-data / x-www-form-urlencoded).",
+            usage: "Use anywhere the user builds an outbound HTTP request — REST Snap, webhook test tool, custom API source. Pair with a `Send test request` action that shows the live response in the preview pane.",
+            behaviors: "Path params chip out automatically from `{name}` segments in the URL. Switching body mode preserves edits where possible; otherwise warns before discarding. Auth tab swaps in the relevant auth fields (Basic, Bearer, OAuth, API key)."
           }
         },
         {
-          file: "preview/dataviz-diverging.html",
-          name: "Palette · Diverging",
-          tagline: "Two-hue ramps for values around a meaningful midpoint.",
+          file: "preview/components-code-editor.html",
+          name: "Code editor",
+          tagline: "Embedded Monaco-style code editor — JSON, JS, SQL, Python.",
           meta: {
-            usage: "Use a diverging palette for values that fan out from zero or a target — deltas, sentiment, percent change. The midpoint is always Grey or off-white; ends are color-coded by direction. Pair with a clear legend showing the midpoint and the units."
+            anatomy: "Container with a 1.5px Grey-300 border and 4px radius · 36px-tall toolbar with language picker, format, expand · gutter with line numbers · main editor (SF Mono 13/20) · status bar with cursor position and language.",
+            options: "Languages: JSON, JavaScript, SQL, Python, plain text. Sizes: inline (200px), default (320px), expanded (full-screen).",
+            usage: "Use anywhere the user writes more than a single line of code — pipeline expressions, custom SQL, JS snippets. For a one-line expression, use a plain Input with mono font.",
+            behaviors: "Syntax highlighting and bracket matching per-language. `⌘ /` toggles comment on selection; `⌘ Enter` formats. Errors gutter-mark with Red-600 squiggles; warnings with Yellow-600."
           }
         },
         {
-          file: "preview/dataviz-sequential.html",
-          name: "Palette · Sequential",
-          tagline: "Single-hue ramps for ordered values — counts, magnitudes, percentages.",
+          file: "preview/components-connection-picker.html",
+          name: "Connection picker",
+          tagline: "Multi-step picker for selecting a connection or creating one inline.",
           meta: {
-            usage: "Use a sequential ramp when the value has a meaningful order with one extreme. Most often Green (success / volume) or Blue (neutral). Encode larger values with the darker step. For two-sided values around a meaningful zero, use a Diverging palette."
+            anatomy: "Step 1: source type grid (Postgres, Salesforce, REST, etc.) · Step 2: existing connections for the chosen type · Step 3: inline new-connection form when no existing connection fits.",
+            usage: "Use when a Snap or step needs to bind to a SaaS endpoint or database. Surfaces existing connections first so the user does not re-enter credentials; falls back to inline creation only when needed.",
+            behaviors: "Step 1 is keyboard-navigable as a grid; arrow keys move the focus, Enter selects. Type-ahead in step 1 filters the grid by source name. Step 3 reuses the Form section + Form row primitives."
           }
         },
         {
-          file: "preview/dataviz-status.html",
-          name: "Status colors",
-          tagline: "Green / Yellow / Red / Blue mapping for pipeline run states.",
+          file: "preview/components-dynamic-repeater.html",
+          name: "Dynamic repeater",
+          tagline: "Field group the user can duplicate N times.",
           meta: {
-            usage: "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite."
+            anatomy: "Vertical stack of identical sub-forms · each repeat has a remove `×` and a drag handle · `+ Add another` button below the stack.",
+            options: "Min/max count constraints. Optional `Duplicate` action on each repeat that copies the previous values.",
+            usage: "Use for ordered lists of structured items — pipeline parameters, mapping rules, conditional branches. For unordered tag-like lists, use a Chip input instead.",
+            behaviors: "Drag handle reorders; Tab moves through fields then advances to the next repeat. Removing the last repeat leaves the empty add-button visible — never an empty stack with no affordance."
+          }
+        },
+        {
+          file: "preview/components-json-editor.html",
+          name: "JSON editor",
+          tagline: "Tree + raw view of a JSON document with inline edit.",
+          meta: {
+            anatomy: "Toolbar with mode toggle (Tree / Raw) · main pane · in Tree mode each row is a key with a typed editor on the right; in Raw mode it falls back to the Code editor with JSON highlighting.",
+            options: "Tree, Raw, Diff (when comparing to a baseline). Read-only mode for output JSON.",
+            usage: "Use for any user-edited JSON — pipeline configuration, account credentials, custom payloads. Diff mode pairs naturally with the Save / discard pattern.",
+            behaviors: "Switching from Tree to Raw preserves edits; switching back validates and surfaces parse errors inline. Add / remove / reorder operations in Tree mode update the underlying JSON immediately."
+          }
+        },
+        {
+          file: "preview/components-key-value-editor.html",
+          name: "Key/value editor",
+          tagline: "Inline editor for headers, params, and other flat dicts.",
+          meta: {
+            anatomy: "Table-like rows · two columns (key, value) · trailing remove · `+ Add` row at the bottom · optional disabled-row checkbox column for skipping entries without removing them.",
+            options: "Plain k/v, with description column, with disable toggle, with auth/secret masking on the value column.",
+            usage: "Use for HTTP headers, query params, environment overrides — any short flat dictionary. For nested structures, use the JSON editor.",
+            behaviors: "Tab from value to the next key (auto-appending a new row when on the last value). Drag-handle column reorders rows. Removing a row leaves no trace; disabling keeps the row but greys it and excludes it from the saved value."
+          }
+        },
+        {
+          file: "preview/components-schema-builder.html",
+          name: "Schema builder",
+          tagline: "Visual editor for JSON schemas — output specs, payload shapes.",
+          meta: {
+            anatomy: "Tree of fields · each field row: name, type, required toggle, default · child fields indented under their parent · `+` adds a child or sibling depending on the focused row.",
+            options: "Output schema, input schema, request body, response body. Types: string, number, boolean, object, array, enum.",
+            usage: "Use anywhere the user defines a structured payload — Snap output schema, custom API responses, webhook contracts. Pair with a sample-data view that validates against the schema as the user types.",
+            behaviors: "Changing a parent type between object / array shows/hides the child editor. Required fields surface a red dot in the tree. Validation errors appear inline next to the offending row."
+          }
+        }
+      ]
+    },
+    {
+      num: "09",
+      id: "templates",
+      name: "Templates",
+      description: "Full-page starting points — complete screens assembled from components and patterns.",
+      items: [
+        {
+          file: "preview/templates-designer.html",
+          name: "Designer · Empty canvas",
+          tagline: "Full Designer template — global header, left rail, canvas, toolbar, properties panel.",
+          meta: {
+            usage: "Use as the reference layout for the Designer workspace. Composes the Global header, Left nav (snap palette), Canvas, Toolbar (Build / Execution / Configuration / Version Control / Transfer groups), and the right Properties panel. Empty state on the canvas shows the `Create your first pipeline` primary action.",
+            behaviors: "Toolbar collapses to icons-only (state A) or expands with labels and group headers (state B); the chevron toggles. Left rail can be resized between 200–360px and persists per user. The properties panel is hidden until a snap is selected; selecting one opens it in the right column."
           }
         }
       ]

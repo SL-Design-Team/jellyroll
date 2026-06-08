@@ -1042,7 +1042,7 @@
     display: grid;
     grid-template-columns: 10px 1fr;
     gap: 12px;
-    align-items: center;
+    align-items: start;
     padding: 10px 12px;
     background: var(--sl-white);
     border: 1px solid var(--sl-grey-200, #E5E8EE);
@@ -1059,6 +1059,7 @@
     width: 10px; height: 10px;
     border-radius: 999px;
     background: var(--cs-color, var(--sl-blue-600));
+    margin-top: 4px;
   }
   .cs-row .cs-name {
     font-size: 12px;
@@ -1066,7 +1067,14 @@
     font-weight: 800;
     color: var(--color-text-heading);
   }
+  .cs-row .cs-desc {
+    margin: 3px 0 0;
+    font-size: 11px;
+    line-height: 16px;
+    color: var(--color-text-subtle);
+  }
   .cs-row .cs-count {
+    margin-top: 4px;
     font-size: 10px;
     line-height: 14px;
     color: var(--color-text-subtle);
@@ -1221,11 +1229,23 @@
   .section[data-hide="true"] { display: none; }
   .section-head {
     display: flex;
-    align-items: baseline;
-    gap: 12px;
+    flex-direction: column;
+    gap: 6px;
     margin-bottom: 16px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--sl-grey-300, #D7DCE3);
+  }
+  .section-head-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .section-head .section-desc {
+    margin: 0;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--color-text-subtle);
+    max-width: 68ch;
   }
   .section-head h2 {
     font-size: 18px;
@@ -2121,7 +2141,7 @@ Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre
 
         <div class="gs-heading">
           <h3>What's in the system</h3>
-          <p>Every foundation, primitive, component, pattern, template, and chart that ships with JellyRoll — grouped by category.</p>
+          <p>Every foundation, building block, component, pattern, template, and chart that ships with JellyRoll — grouped by category.</p>
         </div>
         <div class="category-strip" id="gsCategoryStrip"></div>
       </section>
@@ -2296,6 +2316,7 @@ Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre
         <span class="dot"></span>
         <div>
           <div class="cs-name">${escapeHtml(sec.num)} · ${escapeHtml(sec.name)}</div>
+          ${sec.description ? `<div class="cs-desc">${escapeHtml(sec.description)}</div>` : ""}
           <div class="cs-count">${sec.items.length} ${sec.items.length === 1 ? "asset" : "assets"}</div>
         </div>
       </a>
@@ -2317,7 +2338,7 @@ Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre
   `;
   sidebarEl.innerHTML = topLinksHtml + sections.map(sec => `
     <div class="sec" data-section-id="${sec.id}" data-open="false">
-      <button class="sec-header" type="button" data-toggle="${sec.id}" aria-expanded="false">
+      <button class="sec-header" type="button" data-toggle="${sec.id}" aria-expanded="false"${sec.description ? ` title="${escapeHtml(sec.description)}"` : ""}>
         <i data-lucide="chevron-right" class="chev"></i>
         <span>${escapeHtml(sec.num)} · ${escapeHtml(sec.name)}</span>
         <span class="count-pill">${sec.items.length}</span>
@@ -2612,9 +2633,12 @@ Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre
   sectionsEl.innerHTML = sections.map(sec => `
     <section class="section" id="section-${sec.id}" data-section-id="${sec.id}">
       <div class="section-head">
-        <span class="label-num">${escapeHtml(sec.num)}</span>
-        <h2>${escapeHtml(sec.name)}</h2>
-        <span class="label-count" data-section-count="${sec.id}">${sec.items.length} ${sec.items.length === 1 ? "asset" : "assets"}</span>
+        <div class="section-head-row">
+          <span class="label-num">${escapeHtml(sec.num)}</span>
+          <h2>${escapeHtml(sec.name)}</h2>
+          <span class="label-count" data-section-count="${sec.id}">${sec.items.length} ${sec.items.length === 1 ? "asset" : "assets"}</span>
+        </div>
+        ${sec.description ? `<p class="section-desc">${escapeHtml(sec.description)}</p>` : ""}
       </div>
       <div class="grid">
         ${sec.items.map(it => tileHtml(it, sec)).join("")}
@@ -2765,20 +2789,43 @@ Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre
     iframe.className = "fallback";
     iframe.title = "Asset preview";
     iframe.src = filePath;
+
+    // Grow the iframe to its content so the preview reads as inline content
+    // rather than a fixed scrollbox. Returns true if it could measure the
+    // content (same-origin), false if the browser blocked access — which
+    // Chrome does for every file:// document (each is a unique opaque origin).
+    function sizeToContent() {
+      let doc;
+      try { doc = iframe.contentDocument; } catch { doc = null; }
+      if (!doc || !doc.body) return false;
+      const h = Math.max(doc.body.scrollHeight || 0, doc.documentElement?.scrollHeight || 0);
+      if (!h) return false;
+      iframe.style.height = (h + 24) + "px";
+      doc.body.style.overflow = "hidden"; // parent handles overflow; no inner scrollbar
+      return true;
+    }
+
     iframe.addEventListener("load", () => {
-      try {
-        const doc = iframe.contentDocument;
-        if (!doc) return;
-        // Auto-size to content height so the preview reads as inline content
-        // rather than a fixed scrollable embed.
-        const body = doc.body;
-        const html = doc.documentElement;
-        const h = Math.max(body?.scrollHeight || 0, html?.scrollHeight || 0, 480);
-        iframe.style.height = (h + 24) + "px";
-        // Hide iframe scrollbars; the parent already handles overflow.
-        if (body) body.style.overflow = "hidden";
-      } catch { /* cross-origin won't happen for same-origin local files */ }
+      const ok = sizeToContent();
+      if (ok) {
+        // Re-measure after icons/fonts finish laying out (they render after
+        // `load` and change the height), then keep it synced live.
+        [120, 400, 1000].forEach(t => setTimeout(sizeToContent, t));
+        try {
+          const win = iframe.contentWindow;
+          if (win && "ResizeObserver" in win) {
+            const ro = new win.ResizeObserver(() => sizeToContent());
+            ro.observe(iframe.contentDocument.documentElement);
+          }
+        } catch { /* observer is best-effort */ }
+      } else {
+        // Measurement blocked (Chrome file://). We can't size to content, so
+        // fill the viewport instead of sitting at the stubby min-height — the
+        // most examples visible we can manage without a server.
+        iframe.style.height = "calc(100vh - var(--topbar-h) - 120px)";
+      }
     });
+
     host.appendChild(iframe);
     wrap.setAttribute("data-loading", "false");
   }

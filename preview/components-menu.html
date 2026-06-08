@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · Menu</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 22px; width: 100%; }
+
+  /* ─── MENU POPOVER ──────────────────────────────────────────
+     The light, on-canvas action menu. Distinct from the dark
+     navy header dropdowns (dropdown.css) — this one anchors to a
+     button on the page canvas, so it follows the card chrome
+     rules: white fill, Grey-300 hairline, 4px radius, overlay
+     shadow. Use for split-button options, row "More" actions,
+     and any button-anchored list of commands. */
+  .sl-menu {
+    min-width: 200px;
+    background: var(--color-surface-overlay);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-overlay);
+    padding: var(--space-1) 0;                 /* 4px top/bottom */
+    font-family: var(--font-sans);
+  }
+
+  /* Section label — sentence-case-exempt: matches the system's
+     10px ExtraBold uppercase pill/label convention. */
+  .sl-menu__group {
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-subtle);
+    padding: var(--space-2) var(--space-3) var(--space-1);
+  }
+
+  .sl-menu__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-2) var(--space-3);    /* 8px / 12px */
+    font: 500 14px/22px var(--font-sans);
+    color: var(--color-text-body);
+    background: transparent;
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+  }
+  .sl-menu__item svg { width: 16px; height: 16px; stroke-width: 2; flex: none; color: var(--color-text-subtle); }
+  .sl-menu__item .sl-menu__shortcut { margin-left: auto; font: 400 12px/16px var(--font-mono); color: var(--color-text-subtle); }
+
+  /* Hover / keyboard-focus row — Grey-100 fill (matches table row
+     hover), no color shift on the label. */
+  .sl-menu__item:hover,
+  .sl-menu__item.hover,
+  .sl-menu__item:focus-visible { background: var(--sl-grey-100); outline: none; }
+
+  /* Selected / current value — Blue-100 fill, Blue-700 text,
+     trailing check. Mirrors the table's selected-row pattern. */
+  .sl-menu__item.selected { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+  .sl-menu__item.selected svg { color: var(--sl-blue-600); }
+  .sl-menu__item .sl-menu__check { margin-left: auto; opacity: 0; color: var(--sl-blue-600); }
+  .sl-menu__item.selected .sl-menu__check { opacity: 1; }
+
+  /* Destructive command — red text, red icon. */
+  .sl-menu__item--danger { color: var(--sl-red-600); }
+  .sl-menu__item--danger svg { color: var(--sl-red-600); }
+  .sl-menu__item--danger:hover, .sl-menu__item--danger.hover { background: var(--sl-red-100); }
+
+  /* Disabled command. */
+  .sl-menu__item.disabled { color: var(--sl-grey-400); cursor: not-allowed; }
+  .sl-menu__item.disabled svg { color: var(--sl-grey-400); }
+
+  .sl-menu__divider { height: 1px; background: var(--sl-grey-200); margin: var(--space-1) 0; }
+
+  /* ─── BUTTON (minimal — just enough to anchor the menu) ────── */
+  .sl-btn {
+    font: 800 14px/22px var(--font-sans);
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 8px 24px;
+  }
+  .sl-btn svg { width: 16px; height: 16px; stroke-width: 2; }
+  .sl-btn--primary { background: var(--sl-blue-600); color: var(--sl-white); }
+  .sl-btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .sl-btn-group { display: inline-flex; }
+  .sl-btn-group > .sl-btn:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+  .sl-btn-group > .sl-btn:last-child  { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+  .sl-btn-group > .sl-btn--split-trigger { padding: 8px 10px; gap: 0; }
+  .sl-btn-group .sl-btn--primary:first-child { border-right: 1.5px solid rgba(255,255,255,0.28); }
+
+  /* ─── STAGE / LAYOUT ───────────────────────────────────────── */
+  .stage {
+    background: var(--sl-grey-100);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    padding: 28px;
+    display: flex; gap: 56px; flex-wrap: wrap; align-items: flex-start;
+  }
+  .anchor { display: inline-flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .caption { font: 400 11px/16px var(--font-mono); color: var(--color-text-subtle); }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Menu</span><span class="meta">light on-canvas action menu · button-anchored</span></div>
+
+    <!-- ═══ ANATOMY ═══════════════════════════════════════════ -->
+    <div>
+      <div class="section-h">Anatomy <span class="meta">items · icons · selected · destructive · disabled · group · shortcut</span></div>
+      <div class="stage">
+
+        <div class="anchor">
+          <span class="caption">Simple</span>
+          <div class="sl-menu">
+            <button class="sl-menu__item">Rename</button>
+            <button class="sl-menu__item">Duplicate</button>
+            <button class="sl-menu__item hover">Move to…</button>
+            <div class="sl-menu__divider"></div>
+            <button class="sl-menu__item sl-menu__item--danger"><i data-lucide="trash-2"></i>Delete</button>
+          </div>
+        </div>
+
+        <div class="anchor">
+          <span class="caption">With icons + shortcuts</span>
+          <div class="sl-menu">
+            <button class="sl-menu__item"><i data-lucide="play"></i>Run<span class="sl-menu__shortcut">⌘R</span></button>
+            <button class="sl-menu__item hover"><i data-lucide="copy"></i>Clone<span class="sl-menu__shortcut">⌘D</span></button>
+            <button class="sl-menu__item disabled"><i data-lucide="download"></i>Export</button>
+            <div class="sl-menu__divider"></div>
+            <button class="sl-menu__item sl-menu__item--danger"><i data-lucide="trash-2"></i>Delete<span class="sl-menu__shortcut">⌫</span></button>
+          </div>
+        </div>
+
+        <div class="anchor">
+          <span class="caption">Single-select (current value)</span>
+          <div class="sl-menu">
+            <div class="sl-menu__group">Sort by</div>
+            <button class="sl-menu__item selected">Last modified<i data-lucide="check" class="sl-menu__check"></i></button>
+            <button class="sl-menu__item">Name (A–Z)<i data-lucide="check" class="sl-menu__check"></i></button>
+            <button class="sl-menu__item">Date created<i data-lucide="check" class="sl-menu__check"></i></button>
+            <button class="sl-menu__item">Size<i data-lucide="check" class="sl-menu__check"></i></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══ IN CONTEXT: SPLIT BUTTON ════════════════════════════ -->
+    <div>
+      <div class="section-h">In context <span class="meta">split-button trigger opens the menu</span></div>
+      <div class="stage">
+        <div class="anchor">
+          <span class="caption">Split button · menu open</span>
+          <div class="sl-btn-group">
+            <button class="sl-btn sl-btn--primary">Save</button>
+            <button class="sl-btn sl-btn--primary sl-btn--split-trigger" aria-label="Save options" aria-expanded="true"><i data-lucide="chevron-down"></i></button>
+          </div>
+          <div class="sl-menu" style="margin-top: 2px;">
+            <button class="sl-menu__item hover">Save</button>
+            <button class="sl-menu__item">Save as…</button>
+            <button class="sl-menu__item">Save a copy</button>
+            <div class="sl-menu__divider"></div>
+            <button class="sl-menu__item"><i data-lucide="git-branch"></i>Save and create version</button>
+          </div>
+        </div>
+
+        <div class="anchor">
+          <span class="caption">Row "More" actions</span>
+          <button class="sl-btn sl-btn--secondary" style="padding: 8px 12px; gap: 2px;" aria-label="More actions" aria-expanded="true"><i data-lucide="more-horizontal"></i></button>
+          <div class="sl-menu" style="margin-top: 2px;">
+            <button class="sl-menu__item"><i data-lucide="eye"></i>View details</button>
+            <button class="sl-menu__item"><i data-lucide="copy"></i>Duplicate</button>
+            <button class="sl-menu__item"><i data-lucide="square-pen"></i>Rename</button>
+            <div class="sl-menu__divider"></div>
+            <button class="sl-menu__item sl-menu__item--danger"><i data-lucide="trash-2"></i>Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>chrome</dt><dd>White (<code>--color-surface-overlay</code>) · 1px <code>--sl-grey-300</code> hairline · <code>--radius-sm</code> (4px) · <code>--shadow-overlay</code>. <b>Light</b> — distinct from the dark navy header dropdowns (<code>dropdown.css</code>), which are header-only.</dd>
+      <dt>item</dt><dd>14/22 Medium, <code>--color-text-body</code> · 8px / 12px padding · optional 16px leading Lucide icon (Grey-500) and trailing <code>⌘</code> shortcut (mono, subtle).</dd>
+      <dt>states</dt><dd><b>Hover / focus</b>: Grey-100 fill, no label color change. <b>Selected</b>: Blue-100 fill + Blue-700 text + trailing check. <b>Destructive</b>: Red-600 text, Red-100 hover. <b>Disabled</b>: Grey-400, <code>not-allowed</code>.</dd>
+      <dt>structure</dt><dd>Optional <code>group</code> label (10px ExtraBold uppercase) · 1px Grey-200 dividers between command clusters. Keep destructive actions last, below a divider.</dd>
+      <dt>placement</dt><dd>Anchored to its trigger (split-button caret, icon "More", dropdown button). Opens 2px below; flips above when it would clip the viewport. Width ≥ 200px, grows to the longest item.</dd>
+      <dt>a11y</dt><dd>Trigger carries <code>aria-haspopup="menu"</code> + <code>aria-expanded</code>. Roving focus with ↑/↓; Enter activates; Esc closes and returns focus to the trigger. Sits at <code>--z-popover</code>.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

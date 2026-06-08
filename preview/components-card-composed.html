@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Composed components · Composed cards</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 24px; width: 100%; }
+
+  /* ─── CARD SURFACE (the Card building block) ────────────────── */
+  .sl-card {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-raised);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .sl-card.selected { border: 3px solid var(--sl-blue-600); padding: 14px; }
+
+  /* ─── BUILDING BLOCKS COMPOSED INSIDE ───────────────────────── */
+  /* Header: title + actions */
+  .cc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .cc-title { font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
+  .cc-sub   { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); margin-top: 2px; }
+  .cc-actions { display: flex; gap: 2px; flex: none; }
+
+  /* Icon button (Buttons · tertiary icon-only) */
+  .sl-iconbtn {
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 0; border-radius: var(--radius-sm);
+    background: transparent; color: var(--color-text-subtle);
+    cursor: pointer;
+  }
+  .sl-iconbtn:hover { background: var(--sl-grey-100); color: var(--sl-blue-600); }
+  .sl-iconbtn svg { width: 16px; height: 16px; stroke-width: 2; }
+
+  /* Badge */
+  .sl-badge {
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 1px 8px; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 5px; flex: none;
+  }
+  .sl-badge .dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; }
+  .sl-badge--success { background: var(--sl-green-100); color: var(--sl-green-700); }
+  .sl-badge--neutral { background: var(--sl-grey-200); color: var(--sl-grey-700); }
+  .sl-badge--info    { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+
+  /* Meta row (icon + text) */
+  .cc-meta { display: flex; align-items: center; gap: 6px; font: 500 12px/16px var(--font-sans); color: var(--color-text-body); }
+  .cc-meta svg { width: 14px; height: 14px; stroke-width: 2; color: var(--color-text-subtle); }
+
+  /* Footer */
+  .cc-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 12px; border-top: 1px solid var(--sl-grey-200); }
+  .cc-owner { display: flex; align-items: center; gap: 8px; }
+
+  /* Avatar */
+  .sl-avatar {
+    width: 24px; height: 24px; border-radius: 999px; flex: none;
+    background: var(--sl-blue-600); color: var(--sl-white);
+    font: 800 10px/24px var(--font-sans); text-align: center;
+  }
+  .sl-avatar--teal { background: var(--sl-teal-600); }
+  .sl-avatar--indigo { background: var(--sl-indigo-700, #2A3F8F); }
+  .cc-owner-name { font: 500 12px/16px var(--font-sans); color: var(--color-text-body); }
+
+  /* Text button (Buttons · tertiary / secondary) */
+  .sl-btn {
+    font: 800 12px/16px var(--font-sans);
+    padding: 5px 12px; border-radius: var(--radius-sm);
+    border: 1.5px solid transparent; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .sl-btn svg { width: 14px; height: 14px; stroke-width: 2; }
+  .sl-btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .sl-btn--tertiary  { background: transparent; color: var(--sl-blue-600); padding: 5px 8px; }
+
+  /* Stat card bits */
+  .cc-stat-label { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
+  .cc-stat-value { font: 800 32px/36px var(--font-sans); color: var(--color-text-heading); letter-spacing: -0.01em; }
+  .cc-stat-row { display: flex; align-items: baseline; gap: 10px; }
+  .cc-spark { height: 36px; width: 100%; color: var(--sl-blue-600); }
+
+  /* Resource card bits */
+  .cc-icon-tile {
+    width: 36px; height: 36px; border-radius: var(--radius-sm); flex: none;
+    background: var(--sl-blue-100); color: var(--sl-blue-600);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .cc-icon-tile svg { width: 20px; height: 20px; stroke-width: 2; }
+  .cc-avatar-group { display: flex; }
+  .cc-avatar-group .sl-avatar { margin-left: -6px; box-shadow: 0 0 0 2px var(--sl-white); }
+  .cc-avatar-group .sl-avatar:first-child { margin-left: 0; }
+  .sl-avatar--more { background: var(--sl-grey-200); color: var(--sl-grey-700); }
+
+  /* ─── LAYOUT ────────────────────────────────────────────────── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .note { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .note b { color: var(--color-text-body); }
+  .col-label { font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-subtle); margin-bottom: 6px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Composed cards</span><span class="meta">the Card surface, assembled from building blocks</span></div>
+
+    <!-- ═══ PIPELINE CARD ════════════════════════════════════ -->
+    <div>
+      <div class="section-h">Pipeline card <span class="meta">title · status Badge · icon Buttons · Avatar · footer actions</span></div>
+      <div class="grid">
+
+        <div>
+          <div class="col-label">Default</div>
+          <div class="sl-card">
+            <div class="cc-head">
+              <div>
+                <div class="cc-title">Salesforce → Snowflake</div>
+                <div class="cc-sub">Nightly customer sync</div>
+              </div>
+              <div class="cc-actions">
+                <button class="sl-iconbtn" aria-label="Favorite"><i data-lucide="star"></i></button>
+                <button class="sl-iconbtn" aria-label="More actions" aria-haspopup="menu"><i data-lucide="more-vertical"></i></button>
+              </div>
+            </div>
+            <span class="sl-badge sl-badge--success"><span class="dot"></span>Running</span>
+            <div class="cc-meta"><i data-lucide="clock"></i>Repeats every 5 minutes</div>
+            <div class="cc-foot">
+              <div class="cc-owner">
+                <span class="sl-avatar sl-avatar--teal">MG</span>
+                <span class="cc-owner-name">Maddie Golbaz</span>
+              </div>
+              <button class="sl-btn sl-btn--tertiary">View runs<i data-lucide="arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="col-label">Selected</div>
+          <div class="sl-card selected">
+            <div class="cc-head">
+              <div>
+                <div class="cc-title">Stripe → BigQuery</div>
+                <div class="cc-sub">Hourly revenue rollup</div>
+              </div>
+              <div class="cc-actions">
+                <button class="sl-iconbtn" aria-label="Favorite"><i data-lucide="star"></i></button>
+                <button class="sl-iconbtn" aria-label="More actions" aria-haspopup="menu"><i data-lucide="more-vertical"></i></button>
+              </div>
+            </div>
+            <span class="sl-badge sl-badge--neutral"><span class="dot"></span>Paused</span>
+            <div class="cc-meta"><i data-lucide="clock"></i>Repeats every hour</div>
+            <div class="cc-foot">
+              <div class="cc-owner">
+                <span class="sl-avatar sl-avatar--indigo">JC</span>
+                <span class="cc-owner-name">Jordan Cho</span>
+              </div>
+              <button class="sl-btn sl-btn--tertiary">View runs<i data-lucide="arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══ STAT + RESOURCE CARDS ════════════════════════════ -->
+    <div>
+      <div class="section-h">Stat &amp; resource cards <span class="meta">same surface, different composition</span></div>
+      <div class="grid">
+
+        <!-- Stat / metric card -->
+        <div class="sl-card">
+          <div class="cc-head">
+            <div class="cc-stat-label">Executions · 24h</div>
+            <span class="sl-badge sl-badge--success">+8.2%</span>
+          </div>
+          <div class="cc-stat-value">12,480</div>
+          <svg class="cc-spark" viewBox="0 0 200 36" fill="none" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="0,28 25,24 50,26 75,18 100,20 125,12 150,14 175,7 200,4"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Resource / connection card -->
+        <div class="sl-card">
+          <div class="cc-head">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <span class="cc-icon-tile"><i data-lucide="database"></i></span>
+              <div>
+                <div class="cc-title">Production Snowflake</div>
+                <div class="cc-sub">us-east-1 · 4 warehouses</div>
+              </div>
+            </div>
+            <span class="sl-badge sl-badge--info">Connection</span>
+          </div>
+          <div class="cc-foot">
+            <div class="cc-avatar-group" aria-label="3 collaborators">
+              <span class="sl-avatar">AL</span>
+              <span class="sl-avatar sl-avatar--teal">RP</span>
+              <span class="sl-avatar sl-avatar--more">+4</span>
+            </div>
+            <button class="sl-btn sl-btn--secondary">Open</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="note">
+      Every card here is the same <b>Card</b> surface (building block) with content composed on top from <b>Buttons</b>, <b>Badge</b>, and <b>Avatar</b>. Selection is shown by the 3px Blue-600 border — never a background fill. Keep one card to one object; for lists of objects, use a <b>Table</b>.
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
