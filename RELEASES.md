@@ -2,6 +2,13 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
+## 2026-06-08 · Picker family + popup primitives
+
+- **Picker family → Composed components.** Combobox, Select, Multi-select, and Tree select join Date picker in Composed components — each is a control wired to a popup built from another component (Menu / Calendar / tree), not a self-contained control.
+- **New `Tree` building block** — the hierarchical-node primitive (expand/collapse, indentation, single- and multi-select) that Tree select composes.
+- **New `Calendar` building block** — the month-grid primitive (today marker, single + range selection) that Date picker composes.
+- The three popup primitives now all live in Building blocks: **Menu** (flat list), **Tree** (hierarchy), **Calendar** (dates).
+
 ## 2026-06-08 · Catalog refinements
 
 - **Date picker** → Composed components. It composes a distinct Calendar widget on top of an input, unlike the list-backed pickers (Select, Combobox, Multi-select, Tree select), which remain single-control Building blocks.

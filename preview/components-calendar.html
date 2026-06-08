@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Building blocks · Calendar</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 22px; width: 100%; }
+
+  /* ─── CALENDAR ──────────────────────────────────────────────
+     Month grid. The primitive behind Date picker. Today carries a
+     1.5px Blue-600 border; the selected day is a Blue-600 fill;
+     a range tints the days between its endpoints in Blue-100. */
+  .sl-cal { width: 268px; font-family: var(--font-sans); }
+  .sl-cal__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .sl-cal__title { font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
+  .sl-cal__nav { display: flex; gap: 4px; }
+  .sl-cal__navbtn {
+    width: 28px; height: 28px; border: 0; border-radius: var(--radius-sm);
+    background: transparent; color: var(--color-text-subtle); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sl-cal__navbtn:hover { background: var(--sl-grey-100); color: var(--sl-blue-600); }
+  .sl-cal__navbtn svg { width: 16px; height: 16px; stroke-width: 2; }
+
+  .sl-cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .sl-cal__dow {
+    font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--color-text-subtle); text-align: center; padding-bottom: 6px;
+  }
+  .sl-cal__day {
+    height: 32px; display: flex; align-items: center; justify-content: center;
+    font: 500 13px/16px var(--font-sans); color: var(--color-text-body);
+    border-radius: var(--radius-sm); border: 1.5px solid transparent; cursor: pointer;
+  }
+  .sl-cal__day:hover { background: var(--sl-grey-100); }
+  .sl-cal__day.muted { color: var(--sl-grey-400); }
+  .sl-cal__day.disabled { color: var(--sl-grey-300); cursor: not-allowed; text-decoration: line-through; }
+  .sl-cal__day.today { border-color: var(--sl-blue-600); }
+  .sl-cal__day.selected { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+  .sl-cal__day.in-range { background: var(--sl-blue-100); border-radius: 0; }
+  .sl-cal__day.range-start { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+  .sl-cal__day.range-end   { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .note { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .note b { color: var(--color-text-body); }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Calendar",
+  "section": "Building blocks",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-calendar.html",
+  "tagline": "Month grid with prev/next navigation, today marker, and date or range selection.",
+  "anatomy": "Month/year header with prev/next chevron buttons · weekday header row · 6-week grid of day cells. Today is marked with a 1.5px Blue-600 border; the selected day is a Blue-600 fill with white text; a range fills its endpoints and tints the days between in Blue-100.",
+  "options": "Single date or range; min/max bounds and disabled dates; out-of-month days muted; locale-aware first-day-of-week.",
+  "usage": "Use as the always-visible month grid — scheduling, range filters — and as the primitive inside Date picker, which wraps it in a popover anchored to an input. Reach for Date picker when the calendar opens from a typed field; use Calendar directly when the grid is always shown. For a flat list, use Menu; for a hierarchy, use Tree.",
+  "behaviors": "Prev/next move by month; arrow keys move by day, Page Up/Down by month, Enter selects. Today always carries the Blue-600 border; selection never relies on color alone (fill + white text)."
+}
+</script>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Calendar</span><span class="meta">month grid · today · single + range selection</span></div>
+
+    <div class="grid2">
+      <!-- ── Single date ── -->
+      <div>
+        <div class="section-h">Single date <span class="meta">today = 8 · selected = 12</span></div>
+        <div class="sl-cal">
+          <div class="sl-cal__head">
+            <div class="sl-cal__title">June 2026</div>
+            <div class="sl-cal__nav">
+              <button class="sl-cal__navbtn" aria-label="Previous month"><i data-lucide="chevron-left"></i></button>
+              <button class="sl-cal__navbtn" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
+            </div>
+          </div>
+          <div class="sl-cal__grid">
+            <span class="sl-cal__dow">Mon</span><span class="sl-cal__dow">Tue</span><span class="sl-cal__dow">Wed</span><span class="sl-cal__dow">Thu</span><span class="sl-cal__dow">Fri</span><span class="sl-cal__dow">Sat</span><span class="sl-cal__dow">Sun</span>
+            <span class="sl-cal__day">1</span><span class="sl-cal__day">2</span><span class="sl-cal__day">3</span><span class="sl-cal__day">4</span><span class="sl-cal__day">5</span><span class="sl-cal__day">6</span><span class="sl-cal__day">7</span>
+            <span class="sl-cal__day today">8</span><span class="sl-cal__day">9</span><span class="sl-cal__day">10</span><span class="sl-cal__day">11</span><span class="sl-cal__day selected">12</span><span class="sl-cal__day">13</span><span class="sl-cal__day">14</span>
+            <span class="sl-cal__day">15</span><span class="sl-cal__day">16</span><span class="sl-cal__day">17</span><span class="sl-cal__day">18</span><span class="sl-cal__day">19</span><span class="sl-cal__day">20</span><span class="sl-cal__day">21</span>
+            <span class="sl-cal__day">22</span><span class="sl-cal__day">23</span><span class="sl-cal__day disabled">24</span><span class="sl-cal__day">25</span><span class="sl-cal__day">26</span><span class="sl-cal__day">27</span><span class="sl-cal__day">28</span>
+            <span class="sl-cal__day">29</span><span class="sl-cal__day">30</span><span class="sl-cal__day muted">1</span><span class="sl-cal__day muted">2</span><span class="sl-cal__day muted">3</span><span class="sl-cal__day muted">4</span><span class="sl-cal__day muted">5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Range ── -->
+      <div>
+        <div class="section-h">Range <span class="meta">10 → 16</span></div>
+        <div class="sl-cal">
+          <div class="sl-cal__head">
+            <div class="sl-cal__title">June 2026</div>
+            <div class="sl-cal__nav">
+              <button class="sl-cal__navbtn" aria-label="Previous month"><i data-lucide="chevron-left"></i></button>
+              <button class="sl-cal__navbtn" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
+            </div>
+          </div>
+          <div class="sl-cal__grid">
+            <span class="sl-cal__dow">Mon</span><span class="sl-cal__dow">Tue</span><span class="sl-cal__dow">Wed</span><span class="sl-cal__dow">Thu</span><span class="sl-cal__dow">Fri</span><span class="sl-cal__dow">Sat</span><span class="sl-cal__dow">Sun</span>
+            <span class="sl-cal__day">1</span><span class="sl-cal__day">2</span><span class="sl-cal__day">3</span><span class="sl-cal__day">4</span><span class="sl-cal__day">5</span><span class="sl-cal__day">6</span><span class="sl-cal__day">7</span>
+            <span class="sl-cal__day today">8</span><span class="sl-cal__day">9</span><span class="sl-cal__day range-start">10</span><span class="sl-cal__day in-range">11</span><span class="sl-cal__day in-range">12</span><span class="sl-cal__day in-range">13</span><span class="sl-cal__day in-range">14</span>
+            <span class="sl-cal__day in-range">15</span><span class="sl-cal__day range-end">16</span><span class="sl-cal__day">17</span><span class="sl-cal__day">18</span><span class="sl-cal__day">19</span><span class="sl-cal__day">20</span><span class="sl-cal__day">21</span>
+            <span class="sl-cal__day">22</span><span class="sl-cal__day">23</span><span class="sl-cal__day">24</span><span class="sl-cal__day">25</span><span class="sl-cal__day">26</span><span class="sl-cal__day">27</span><span class="sl-cal__day">28</span>
+            <span class="sl-cal__day">29</span><span class="sl-cal__day">30</span><span class="sl-cal__day muted">1</span><span class="sl-cal__day muted">2</span><span class="sl-cal__day muted">3</span><span class="sl-cal__day muted">4</span><span class="sl-cal__day muted">5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      The <b>Calendar</b> is the building block behind <b>Date picker</b> (which wraps it in a popover anchored to an input). Use it directly when the grid is always visible — scheduling, range filters. Today always carries the 1.5px Blue-600 border; selection uses a Blue-600 fill (never color alone). For a flat list of options, use <b>Menu</b>; for a hierarchy, use <b>Tree</b>.
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

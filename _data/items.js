@@ -240,6 +240,17 @@ window.JELLYROLL_DATA = {
           }
         },
         {
+          file: "preview/components-calendar.html",
+          name: "Calendar",
+          tagline: "Month grid with prev/next navigation, today marker, and date or range selection.",
+          meta: {
+            anatomy: "Month/year header with prev/next chevron buttons · weekday header row · 6-week grid of day cells. Today is marked with a 1.5px Blue-600 border; the selected day is a Blue-600 fill with white text; a range fills its endpoints and tints the days between in Blue-100.",
+            options: "Single date or range; min/max bounds and disabled dates; out-of-month days muted; locale-aware first-day-of-week.",
+            usage: "Use as the always-visible month grid — scheduling, range filters — and as the primitive inside Date picker, which wraps it in a popover anchored to an input. Reach for Date picker when the calendar opens from a typed field; use Calendar directly when the grid is always shown. For a flat list, use Menu; for a hierarchy, use Tree.",
+            behaviors: "Prev/next move by month; arrow keys move by day, Page Up/Down by month, Enter selects. Today always carries the Blue-600 border; selection never relies on color alone (fill + white text)."
+          }
+        },
+        {
           file: "preview/components-card.html",
           name: "Card",
           tagline: "White surface with a 1px Grey-300 border. Borders — not shadow — indicate selection.",
@@ -270,17 +281,6 @@ window.JELLYROLL_DATA = {
             options: "Static (display only), removable (with `×`), selectable (toggle), with leading icon.",
             usage: "Use for free-form labels (tags, applied filters, selected multi-select values). For fixed status enums, use a Badge instead.",
             behaviors: "Click the `×` removes; click the chip body toggles selection (where applicable). Removed chips animate out in 100ms with no shift of the remaining row."
-          }
-        },
-        {
-          file: "preview/components-combobox.html",
-          name: "Combobox",
-          tagline: "Input combined with a filtered dropdown for very long or open-ended lists.",
-          meta: {
-            anatomy: "Input · trailing chevron · panel of suggestions that updates as the user types. Highlighted match shown bold.",
-            options: "Single-value, multi-value (chips), async-loaded suggestions, creatable (typed values become new options).",
-            usage: "Use for 50+ options, async-loaded sets, or open-ended pickers where the user may want to type a value that does not exist yet (tags, custom names). Below 50 options, use a Select.",
-            behaviors: "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab accepts the current input. For creatable comboboxes, typing a new value and pressing Enter creates it."
           }
         },
         {
@@ -321,17 +321,6 @@ window.JELLYROLL_DATA = {
             options: "Item states: default, hover/focus (Grey-100), selected (Blue-100 fill / Blue-700 text / trailing check), destructive (Red-600), disabled (Grey-400). With or without icons, shortcuts, group labels, and dividers.",
             usage: "Use as the light on-canvas action menu anchored to a button — split-button options, row `More` actions, dropdown buttons, single-select pickers. This is distinct from the dark navy header dropdowns (`dropdown.css`), which are reserved for the global header. Keep destructive actions last, below a divider.",
             behaviors: "Opens 2px below its trigger and flips above when it would clip the viewport. Width ≥ 200px, growing to the longest item. Trigger carries `aria-haspopup=\"menu\"` + `aria-expanded`; roving focus with ↑/↓, Enter activates, Esc closes and returns focus to the trigger. Sits at `--z-popover`."
-          }
-        },
-        {
-          file: "preview/components-multi-select.html",
-          name: "Multi-select",
-          tagline: "Select-style trigger that accepts multiple values rendered as chips.",
-          meta: {
-            anatomy: "Trigger field showing selected chips inline · trailing chevron · panel of checkboxes (so the multi-select intent is obvious). Each chip has a remove `×`.",
-            options: "Plain, searchable, grouped. Optional `Select all` row at the top of the panel.",
-            usage: "Use when the user can pick more than one value from a bounded list. For free-form text tags, use a Chip input instead. Limit visible chips inline and overflow to `+N more` past a sensible threshold.",
-            behaviors: "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip."
           }
         },
         {
@@ -395,17 +384,6 @@ window.JELLYROLL_DATA = {
             options: "Sizes: default 32px, small 28px. Text-only, icon-only, or icon + text segments.",
             usage: "Use to flip between views inside a single surface (list / grid, day / week / month, summary / details). For navigating between unrelated screens, use Tabs. For more than 5 options, use a Select.",
             behaviors: "Click selects; arrow keys cycle. Selection animates the white pill across segments in 150ms with no overshoot. Disabled segments drop opacity and reject input."
-          }
-        },
-        {
-          file: "preview/components-select.html",
-          name: "Select",
-          tagline: "Single-choice dropdown with searchable + grouped variants.",
-          meta: {
-            anatomy: "Trigger (same shape as Input) with trailing chevron · panel (white, Raised shadow, 4px radius, max-height with scroll) · options (40px rows, 12px left padding, optional leading icon, current selection marked).",
-            options: "Variants: standard, searchable, grouped, with icons. Sizes: default 40px, compact 32px.",
-            usage: "Use for picking one value from 5–50 options. Below 5, prefer a Segmented control or Radio group. Above 50 or for unbounded sets, use a Combobox.",
-            behaviors: "Click or Space/Enter opens. Arrow keys cycle options; typing jumps to the first match. Selecting closes the panel and updates the trigger. Esc closes without changing the value. The panel anchors to the trigger and flips above when it would clip below."
           }
         },
         {
@@ -482,14 +460,14 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "preview/components-tree-select.html",
-          name: "Tree select",
-          tagline: "Hierarchical picker — folders, snaplexes, org units.",
+          file: "preview/components-tree.html",
+          name: "Tree",
+          tagline: "Hierarchical list of nodes with expand/collapse, indentation, and selection.",
           meta: {
-            anatomy: "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 16px per level. Single or multi-select.",
-            options: "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches.",
-            usage: "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
-            behaviors: "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants."
+            anatomy: "Rows of nodes indented by depth · a chevron toggle on parent nodes (rotates down when expanded) or a spacer on leaves · optional 16px leading Lucide icon (folder / pipeline / org) · 14/22 label · optional leading checkbox for multi-select. Selected row uses a Blue-100 fill with a 2px Blue-600 left marker.",
+            options: "Single-select or multi-select (leading checkboxes); with or without node icons; lazy-loaded branches (spinner on expand); disabled / read-only nodes; optional per-node count.",
+            usage: "Use to navigate or pick from a hierarchy — project folders, snaplexes, org units. This is the primitive behind the Tree select component, which wraps it in a popover. For a flat list of options or commands, use Menu instead.",
+            behaviors: "Click a chevron (or the row) to expand/collapse; arrow keys move between visible nodes, Right/Left expand/collapse, Enter selects. Hover swaps the row to Grey-100; selected is Blue-100 with the Blue-600 left marker — never color alone."
           }
         }
       ]
@@ -519,6 +497,17 @@ window.JELLYROLL_DATA = {
             options: "Tones: neutral / info / warning / danger. Dismissible or persistent. With or without action.",
             usage: "Use for system-wide announcements — maintenance windows, license issues, broad outages. Never use for per-record errors (use a Toast) or for ephemeral feedback. Persistent banners must include a `Learn more` link.",
             behaviors: "Dismiss is per-user and per-banner-id; the banner does not re-appear on next load until the id changes. Tone color sets the background tint and the leading icon."
+          }
+        },
+        {
+          file: "preview/components-combobox.html",
+          name: "Combobox",
+          tagline: "Input combined with a filtered dropdown for very long or open-ended lists.",
+          meta: {
+            anatomy: "Input · trailing chevron · panel of suggestions that updates as the user types. Highlighted match shown bold.",
+            options: "Single-value, multi-value (chips), async-loaded suggestions, creatable (typed values become new options).",
+            usage: "Use for 50+ options, async-loaded sets, or open-ended pickers where the user may want to type a value that does not exist yet (tags, custom names). Below 50 options, use a Select.",
+            behaviors: "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab accepts the current input. For creatable comboboxes, typing a new value and pressing Enter creates it."
           }
         },
         {
@@ -626,6 +615,17 @@ window.JELLYROLL_DATA = {
           }
         },
         {
+          file: "preview/components-multi-select.html",
+          name: "Multi-select",
+          tagline: "Select-style trigger that accepts multiple values rendered as chips.",
+          meta: {
+            anatomy: "Trigger field showing selected chips inline · trailing chevron · panel of checkboxes (so the multi-select intent is obvious). Each chip has a remove `×`.",
+            options: "Plain, searchable, grouped. Optional `Select all` row at the top of the panel.",
+            usage: "Use when the user can pick more than one value from a bounded list. For free-form text tags, use a Chip input instead. Limit visible chips inline and overflow to `+N more` past a sensible threshold.",
+            behaviors: "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip."
+          }
+        },
+        {
           file: "preview/components-notifications.html",
           name: "Notifications",
           tagline: "Notification center surfaced from the global bell icon.",
@@ -654,6 +654,17 @@ window.JELLYROLL_DATA = {
             anatomy: "Centered modal (no scrim — backdrop blur is not used; instead a flat Indigo-1000 60% fill) · search input · grouped results by type (Pipelines / Snaps / Accounts / Docs) · keyboard hint footer.",
             usage: "Use as the global navigate-to-result entry point. For filtering content visible on the current screen, use a local Search field instead.",
             behaviors: "Opens on `⌘ K` / `Ctrl K` from any page; Esc closes. Up/Down arrows cycle results; Enter activates. Recent searches show on empty input; typing replaces them with live results."
+          }
+        },
+        {
+          file: "preview/components-select.html",
+          name: "Select",
+          tagline: "Single-choice dropdown with searchable + grouped variants.",
+          meta: {
+            anatomy: "Trigger (same shape as Input) with trailing chevron · panel (white, Raised shadow, 4px radius, max-height with scroll) · options (40px rows, 12px left padding, optional leading icon, current selection marked).",
+            options: "Variants: standard, searchable, grouped, with icons. Sizes: default 40px, compact 32px.",
+            usage: "Use for picking one value from 5–50 options. Below 5, prefer a Segmented control or Radio group. Above 50 or for unbounded sets, use a Combobox.",
+            behaviors: "Click or Space/Enter opens. Arrow keys cycle options; typing jumps to the first match. Selecting closes the panel and updates the trigger. Esc closes without changing the value. The panel anchors to the trigger and flips above when it would clip below."
           }
         },
         {
@@ -708,6 +719,17 @@ window.JELLYROLL_DATA = {
             options: "Tones: neutral / success / warning / danger. With or without action link (`Undo`, `View`).",
             usage: "Use for ephemeral feedback after an action — saves, deletes (with Undo), background process completes. Auto-dismiss after 5s (8s if there is an action link). For errors that need user attention, use a Banner or Modal.",
             behaviors: "Slide in from bottom-right in 200ms. Hover pauses the auto-dismiss timer. Stack is FIFO; new toasts push above older ones. Dismiss via `×`, the action, or auto-timeout."
+          }
+        },
+        {
+          file: "preview/components-tree-select.html",
+          name: "Tree select",
+          tagline: "Hierarchical picker — folders, snaplexes, org units.",
+          meta: {
+            anatomy: "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 16px per level. Single or multi-select.",
+            options: "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches.",
+            usage: "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
+            behaviors: "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants."
           }
         },
         {

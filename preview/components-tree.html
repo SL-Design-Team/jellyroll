@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Building blocks · Tree</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 22px; width: 100%; }
+
+  /* ─── TREE ──────────────────────────────────────────────────
+     Hierarchical list of nodes. The primitive behind Tree select.
+     Each row: a chevron toggle (parents) or spacer (leaves), an
+     optional Lucide icon, and a label. Depth is set by padding. */
+  .sl-tree { font-family: var(--font-sans); max-width: 340px; }
+  .sl-tree__node {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 8px;
+    border-radius: var(--radius-sm);
+    border-left: 2px solid transparent;
+    font: 500 14px/22px var(--font-sans);
+    color: var(--color-text-body);
+    cursor: pointer;
+    user-select: none;
+  }
+  .sl-tree__node[data-depth="0"] { padding-left: 8px; }
+  .sl-tree__node[data-depth="1"] { padding-left: 30px; }
+  .sl-tree__node[data-depth="2"] { padding-left: 52px; }
+
+  .sl-tree__node:hover { background: var(--sl-grey-100); }
+  .sl-tree__node.selected {
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    border-left-color: var(--sl-blue-600);
+    font-weight: 800;
+  }
+  .sl-tree__node.disabled { color: var(--sl-grey-400); cursor: not-allowed; }
+
+  .sl-tree__toggle, .sl-tree__spacer { width: 16px; height: 16px; flex: none; }
+  .sl-tree__toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--color-text-subtle);
+    transition: transform 120ms ease-out;
+  }
+  .sl-tree__node[aria-expanded="true"] > .sl-tree__toggle { transform: rotate(90deg); }
+  .sl-tree__toggle svg { width: 14px; height: 14px; stroke-width: 2; }
+  .sl-tree__icon { flex: none; width: 16px; height: 16px; color: var(--color-text-subtle); }
+  .sl-tree__node.selected .sl-tree__icon { color: var(--sl-blue-600); }
+  .sl-tree__icon svg { width: 16px; height: 16px; stroke-width: 2; }
+  .sl-tree__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sl-tree__count { margin-left: auto; font: 400 12px/16px var(--font-mono); color: var(--color-text-subtle); }
+
+  /* Checkbox variant (multi-select trees) */
+  .sl-tree__check {
+    width: 16px; height: 16px; flex: none;
+    border: 1.5px solid var(--sl-grey-400); border-radius: 2px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--sl-white);
+  }
+  .sl-tree__check.checked { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .sl-tree__check svg { width: 12px; height: 12px; stroke-width: 3; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .note { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .note b { color: var(--color-text-body); }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Tree",
+  "section": "Building blocks",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-tree.html",
+  "tagline": "Hierarchical list of nodes with expand/collapse, indentation, and selection.",
+  "anatomy": "Rows of nodes indented by depth · a chevron toggle on parent nodes (rotates down when expanded) or a spacer on leaves · optional 16px leading Lucide icon (folder / pipeline / org) · 14/22 label · optional leading checkbox for multi-select. Selected row uses a Blue-100 fill with a 2px Blue-600 left marker.",
+  "options": "Single-select or multi-select (leading checkboxes); with or without node icons; lazy-loaded branches (spinner on expand); disabled / read-only nodes; optional per-node count.",
+  "usage": "Use to navigate or pick from a hierarchy — project folders, snaplexes, org units. This is the primitive behind the Tree select component, which wraps it in a popover. For a flat list of options or commands, use Menu instead.",
+  "behaviors": "Click a chevron (or the row) to expand/collapse; arrow keys move between visible nodes, Right/Left expand/collapse, Enter selects. Hover swaps the row to Grey-100; selected is Blue-100 with the Blue-600 left marker — never color alone."
+}
+</script>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Tree</span><span class="meta">hierarchical nodes · expand/collapse · selection</span></div>
+
+    <div class="grid2">
+      <!-- ── Single-select (navigation / picker) ── -->
+      <div>
+        <div class="section-h">Single-select <span class="meta">folders · snaplexes · pipelines</span></div>
+        <div class="sl-tree" role="tree">
+          <div class="sl-tree__node" data-depth="0" role="treeitem" aria-expanded="true">
+            <span class="sl-tree__toggle"><i data-lucide="chevron-right"></i></span>
+            <span class="sl-tree__icon"><i data-lucide="folder-open"></i></span>
+            <span class="sl-tree__label">Production</span>
+          </div>
+          <div class="sl-tree__node" data-depth="1" role="treeitem" aria-expanded="true">
+            <span class="sl-tree__toggle"><i data-lucide="chevron-right"></i></span>
+            <span class="sl-tree__icon"><i data-lucide="folder-open"></i></span>
+            <span class="sl-tree__label">Pipelines</span>
+          </div>
+          <div class="sl-tree__node selected" data-depth="2" role="treeitem" aria-selected="true">
+            <span class="sl-tree__spacer"></span>
+            <span class="sl-tree__icon"><i data-lucide="git-branch"></i></span>
+            <span class="sl-tree__label">SF → Snowflake nightly</span>
+          </div>
+          <div class="sl-tree__node" data-depth="2" role="treeitem">
+            <span class="sl-tree__spacer"></span>
+            <span class="sl-tree__icon"><i data-lucide="git-branch"></i></span>
+            <span class="sl-tree__label">Stripe → BigQuery</span>
+          </div>
+          <div class="sl-tree__node" data-depth="1" role="treeitem" aria-expanded="false">
+            <span class="sl-tree__toggle"><i data-lucide="chevron-right"></i></span>
+            <span class="sl-tree__icon"><i data-lucide="folder"></i></span>
+            <span class="sl-tree__label">Snaplexes</span>
+            <span class="sl-tree__count">3</span>
+          </div>
+          <div class="sl-tree__node" data-depth="0" role="treeitem" aria-expanded="false">
+            <span class="sl-tree__toggle"><i data-lucide="chevron-right"></i></span>
+            <span class="sl-tree__icon"><i data-lucide="folder"></i></span>
+            <span class="sl-tree__label">Staging</span>
+          </div>
+          <div class="sl-tree__node disabled" data-depth="0" role="treeitem" aria-disabled="true">
+            <span class="sl-tree__spacer"></span>
+            <span class="sl-tree__icon"><i data-lucide="lock"></i></span>
+            <span class="sl-tree__label">Archived (read-only)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Multi-select (checkboxes) ── -->
+      <div>
+        <div class="section-h">Multi-select <span class="meta">leading checkboxes</span></div>
+        <div class="sl-tree" role="tree" aria-multiselectable="true">
+          <div class="sl-tree__node" data-depth="0" role="treeitem" aria-expanded="true">
+            <span class="sl-tree__toggle"><i data-lucide="chevron-right"></i></span>
+            <span class="sl-tree__check checked"><i data-lucide="check"></i></span>
+            <span class="sl-tree__icon"><i data-lucide="folder-open"></i></span>
+            <span class="sl-tree__label">Org units</span>
+          </div>
+          <div class="sl-tree__node" data-depth="1" role="treeitem">
+            <span class="sl-tree__spacer"></span>
+            <span class="sl-tree__check checked"><i data-lucide="check"></i></span>
+            <span class="sl-tree__icon"><i data-lucide="users"></i></span>
+            <span class="sl-tree__label">Data Platform</span>
+          </div>
+          <div class="sl-tree__node" data-depth="1" role="treeitem">
+            <span class="sl-tree__spacer"></span>
+            <span class="sl-tree__check"></span>
+            <span class="sl-tree__icon"><i data-lucide="users"></i></span>
+            <span class="sl-tree__label">Analytics</span>
+          </div>
+          <div class="sl-tree__node" data-depth="1" role="treeitem">
+            <span class="sl-tree__spacer"></span>
+            <span class="sl-tree__check"></span>
+            <span class="sl-tree__icon"><i data-lucide="users"></i></span>
+            <span class="sl-tree__label">Integrations</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      The <b>Tree</b> is the building block behind <b>Tree select</b> (which wraps it in a popover anchored to a trigger). Use it directly for in-page hierarchy navigation — project folders, snaplexes, org units. For a flat list of options or commands, use <b>Menu</b> instead. Selection uses a Blue-100 row fill with a 2px Blue-600 left marker — never color alone.
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
