@@ -137,6 +137,26 @@ function injectInlineMeta() {
   return { touched, missing, skipped };
 }
 
+// ── Alphabetical-order check ────────────────────────────────────────────────
+// Most sections list their items A→Z. These two are intentionally ordered by
+// meaning (Foundations follows a learning order; Color leads with the ramps),
+// so they're exempt. Warns — never fails — when any other section drifts.
+const UNSORTED_SECTIONS = new Set(['foundations', 'color']);
+function checkAlphabetical() {
+  const warnings = [];
+  for (const sec of DATA.sections) {
+    if (UNSORTED_SECTIONS.has(sec.id)) continue;
+    for (let i = 1; i < sec.items.length; i++) {
+      const prev = sec.items[i - 1].name;
+      const curr = sec.items[i].name;
+      if (prev.localeCompare(curr, 'en', { sensitivity: 'base' }) > 0) {
+        warnings.push('  ' + sec.name + ': "' + curr + '" should come before "' + prev + '"');
+      }
+    }
+  }
+  return warnings;
+}
+
 // ── Run ─────────────────────────────────────────────────────────────────────
 const catalog = buildCatalog();
 fs.writeFileSync(path.join(ROOT, 'jellyroll.json'), JSON.stringify(catalog, null, 2) + '\n');
@@ -148,3 +168,11 @@ console.log('jellyroll.json : ' + DATA.sections.length + ' sections, ' + itemCou
 console.log('llms.txt       : written');
 console.log('inline meta    : ' + inj.touched + ' previews updated, ' +
   inj.missing + ' missing file(s), ' + inj.skipped + ' without <head>');
+
+const orderWarnings = checkAlphabetical();
+if (orderWarnings.length) {
+  console.warn('\n⚠ alphabetical order — ' + orderWarnings.length + ' item(s) out of place:');
+  orderWarnings.forEach(w => console.warn(w));
+} else {
+  console.log('order check    : all sortable sections alphabetical');
+}
