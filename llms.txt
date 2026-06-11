@@ -84,7 +84,6 @@ Several building blocks assembled into a complete piece of the interface.
 - [Combobox](https://sl-design-team.github.io/jellyroll/preview/components-combobox.html): Input combined with a filtered dropdown for very long or open-ended lists.
 - [Composed cards](https://sl-design-team.github.io/jellyroll/preview/components-card-composed.html): The Card surface assembled from building blocks — pipeline, stat, and resource cards.
 - [Date picker](https://sl-design-team.github.io/jellyroll/preview/components-date-picker.html): Calendar dropdown attached to an input for picking a date or range.
-- [Time range selector](https://sl-design-team.github.io/jellyroll/preview/components-time-range-selector.html): Segmented control of quick time presets with a More menu and custom-range calendar.
 - [Drawer](https://sl-design-team.github.io/jellyroll/preview/components-drawer.html): Side panel that slides in from the right for details or secondary tasks.
 - [Environment picker](https://sl-design-team.github.io/jellyroll/preview/components-env-picker.html): Switcher for the active environment (Dev / Stage / Prod).
 - [File upload](https://sl-design-team.github.io/jellyroll/preview/components-file-upload.html): Drop zone, browse button, and progress.
@@ -102,6 +101,7 @@ Several building blocks assembled into a complete piece of the interface.
 - [Stepper](https://sl-design-team.github.io/jellyroll/preview/components-stepper.html): Numbered progress through a multi-step flow.
 - [Table](https://sl-design-team.github.io/jellyroll/preview/components-table.html): Dense data table — the dominant shape for Manager and Monitor.
 - [Tabs](https://sl-design-team.github.io/jellyroll/preview/components-tabs.html): Horizontal tab bar that swaps views inside a single surface.
+- [Time range selector](https://sl-design-team.github.io/jellyroll/preview/components-time-range-selector.html): Segmented control of quick time presets with a More menu and custom-range calendar.
 - [Toast](https://sl-design-team.github.io/jellyroll/preview/components-toast.html): Transient message anchored bottom-right.
 - [Tree select](https://sl-design-team.github.io/jellyroll/preview/components-tree-select.html): Hierarchical picker — folders, snaplexes, org units.
 - [User menu](https://sl-design-team.github.io/jellyroll/preview/components-user-menu.html): Avatar in the global header opens an account + preferences popover.

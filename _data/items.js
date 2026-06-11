@@ -533,17 +533,6 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "preview/components-time-range-selector.html",
-          name: "Time range selector",
-          tagline: "Segmented control of quick time presets with a More menu and custom-range calendar.",
-          meta: {
-            anatomy: "Small segmented control with quick presets (24h · 7d · 30d · 12mo) and a trailing `More` segment. More opens a Menu (Last month · Last quarter · Custom range…); Custom range… opens the two-month date-range calendar in a popover with a range readout and Cancel / Apply.",
-            options: "Sizes: small (default, 24px) and default (30px). Preset set is configurable per context — as few as two segments (down to one preset + More) up to five. Single active range, mutually exclusive.",
-            usage: "Use to scope a dashboard, chart, or log view to a time window. Placement depends on what it scopes: the page header at the page level when it drives the whole view; the upper right-hand corner outside a table (aligned with its title or above the header row); or inside the table actions row alongside search and filters when it scopes just that table. Quick presets cover the common windows; the More menu carries period-relative ranges and the custom calendar. Composes Segmented control + Menu + the Date picker range calendar; don't rebuild those.",
-            behaviors: "Selecting a preset applies immediately. More opens the menu; choosing an overflow range or applying a custom range moves selection onto the More segment, which then shows the active value with a caret while the presets deselect. Custom range… opens the range calendar; Apply commits, Cancel and Esc discard."
-          }
-        },
-        {
           file: "preview/components-drawer.html",
           name: "Drawer",
           tagline: "Side panel that slides in from the right for details or secondary tasks.",
@@ -719,6 +708,17 @@ window.JELLYROLL_DATA = {
             options: "Sizes: default, compact. With or without leading icons. With optional badge/count next to the label.",
             usage: "Use to swap between views in the same surface that share context (Configuration / Logs / Settings on a pipeline). For independent navigation across pages, use the Left nav.",
             behaviors: "Left/Right arrow moves focus; Home/End jump to first/last. Activation on click or Enter (or automatically on focus in `automatic activation` mode). Indicator slides between tabs in 150ms."
+          }
+        },
+        {
+          file: "preview/components-time-range-selector.html",
+          name: "Time range selector",
+          tagline: "Segmented control of quick time presets with a More menu and custom-range calendar.",
+          meta: {
+            anatomy: "Small segmented control with quick presets (24h · 7d · 30d · 12mo) and a trailing `More` segment. More opens a Menu (Last month · Last quarter · Custom range…); Custom range… opens the two-month date-range calendar in a popover with a range readout and Cancel / Apply.",
+            options: "Sizes: small (default, 24px) and default (30px). Preset set is configurable per context — as few as two segments (down to one preset + More) up to five. Single active range, mutually exclusive.",
+            usage: "Use to scope a dashboard, chart, or log view to a time window. Placement depends on what it scopes: the page header at the page level when it drives the whole view; the upper right-hand corner outside a table (aligned with its title or above the header row); or inside the table actions row alongside search and filters when it scopes just that table. Quick presets cover the common windows; the More menu carries period-relative ranges and the custom calendar. Composes Segmented control + Menu + the Date picker range calendar; don't rebuild those.",
+            behaviors: "Selecting a preset applies immediately. More opens the menu; choosing an overflow range or applying a custom range moves selection onto the More segment, which then shows the active value with a caret while the presets deselect. Custom range… opens the range calendar; Apply commits, Cancel and Esc discard."
           }
         },
         {
