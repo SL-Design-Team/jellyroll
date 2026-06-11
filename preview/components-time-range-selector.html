@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Composed · Time range selector</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 22px; width: 100%; }
+
+  /* ─── Segmented control (reused building block) ──────────────
+     Sunken pill track, Blue-600 selected segment. The last
+     segment, `More`, doubles as a menu trigger and as the holder
+     for the active range when it isn't one of the quick presets. */
+  .sc {
+    --sc-h: 30px;
+    --sc-pad: 3px;
+    --sc-border: var(--sl-grey-300);
+    --sc-text: var(--sl-indigo-900);
+    --sc-text-muted: var(--sl-grey-700);
+    --sc-hover-bg: rgba(8, 65, 180, 0.06);
+    display: inline-flex;
+    align-items: stretch;
+    padding: var(--sc-pad);
+    border: 1px solid var(--sc-border);
+    border-radius: 4px;
+    background: transparent;
+    font: 800 13px/20px var(--font-sans);
+  }
+  .sc__item {
+    height: calc(var(--sc-h) - var(--sc-pad) * 2 - 2px);
+    padding: 0 14px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--sc-text-muted);
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: background-color 150ms ease-out, color 150ms ease-out;
+    font: inherit;
+    white-space: nowrap;
+  }
+  .sc__item:hover { color: var(--sc-text); background: var(--sc-hover-bg); }
+  .sc__item.selected { background: var(--sl-blue-600); color: var(--sl-white); }
+  .sc__item.selected:hover { background: var(--sl-blue-700); color: var(--sl-white); }
+  .sc__item:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--sl-teal-600); }
+  .sc__item svg { width: 14px; height: 14px; flex: none; stroke-width: 2; }
+
+  /* `More` segment — divider hairline before it, trailing caret. */
+  .sc__item--more { gap: 5px; }
+  .sc__item--more::before {
+    content: "";
+    width: 1px; align-self: center;
+    height: 14px; margin: 0 4px 0 -4px;
+    background: var(--sl-grey-300);
+  }
+  .sc__item--more.selected::before { background: rgba(255,255,255,0.32); }
+  .sc__item--more svg { width: 13px; height: 13px; opacity: 0.85; }
+
+  /* Small — the default size for this control. */
+  .sc--sm { --sc-h: 24px; --sc-pad: 2px; font: 800 12px/16px var(--font-sans); }
+  .sc--sm .sc__item { padding: 0 10px; gap: 4px; }
+  .sc--sm .sc__item svg { width: 12px; height: 12px; }
+
+  /* ─── Menu (reused building block) ───────────────────────────
+     Opens from the `More` segment with the overflow ranges. */
+  .sl-menu {
+    min-width: 200px;
+    background: var(--color-surface-overlay);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-overlay);
+    padding: var(--space-1) 0;
+    font-family: var(--font-sans);
+  }
+  .sl-menu__item {
+    display: flex; align-items: center; gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    font: 500 14px/22px var(--font-sans);
+    color: var(--color-text-body);
+    background: transparent; border: 0; text-align: left; cursor: pointer;
+  }
+  .sl-menu__item svg { width: 16px; height: 16px; stroke-width: 2; flex: none; color: var(--color-text-subtle); }
+  .sl-menu__item:hover, .sl-menu__item.hover, .sl-menu__item:focus-visible { background: var(--sl-grey-100); outline: none; }
+  .sl-menu__item.selected { background: var(--sl-blue-100); color: var(--sl-blue-700); }
+  .sl-menu__item.selected svg { color: var(--sl-blue-600); }
+  .sl-menu__item .sl-menu__check { margin-left: auto; opacity: 0; color: var(--sl-blue-600); }
+  .sl-menu__item.selected .sl-menu__check { opacity: 1; }
+  .sl-menu__divider { height: 1px; background: var(--sl-grey-200); margin: var(--space-1) 0; }
+
+  /* ─── Custom-range calendar (reused Date-picker range grid) ──
+     Two months, round selection system shared with Calendar and
+     Date picker. No preset sidebar — the presets live one level
+     up in the More menu, so this is purely arbitrary-date picking. */
+  .tr-pop {
+    display: inline-block;
+    background: var(--color-surface-overlay);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-overlay);
+    padding: 16px;
+  }
+  .tr-pop__title {
+    font: 800 13px/16px var(--font-sans);
+    color: var(--color-text-heading);
+    margin-bottom: 12px;
+  }
+  .sl-cal { display: grid; grid-template-columns: auto auto; gap: 0 24px; font-family: var(--font-sans); }
+  .sl-cal__month { width: 224px; }
+  .sl-cal__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .sl-cal__title { font: 800 14px/20px var(--font-sans); color: var(--sl-indigo-900); }
+  .sl-cal__nav {
+    width: 24px; height: 24px; border: 0; background: transparent;
+    border-radius: var(--radius-xs); color: var(--color-text-body); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sl-cal__nav:hover { background: var(--sl-grey-100); }
+  .sl-cal__nav svg { width: 14px; height: 14px; }
+
+  .sl-cal__grid { display: grid; grid-template-columns: repeat(7, 32px); gap: 0; }
+  .sl-cal__dow {
+    font: 800 10px/14px var(--font-mono); color: var(--color-text-subtle);
+    text-transform: uppercase; text-align: center; padding: 4px 0;
+  }
+  .sl-cal__day {
+    width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 400 13px/16px var(--font-sans); color: var(--sl-indigo-900);
+    cursor: pointer; border-radius: 999px; border: 0; background: transparent;
+  }
+  .sl-cal__day:hover { background: var(--sl-blue-100); }
+  .sl-cal__day.muted { color: var(--sl-grey-500); }
+  .sl-cal__day.today { box-shadow: inset 0 0 0 1px var(--sl-blue-600); font-weight: 800; }
+  .sl-cal__day.selected { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; }
+  .sl-cal__day.range { background: var(--sl-blue-100); border-radius: 0; color: var(--sl-blue-700); }
+  .sl-cal__day.range-start { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; border-radius: 999px 0 0 999px; }
+  .sl-cal__day.range-end   { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; border-radius: 0 999px 999px 0; }
+
+  .sl-cal__foot {
+    grid-column: 1 / -1;
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--sl-grey-200);
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  }
+  .sl-cal__foot .selected-text { font: 400 12px/16px var(--font-mono); color: var(--color-text-subtle); }
+  .sl-cal__foot .actions { display: flex; gap: 6px; }
+  .sl-cal__foot .btn { font: 800 13px/16px var(--font-sans); padding: 4px 12px; border-radius: var(--radius-sm); border: 1.5px solid; cursor: pointer; }
+  .sl-cal__foot .btn-secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+  .sl-cal__foot .btn-primary { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
+
+  /* ─── Stages / demo layout ───────────────────────────────────── */
+  .stage {
+    background: var(--sl-grey-100);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+  }
+  .anchor { display: inline-flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+  .toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+  }
+  .toolbar__title { font: 800 16px/22px var(--font-sans); color: var(--color-text-heading); }
+  .size-row { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+  .size-row .lbl { font: 400 11px/16px var(--font-mono); color: var(--color-text-subtle); margin-top: 6px; }
+
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .caption { font: 400 11px/16px var(--font-mono); color: var(--color-text-subtle); }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Time range selector",
+  "section": "Composed components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-time-range-selector.html",
+  "tagline": "Segmented control of quick time presets with a More menu and custom-range calendar.",
+  "anatomy": "Small segmented control with quick presets (24h · 7d · 30d · 12mo) and a trailing `More` segment. More opens a Menu (Last month · Last quarter · Custom range…); Custom range… opens the two-month date-range calendar in a popover with a range readout and Cancel / Apply.",
+  "options": "Sizes: small (default, 24px) and default (30px). Preset set is configurable per context — as few as two segments (down to one preset + More) up to five. Single active range, mutually exclusive.",
+  "usage": "Use to scope a dashboard, chart, or log view to a time window. Placement depends on what it scopes: the page header at the page level when it drives the whole view; the upper right-hand corner outside a table (aligned with its title or above the header row); or inside the table actions row alongside search and filters when it scopes just that table. Quick presets cover the common windows; the More menu carries period-relative ranges and the custom calendar. Composes Segmented control + Menu + the Date picker range calendar; don't rebuild those.",
+  "behaviors": "Selecting a preset applies immediately. More opens the menu; choosing an overflow range or applying a custom range moves selection onto the More segment, which then shows the active value with a caret while the presets deselect. Custom range… opens the range calendar; Apply commits, Cancel and Esc discard."
+}
+</script>
+</head>
+<body>
+  <div class="card">
+
+    <!-- ── Default ───────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Default <span class="meta">small · 7d active</span></div>
+      <div class="stage">
+        <div class="toolbar">
+          <span class="toolbar__title">Pipeline executions</span>
+          <div class="sc sc--sm" role="group" aria-label="Time range">
+            <button class="sc__item" type="button">24h</button>
+            <button class="sc__item selected" type="button" aria-pressed="true">7d</button>
+            <button class="sc__item" type="button">30d</button>
+            <button class="sc__item" type="button">12mo</button>
+            <button class="sc__item sc__item--more" type="button" aria-haspopup="menu" aria-expanded="false">More <i data-lucide="chevron-down"></i></button>
+          </div>
+        </div>
+        <p class="caption" style="margin-top: 12px;">Quick presets apply on click. Everything else lives behind More.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── More menu open ────────────────────────────────────── -->
+    <div>
+      <div class="section-h">More menu <span class="meta">overflow ranges</span></div>
+      <div class="stage">
+        <div class="anchor">
+          <div class="sc sc--sm" role="group" aria-label="Time range">
+            <button class="sc__item" type="button">24h</button>
+            <button class="sc__item" type="button">7d</button>
+            <button class="sc__item" type="button">30d</button>
+            <button class="sc__item" type="button">12mo</button>
+            <button class="sc__item sc__item--more" type="button" aria-haspopup="menu" aria-expanded="true">More <i data-lucide="chevron-down"></i></button>
+          </div>
+          <div class="sl-menu" role="menu" aria-label="More ranges" style="min-width: 180px; align-self: flex-end;">
+            <button class="sl-menu__item" role="menuitem" type="button">Last month</button>
+            <button class="sl-menu__item" role="menuitem" type="button">Last quarter</button>
+            <div class="sl-menu__divider"></div>
+            <button class="sl-menu__item" role="menuitem" type="button"><i data-lucide="calendar-range"></i>Custom range…</button>
+          </div>
+        </div>
+        <p class="caption" style="margin-top: 16px;">The menu aligns to the More segment. Custom range… opens the calendar below.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── Custom range picker ───────────────────────────────── -->
+    <div>
+      <div class="section-h">Custom range <span class="meta">two-month calendar · 12 → 19 May</span></div>
+      <div class="stage">
+        <div class="tr-pop">
+          <div class="tr-pop__title">Custom range</div>
+          <div class="sl-cal">
+            <div class="sl-cal__month">
+              <div class="sl-cal__head">
+                <button class="sl-cal__nav" aria-label="Previous month" type="button"><i data-lucide="chevron-left"></i></button>
+                <span class="sl-cal__title">May 2026</span>
+                <span style="width: 24px;"></span>
+              </div>
+              <div class="sl-cal__grid">
+                <span class="sl-cal__dow">M</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">W</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">F</span><span class="sl-cal__dow">S</span><span class="sl-cal__dow">S</span>
+                <button class="sl-cal__day muted">27</button><button class="sl-cal__day muted">28</button><button class="sl-cal__day muted">29</button><button class="sl-cal__day muted">30</button><button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button>
+                <button class="sl-cal__day">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button><button class="sl-cal__day">8</button><button class="sl-cal__day">9</button><button class="sl-cal__day">10</button>
+                <button class="sl-cal__day">11</button><button class="sl-cal__day range-start">12</button><button class="sl-cal__day range">13</button><button class="sl-cal__day range">14</button><button class="sl-cal__day range">15</button><button class="sl-cal__day range">16</button><button class="sl-cal__day range">17</button>
+                <button class="sl-cal__day range">18</button><button class="sl-cal__day range-end today">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button><button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button>
+                <button class="sl-cal__day">25</button><button class="sl-cal__day">26</button><button class="sl-cal__day">27</button><button class="sl-cal__day">28</button><button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day">31</button>
+              </div>
+            </div>
+            <div class="sl-cal__month">
+              <div class="sl-cal__head">
+                <span style="width: 24px;"></span>
+                <span class="sl-cal__title">June 2026</span>
+                <button class="sl-cal__nav" aria-label="Next month" type="button"><i data-lucide="chevron-right"></i></button>
+              </div>
+              <div class="sl-cal__grid">
+                <span class="sl-cal__dow">M</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">W</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">F</span><span class="sl-cal__dow">S</span><span class="sl-cal__dow">S</span>
+                <button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button><button class="sl-cal__day">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button>
+                <button class="sl-cal__day">8</button><button class="sl-cal__day">9</button><button class="sl-cal__day">10</button><button class="sl-cal__day">11</button><button class="sl-cal__day">12</button><button class="sl-cal__day">13</button><button class="sl-cal__day">14</button>
+                <button class="sl-cal__day">15</button><button class="sl-cal__day">16</button><button class="sl-cal__day">17</button><button class="sl-cal__day">18</button><button class="sl-cal__day">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button>
+                <button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button><button class="sl-cal__day">25</button><button class="sl-cal__day">26</button><button class="sl-cal__day">27</button><button class="sl-cal__day">28</button>
+                <button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day muted">1</button><button class="sl-cal__day muted">2</button><button class="sl-cal__day muted">3</button><button class="sl-cal__day muted">4</button><button class="sl-cal__day muted">5</button>
+              </div>
+            </div>
+            <div class="sl-cal__foot">
+              <span class="selected-text">12 May 2026 – 19 May 2026 · 7 days</span>
+              <div class="actions">
+                <button class="btn btn-secondary" type="button">Cancel</button>
+                <button class="btn btn-primary" type="button">Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── Active states ─────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Active states <span class="meta">preset vs. custom range</span></div>
+      <div class="stage">
+        <div class="size-row">
+          <div class="anchor">
+            <div class="sc sc--sm" role="group" aria-label="Time range">
+              <button class="sc__item" type="button">24h</button>
+              <button class="sc__item" type="button">7d</button>
+              <button class="sc__item selected" type="button" aria-pressed="true">30d</button>
+              <button class="sc__item" type="button">12mo</button>
+              <button class="sc__item sc__item--more" type="button" aria-haspopup="menu" aria-expanded="false">More <i data-lucide="chevron-down"></i></button>
+            </div>
+            <span class="lbl">Quick preset active</span>
+          </div>
+          <div class="anchor">
+            <div class="sc sc--sm" role="group" aria-label="Time range">
+              <button class="sc__item" type="button">24h</button>
+              <button class="sc__item" type="button">7d</button>
+              <button class="sc__item" type="button">30d</button>
+              <button class="sc__item" type="button">12mo</button>
+              <button class="sc__item sc__item--more selected" type="button" aria-haspopup="menu" aria-expanded="false">12 May – 19 May <i data-lucide="chevron-down"></i></button>
+            </div>
+            <span class="lbl">Custom range active — held on More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── Sizes ─────────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Sizes <span class="meta">small (default) · default</span></div>
+      <div class="stage">
+        <div class="size-row">
+          <div class="anchor">
+            <div class="sc sc--sm" role="group" aria-label="Time range">
+              <button class="sc__item" type="button">24h</button>
+              <button class="sc__item selected" type="button" aria-pressed="true">7d</button>
+              <button class="sc__item" type="button">30d</button>
+              <button class="sc__item" type="button">12mo</button>
+              <button class="sc__item sc__item--more" type="button" aria-haspopup="menu" aria-expanded="false">More <i data-lucide="chevron-down"></i></button>
+            </div>
+            <span class="lbl">small · 24px — dense toolbars</span>
+          </div>
+          <div class="anchor">
+            <div class="sc" role="group" aria-label="Time range">
+              <button class="sc__item" type="button">24h</button>
+              <button class="sc__item selected" type="button" aria-pressed="true">7d</button>
+              <button class="sc__item" type="button">30d</button>
+              <button class="sc__item" type="button">12mo</button>
+              <button class="sc__item sc__item--more" type="button" aria-haspopup="menu" aria-expanded="false">More <i data-lucide="chevron-down"></i></button>
+            </div>
+            <span class="lbl">default · 30px — page headers</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── Minimal ───────────────────────────────────────────── -->
+    <div>
+      <div class="section-h">Minimal <span class="meta">as few as two options</span></div>
+      <div class="stage">
+        <div class="size-row">
+          <div class="anchor">
+            <div class="sc sc--sm" role="group" aria-label="Time range">
+              <button class="sc__item selected" type="button" aria-pressed="true">7d</button>
+              <button class="sc__item" type="button">30d</button>
+            </div>
+            <span class="lbl">two presets</span>
+          </div>
+          <div class="anchor">
+            <div class="sc sc--sm" role="group" aria-label="Time range">
+              <button class="sc__item selected" type="button" aria-pressed="true">7d</button>
+              <button class="sc__item sc__item--more" type="button" aria-haspopup="menu" aria-expanded="false">More <i data-lucide="chevron-down"></i></button>
+            </div>
+            <span class="lbl">one preset + More</span>
+          </div>
+        </div>
+        <p class="caption" style="margin-top: 16px;">Two segments is the floor — a single preset paired with More still gives the full range set.</p>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>placement</dt><dd>Context decides. At the <b>page level</b> in the page header when it scopes the whole view (dashboard, all charts at once); in the <b>upper right-hand corner outside a table</b> (aligned with its title or above the header row); or inside the <b>table actions row</b> beside search and filters when it scopes just that table.</dd>
+      <dt>presets</dt><dd>Quick windows live as segments. Configure the set per context — <code>24h / 7d / 30d / 12mo</code> is the dashboard default. As few as two segments (down to one preset + More) up to five.</dd>
+      <dt>more</dt><dd>Trailing segment with a hairline divider and caret. Opens the <b>Menu</b> with period-relative ranges (Last month, Last quarter) and Custom range…</dd>
+      <dt>custom range</dt><dd>Reuses the <b>Date picker</b> two-month range calendar — round endpoints, Blue-100 tint between, range readout, Cancel / Apply. No preset sidebar; presets live in the More menu.</dd>
+      <dt>active value</dt><dd>One range active at a time. A non-preset choice moves selection onto More, which shows the value (<code>12 May – 19 May</code>) with its caret; presets deselect.</dd>
+      <dt>sizes</dt><dd><b>Small</b> (24px) is the default. <b>Default</b> (30px) for roomier page headers.</dd>
+      <dt>a11y</dt><dd>Control is a <code>role="group"</code> of toggle buttons; the active segment carries <code>aria-pressed</code>. More carries <code>aria-haspopup="menu"</code> + <code>aria-expanded</code>. Calendar follows the Date picker dialog/grid semantics.</dd>
+    </dl>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

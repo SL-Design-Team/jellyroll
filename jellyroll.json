@@ -1211,6 +1211,16 @@
           "behaviors": "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill."
         },
         {
+          "name": "Time range selector",
+          "file": "preview/components-time-range-selector.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/components-time-range-selector.html",
+          "tagline": "Segmented control of quick time presets with a More menu and custom-range calendar.",
+          "anatomy": "Small segmented control with quick presets (24h · 7d · 30d · 12mo) and a trailing `More` segment. More opens a Menu (Last month · Last quarter · Custom range…); Custom range… opens the two-month date-range calendar in a popover with a range readout and Cancel / Apply.",
+          "options": "Sizes: small (default, 24px) and default (30px). Preset set is configurable per context — as few as two segments (down to one preset + More) up to five. Single active range, mutually exclusive.",
+          "usage": "Use to scope a dashboard, chart, or log view to a time window. Placement depends on what it scopes: the page header at the page level when it drives the whole view; the upper right-hand corner outside a table (aligned with its title or above the header row); or inside the table actions row alongside search and filters when it scopes just that table. Quick presets cover the common windows; the More menu carries period-relative ranges and the custom calendar. Composes Segmented control + Menu + the Date picker range calendar; don't rebuild those.",
+          "behaviors": "Selecting a preset applies immediately. More opens the menu; choosing an overflow range or applying a custom range moves selection onto the More segment, which then shows the active value with a caret while the presets deselect. Custom range… opens the range calendar; Apply commits, Cancel and Esc discard."
+        },
+        {
           "name": "Drawer",
           "file": "preview/components-drawer.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/components-drawer.html",

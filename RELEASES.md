@@ -2,6 +2,17 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
+## 2026-06-11 · Time range selector + calendar consistency
+
+### New components
+- **Time range selector** (Composed components) — a segmented control of quick presets (`24h · 7d · 30d · 12mo`) with a trailing **More** segment. More opens a Menu with period-relative ranges (Last month, Last quarter) and **Custom range…**, which opens the two-month date-range calendar reused from Date picker. A non-preset choice moves selection onto the More segment, which then shows the active value with a caret. Small (24px) is the default size; default (30px) is available for roomier headers. Configurable from two segments up to five. Placement is context-driven: page header, upper-right outside a table, or inside the table actions row.
+
+### Fixes
+- **Calendar selection shape now matches Date picker.** The Calendar building block rendered the selected day as a rounded rectangle (`--radius-sm`); it's now the same 32px circle the Date picker uses, with circular range endpoints and a continuous Blue-100 range fill. Calendar, Date picker, and Time range selector now share one selection treatment.
+
+### Docs
+- **Spacing rule clarified in `CLAUDE.md`.** The 4-pt grid governs layout spacing between components; height-anchored component internals (e.g. button padding derived from fixed 40/36/28 heights) are exempt and must not be rounded to the grid.
+
 ## 2026-06-08 · Picker family + popup primitives
 
 - **Picker family → Composed components.** Combobox, Select, Multi-select, and Tree select join Date picker in Composed components — each is a control wired to a popup built from another component (Menu / Calendar / tree), not a self-contained control.

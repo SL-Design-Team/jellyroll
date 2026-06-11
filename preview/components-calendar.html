@@ -13,7 +13,7 @@
      Month grid. The primitive behind Date picker. Today carries a
      1.5px Blue-600 border; the selected day is a Blue-600 fill;
      a range tints the days between its endpoints in Blue-100. */
-  .sl-cal { width: 268px; font-family: var(--font-sans); }
+  .sl-cal { width: 224px; font-family: var(--font-sans); }
   .sl-cal__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
   .sl-cal__title { font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
   .sl-cal__nav { display: flex; gap: 4px; }
@@ -25,15 +25,15 @@
   .sl-cal__navbtn:hover { background: var(--sl-grey-100); color: var(--sl-blue-600); }
   .sl-cal__navbtn svg { width: 16px; height: 16px; stroke-width: 2; }
 
-  .sl-cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .sl-cal__grid { display: grid; grid-template-columns: repeat(7, 32px); gap: 0; }
   .sl-cal__dow {
     font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.04em;
     color: var(--color-text-subtle); text-align: center; padding-bottom: 6px;
   }
   .sl-cal__day {
-    height: 32px; display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
     font: 500 13px/16px var(--font-sans); color: var(--color-text-body);
-    border-radius: var(--radius-sm); border: 1.5px solid transparent; cursor: pointer;
+    border-radius: 999px; border: 1.5px solid transparent; cursor: pointer;
   }
   .sl-cal__day:hover { background: var(--sl-grey-100); }
   .sl-cal__day.muted { color: var(--sl-grey-400); }
@@ -41,8 +41,8 @@
   .sl-cal__day.today { border-color: var(--sl-blue-600); }
   .sl-cal__day.selected { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); }
   .sl-cal__day.in-range { background: var(--sl-blue-100); border-radius: 0; }
-  .sl-cal__day.range-start { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
-  .sl-cal__day.range-end   { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+  .sl-cal__day.range-start { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); border-radius: 999px 0 0 999px; }
+  .sl-cal__day.range-end   { background: var(--sl-blue-600); color: var(--sl-white); border-color: var(--sl-blue-600); border-radius: 0 999px 999px 0; }
 
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
   .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
