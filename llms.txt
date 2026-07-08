@@ -67,7 +67,7 @@ Single-purpose controls — each does one job. The atoms you compose with.
 - [Search field](https://sl-design-team.github.io/jellyroll/preview/components-search-field.html): Input with a leading search icon and a clear-on-typed affordance.
 - [Segmented control](https://sl-design-team.github.io/jellyroll/preview/components-segmented-control.html): Compact horizontal switch for 2–5 mutually exclusive options.
 - [Skeleton loader](https://sl-design-team.github.io/jellyroll/preview/components-skeleton.html): Pulsing grey shape standing in for loading content.
-- [Slider](https://sl-design-team.github.io/jellyroll/preview/components-slider.html): Drag to pick a value or a range from a continuous track.
+- [Slider](https://sl-design-team.github.io/jellyroll/preview/components-slider.html): Drag to pick a value from a continuous track.
 - [Spinner](https://sl-design-team.github.io/jellyroll/preview/components-spinner.html): Comet-tail loader — a tapered ring on a 1.1s rotation.
 - [Status atom](https://sl-design-team.github.io/jellyroll/preview/components-status.html): 6px colored dot + label — the minimal status indicator.
 - [Text area](https://sl-design-team.github.io/jellyroll/preview/components-textarea.html): Multi-line text input. Auto-grows by default; resize handle on demand.

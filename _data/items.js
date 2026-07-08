@@ -399,12 +399,12 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/components-slider.html",
           name: "Slider",
-          tagline: "Drag to pick a value or a range from a continuous track.",
+          tagline: "Drag to pick a value from a continuous track.",
           meta: {
-            anatomy: "4px track · 16px circular thumb · optional tick marks · optional value bubble above thumb. Filled portion Blue-600; unfilled Grey-300.",
-            options: "Single thumb or range (two thumbs); horizontal default; integer or float steps; optional tick labels.",
-            usage: "Use for approximate continuous values where exact precision is not required — opacity, zoom, throttling. Pair with a number input alongside when the user may want to type an exact value.",
-            behaviors: "Click on the track jumps the nearest thumb. Drag, arrow keys, Page Up/Down (large step), Home/End (min/max) all move the thumb. Range thumbs cannot cross. Value bubble appears on hover and during drag."
+            anatomy: "Single-thumb horizontal slider with 3px track, 16px circular thumb, and 28px visual height. Filled portion Blue-600; unfilled track Blue-200. Disabled uses Grey-200 track with Grey-400 fill/thumb.",
+            options: "With or without label, unit suffix, and paired number input. No tick marks, value bubble, or range variant in the base component.",
+            usage: "Use for approximate continuous values — opacity, zoom, throttling. Pair with a number input alongside when the user may want to type an exact value; place the label above and the slider + number input in one row.",
+            behaviors: "Click on the track jumps the thumb. Drag, arrow keys, Page Up/Down (large step), and Home/End (min/max) move the thumb. Visual height is 28px, with an invisible 44px hit area for pointer/touch input. Thumb shadow transitions in 150ms; value movement follows input directly. Disabled removes hover/focus affordances and uses a not-allowed cursor."
           }
         },
         {

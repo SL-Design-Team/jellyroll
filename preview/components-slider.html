@@ -9,6 +9,13 @@
   .grid { display: grid; grid-template-columns: 110px 1fr; gap: 14px 20px; align-items: center; }
   .tag { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
   .sl-wrap { position: relative; height: 28px; }
+  .sl-wrap::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
   .sl-track {
     position: absolute; top: 50%; left: 0; right: 0; height: 3px;
     background: var(--sl-blue-200); border-radius: 2px; transform: translateY(-50%);
@@ -19,6 +26,7 @@
     background: var(--sl-blue-600); transform: translate(-50%, -50%); cursor: pointer;
     border: 2px solid var(--sl-white);
     box-shadow: 0 0 0 1px var(--sl-blue-600);
+    transition: box-shadow 150ms ease-out;
   }
   .sl-thumb.hover { box-shadow: 0 0 0 1.5px var(--sl-blue-600); }
   .sl-thumb.focus { box-shadow: 0 0 0 1px var(--sl-blue-600), 0 0 0 8px rgba(8,65,180,0.18); }
@@ -26,18 +34,45 @@
   .sl-fill.error { background: var(--sl-red-600); }
   .sl-track.error { background: var(--sl-red-200); }
   .sl-thumb.error { background: var(--sl-red-600); box-shadow: 0 0 0 1px var(--sl-red-600); }
+  .sl-track.disabled { background: var(--sl-grey-200); }
+  .sl-fill.disabled { background: var(--sl-grey-400); }
+  .sl-thumb.disabled {
+    background: var(--sl-grey-400);
+    box-shadow: 0 0 0 1px var(--sl-grey-400);
+    cursor: not-allowed;
+  }
   .scale-labels { display: flex; justify-content: space-between; margin-top: 4px; font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
+  .field-demo { display: flex; flex-direction: column; gap: 6px; }
+  .field-label { font: 800 14px/22px var(--font-sans); color: var(--color-text-body); }
+  .slider-row { display: grid; grid-template-columns: minmax(160px, 1fr) 88px; gap: 12px; align-items: center; }
+  .num-field {
+    height: 32px;
+    border: 1px solid var(--field-border-default);
+    border-radius: var(--field-radius);
+    background: var(--field-bg-default);
+    display: inline-flex;
+    align-items: center;
+    padding: 0 8px;
+    font: 400 13px/20px var(--font-sans);
+    color: var(--field-text-default);
+  }
+  .num-field .value { flex: 1; text-align: right; }
+  .num-field .unit { margin-left: 4px; color: var(--color-text-subtle); font: 400 11px/14px var(--font-mono); }
+  .spec { display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); margin-top: 18px; }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
 </style>
 <script type="application/json" id="jellyroll-meta">
 {
   "name": "Slider",
   "section": "Building blocks",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-slider.html",
-  "tagline": "Drag to pick a value or a range from a continuous track.",
-  "anatomy": "4px track · 16px circular thumb · optional tick marks · optional value bubble above thumb. Filled portion Blue-600; unfilled Grey-300.",
-  "options": "Single thumb or range (two thumbs); horizontal default; integer or float steps; optional tick labels.",
-  "usage": "Use for approximate continuous values where exact precision is not required — opacity, zoom, throttling. Pair with a number input alongside when the user may want to type an exact value.",
-  "behaviors": "Click on the track jumps the nearest thumb. Drag, arrow keys, Page Up/Down (large step), Home/End (min/max) all move the thumb. Range thumbs cannot cross. Value bubble appears on hover and during drag."
+  "tagline": "Drag to pick a value from a continuous track.",
+  "anatomy": "Single-thumb horizontal slider with 3px track, 16px circular thumb, and 28px visual height. Filled portion Blue-600; unfilled track Blue-200. Disabled uses Grey-200 track with Grey-400 fill/thumb.",
+  "options": "With or without label, unit suffix, and paired number input. No tick marks, value bubble, or range variant in the base component.",
+  "usage": "Use for approximate continuous values — opacity, zoom, throttling. Pair with a number input alongside when the user may want to type an exact value; place the label above and the slider + number input in one row.",
+  "behaviors": "Click on the track jumps the thumb. Drag, arrow keys, Page Up/Down (large step), and Home/End (min/max) move the thumb. Visual height is 28px, with an invisible 44px hit area for pointer/touch input. Thumb shadow transitions in 150ms; value movement follows input directly. Disabled removes hover/focus affordances and uses a not-allowed cursor."
 }
 </script>
 </head>
@@ -90,7 +125,36 @@
         </div>
         <div class="scale-labels"><span>0</span><span>90</span></div>
       </div>
+      <span class="tag">Disabled</span>
+      <div>
+        <div class="sl-wrap">
+          <div class="sl-track disabled"></div>
+          <div class="sl-fill disabled" style="width: 45%"></div>
+          <div class="sl-thumb disabled" style="left: 45%"></div>
+        </div>
+        <div class="scale-labels"><span>0</span><span>90</span></div>
+      </div>
+      <span class="tag">With input</span>
+      <div class="field-demo">
+        <label class="field-label">Opacity</label>
+        <div class="slider-row">
+          <div>
+            <div class="sl-wrap">
+              <div class="sl-track"></div>
+              <div class="sl-fill" style="width: 72%"></div>
+              <div class="sl-thumb" style="left: 72%"></div>
+            </div>
+            <div class="scale-labels"><span>0</span><span>100</span></div>
+          </div>
+          <div class="num-field" aria-label="Opacity value"><span class="value">72</span><span class="unit">%</span></div>
+        </div>
+      </div>
     </div>
+    <dl class="spec">
+      <dt>not included</dt><dd>No tick marks, value bubble, loading state, or dual-thumb range variant in the base Slider.</dd>
+      <dt>hit area</dt><dd>Visual control remains 28px tall; pointer/touch target extends to 44px invisibly.</dd>
+      <dt>input pair</dt><dd>Use a paired number input when exact values matter. Keep the label above the row and put the unit suffix in the number input.</dd>
+    </dl>
   </div>
 </body>
 </html>
