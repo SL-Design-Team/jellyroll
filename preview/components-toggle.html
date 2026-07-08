@@ -15,7 +15,8 @@
   .tg.selected { background: var(--sl-blue-600); }
   .tg.selected::after { left: 16px; }
   .tg.hover { background: var(--sl-grey-700); }
-  .tg.selected.hover { background: linear-gradient(112.63deg, #0B9D9B 12.38%, #0841B4 137.46%); }
+  .tg.selected.hover { background: var(--sl-blue-700); }
+  .tg.focus { box-shadow: var(--shadow-focus-ring); }
   .tg.disabled { background: var(--sl-grey-300); }
   .tg.disabled.selected { background: var(--sl-blue-200); }
 
@@ -26,6 +27,17 @@
   .tg.lg { width: 40px; height: 22px; }
   .tg.lg::after { width: 18px; height: 18px; }
   .tg.lg.selected::after { left: 20px; }
+  .divider { height: 1px; background: var(--sl-grey-200); margin: 18px 0; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .status-row { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+  .status-demo { display: inline-flex; align-items: center; gap: 8px; font: 400 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
+  .status-text { font: 800 10px/14px var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-subtle); }
+  .spec { display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
 </style>
 <script type="application/json" id="jellyroll-meta">
 {
@@ -33,10 +45,10 @@
   "section": "Building blocks",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-toggle.html",
   "tagline": "On/off switch for a setting that takes effect immediately.",
-  "anatomy": "32×16 pill track · 12px circular thumb · label to the left or right. Track grey when off, Blue-600 when on; thumb white in both states.",
-  "options": "Sizes: default 32×16, small 28×14. With or without inline status text (`On` / `Off`).",
+  "anatomy": "Pill track with flat white thumb. Sizes: small 26×14 track / 10px thumb, default 32×18 / 14px thumb, large 40×22 / 18px thumb. Track is Grey-600 when off and Blue-600 when on.",
+  "options": "Sizes: small, default, large. Label may sit left or right. Optional inline status text (`Off` / `On`) may flank the switch outside the track.",
   "usage": "Use for settings that take effect immediately — feature toggles, autosave, notifications. For form fields that submit later, use a Checkbox.",
-  "behaviors": "Click anywhere on the track or label toggles. Space toggles when focused. Animation is a 150ms slide of the thumb with a colour swap of the track — no bounce or overshoot."
+  "behaviors": "Use role=\"switch\" with aria-checked. Click anywhere on the track or label toggles; Space toggles, and Enter may toggle when implemented as a button. Focus uses the global Teal halo. Hover shifts off to Grey-700 and on to Blue-700; no gradient, loading, or special pressed state. Animation is a 150ms slide of the thumb with a color swap of the track — no bounce or overshoot."
 }
 </script>
 </head>
@@ -51,8 +63,17 @@
       <span class="tag">On</span>
       <span class="opt"><span class="tg selected"></span>Label</span>
       <span class="opt disabled"><span class="tg disabled selected"></span>Label</span>
+      <span class="tag">Off · hover</span>
+      <span class="opt"><span class="tg hover"></span>Label</span>
+      <span></span>
       <span class="tag">On · hover</span>
       <span class="opt"><span class="tg selected hover"></span>Label</span>
+      <span></span>
+      <span class="tag">Focus</span>
+      <span class="opt"><span class="tg focus" role="switch" aria-checked="false"></span>Label</span>
+      <span></span>
+      <span class="tag">On · focus</span>
+      <span class="opt"><span class="tg selected focus" role="switch" aria-checked="true"></span>Label</span>
       <span></span>
     </div>
     <div class="row-label" style="margin-top: 8px"><span class="name">Sizes</span><span class="meta"></span></div>
@@ -61,6 +82,26 @@
       <div style="display:flex; flex-direction:column; align-items:center; gap: 6px"><span class="tg selected"></span><span class="tag">Medium</span></div>
       <div style="display:flex; flex-direction:column; align-items:center; gap: 6px"><span class="tg lg selected"></span><span class="tag">Large</span></div>
     </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Label and status text <span class="meta">left or right label · optional Off/On text outside track</span></div>
+      <div class="status-row">
+        <span class="status-demo">Autosave <span class="tg selected" role="switch" aria-checked="true"></span></span>
+        <span class="status-demo"><span class="tg" role="switch" aria-checked="false"></span>Notifications</span>
+        <span class="status-demo"><span class="status-text">Off</span><span class="tg" role="switch" aria-checked="false"></span><span class="status-text">On</span></span>
+        <span class="status-demo"><span class="status-text">Off</span><span class="tg selected" role="switch" aria-checked="true"></span><span class="status-text">On</span></span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <dl class="spec">
+      <dt>states</dt><dd><b>No loading state</b> and no special pressed visual. Toggle commits immediately; show progress elsewhere if the setting triggers async work.</dd>
+      <dt>thumb</dt><dd>Flat white thumb, no shadow, including disabled tracks.</dd>
+      <dt>a11y</dt><dd>Use <code>role="switch"</code> with <code>aria-checked</code>. Space toggles; Enter may toggle when the switch is implemented as a button.</dd>
+    </dl>
   </div>
 </body>
 </html>

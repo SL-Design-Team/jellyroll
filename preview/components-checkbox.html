@@ -18,7 +18,7 @@
     flex-shrink: 0;
   }
   .cb.hover { border-color: var(--sl-blue-600); }
-  .cb.focus { border-color: var(--sl-blue-600); box-shadow: 0 0 0 3px rgba(8,65,180,0.25); }
+  .cb.focus { box-shadow: var(--shadow-focus-ring); }
   .cb.selected { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
   .cb.selected::after {
     content: ''; width: 12px; height: 7px; transform: rotate(-45deg) translate(1px, -1px);
@@ -30,7 +30,22 @@
   .cb.disabled { background: var(--sl-grey-100); border-color: var(--sl-grey-300); }
   .cb.disabled.selected { background: var(--sl-blue-200); border-color: var(--sl-blue-200); }
   .cb.disabled.selected::after { border-color: var(--sl-blue-400); }
+  .cb--dense {
+    width: 16px; height: 16px;
+    border-radius: 2px;
+  }
+  .cb--dense.selected::after {
+    width: 8px; height: 4px;
+  }
+  .cb--dense.indeterminate::after {
+    width: 8px;
+  }
   .opt.error { color: var(--sl-red-700); font-weight: 800; }
+  .divider { height: 1px; background: var(--sl-grey-200); margin: 18px 0; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .size-row { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .with-label { display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); }
 </style>
 <script type="application/json" id="jellyroll-meta">
 {
@@ -68,6 +83,24 @@
       <span class="tag">Tab focus</span>
       <span class="opt"><span class="cb focus"></span>Label</span>
       <span></span>
+      <span class="tag">Selected focus</span>
+      <span class="opt"><span class="cb selected focus"></span>Label</span>
+      <span></span>
+      <span class="tag">Error focus</span>
+      <span class="opt error"><span class="cb error focus" aria-invalid="true"></span>Required</span>
+      <span></span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Sizes <span class="meta">default 20px · dense 16px · no 14px tier</span></div>
+      <div class="size-row">
+        <span class="with-label"><span class="cb selected"></span>Default · 20</span>
+        <span class="with-label"><span class="cb cb--dense selected"></span>Dense · 16</span>
+        <span class="with-label"><span class="cb cb--dense indeterminate"></span>Dense mixed · 16</span>
+        <span class="with-label"><span class="cb cb--dense"></span>Dense empty · 16</span>
+      </div>
     </div>
   </div>
 </body>

@@ -442,10 +442,10 @@ window.JELLYROLL_DATA = {
           name: "Toggle",
           tagline: "On/off switch for a setting that takes effect immediately.",
           meta: {
-            anatomy: "32×16 pill track · 12px circular thumb · label to the left or right. Track grey when off, Blue-600 when on; thumb white in both states.",
-            options: "Sizes: default 32×16, small 28×14. With or without inline status text (`On` / `Off`).",
+            anatomy: "Pill track with flat white thumb. Sizes: small 26×14 track / 10px thumb, default 32×18 / 14px thumb, large 40×22 / 18px thumb. Track is Grey-600 when off and Blue-600 when on.",
+            options: "Sizes: small, default, large. Label may sit left or right. Optional inline status text (`Off` / `On`) may flank the switch outside the track.",
             usage: "Use for settings that take effect immediately — feature toggles, autosave, notifications. For form fields that submit later, use a Checkbox.",
-            behaviors: "Click anywhere on the track or label toggles. Space toggles when focused. Animation is a 150ms slide of the thumb with a colour swap of the track — no bounce or overshoot."
+            behaviors: "Use role=\"switch\" with aria-checked. Click anywhere on the track or label toggles; Space toggles, and Enter may toggle when implemented as a button. Focus uses the global Teal halo. Hover shifts off to Grey-700 and on to Blue-700; no gradient, loading, or special pressed state. Animation is a 150ms slide of the thumb with a color swap of the track — no bounce or overshoot."
           }
         },
         {
