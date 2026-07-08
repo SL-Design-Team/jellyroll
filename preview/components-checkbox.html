@@ -26,9 +26,11 @@
   }
   .cb.indeterminate { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
   .cb.indeterminate::after { content: ''; width: 10px; height: 2px; background: white; border-radius: 1px; }
+  .cb.error { border-color: var(--sl-red-600); }
   .cb.disabled { background: var(--sl-grey-100); border-color: var(--sl-grey-300); }
   .cb.disabled.selected { background: var(--sl-blue-200); border-color: var(--sl-blue-200); }
   .cb.disabled.selected::after { border-color: var(--sl-blue-400); }
+  .opt.error { color: var(--sl-red-700); font-weight: 800; }
 </style>
 <script type="application/json" id="jellyroll-meta">
 {
@@ -36,10 +38,10 @@
   "section": "Building blocks",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-checkbox.html",
   "tagline": "Binary selection with optional indeterminate state.",
-  "anatomy": "16px square · 1.5px Grey-400 border · 2px radius · label to the right (14/22). Checked: Blue-600 fill with white Lucide check. Indeterminate: Blue-600 fill with white horizontal dash.",
-  "options": "States: unchecked, checked, indeterminate, disabled, error. Sizes: default 16px, small 14px.",
+  "anatomy": "20px square · 1.5px Grey-600 border · 3px radius · label to the right (14/22). Checked: Blue-600 fill with white check. Indeterminate: Blue-600 fill with white horizontal dash. Error: white fill with Red-600 border.",
+  "options": "States: unchecked, checked, indeterminate, disabled, error. Sizes: default 20px; dense 16px for table, tree, and popover contexts.",
   "usage": "Use for boolean selections in forms and for selecting rows in a table or list. For a single optional yes/no, prefer a Toggle. Indeterminate is reserved for the parent of a partially-selected group.",
-  "behaviors": "Click anywhere on the box or label toggles. Space toggles when focused. Disabled drops opacity to 0.5 and removes the pointer. Focus ring matches the global 3px Teal-600 halo."
+  "behaviors": "Click anywhere on the box or label toggles. Space toggles when focused. Disabled uses explicit muted fill, border, and label colors instead of opacity. Focus uses the global 3px Teal-600 halo."
 }
 </script>
 </head>
@@ -60,6 +62,9 @@
       <span class="tag">Indeterminate</span>
       <span class="opt"><span class="cb indeterminate"></span>Label</span>
       <span class="opt disabled"><span class="cb disabled indeterminate" style="background: var(--sl-blue-200); border-color: var(--sl-blue-200);"></span>Label</span>
+      <span class="tag">Error</span>
+      <span class="opt error"><span class="cb error" aria-invalid="true"></span>Required</span>
+      <span></span>
       <span class="tag">Tab focus</span>
       <span class="opt"><span class="cb focus"></span>Label</span>
       <span></span>

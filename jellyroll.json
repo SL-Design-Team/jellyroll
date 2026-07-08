@@ -831,7 +831,7 @@
           "url": "https://sl-design-team.github.io/jellyroll/preview/components-card.html",
           "tagline": "White surface with a 1px Grey-300 border. Borders — not shadow — indicate selection.",
           "anatomy": "White fill · 1px Grey-300 border · 4px radius · 16px internal padding · `--shadow-raised` shadow. Optional header, body, and footer sections.",
-          "options": "Interactive vs static. With or without header / footer slots. With or without media at the top.",
+          "options": "Interactive vs static. With or without header / footer slots.",
           "usage": "Use to group a single object's attributes (a pipeline, a snap, a connection). For a list of objects, use a Table. Cards do not stretch to fill their parent — they sit at intrinsic width or in a grid.",
           "behaviors": "Hover bumps the border to 1.5px Blue-600 and may raise the shadow one step. Selected goes to 3px Blue-600 — same color shift, thicker border. The shadow never increases on selection (that's reserved for hover).",
           "tokens": [
@@ -882,10 +882,10 @@
           "file": "preview/components-checkbox.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/components-checkbox.html",
           "tagline": "Binary selection with optional indeterminate state.",
-          "anatomy": "16px square · 1.5px Grey-400 border · 2px radius · label to the right (14/22). Checked: Blue-600 fill with white Lucide check. Indeterminate: Blue-600 fill with white horizontal dash.",
-          "options": "States: unchecked, checked, indeterminate, disabled, error. Sizes: default 16px, small 14px.",
+          "anatomy": "20px square · 1.5px Grey-600 border · 3px radius · label to the right (14/22). Checked: Blue-600 fill with white check. Indeterminate: Blue-600 fill with white horizontal dash. Error: white fill with Red-600 border.",
+          "options": "States: unchecked, checked, indeterminate, disabled, error. Sizes: default 20px; dense 16px for table, tree, and popover contexts.",
           "usage": "Use for boolean selections in forms and for selecting rows in a table or list. For a single optional yes/no, prefer a Toggle. Indeterminate is reserved for the parent of a partially-selected group.",
-          "behaviors": "Click anywhere on the box or label toggles. Space toggles when focused. Disabled drops opacity to 0.5 and removes the pointer. Focus ring matches the global 3px Teal-600 halo."
+          "behaviors": "Click anywhere on the box or label toggles. Space toggles when focused. Disabled uses explicit muted fill, border, and label colors instead of opacity. Focus uses the global 3px Teal-600 halo."
         },
         {
           "name": "Chip",
@@ -1030,10 +1030,10 @@
           "file": "preview/components-radio.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/components-radio.html",
           "tagline": "Single-choice from a small visible set.",
-          "anatomy": "16px circle · 1.5px Grey-400 border · label to the right (14/22). Checked: Blue-600 fill with a 6px white center dot.",
-          "options": "States: unselected, selected, disabled, error. Layout: vertical (default) or horizontal.",
+          "anatomy": "20px circle · 1.5px Grey-600 border · label to the right (14/22). Checked: white fill with a Blue-600 ring and 10px Blue-600 center dot. Error: white fill with Red-600 border.",
+          "options": "States: unselected, hover, focus, selected, disabled, error. Sizes: default 20px; dense 16px for table, tree, and popover contexts. Layout: vertical (8px gap, default) or horizontal (24px column gap, 8px row gap).",
           "usage": "Use for picking one of 2–5 options where all options should be visible at once. Above 5 options, prefer a Select. Below 2 options, this is a toggle, not a radio group.",
-          "behaviors": "Click anywhere on the circle or label selects. Arrow keys move between options within the group; Tab jumps past the group. Selection cannot be cleared by clicking again — the only way out is to choose another value."
+          "behaviors": "Use fieldset + legend for semantic groups. Click anywhere on the circle or label selects. Arrow keys move between options within the group; Tab jumps past the group. Focus uses the global Teal halo and does not replace state borders. Selected + hover has no extra visual change. Disabled uses explicit muted fill, border, dot, and label colors instead of opacity."
         },
         {
           "name": "Search field",

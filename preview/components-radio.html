@@ -18,14 +18,36 @@
     flex-shrink: 0;
   }
   .radio.hover { border-color: var(--sl-blue-600); }
-  .radio.focus { border-color: var(--sl-teal-600); box-shadow: 0 0 0 3px rgba(9,129,127,0.25); }
+  .radio.focus { box-shadow: var(--shadow-focus-ring); }
   .radio.selected { border-color: var(--sl-blue-600); }
   .radio.selected::after {
     content: ''; width: 10px; height: 10px; border-radius: 999px;
     background: var(--sl-blue-600);
   }
+  .radio.error { border-color: var(--sl-red-600); }
   .radio.disabled { border-color: var(--sl-grey-300); background: var(--sl-grey-100); }
   .radio.disabled.selected::after { background: var(--sl-grey-400); }
+  .opt.error { color: var(--sl-red-700); font-weight: 800; }
+
+  .divider { height: 1px; background: var(--sl-grey-200); margin: 18px 0; }
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .group-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .radio-fieldset {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin: 0;
+  }
+  .radio-fieldset legend {
+    padding: 0 4px;
+    font: 800 14px/22px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .radio-help { margin: 0 0 10px; font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .radio-group { display: flex; }
+  .radio-group--vertical { flex-direction: column; gap: 8px; }
+  .radio-group--horizontal { flex-flow: row wrap; column-gap: 24px; row-gap: 8px; }
 </style>
 <script type="application/json" id="jellyroll-meta">
 {
@@ -33,10 +55,10 @@
   "section": "Building blocks",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-radio.html",
   "tagline": "Single-choice from a small visible set.",
-  "anatomy": "16px circle · 1.5px Grey-400 border · label to the right (14/22). Checked: Blue-600 fill with a 6px white center dot.",
-  "options": "States: unselected, selected, disabled, error. Layout: vertical (default) or horizontal.",
+  "anatomy": "20px circle · 1.5px Grey-600 border · label to the right (14/22). Checked: white fill with a Blue-600 ring and 10px Blue-600 center dot. Error: white fill with Red-600 border.",
+  "options": "States: unselected, hover, focus, selected, disabled, error. Sizes: default 20px; dense 16px for table, tree, and popover contexts. Layout: vertical (8px gap, default) or horizontal (24px column gap, 8px row gap).",
   "usage": "Use for picking one of 2–5 options where all options should be visible at once. Above 5 options, prefer a Select. Below 2 options, this is a toggle, not a radio group.",
-  "behaviors": "Click anywhere on the circle or label selects. Arrow keys move between options within the group; Tab jumps past the group. Selection cannot be cleared by clicking again — the only way out is to choose another value."
+  "behaviors": "Use fieldset + legend for semantic groups. Click anywhere on the circle or label selects. Arrow keys move between options within the group; Tab jumps past the group. Focus uses the global Teal halo and does not replace state borders. Selected + hover has no extra visual change. Disabled uses explicit muted fill, border, dot, and label colors instead of opacity."
 }
 </script>
 </head>
@@ -54,9 +76,45 @@
       <span class="tag">Selected</span>
       <span class="opt"><span class="radio selected"></span>Label</span>
       <span class="opt disabled"><span class="radio disabled selected"></span>Label</span>
+      <span class="tag">Selected hover</span>
+      <span class="opt"><span class="radio selected hover"></span>Label</span>
+      <span></span>
+      <span class="tag">Error</span>
+      <span class="opt error"><span class="radio error" aria-invalid="true"></span>Required</span>
+      <span></span>
       <span class="tag">Tab focus</span>
       <span class="opt"><span class="radio focus"></span>Label</span>
       <span></span>
+      <span class="tag">Selected focus</span>
+      <span class="opt"><span class="radio selected focus"></span>Label</span>
+      <span></span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Group layout <span class="meta">fieldset + legend · vertical default · horizontal wraps</span></div>
+      <div class="group-grid">
+        <fieldset class="radio-fieldset">
+          <legend>Schedule</legend>
+          <p class="radio-help">Choose one run cadence.</p>
+          <div class="radio-group radio-group--vertical" role="radiogroup" aria-label="Schedule">
+            <span class="opt"><span class="radio selected"></span>Hourly</span>
+            <span class="opt"><span class="radio"></span>Daily</span>
+            <span class="opt"><span class="radio"></span>Weekly</span>
+          </div>
+        </fieldset>
+
+        <fieldset class="radio-fieldset">
+          <legend>Density</legend>
+          <p class="radio-help">Horizontal groups use 24px column gaps.</p>
+          <div class="radio-group radio-group--horizontal" role="radiogroup" aria-label="Density">
+            <span class="opt"><span class="radio"></span>Comfortable</span>
+            <span class="opt"><span class="radio selected"></span>Compact</span>
+            <span class="opt"><span class="radio"></span>Dense</span>
+          </div>
+        </fieldset>
+      </div>
     </div>
   </div>
 </body>
