@@ -2,6 +2,18 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
+## 2026-07-08 · Selection controls spec cleanup
+
+### Components
+- **Radio and Checkbox** now share the same selection-control rules: 20px default controls, 16px dense controls for tables / trees / popovers, Grey-600 unselected borders, explicit disabled colors instead of opacity, and global Teal focus halos that layer on top of state.
+- **Radio** now documents and draws error, selected-hover, selected-focus, and vertical / horizontal radio group layouts with semantic `fieldset` + `legend` treatment.
+- **Checkbox** now draws error and focus variants, documents the 20px / 16px size tiers, and confirms there is no 14px tier.
+- **Toggle** now matches its drawn geometry and product usage: small / default / large sizes, global focus halo, optional left/right labels and Off / On status text, solid Grey-700 / Blue-700 hover treatments, and `role="switch"` guidance.
+- **Slider** now documents the supported base component: single-thumb only, disabled state, 28px visual height with a 44px hit area, subtle 150ms thumb-shadow transition, and optional label / unit / paired number input. Tick marks, value bubbles, and range sliders are no longer promised.
+
+### Docs
+- **Card** metadata no longer advertises an undocumented top media slot; the base Card remains header / body / footer slots only.
+
 ## 2026-06-11 · Time range selector + calendar consistency
 
 ### New components
