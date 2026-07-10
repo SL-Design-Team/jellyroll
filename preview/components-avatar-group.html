@@ -23,6 +23,8 @@
     background: var(--sl-grey-200);
     flex: none;
     user-select: none;
+    border: 0;
+    padding: 0;
   }
   .sl-avatar--xs  { width: 16px; height: 16px; font-size: 10px; }
   .sl-avatar--sm  { width: 24px; height: 24px; font-size: 14px; }
@@ -36,41 +38,112 @@
   .sl-avatar--c7 { background: var(--sl-pink-100);   color: var(--sl-pink-700);   }
   .sl-avatar--c8 { background: var(--sl-red-100);    color: var(--sl-red-700);    }
 
+  /* Active is the default. On light surfaces, inactive avatars become
+     neutral instead of fading the already-soft identity tint. */
+  .sl-avatar--inactive {
+    background: var(--sl-grey-200);
+    color: var(--sl-grey-700);
+  }
+
   /* ─── AVATAR GROUP ─────────────────────────────────────────
      Overlapping stack with a surface-colored ring separating
-     each avatar. Left-most renders on top. Overflow chip "+N"
-     uses Grey-300 for a clear neutral end-cap.
+     each avatar. DOM and visual order both run left-to-right.
+     The overflow button "+N" is the right-most end-cap.
   */
   .sl-avatar-group {
     display: inline-flex;
-    flex-direction: row-reverse;     /* invert order so left-most is on top */
-    justify-content: flex-end;
-    isolation: isolate;              /* contain z-stacking */
+    isolation: isolate;
   }
-  .sl-avatar-group > .sl-avatar {
+  .sl-avatar-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .sl-avatar-group > .sl-avatar-item { margin-left: -8px; }
+  .sl-avatar-group > .sl-avatar-item:first-child { margin-left: 0; }
+  .sl-avatar-group > .sl-avatar-item > .sl-avatar {
     border: 2px solid var(--sl-white);   /* ring — uses the surface color */
     box-sizing: content-box;
-    margin-right: -8px;              /* overlap; matched to size below */
   }
-  .sl-avatar-group > .sl-avatar:first-child { margin-right: 0; }  /* visually right-most */
 
   /* Overlap scales with size */
-  .sl-avatar-group--xs > .sl-avatar { margin-right: -4px; border-width: 1.5px; }
-  .sl-avatar-group--sm > .sl-avatar { margin-right: -6px; }
-  .sl-avatar-group--md > .sl-avatar { margin-right: -8px; }
+  .sl-avatar-group--xs > .sl-avatar-item { margin-left: -4px; }
+  .sl-avatar-group--xs > .sl-avatar-item > .sl-avatar { border-width: 1.5px; }
+  .sl-avatar-group--sm > .sl-avatar-item { margin-left: -6px; }
+  .sl-avatar-group--md > .sl-avatar-item { margin-left: -8px; }
 
-  /* Overflow chip — "+N" */
+  /* Tooltip — shared behavior with the Tooltip primitive. */
+  .sl-tooltip {
+    position: absolute;
+    z-index: 100;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    max-width: 240px;
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-indigo-900);
+    color: var(--sl-white);
+    box-shadow: 0 2px 8px rgba(3,26,72,0.18);
+    font: 500 12px/16px var(--font-sans);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 120ms ease-out 300ms, transform 120ms ease-out 300ms;
+  }
+  .sl-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--sl-indigo-900);
+    border-bottom: none;
+  }
+  .sl-avatar-item:not(:hover):not(:focus-within) .sl-tooltip {
+    transition: opacity 80ms ease-in 0ms, transform 80ms ease-in 0ms;
+  }
+  .sl-avatar-item:hover,
+  .sl-avatar-item:focus-within { z-index: 1; }
+  .sl-avatar-item:hover .sl-tooltip,
+  .sl-avatar-item:focus-within .sl-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Overflow button — "+N" */
   .sl-avatar--overflow {
     background: var(--sl-grey-200);
     color: var(--sl-grey-900);
+    cursor: pointer;
+    transition: background-color 120ms ease-out;
   }
-
-  /* Surface variants — when the group sits on a non-white background,
-     the ring color needs to match the surface so it reads as a "cutout".
-     The light-tint avatars themselves read well on both light and dark surfaces,
-     so we only override the ring color, not the avatar fills. */
-  .on-sunken .sl-avatar-group > .sl-avatar { border-color: var(--sl-grey-100); }
-  .on-navbar .sl-avatar-group > .sl-avatar { border-color: var(--sl-blue-1000); }
+  .sl-avatar--overflow:hover { background: var(--sl-grey-300); }
+  /* Surface variants — rings match the surface beneath. The dark global
+     header uses saturated identity colors with white initials; light table
+     and canvas contexts keep the softer tint palette above. */
+  .on-sunken .sl-avatar-group > .sl-avatar-item > .sl-avatar { border-color: var(--sl-grey-100); }
+  .on-navbar .sl-avatar-group > .sl-avatar-item > .sl-avatar { border-color: var(--sl-blue-1000); }
+  .on-navbar .sl-avatar--c1 { background: var(--sl-blue-600);   color: var(--sl-white); }
+  .on-navbar .sl-avatar--c2 { background: var(--sl-teal-600);   color: var(--sl-white); }
+  .on-navbar .sl-avatar--c3 { background: var(--sl-indigo-600); color: var(--sl-white); }
+  .on-navbar .sl-avatar--c4 { background: var(--sl-orange-700); color: var(--sl-white); }
+  .on-navbar .sl-avatar--c5 { background: var(--sl-purple-600); color: var(--sl-white); }
+  .on-navbar .sl-avatar--c6 { background: var(--sl-green-600);  color: var(--sl-white); }
+  .on-navbar .sl-avatar--c7 { background: var(--sl-pink-700);   color: var(--sl-white); }
+  .on-navbar .sl-avatar--c8 { background: var(--sl-red-600);    color: var(--sl-white); }
+  .on-navbar .sl-avatar--inactive {
+    opacity: 0.55;
+    filter: saturate(0.5);
+  }
+  .sl-avatar-group > .sl-avatar-item > .sl-avatar--overflow:focus-visible {
+    outline: none;
+    border-color: var(--sl-teal-600);
+    box-shadow: var(--ring-focus);
+  }
 
   /* ─── Layout helpers ──────────────────────────────────────── */
   .row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
@@ -102,9 +175,10 @@
   "section": "Composed components",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-avatar-group.html",
   "tagline": "Stack of overlapping avatars with overflow count.",
-  "anatomy": "Avatars overlap by 8px (default size); the last avatar in the visible set sits leftmost in z-order. Overflow shown as `+N` in a grey avatar.",
-  "options": "Visible count 2–6; overflow shown as `+N` or expanded into a tooltip on hover. Sizes follow Avatar.",
-  "usage": "Use to surface a small set of collaborators or assignees — pipeline owners, mentioned users. Above 6 visible avatars, the row stops being scannable; show only 3–4 and use `+N`."
+  "anatomy": "Avatars overlap by 8px at the default size in left-to-right DOM and visual order. Overflow is a grey `+N` button at the right edge. Active is the default presence state; inactive avatars are neutral on light surfaces and dimmed on the dark global header.",
+  "options": "Visible count 2–6; active or inactive presence; soft identity tints on light surfaces and saturated fills in the dark global header. Each visible avatar shows the user's full name in a tooltip, including the inactive state when applicable. The `+N` button shows `Show N more members` on hover or focus. Sizes follow Avatar.",
+  "usage": "Use to surface a small set of collaborators or assignees — pipeline owners, mentioned users. Above 6 visible avatars, the row stops being scannable; show only 3–4 and use `+N`.",
+  "behaviors": "Hovering a visible avatar raises it above its neighbors and shows the user's full name after 300ms without changing its color or outline. Inactive avatars include their state in the tooltip and accessible name so presence is not conveyed by color alone. The `+N` button shifts from Grey-200 to Grey-300 on hover and opens the complete member list on click; keyboard focus shows the same tooltip with the standard teal focus ring."
 }
 </script>
 </head>
@@ -112,7 +186,7 @@
   <div class="card">
     <div class="row-label">
       <span class="name">Avatar group</span>
-      <span class="meta">overlapping stack · +N overflow · 4 sizes</span>
+      <span class="meta">overlapping stack · +N overflow · 3 sizes</span>
     </div>
 
     <!-- ─── SIZES ────────────────────────────────────────────── -->
@@ -122,28 +196,28 @@
       <div class="row">
         <span class="lbl">xs<small>16px</small></span>
         <div class="sl-avatar-group sl-avatar-group--xs">
-          <span class="sl-avatar sl-avatar--xs sl-avatar--c1" aria-label="Anita Brown">A</span>
-          <span class="sl-avatar sl-avatar--xs sl-avatar--c3" aria-label="Bilal Khan">B</span>
-          <span class="sl-avatar sl-avatar--xs sl-avatar--c5" aria-label="Chen Wei">C</span>
-          <span class="sl-avatar sl-avatar--xs sl-avatar--c7" aria-label="Diego Ramos">D</span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--xs sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--xs sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--xs sl-avatar--c5" aria-label="Chen Wei">C</span><span class="sl-tooltip" role="tooltip">Chen Wei</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--xs sl-avatar--c7" aria-label="Diego Ramos">D</span><span class="sl-tooltip" role="tooltip">Diego Ramos</span></span>
         </div>
       </div>
       <div class="row">
         <span class="lbl">sm<small>24px</small></span>
         <div class="sl-avatar-group sl-avatar-group--sm">
-          <span class="sl-avatar sl-avatar--sm sl-avatar--c1" aria-label="Anita Brown">A</span>
-          <span class="sl-avatar sl-avatar--sm sl-avatar--c3" aria-label="Bilal Khan">B</span>
-          <span class="sl-avatar sl-avatar--sm sl-avatar--c5" aria-label="Chen Wei">C</span>
-          <span class="sl-avatar sl-avatar--sm sl-avatar--c7" aria-label="Diego Ramos">D</span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--sm sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--sm sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--sm sl-avatar--c5" aria-label="Chen Wei">C</span><span class="sl-tooltip" role="tooltip">Chen Wei</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--sm sl-avatar--c7" aria-label="Diego Ramos">D</span><span class="sl-tooltip" role="tooltip">Diego Ramos</span></span>
         </div>
       </div>
       <div class="row">
         <span class="lbl">md<small>32px · default</small></span>
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c7" aria-label="Diego Ramos">D</span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span><span class="sl-tooltip" role="tooltip">Chen Wei</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c7" aria-label="Diego Ramos">D</span><span class="sl-tooltip" role="tooltip">Diego Ramos</span></span>
         </div>
       </div>
     </div>
@@ -152,36 +226,36 @@
 
     <!-- ─── OVERFLOW ─────────────────────────────────────────── -->
     <div>
-      <div class="section-h">Overflow <span class="meta">show ~5 then +N · opens member list on click</span></div>
+      <div class="section-h">Overflow <span class="meta">show ~5 then +N on the right · opens member list on click</span></div>
 
       <div class="row">
         <span class="lbl">5 visible</span>
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c4" aria-label="Diego Ramos">D</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c6" aria-label="Elif Yilmaz">E</span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span><span class="sl-tooltip" role="tooltip">Chen Wei</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c4" aria-label="Diego Ramos">D</span><span class="sl-tooltip" role="tooltip">Diego Ramos</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c6" aria-label="Elif Yilmaz">E</span><span class="sl-tooltip" role="tooltip">Elif Yilmaz</span></span>
         </div>
       </div>
       <div class="row">
         <span class="lbl">+ overflow</span>
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c4" aria-label="Diego Ramos">D</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c6" aria-label="Elif Yilmaz">E</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--overflow" role="button" tabindex="0" aria-label="Show 12 more members">+12</span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span><span class="sl-tooltip" role="tooltip">Chen Wei</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c4" aria-label="Diego Ramos">D</span><span class="sl-tooltip" role="tooltip">Diego Ramos</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c6" aria-label="Elif Yilmaz">E</span><span class="sl-tooltip" role="tooltip">Elif Yilmaz</span></span>
+          <span class="sl-avatar-item"><button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 12 more members">+12</button><span class="sl-tooltip" role="tooltip">Show 12 more members</span></span>
         </div>
       </div>
       <div class="row">
         <span class="lbl">Large overflow</span>
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar sl-avatar--md sl-avatar--c2" aria-label="Farah Patel">F</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c8" aria-label="Greg Olsen">G</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Hana Suzuki">H</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--overflow" role="button" tabindex="0" aria-label="Show 99 more members">99+</span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c2" aria-label="Farah Patel">F</span><span class="sl-tooltip" role="tooltip">Farah Patel</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c8" aria-label="Greg Olsen">G</span><span class="sl-tooltip" role="tooltip">Greg Olsen</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Hana Suzuki">H</span><span class="sl-tooltip" role="tooltip">Hana Suzuki</span></span>
+          <span class="sl-avatar-item"><button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 99 more members">99+</button><span class="sl-tooltip" role="tooltip">Show 99 more members</span></span>
         </div>
       </div>
     </div>
@@ -190,35 +264,35 @@
 
     <!-- ─── SURFACE VARIANTS ─────────────────────────────────── -->
     <div>
-      <div class="section-h">Surface variants <span class="meta">ring color matches the surface beneath</span></div>
+      <div class="section-h">Presence &amp; surface variants <span class="meta">active is full tone · inactive is neutral or dimmed</span></div>
 
       <div class="row" style="padding: 14px; background: var(--sl-white); border: 1px solid var(--sl-grey-200); border-radius: var(--radius-sm);">
         <span class="lbl">on canvas<small>white</small></span>
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--overflow">+8</span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5 sl-avatar--inactive" aria-label="Chen Wei, inactive">C</span><span class="sl-tooltip" role="tooltip">Chen Wei · Inactive</span></span>
+          <span class="sl-avatar-item"><button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 8 more members">+8</button><span class="sl-tooltip" role="tooltip">Show 8 more members</span></span>
         </div>
       </div>
 
       <div class="row on-sunken" style="padding: 14px; background: var(--sl-grey-100); border-radius: var(--radius-sm);">
         <span class="lbl">on sunken<small>grey-100</small></span>
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--overflow" style="background: var(--sl-grey-300); color: var(--sl-grey-1000);">+8</span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5 sl-avatar--inactive" aria-label="Chen Wei, inactive">C</span><span class="sl-tooltip" role="tooltip">Chen Wei · Inactive</span></span>
+          <span class="sl-avatar-item"><button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 8 more members">+8</button><span class="sl-tooltip" role="tooltip">Show 8 more members</span></span>
         </div>
       </div>
 
-      <div class="row on-navbar" style="padding: 14px; background: var(--sl-blue-900); border-radius: var(--radius-sm);">
-        <span class="lbl" style="color: rgba(255,255,255,0.55);">on navbar<small style="opacity: 0.5;">blue-900</small></span>
+      <div class="row on-navbar" style="padding: 14px; background: var(--sl-blue-1000); border-radius: var(--radius-sm);">
+        <span class="lbl" style="color: rgba(255,255,255,0.55);">on navbar<small style="opacity: 0.5;">blue-1000</small></span>
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span>
-          <span class="sl-avatar sl-avatar--md sl-avatar--overflow">+8</span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5 sl-avatar--inactive" aria-label="Chen Wei, inactive">C</span><span class="sl-tooltip" role="tooltip">Chen Wei · Inactive</span></span>
+          <span class="sl-avatar-item"><button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 8 more members">+8</button><span class="sl-tooltip" role="tooltip">Show 8 more members</span></span>
         </div>
       </div>
     </div>
@@ -226,15 +300,21 @@
     <!-- ─── SPEC ─────────────────────────────────────────────── -->
     <dl class="spec">
       <dt>structure</dt>
-      <dd>Inline-flex container of Avatar primitives. Order in DOM = visual right-to-left; left-most renders on top via <code>flex-direction: row-reverse</code>.</dd>
+      <dd>Inline-flex container of tooltip-wrapped Avatar primitives. DOM and visual order both run left-to-right; place the overflow button last so it forms the right end-cap.</dd>
       <dt>ring</dt>
-      <dd>2px solid in the surface color (white on canvas, Grey-100 on sunken, Blue-900 on navbar). Acts as a "cutout" so adjacent avatars read as distinct shapes.</dd>
+      <dd>2px solid in the surface color (white on canvas, Grey-100 on sunken, Blue-1000 on navbar). Acts as a "cutout" so adjacent avatars read as distinct shapes.</dd>
       <dt>overlap</dt>
       <dd><code>-4 / -6 / -8px</code> for xs / sm / md.</dd>
+      <dt>hover</dt>
+      <dd>After 300ms, show the visible user's full name in a Tooltip above the avatar. Raise only the hovered item above its neighbors; do not change its fill, outline, scale, or shadow.</dd>
+      <dt>presence</dt>
+      <dd>Active is the default. Add <code>sl-avatar--inactive</code> to neutralize the avatar on light surfaces or dim and desaturate its identity color in the global header. Include <b>Inactive</b> in its tooltip and accessible name.</dd>
+      <dt>color</dt>
+      <dd>Use soft 100-step fills with 700/800 text in tables and other light contexts. On the dark global header, use saturated 600/700-step fills with white initials.</dd>
       <dt>overflow</dt>
-      <dd>Show ~5 avatars then a <b>"+N"</b> chip — same shape, Grey-200 background, indigo text. Use <code>role="button"</code> + <code>aria-label</code> so screen readers announce it as expandable. Clicking opens a dropdown listing all members.</dd>
+      <dd>Show ~5 avatars then a native <b>"+N"</b> button — same shape, Grey-200 background, indigo text. Hover shifts the fill to Grey-300 and shows <b>"Show N more members"</b>; focus uses the standard teal ring. Clicking opens a dropdown listing all members.</dd>
       <dt>a11y</dt>
-      <dd>Each child Avatar carries <code>aria-label="Full name"</code>. The group itself doesn't need a label — children carry context.</dd>
+      <dd>Each visible Avatar carries <code>aria-label="Full name"</code>, including <code>, inactive</code> when applicable. The overflow control is a native button with <code>aria-label="Show N more members"</code>, so Enter and Space activate it without custom keyboard handling.</dd>
     </dl>
   </div>
 </body>
