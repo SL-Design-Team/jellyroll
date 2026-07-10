@@ -178,7 +178,7 @@
   "anatomy": "Avatars overlap by 8px at the default size in left-to-right DOM and visual order. Overflow is a grey `+N` button at the right edge. Active is the default presence state; inactive avatars are neutral on light surfaces and dimmed on the dark global header.",
   "options": "Visible count 2–6; active or inactive presence; soft identity tints on light surfaces and saturated fills in the dark global header. Each visible avatar shows the user's full name in a tooltip, including the inactive state when applicable. The `+N` button shows `Show N more members` on hover or focus. Sizes follow Avatar.",
   "usage": "Use to surface a small set of collaborators or assignees — pipeline owners, mentioned users. Above 6 visible avatars, the row stops being scannable; show only 3–4 and use `+N`.",
-  "behaviors": "Hovering a visible avatar raises it above its neighbors and shows the user's full name after 300ms without changing its color or outline. Inactive avatars include their state in the tooltip and accessible name so presence is not conveyed by color alone. The `+N` button shifts from Grey-200 to Grey-300 on hover and opens the complete member list on click; keyboard focus shows the same tooltip with the standard teal focus ring."
+  "behaviors": "Hovering a visible avatar raises it above its neighbors and shows the user's full name after 300ms without changing its color or outline. Inactive avatars include their state in the tooltip and accessible name so presence is not conveyed by color alone. The `+N` button shifts from Grey-200 to Grey-300 on hover and opens a member-list Popover with names and presence statuses on click; keyboard focus shows the same tooltip with the standard teal focus ring. Wire the trigger with `aria-haspopup=\"dialog\"`, `aria-expanded`, and `aria-controls`."
 }
 </script>
 </head>
@@ -226,7 +226,7 @@
 
     <!-- ─── OVERFLOW ─────────────────────────────────────────── -->
     <div>
-      <div class="section-h">Overflow <span class="meta">show ~5 then +N on the right · opens member list on click</span></div>
+      <div class="section-h">Overflow <span class="meta">show ~5 then +N on the right · opens member-list popover on click</span></div>
 
       <div class="row">
         <span class="lbl">5 visible</span>
@@ -312,9 +312,9 @@
       <dt>color</dt>
       <dd>Use soft 100-step fills with 700/800 text in tables and other light contexts. On the dark global header, use saturated 600/700-step fills with white initials.</dd>
       <dt>overflow</dt>
-      <dd>Show ~5 avatars then a native <b>"+N"</b> button — same shape, Grey-200 background, indigo text. Hover shifts the fill to Grey-300 and shows <b>"Show N more members"</b>; focus uses the standard teal ring. Clicking opens a dropdown listing all members.</dd>
+      <dd>Show ~5 avatars then a native <b>"+N"</b> button — same shape, Grey-200 background, indigo text. Hover shifts the fill to Grey-300 and shows <b>"Show N more members"</b>; focus uses the standard teal ring. Clicking opens a member-list Popover with each person's name and presence status.</dd>
       <dt>a11y</dt>
-      <dd>Each visible Avatar carries <code>aria-label="Full name"</code>, including <code>, inactive</code> when applicable. The overflow control is a native button with <code>aria-label="Show N more members"</code>, so Enter and Space activate it without custom keyboard handling.</dd>
+      <dd>Each visible Avatar carries <code>aria-label="Full name"</code>, including <code>, inactive</code> when applicable. The overflow control is a native button with <code>aria-label="Show N more members"</code>. When wired to the Popover, also set <code>aria-haspopup="dialog"</code>, <code>aria-expanded</code>, and <code>aria-controls</code>; Enter and Space activate it without custom keyboard handling.</dd>
     </dl>
   </div>
 </body>
