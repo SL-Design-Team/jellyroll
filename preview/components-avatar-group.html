@@ -394,17 +394,25 @@
   </div>
   <script>
   (function () {
+    // Scope to the containing root — the gallery renders previews inside a
+    // shadow root, so `document` won't find these nodes. Falls back to
+    // `document` when the file is opened standalone.
+    const ROOT = (document.currentScript && document.currentScript.getRootNode())
+              || (document.querySelector('#previewRender, .preview-render') || {}).shadowRoot
+              || document;
+
     // Make each visible avatar keyboard-focusable so sighted keyboard users
     // get the name tooltip (revealed via :focus-within). Names stay available
     // to screen readers through the existing aria-label.
-    document.querySelectorAll('.sl-avatar-item > .sl-avatar:not(.sl-avatar--overflow)').forEach(function (a) {
+    ROOT.querySelectorAll('.sl-avatar-item > .sl-avatar:not(.sl-avatar--overflow)').forEach(function (a) {
       a.setAttribute('tabindex', '0');
       a.setAttribute('role', 'img');
     });
 
     // Wire "+N" buttons that control a member-list popover.
-    document.querySelectorAll('.sl-avatar--overflow[aria-controls]').forEach(function (btn) {
-      var pop = document.getElementById(btn.getAttribute('aria-controls'));
+    ROOT.querySelectorAll('.sl-avatar--overflow[aria-controls]').forEach(function (btn) {
+      var id = btn.getAttribute('aria-controls');
+      var pop = ROOT.getElementById ? ROOT.getElementById(id) : ROOT.querySelector('#' + id);
       if (!pop) return;
       function close() { pop.hidden = true;  btn.setAttribute('aria-expanded', 'false'); }
       function open()  { pop.hidden = false; btn.setAttribute('aria-expanded', 'true');  }
@@ -412,10 +420,11 @@
         e.stopPropagation();
         pop.hidden ? open() : close();
       });
-      document.addEventListener('click', function (e) {
+      // Listen on ROOT so e.target isn't retargeted to the shadow host.
+      ROOT.addEventListener('click', function (e) {
         if (!pop.hidden && !pop.contains(e.target) && e.target !== btn) close();
       });
-      document.addEventListener('keydown', function (e) {
+      ROOT.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && !pop.hidden) { close(); btn.focus(); }
       });
     });
