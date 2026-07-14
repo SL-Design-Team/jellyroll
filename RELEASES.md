@@ -2,6 +2,18 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
+## 2026-07-14 · Tooltip fixes + Avatar group popover & keyboard access
+
+### Components
+- **Avatar group** now specs and demos the **overflow member-list popover**: click `+N` to open a white card (1px Grey-300 border, `radius-sm`, raised shadow, min-width 240px, no header) whose rows pair an xs avatar with the member's full name and a muted right-aligned presence label (**Inactive** where applicable), scrolling after ~5 rows. Wired with `aria-haspopup="dialog"` / `aria-expanded` / `aria-controls`; Escape closes and returns focus to the button.
+- **Avatar group** individual avatars are now **keyboard-focusable** (`tabindex="0"`, `role="img"`) — focus shows the same name tooltip and teal focus ring as `+N`, so keyboard users can reach every name (previously only screen readers got them via `aria-label`).
+
+### Fixes
+- **Tooltip max-width corrected to 240px.** The CSS shipped `280px` while every doc, comment, and the "vs alt text" table said 240px; the CSS was the typo.
+- **Tooltip width no longer collapses to the trigger.** Removed a dead `white-space: nowrap` (immediately overridden) and added `width: max-content`, so the bubble sizes to its content and wraps only past 240px instead of rendering one word per line.
+- **Tooltip arrow documentation aligned.** The header comment's "6×4px triangle" now reads "5px triangle (renders 10×5px)," matching the CSS and metadata. The "vs alt text" table now says tooltips **cap** at 240px (wrapping, not truncating).
+- **Rich tooltip** copy no longer implies a hard 2-line cap — it wraps within 320px; "~2 lines" is guidance only.
+
 ## 2026-07-08 · Selection controls spec cleanup
 
 ### Components
