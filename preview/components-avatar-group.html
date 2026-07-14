@@ -25,28 +25,7 @@
     user-select: none;
     border: 0;
     padding: 0;
-    position: relative;   /* anchors the presence status dot */
   }
-
-  /* Presence status dot — filled green (active) / grey (inactive), with a
-     surface-colored ring so it separates from the avatar and any overlap.
-     Paired with the "Inactive" text label; never color alone. */
-  .sl-avatar-status {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    box-shadow: 0 0 0 2px var(--sl-white);
-    z-index: 2;   /* sits above the next, overlapping avatar */
-  }
-  .sl-avatar-status--active   { background: var(--sl-green-600); }
-  .sl-avatar-status--inactive { background: var(--sl-grey-500); }
-  .sl-avatar--sm .sl-avatar-status { width: 8px; height: 8px; }
-  .sl-avatar--xs .sl-avatar-status { width: 6px; height: 6px; box-shadow: 0 0 0 1.5px var(--sl-white); }
-  .on-sunken .sl-avatar-status { box-shadow: 0 0 0 2px var(--sl-grey-100); }
-  .on-navbar .sl-avatar-status { box-shadow: 0 0 0 2px var(--sl-blue-1000); }
   .sl-avatar--xs  { width: 16px; height: 16px; font-size: 10px; }
   .sl-avatar--sm  { width: 24px; height: 24px; font-size: 14px; }
   .sl-avatar--md  { width: 32px; height: 32px; font-size: 18px; }
@@ -270,10 +249,10 @@
   "section": "Composed components",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-avatar-group.html",
   "tagline": "Stack of overlapping avatars with overflow count.",
-  "anatomy": "Avatars overlap by 8px at the default size in left-to-right DOM and visual order. Overflow is a grey `+N` button at the right edge. A presence status dot sits at each avatar's bottom-right — Green-600 for active, Grey-500 for inactive — ringed in the surface color. Active is the default; inactive avatars are also neutral on light surfaces and dimmed on the dark global header.",
+  "anatomy": "Avatars overlap by 8px at the default size in left-to-right DOM and visual order. Overflow is a grey `+N` button at the right edge. Active is the default presence state; inactive avatars are neutral on light surfaces and dimmed on the dark global header.",
   "options": "Visible count 2–6; active or inactive presence; soft identity tints on light surfaces and saturated fills in the dark global header. Each visible avatar is keyboard-focusable and shows the user's full name in a tooltip on hover or focus, including the inactive state when applicable. The `+N` button shows `Show N more members` on hover or focus. Sizes follow Avatar.",
   "usage": "Use to surface a small set of collaborators or assignees — pipeline owners, mentioned users. Above 6 visible avatars, the row stops being scannable; show only 3–4 and use `+N`.",
-  "behaviors": "Hovering or focusing a visible avatar raises it above its neighbors and shows the user's full name after 300ms without changing its color or outline; keyboard focus adds the standard teal ring so every name is reachable without a pointer. Presence is shown by a green (active) / grey (inactive) status dot at the bottom-right, but never by color alone — inactive avatars also carry their state in the tooltip, the accessible name, and the member list. The `+N` button shifts from Grey-200 to Grey-300 on hover and on click opens a member-list Popover — a white card (1px Grey-300 border, radius-sm, raised shadow, min-width 240px, no header) whose rows each pair an xs avatar with the member's full name and a muted right-aligned presence label (`Inactive` where applicable), active members first and inactive sorted to the bottom, scrolling after ~5 rows. Wire the trigger with `aria-haspopup=\"dialog\"`, `aria-expanded`, and `aria-controls`; Escape closes it and returns focus to the button."
+  "behaviors": "Hovering or focusing a visible avatar raises it above its neighbors and shows the user's full name after 300ms without changing its color or outline; keyboard focus adds the standard teal ring so every name is reachable without a pointer. Inactive avatars include their state in the tooltip and accessible name so presence is not conveyed by color alone. The `+N` button shifts from Grey-200 to Grey-300 on hover and on click opens a member-list Popover — a white card (1px Grey-300 border, radius-sm, raised shadow, min-width 240px, no header) whose rows each pair an xs avatar with the member's full name and a muted right-aligned presence label (`Inactive` where applicable), active members first and inactive sorted to the bottom, scrolling after ~5 rows. Wire the trigger with `aria-haspopup=\"dialog\"`, `aria-expanded`, and `aria-controls`; Escape closes it and returns focus to the button."
 }
 </script>
 </head>
@@ -359,9 +338,9 @@
              so it renders above later groups instead of behind them. -->
         <div class="sl-avatar-group-wrap">
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="sl-tooltip" role="tooltip">Anita Brown · Active</span></span>
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="sl-tooltip" role="tooltip">Bilal Khan · Active</span></span>
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="sl-tooltip" role="tooltip">Chen Wei · Active</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span><span class="sl-tooltip" role="tooltip">Chen Wei</span></span>
           <span class="sl-avatar-item">
             <button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 7 more members" aria-haspopup="dialog" aria-expanded="false" aria-controls="member-popover">+7</button>
             <span class="sl-tooltip" role="tooltip">Show 7 more members</span>
@@ -370,13 +349,13 @@
           <div class="sl-avatar-popover" id="member-popover" role="dialog" aria-label="Group members" hidden>
             <ul>
               <!-- Active members first; inactive sorted to the bottom. -->
-              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c4" aria-hidden="true">D<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="mem-name">Diego Ramos</span></li>
-              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c6" aria-hidden="true">E<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="mem-name">Elif Yilmaz</span></li>
-              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c2" aria-hidden="true">F<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="mem-name">Farah Patel</span></li>
-              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c1" aria-hidden="true">H<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="mem-name">Hana Suzuki</span></li>
-              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c7" aria-hidden="true">I<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="mem-name">Ivan Petrov</span></li>
-              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--inactive" aria-hidden="true">G<span class="sl-avatar-status sl-avatar-status--inactive"></span></span><span class="mem-name">Greg Olsen</span><span class="mem-presence">Inactive</span></li>
-              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--inactive" aria-hidden="true">J<span class="sl-avatar-status sl-avatar-status--inactive"></span></span><span class="mem-name">Jia Lin</span><span class="mem-presence">Inactive</span></li>
+              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c4" aria-hidden="true">D</span><span class="mem-name">Diego Ramos</span></li>
+              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c6" aria-hidden="true">E</span><span class="mem-name">Elif Yilmaz</span></li>
+              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c2" aria-hidden="true">F</span><span class="mem-name">Farah Patel</span></li>
+              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c1" aria-hidden="true">H</span><span class="mem-name">Hana Suzuki</span></li>
+              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c7" aria-hidden="true">I</span><span class="mem-name">Ivan Petrov</span></li>
+              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--inactive" aria-hidden="true">G</span><span class="mem-name">Greg Olsen</span><span class="mem-presence">Inactive</span></li>
+              <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--inactive" aria-hidden="true">J</span><span class="mem-name">Jia Lin</span><span class="mem-presence">Inactive</span></li>
             </ul>
           </div>
         </div>
@@ -392,9 +371,9 @@
       <div class="row" style="padding: 14px; background: var(--sl-white); border: 1px solid var(--sl-grey-200); border-radius: var(--radius-sm);">
         <span class="lbl">on canvas<small>white</small></span>
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="sl-tooltip" role="tooltip">Anita Brown · Active</span></span>
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="sl-tooltip" role="tooltip">Bilal Khan · Active</span></span>
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5 sl-avatar--inactive" aria-label="Chen Wei, inactive">C<span class="sl-avatar-status sl-avatar-status--inactive"></span></span><span class="sl-tooltip" role="tooltip">Chen Wei · Inactive</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5 sl-avatar--inactive" aria-label="Chen Wei, inactive">C</span><span class="sl-tooltip" role="tooltip">Chen Wei · Inactive</span></span>
           <span class="sl-avatar-item"><button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 8 more members">+8</button><span class="sl-tooltip" role="tooltip">Show 8 more members</span></span>
         </div>
       </div>
@@ -402,9 +381,9 @@
       <div class="row on-sunken" style="padding: 14px; background: var(--sl-grey-100); border-radius: var(--radius-sm);">
         <span class="lbl">on sunken<small>grey-100</small></span>
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="sl-tooltip" role="tooltip">Anita Brown · Active</span></span>
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="sl-tooltip" role="tooltip">Bilal Khan · Active</span></span>
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5 sl-avatar--inactive" aria-label="Chen Wei, inactive">C<span class="sl-avatar-status sl-avatar-status--inactive"></span></span><span class="sl-tooltip" role="tooltip">Chen Wei · Inactive</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5 sl-avatar--inactive" aria-label="Chen Wei, inactive">C</span><span class="sl-tooltip" role="tooltip">Chen Wei · Inactive</span></span>
           <span class="sl-avatar-item"><button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 8 more members">+8</button><span class="sl-tooltip" role="tooltip">Show 8 more members</span></span>
         </div>
       </div>
@@ -412,9 +391,9 @@
       <div class="row on-navbar" style="padding: 14px; background: var(--sl-blue-1000); border-radius: var(--radius-sm);">
         <span class="lbl" style="color: rgba(255,255,255,0.55);">on navbar<small style="opacity: 0.5;">blue-1000</small></span>
         <div class="sl-avatar-group sl-avatar-group--md">
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="sl-tooltip" role="tooltip">Anita Brown · Active</span></span>
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B<span class="sl-avatar-status sl-avatar-status--active"></span></span><span class="sl-tooltip" role="tooltip">Bilal Khan · Active</span></span>
-          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5 sl-avatar--inactive" aria-label="Chen Wei, inactive">C<span class="sl-avatar-status sl-avatar-status--inactive"></span></span><span class="sl-tooltip" role="tooltip">Chen Wei · Inactive</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5 sl-avatar--inactive" aria-label="Chen Wei, inactive">C</span><span class="sl-tooltip" role="tooltip">Chen Wei · Inactive</span></span>
           <span class="sl-avatar-item"><button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 8 more members">+8</button><span class="sl-tooltip" role="tooltip">Show 8 more members</span></span>
         </div>
       </div>
@@ -431,7 +410,7 @@
       <dt>hover / focus</dt>
       <dd>After 300ms, show the visible user's full name in a Tooltip above the avatar. Raise only the hovered item above its neighbors; do not change its fill, outline, scale, or shadow. Each avatar is keyboard-focusable (<code>tabindex="0"</code>): focus shows the same name Tooltip and adds the standard teal ring, so keyboard users reach every name.</dd>
       <dt>presence</dt>
-      <dd>A status dot sits at the avatar's bottom-right — filled <b>Green-600</b> for active, <b>Grey-500</b> for inactive — with a 2px surface-colored ring (and a raised <code>z-index</code> so it clears the next, overlapping avatar). Active is the default; add <code>sl-avatar--inactive</code> to also neutralize the avatar on light surfaces or dim its identity color in the global header. The dot is never the only signal: include <b>Inactive</b> in the tooltip and accessible name, and in the member list.</dd>
+      <dd>Active is the default. Add <code>sl-avatar--inactive</code> to neutralize the avatar on light surfaces or dim and desaturate its identity color in the global header. Include <b>Inactive</b> in its tooltip and accessible name.</dd>
       <dt>color</dt>
       <dd>Use soft 100-step fills with 700/800 text in tables and other light contexts. On the dark global header, use saturated 600/700-step fills with white initials.</dd>
       <dt>overflow</dt>
