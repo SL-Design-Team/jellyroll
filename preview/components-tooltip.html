@@ -13,10 +13,10 @@
      Non-interactive overlay that surfaces a short label or
      description for an element on hover or keyboard focus.
      Dark navy fill, white text, 4px radius, subtle drop-shadow.
-     Arrow (6×4px triangle) points toward the trigger.
+     Arrow (5px triangle, renders 10×5px) points toward the trigger.
 
      Placement: top (default) · bottom · left · right
-     Width: auto up to 240px, then wraps.
+     Width: natural (sizes to content) up to 240px, then wraps.
   */
   .sl-tooltip-wrap {
     position: relative;
@@ -32,8 +32,10 @@
     font: 500 12px/16px var(--font-sans);
     padding: 5px 10px;
     border-radius: var(--radius-sm);
-    white-space: nowrap;
-    max-width: 280px;
+    /* Size to content (up to max-width), then wrap. width:max-content stops the
+       absolutely-positioned bubble from shrink-wrapping to the trigger. */
+    width: max-content;
+    max-width: 240px;
     white-space: normal;
     pointer-events: none;
     box-shadow: 0 2px 8px rgba(3,26,72,0.18);
@@ -275,7 +277,7 @@
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-tooltip.html",
   "tagline": "Short label or description surfaced on hover or focus.",
   "anatomy": "Dark navy pill (Indigo-900 fill, white 12/16 text, 4px radius, 5×10px padding) · 5px triangle arrow pointing at the trigger · max-width 240px.",
-  "options": "Placement: top (default), bottom, left, right. Variants: default (single line) · rich (bold title + muted body, up to 2 lines). Works on any focusable trigger.",
+  "options": "Placement: top (default), bottom, left, right. Variants: default (sizes to content on a single line, wraps past 240px) · rich (bold title + muted body, wraps within 320px — keep to ~2 lines). Works on any focusable trigger.",
   "usage": "Use to label icon-only controls, surface truncated text, or add a short explanation to a disabled element. Keep copy to one short sentence — for more detail, use a Popover. Never put interactive content (links, buttons) inside a tooltip.",
   "behaviors": "Appears after a 300ms hover delay; disappears immediately on mouse-out. Also shows on keyboard focus so it is accessible without a pointer. For disabled triggers, wrap the trigger in a container that handles the hover — the button itself cannot receive hover events when disabled."
 }
@@ -470,7 +472,7 @@
         <tr>
           <td>Complex chart or diagram</td>
           <td><span class="tag-pill tag-pill--alt">alt="…"</span> or <code>aria-describedby</code></td>
-          <td>Tooltips truncate at 240px and are not discoverable by touch. Use visible caption or linked description instead.</td>
+          <td>Tooltips cap at 240px (wrapping, not truncating) and are not discoverable by touch. Use visible caption or linked description instead.</td>
         </tr>
         <tr>
           <td>Truncated text in a table cell</td>

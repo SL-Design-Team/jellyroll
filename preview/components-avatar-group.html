@@ -122,6 +122,8 @@
     transition: background-color 120ms ease-out;
   }
   .sl-avatar--overflow:hover { background: var(--sl-grey-300); }
+  /* Suppress the "+N" hover tooltip while its popover is open. */
+  .sl-avatar--overflow[aria-expanded="true"] ~ .sl-tooltip { opacity: 0 !important; }
   /* Surface variants — rings match the surface beneath. The dark global
      header uses saturated identity colors with white initials; light table
      and canvas contexts keep the softer tint palette above. */
@@ -143,6 +145,56 @@
     outline: none;
     border-color: var(--sl-teal-600);
     box-shadow: var(--ring-focus);
+  }
+  /* Individual avatars are focusable (tabindex set in JS) so keyboard users
+     get the name tooltip. Same teal ring as the overflow button. */
+  .sl-avatar-group > .sl-avatar-item > .sl-avatar:focus-visible {
+    outline: none;
+    border-color: var(--sl-teal-600);
+    box-shadow: var(--ring-focus);
+  }
+
+  /* ─── OVERFLOW MEMBER-LIST POPOVER ─────────────────────────
+     Opens below the "+N" button. White card, Grey-300 border,
+     radius-sm, raised shadow. Each row: xs avatar + full name +
+     muted presence label. Scrolls after ~5 rows. No header. */
+  .sl-avatar-popover {
+    position: absolute;
+    top: calc(100% + 2px);
+    right: 0;
+    z-index: 50;
+    min-width: 240px;
+    max-width: 280px;
+    max-height: 200px;      /* ~5–6 rows, then scroll */
+    overflow-y: auto;
+    padding: 4px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-raised);
+    text-align: left;
+  }
+  .sl-avatar-popover[hidden] { display: none; }
+  .sl-avatar-popover ul { list-style: none; margin: 0; padding: 0; }
+  .sl-avatar-popover-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: var(--radius-xs);
+    white-space: nowrap;
+  }
+  .sl-avatar-popover-row:hover { background: var(--sl-grey-100); }
+  .sl-avatar-popover-row .sl-avatar { border: 0; }   /* no group ring inside the list */
+  .sl-avatar-popover-row .mem-name {
+    font: 500 13px/16px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .sl-avatar-popover-row .mem-presence {
+    margin-left: auto;
+    padding-left: 16px;
+    font: 400 12px/16px var(--font-sans);
+    color: var(--sl-grey-600);
   }
 
   /* ─── Layout helpers ──────────────────────────────────────── */
@@ -176,9 +228,9 @@
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-avatar-group.html",
   "tagline": "Stack of overlapping avatars with overflow count.",
   "anatomy": "Avatars overlap by 8px at the default size in left-to-right DOM and visual order. Overflow is a grey `+N` button at the right edge. Active is the default presence state; inactive avatars are neutral on light surfaces and dimmed on the dark global header.",
-  "options": "Visible count 2–6; active or inactive presence; soft identity tints on light surfaces and saturated fills in the dark global header. Each visible avatar shows the user's full name in a tooltip, including the inactive state when applicable. The `+N` button shows `Show N more members` on hover or focus. Sizes follow Avatar.",
+  "options": "Visible count 2–6; active or inactive presence; soft identity tints on light surfaces and saturated fills in the dark global header. Each visible avatar is keyboard-focusable and shows the user's full name in a tooltip on hover or focus, including the inactive state when applicable. The `+N` button shows `Show N more members` on hover or focus. Sizes follow Avatar.",
   "usage": "Use to surface a small set of collaborators or assignees — pipeline owners, mentioned users. Above 6 visible avatars, the row stops being scannable; show only 3–4 and use `+N`.",
-  "behaviors": "Hovering a visible avatar raises it above its neighbors and shows the user's full name after 300ms without changing its color or outline. Inactive avatars include their state in the tooltip and accessible name so presence is not conveyed by color alone. The `+N` button shifts from Grey-200 to Grey-300 on hover and opens a member-list Popover with names and presence statuses on click; keyboard focus shows the same tooltip with the standard teal focus ring. Wire the trigger with `aria-haspopup=\"dialog\"`, `aria-expanded`, and `aria-controls`."
+  "behaviors": "Hovering or focusing a visible avatar raises it above its neighbors and shows the user's full name after 300ms without changing its color or outline; keyboard focus adds the standard teal ring so every name is reachable without a pointer. Inactive avatars include their state in the tooltip and accessible name so presence is not conveyed by color alone. The `+N` button shifts from Grey-200 to Grey-300 on hover and on click opens a member-list Popover — a white card (1px Grey-300 border, radius-sm, raised shadow, min-width 240px, no header) whose rows each pair an xs avatar with the member's full name and a muted right-aligned presence label (`Inactive` where applicable), scrolling after ~5 rows. Wire the trigger with `aria-haspopup=\"dialog\"`, `aria-expanded`, and `aria-controls`; Escape closes it and returns focus to the button."
 }
 </script>
 </head>
@@ -258,6 +310,29 @@
           <span class="sl-avatar-item"><button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 99 more members">99+</button><span class="sl-tooltip" role="tooltip">Show 99 more members</span></span>
         </div>
       </div>
+      <div class="row">
+        <span class="lbl">Member list<small>click +N</small></span>
+        <div class="sl-avatar-group sl-avatar-group--md">
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c1" aria-label="Anita Brown">A</span><span class="sl-tooltip" role="tooltip">Anita Brown</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c3" aria-label="Bilal Khan">B</span><span class="sl-tooltip" role="tooltip">Bilal Khan</span></span>
+          <span class="sl-avatar-item"><span class="sl-avatar sl-avatar--md sl-avatar--c5" aria-label="Chen Wei">C</span><span class="sl-tooltip" role="tooltip">Chen Wei</span></span>
+          <span class="sl-avatar-item">
+            <button class="sl-avatar sl-avatar--md sl-avatar--overflow" type="button" aria-label="Show 7 more members" aria-haspopup="dialog" aria-expanded="false" aria-controls="member-popover">+7</button>
+            <span class="sl-tooltip" role="tooltip">Show 7 more members</span>
+            <div class="sl-avatar-popover" id="member-popover" role="dialog" aria-label="Group members" hidden>
+              <ul>
+                <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c4" aria-hidden="true">D</span><span class="mem-name">Diego Ramos</span></li>
+                <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c6" aria-hidden="true">E</span><span class="mem-name">Elif Yilmaz</span></li>
+                <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c2" aria-hidden="true">F</span><span class="mem-name">Farah Patel</span></li>
+                <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--inactive" aria-hidden="true">G</span><span class="mem-name">Greg Olsen</span><span class="mem-presence">Inactive</span></li>
+                <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c1" aria-hidden="true">H</span><span class="mem-name">Hana Suzuki</span></li>
+                <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--c7" aria-hidden="true">I</span><span class="mem-name">Ivan Petrov</span></li>
+                <li class="sl-avatar-popover-row"><span class="sl-avatar sl-avatar--xs sl-avatar--inactive" aria-hidden="true">J</span><span class="mem-name">Jia Lin</span><span class="mem-presence">Inactive</span></li>
+              </ul>
+            </div>
+          </span>
+        </div>
+      </div>
     </div>
 
     <div class="divider"></div>
@@ -305,17 +380,46 @@
       <dd>2px solid in the surface color (white on canvas, Grey-100 on sunken, Blue-1000 on navbar). Acts as a "cutout" so adjacent avatars read as distinct shapes.</dd>
       <dt>overlap</dt>
       <dd><code>-4 / -6 / -8px</code> for xs / sm / md.</dd>
-      <dt>hover</dt>
-      <dd>After 300ms, show the visible user's full name in a Tooltip above the avatar. Raise only the hovered item above its neighbors; do not change its fill, outline, scale, or shadow.</dd>
+      <dt>hover / focus</dt>
+      <dd>After 300ms, show the visible user's full name in a Tooltip above the avatar. Raise only the hovered item above its neighbors; do not change its fill, outline, scale, or shadow. Each avatar is keyboard-focusable (<code>tabindex="0"</code>): focus shows the same name Tooltip and adds the standard teal ring, so keyboard users reach every name.</dd>
       <dt>presence</dt>
       <dd>Active is the default. Add <code>sl-avatar--inactive</code> to neutralize the avatar on light surfaces or dim and desaturate its identity color in the global header. Include <b>Inactive</b> in its tooltip and accessible name.</dd>
       <dt>color</dt>
       <dd>Use soft 100-step fills with 700/800 text in tables and other light contexts. On the dark global header, use saturated 600/700-step fills with white initials.</dd>
       <dt>overflow</dt>
-      <dd>Show ~5 avatars then a native <b>"+N"</b> button — same shape, Grey-200 background, indigo text. Hover shifts the fill to Grey-300 and shows <b>"Show N more members"</b>; focus uses the standard teal ring. Clicking opens a member-list Popover with each person's name and presence status.</dd>
+      <dd>Show ~5 avatars then a native <b>"+N"</b> button — same shape, Grey-200 background, indigo text. Hover shifts the fill to Grey-300 and shows <b>"Show N more members"</b>; focus uses the standard teal ring. Clicking opens a member-list Popover: white card, 1px Grey-300 border, <code>radius-sm</code>, raised shadow, <code>min-width 240px</code>, no header. Each row is an <b>xs avatar + full name</b>, with a muted right-aligned presence label (<b>"Inactive"</b>) where applicable; the list scrolls after ~5 rows (<code>max-height 200px</code>). Escape closes it and returns focus to the button.</dd>
       <dt>a11y</dt>
-      <dd>Each visible Avatar carries <code>aria-label="Full name"</code>, including <code>, inactive</code> when applicable. The overflow control is a native button with <code>aria-label="Show N more members"</code>. When wired to the Popover, also set <code>aria-haspopup="dialog"</code>, <code>aria-expanded</code>, and <code>aria-controls</code>; Enter and Space activate it without custom keyboard handling.</dd>
+      <dd>Each visible Avatar carries <code>aria-label="Full name"</code>, including <code>, inactive</code> when applicable, and is focusable so keyboard users see the name Tooltip. The overflow control is a native button with <code>aria-label="Show N more members"</code>. When wired to the Popover, also set <code>aria-haspopup="dialog"</code>, <code>aria-expanded</code>, and <code>aria-controls</code>; Enter and Space activate it without custom keyboard handling.</dd>
     </dl>
   </div>
+  <script>
+  (function () {
+    // Make each visible avatar keyboard-focusable so sighted keyboard users
+    // get the name tooltip (revealed via :focus-within). Names stay available
+    // to screen readers through the existing aria-label.
+    document.querySelectorAll('.sl-avatar-item > .sl-avatar:not(.sl-avatar--overflow)').forEach(function (a) {
+      a.setAttribute('tabindex', '0');
+      a.setAttribute('role', 'img');
+    });
+
+    // Wire "+N" buttons that control a member-list popover.
+    document.querySelectorAll('.sl-avatar--overflow[aria-controls]').forEach(function (btn) {
+      var pop = document.getElementById(btn.getAttribute('aria-controls'));
+      if (!pop) return;
+      function close() { pop.hidden = true;  btn.setAttribute('aria-expanded', 'false'); }
+      function open()  { pop.hidden = false; btn.setAttribute('aria-expanded', 'true');  }
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        pop.hidden ? open() : close();
+      });
+      document.addEventListener('click', function (e) {
+        if (!pop.hidden && !pop.contains(e.target) && e.target !== btn) close();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !pop.hidden) { close(); btn.focus(); }
+      });
+    });
+  })();
+  </script>
 </body>
 </html>
