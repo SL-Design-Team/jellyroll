@@ -42,27 +42,30 @@
     gap: 10px;
     box-shadow: var(--shadow-raised);
   }
+  /* Dark-surface card — same opacity pulse, on-dark band token */
+  .skeleton-card.on-dark {
+    background: var(--sl-blue-1000);
+    border-color: var(--sl-blue-1000);
+  }
+  /* Opacity pulse — identical technique to the Skeleton loader component */
+  @keyframes sk-pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.5; }
+  }
   .sk-row {
     height: 14px;
     border-radius: var(--radius-xs);
-    background: linear-gradient(
-      90deg,
-      var(--color-skeleton) 0%,
-      var(--color-skeleton-pulse) 50%,
-      var(--color-skeleton) 100%
-    );
-    background-size: 200% 100%;
-    animation: pulse 1400ms infinite var(--ease-standard);
+    background: var(--color-skeleton);
+    animation: sk-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  .skeleton-card.on-dark .sk-row { background: var(--color-skeleton-on-dark); }
+  @media (prefers-reduced-motion: reduce) {
+    .sk-row { animation: none; }
   }
   .sk-row.title  { height: 18px; width: 55%; }
   .sk-row.line-1 { width: 95%; }
   .sk-row.line-2 { width: 75%; }
   .sk-row.line-3 { width: 40%; }
-
-  @keyframes pulse {
-    0%   { background-position: 100% 0; }
-    100% { background-position: -100% 0; }
-  }
 
   .legend {
     display: grid;
@@ -87,12 +90,12 @@
   "section": "Foundations",
   "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-selection-skeleton.html",
   "tagline": "Text highlight and loading placeholder colors.",
-  "usage": "`--color-selection-bg` and `--color-selection-text` style the browser's text-highlight via a global `::selection` rule — no per-component wiring needed. Use `--color-skeleton` (resting) and `--color-skeleton-pulse` (animated band) for loading placeholders; pair with `--duration-slow` and a 1400ms shimmer to avoid drawing too much attention. Skeletons should match the eventual content's geometry — same row heights, same line widths.",
+  "usage": "`--color-selection-bg` and `--color-selection-text` style the browser's text-highlight via a global `::selection` rule — no per-component wiring needed. For loading placeholders, fill bands with `--color-skeleton` on light surfaces and `--color-skeleton-on-dark` (a white-alpha overlay) on dark surfaces like the nav rail — light grey reads too bright on navy. Bands pulse opacity 1 → 0.5 → 1 at 2s (disabled under prefers-reduced-motion); keep it subtle. Skeletons should match the eventual content's geometry — same row heights, same line widths.",
   "tokens": [
     "--color-selection-bg",
     "--color-selection-text",
     "--color-skeleton",
-    "--color-skeleton-pulse"
+    "--color-skeleton-on-dark"
   ]
 }
 </script>
@@ -111,9 +114,15 @@
 
     <div class="row-label">
       <span class="name">Skeleton loader</span>
-      <span class="meta">--color-skeleton · --color-skeleton-pulse</span>
+      <span class="meta">--color-skeleton (light) · --color-skeleton-on-dark (dark) · 2s opacity pulse</span>
     </div>
     <div class="skeleton-card">
+      <div class="sk-row title"></div>
+      <div class="sk-row line-1"></div>
+      <div class="sk-row line-2"></div>
+      <div class="sk-row line-3"></div>
+    </div>
+    <div class="skeleton-card on-dark">
       <div class="sk-row title"></div>
       <div class="sk-row line-1"></div>
       <div class="sk-row line-2"></div>
@@ -130,12 +139,12 @@
         <span class="val">--color-selection-text · indigo-900 · #131C35</span>
       </div>
       <div class="pair">
-        <span class="lbl"><span class="chip" style="background: var(--color-skeleton)"></span>Skeleton base</span>
-        <span class="val">--color-skeleton · grey-200 · #EBEDF1</span>
+        <span class="lbl"><span class="chip" style="background: var(--color-skeleton)"></span>Skeleton (light)</span>
+        <span class="val">--color-skeleton · grey-400 · #C4CAD6</span>
       </div>
       <div class="pair">
-        <span class="lbl"><span class="chip" style="background: var(--color-skeleton-pulse)"></span>Skeleton pulse</span>
-        <span class="val">--color-skeleton-pulse · grey-100 · #F5F6F8</span>
+        <span class="lbl"><span class="chip" style="background: var(--sl-blue-1000)"><span style="position:absolute"></span></span>Skeleton (on dark)</span>
+        <span class="val">--color-skeleton-on-dark · white@10%</span>
       </div>
     </div>
   </div>

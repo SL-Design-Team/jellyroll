@@ -431,8 +431,9 @@
   */
   --color-selection-bg:   var(--sl-blue-200);
   --color-selection-text: var(--sl-indigo-900);
-  --color-skeleton:       var(--sl-grey-200);
-  --color-skeleton-pulse: var(--sl-grey-100);
+  /* Skeleton / loading placeholder band fill — opacity pulses 1 → 0.5 → 1. */
+  --color-skeleton:         var(--sl-grey-400);         /* on light surfaces */
+  --color-skeleton-on-dark: rgba(255, 255, 255, 0.10);  /* on dark surfaces — navy nav, etc. */
 }
 
 /* Apply the selection tokens to the platform highlight */

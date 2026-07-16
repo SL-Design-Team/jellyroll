@@ -117,7 +117,7 @@ window.JELLYROLL_DATA = {
           name: "Selection & skeleton",
           tagline: "Text highlight and loading placeholder colors.",
           meta: {
-            usage: "`--color-selection-bg` and `--color-selection-text` style the browser's text-highlight via a global `::selection` rule — no per-component wiring needed. Use `--color-skeleton` (resting) and `--color-skeleton-pulse` (animated band) for loading placeholders; pair with `--duration-slow` and a 1400ms shimmer to avoid drawing too much attention. Skeletons should match the eventual content's geometry — same row heights, same line widths."
+            usage: "`--color-selection-bg` and `--color-selection-text` style the browser's text-highlight via a global `::selection` rule — no per-component wiring needed. For loading placeholders, fill bands with `--color-skeleton` on light surfaces and `--color-skeleton-on-dark` (a white-alpha overlay) on dark surfaces like the nav rail — light grey reads too bright on navy. Bands pulse opacity 1 → 0.5 → 1 at 2s (disabled under prefers-reduced-motion); keep it subtle. Skeletons should match the eventual content's geometry — same row heights, same line widths."
           }
         }
       ]
@@ -391,9 +391,9 @@ window.JELLYROLL_DATA = {
           name: "Skeleton loader",
           tagline: "Pulsing grey shape standing in for loading content.",
           meta: {
-            anatomy: "Grey-200 fill · 4px radius · animated linear gradient sweep at 1500ms infinite (subtle, low contrast).",
-            options: "Block (default), text (1em tall), avatar (circle), media (with aspect ratio).",
-            usage: "Use for loading states on cards, rows, lists, and full views. Match the rough shape of the content that is loading — a row of three skeletons of varying widths suggests a body of text. Never animate aggressively; the sweep should sit at the edge of perception."
+            anatomy: "Grey-300 fill · 4px radius · opacity pulse 1 → 0.5 → 1 at 2s infinite (subtle, low contrast). On dark surfaces, swap the fill for a white@10% overlay — grey reads too bright on navy.",
+            options: "Block (default), text (1em tall), avatar (circle), media (with aspect ratio). On-dark variant for dark surfaces like the nav rail.",
+            usage: "Use for loading states on cards, rows, lists, and full views. Match the rough shape of the content that is loading — a row of three skeletons of varying widths suggests a body of text. Never animate aggressively; the pulse should sit at the edge of perception. Pulse is disabled under prefers-reduced-motion."
           }
         },
         {
@@ -588,9 +588,9 @@ window.JELLYROLL_DATA = {
           name: "Global header",
           tagline: "The dark Indigo-1000 chrome that spans every product.",
           meta: {
-            anatomy: "56px tall · Indigo-1000 fill · left: waffle launcher + product wordmark · center: contextual search + breadcrumb · right: env picker + notifications + user menu.",
+            anatomy: "56px tall · Indigo-1000 fill · left: waffle launcher + product wordmark · center: contextual search + breadcrumb · right: env picker + notifications + user menu. A 5px teal → blue → teal gradient loader bar sits on the bottom edge for global loading states.",
             usage: "Use across every product as the only chrome that crosses product boundaries. Never inject product-specific controls into the global header — those belong on the Left nav or the page itself.",
-            behaviors: "Sticky to the top of the viewport. Hover states on icons use a 12% white overlay; selected states use a 24% white overlay. The waffle launcher opens the Product launcher popover."
+            behaviors: "Sticky to the top of the viewport. Hover states on icons use a 12% white overlay; selected states use a 24% white overlay. The waffle launcher opens the Product launcher popover. The combo loader bar fills left → right over 4s while an inner band walks on a 1s loop — shown while a page or product-level action loads, hidden when idle. It uses the brand teal → blue gradient (matching `--color-background-primary-hover`)."
           }
         },
         {
@@ -602,6 +602,17 @@ window.JELLYROLL_DATA = {
             options: "Collapsed (icons only) or expanded (labels visible). With or without nested item groups.",
             usage: "Use as the primary product-level nav inside each app. Designer's snap palette, Manager's org tree, and Monitor's pipeline list all live here. Items represent destinations or scopes — never actions.",
             behaviors: "Collapse toggle is persistent per user. Hover on a collapsed item shows the label as a tooltip. Active route is marked with a 3px Blue-600 left border and Blue-100 row background."
+          }
+        },
+        {
+          file: "preview/components-left-nav-skeleton.html",
+          name: "Left nav skeleton",
+          tagline: "Loading placeholder for the dark navigation rail.",
+          meta: {
+            anatomy: "Same 240/56px rail on Blue-1000 · icon circle + label bar per item · grouped into the same sections · white@10% bands, not grey.",
+            options: "Expanded (icon + label bars) or minimized (icon circles only).",
+            usage: "Show while the nav model loads. Bands are white-alpha overlays tuned to the navy rail — the light-grey Skeleton loader is for white surfaces and reads too bright here. Match item counts and geometry to the real nav so it settles into place on load.",
+            behaviors: "Opacity pulse 1 → 0.5 → 1 at 2s; disabled under prefers-reduced-motion."
           }
         },
         {
@@ -1216,10 +1227,10 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/templates-designer.html",
           name: "Designer · Empty canvas",
-          tagline: "Full Designer template — global header, left rail, canvas, toolbar, properties panel.",
+          tagline: "Full Designer template — global header, left rail, toolbar, and pipeline canvas.",
           meta: {
-            usage: "Use as the reference layout for the Designer workspace. Composes the Global header, Left nav (snap palette), Canvas, Toolbar (Build / Execution / Configuration / Version Control / Transfer groups), and the right Properties panel. Empty state on the canvas shows the `Create your first pipeline` primary action.",
-            behaviors: "Toolbar collapses to icons-only (state A) or expands with labels and group headers (state B); the chevron toggles. Left rail can be resized between 200–360px and persists per user. The properties panel is hidden until a snap is selected; selecting one opens it in the right column."
+            usage: "Use as the reference layout for the Designer workspace. Composes the Global header, Left nav (snap palette), Toolbar (Build / Execution / Configuration / Version Control / Transfer groups), and the pipeline Canvas. The empty canvas shows a drag-Snaps hint.",
+            behaviors: "Toolbar collapses to icons-only or expands with labels and group headers; the chevron toggles. Left rail can be resized and persists per user. The properties panel is hidden until a snap is selected. A standalone load-time treatment lives at preview/templates-designer-loading.html (kept out of the gallery because its head-level CSS/JS don't run when the gallery injects a preview body inline — open it directly)."
           }
         }
       ]

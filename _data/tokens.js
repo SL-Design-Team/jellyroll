@@ -72,8 +72,8 @@ window.JELLYROLL_TOKENS = {
   "preview/foundations-selection-skeleton.html": [
     { name: "--color-selection-bg",   value: "#CED9F0", role: "Text-highlight fill — Blue-200" },
     { name: "--color-selection-text", value: "#131C35", role: "Text-highlight foreground — Indigo-900" },
-    { name: "--color-skeleton",       value: "#EBEDF1", role: "Skeleton base — Grey-200" },
-    { name: "--color-skeleton-pulse", value: "#F5F6F8", role: "Skeleton pulse band — Grey-100" },
+    { name: "--color-skeleton",         value: "#C4CAD6",            role: "Skeleton band, light surface — Grey-400" },
+    { name: "--color-skeleton-on-dark", value: "rgba(255,255,255,0.10)", role: "Skeleton band, dark surface — white@10%" },
   ],
 
   // ── 02 Color ──────────────────────────────────────────────────────

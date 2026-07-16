@@ -91,6 +91,7 @@ Several building blocks assembled into a complete piece of the interface.
 - [Form section](https://sl-design-team.github.io/jellyroll/preview/components-form-section.html): Grouped fields under a heading + optional description.
 - [Global header](https://sl-design-team.github.io/jellyroll/preview/components-global-header.html): The dark Indigo-1000 chrome that spans every product.
 - [Left nav](https://sl-design-team.github.io/jellyroll/preview/components-left-nav.html): Contextual product navigation — collapsible to icons-only.
+- [Left nav skeleton](https://sl-design-team.github.io/jellyroll/preview/components-left-nav-skeleton.html): Loading placeholder for the dark navigation rail.
 - [Modal](https://sl-design-team.github.io/jellyroll/preview/components-modal.html): Overlay surface for confirms, focused tasks, and destructive actions.
 - [Multi-select](https://sl-design-team.github.io/jellyroll/preview/components-multi-select.html): Select-style trigger that accepts multiple values rendered as chips.
 - [Notifications](https://sl-design-team.github.io/jellyroll/preview/components-notifications.html): Notification center surfaced from the global bell icon.
@@ -171,4 +172,4 @@ Specialized multi-field editors for SnapLogic's configuration surfaces.
 
 Full-page starting points — complete screens assembled from components and patterns.
 
-- [Designer · Empty canvas](https://sl-design-team.github.io/jellyroll/preview/templates-designer.html): Full Designer template — global header, left rail, canvas, toolbar, properties panel.
+- [Designer · Empty canvas](https://sl-design-team.github.io/jellyroll/preview/templates-designer.html): Full Designer template — global header, left rail, toolbar, and pipeline canvas.

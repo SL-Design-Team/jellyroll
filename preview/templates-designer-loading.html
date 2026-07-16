@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Templates · Designer · Loading state</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { gap: 24px; width: 100%; padding: 24px; }
+
+  /* ─── Template frame ──────────────────────────────────────────── */
+  .frame {
+    width: 1440px;
+    height: 900px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: 6px;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 56px 1fr;
+    font-family: var(--font-sans);
+    color: var(--color-text-body);
+  }
+
+  /* ─── Global navbar ───────────────────────────────────────────── */
+  .gn {
+    background: #020D24;
+    color: var(--sl-white);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 0 18px;
+    border-bottom: 1px solid rgba(156, 179, 225, 0.3);
+    position: relative;
+  }
+  .gn::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 4px;
+    background: var(--gradient-brand);
+  }
+  .gn__left, .gn__right {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .gn__right { margin-left: auto; }
+  .gn__brand {
+    display: inline-flex; align-items: center; gap: 12px;
+    font: 800 16px/22px var(--font-sans);
+  }
+  .gn__brand-mark {
+    width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .gn__brand-mark img { width: 32px; height: 32px; display: block; }
+  .gn__brand-title { font: 800 18px/22px var(--font-sans); color: var(--sl-white); }
+  .gn__env {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(156, 179, 225, 0.25);
+    border-radius: var(--field-radius);
+    padding: 6px 12px;
+    font: 400 13px/18px var(--font-sans);
+    color: var(--sl-grey-100);
+  }
+  .gn__env-mark {
+    width: 16px; height: 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--sl-yellow-500);
+    flex: none;
+  }
+  .gn__env-mark i, .gn__env-mark svg { width: 14px; height: 14px; flex: none; stroke-width: 2; }
+  .gn__snapgpt {
+    background: linear-gradient(112.63deg, #0B9D9B 12%, #0841B4 137%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font: 800 16px/22px var(--font-sans);
+    position: relative;
+  }
+  .gn__snapgpt-dot { position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 6px; height: 6px; border-radius: 50%; background: var(--sl-yellow-500); -webkit-text-fill-color: var(--sl-yellow-500); }
+  .gn__icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-xs);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--sl-grey-100);
+    cursor: pointer;
+    position: relative;
+  }
+  .gn__icon:hover { background: rgba(255,255,255,0.08); }
+  .gn__icon svg { width: 18px; height: 18px; }
+  .gn__badge {
+    position: absolute; top: 2px; right: 2px;
+    min-width: 14px; height: 14px; padding: 0 3px;
+    border-radius: 999px;
+    background: var(--sl-red-600);
+    color: var(--sl-white);
+    font: 800 9px/14px var(--font-mono);
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1.5px solid #020D24;
+  }
+  .gn__avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: transparent;
+    border: 1.5px solid var(--sl-white);
+    color: var(--sl-white);
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 800 12px/16px var(--font-sans);
+    cursor: pointer;
+  }
+  .gn__waffle { display: grid; grid-template-columns: repeat(3, 4px); gap: 3px; padding: 4px; }
+  .gn__waffle span { width: 4px; height: 4px; background: var(--sl-grey-100); border-radius: 1px; }
+
+  /* ─── Body: rail + right column ───────────────────────────────── */
+  .body {
+    display: grid;
+    grid-template-columns: var(--rail-w, 280px) 1fr;
+    overflow: hidden;
+  }
+
+  /* ─── Left rail (dark, full body height) ──────────────────────── */
+  .rail {
+    background: #020D24;
+    color: var(--sl-grey-100);
+    border-right: 1px solid rgba(156, 179, 225, 0.3);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Rail · minimized (icons-only) */
+  .rail--mini { width: 48px; }
+  .rail--mini .rail-icon {
+    width: 48px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--sl-grey-100);
+    opacity: 0.6;
+    cursor: pointer;
+  }
+  .rail--mini .rail-icon:hover { opacity: 1; }
+  .rail--mini .rail-icon svg { width: 18px; height: 18px; }
+
+  /* Rail · expanded */
+  .rail--expanded { padding: 12px 0 0; }
+  .rail__search {
+    margin: 0 12px 12px;
+    display: flex; align-items: center; gap: 8px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid rgba(156, 179, 225, 0.25);
+    border-radius: var(--field-radius);
+    background: rgba(255,255,255,0.02);
+  }
+  .rail__search svg { width: 14px; height: 14px; color: var(--sl-grey-400); flex: none; }
+  .rail__search input {
+    flex: 1; border: 0; outline: 0; background: transparent;
+    color: var(--sl-grey-100); font: 400 13px/18px var(--font-sans);
+  }
+
+  /* Inverted track segmented control */
+  .rail__seg {
+    margin: 0 12px 18px;
+    display: inline-flex; padding: 4px;
+    border: 1px solid rgba(156, 179, 225, 0.25);
+    border-radius: var(--radius-md);
+    gap: 0;
+  }
+  .rail__seg button {
+    flex: 1;
+    height: 30px;
+    padding: 0 12px;
+    border: 0; border-radius: var(--field-radius);
+    background: transparent;
+    color: var(--sl-grey-400);
+    font: 800 13px/20px var(--font-sans);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .rail__seg button:hover { color: var(--sl-white); background: rgba(255,255,255,0.06); }
+  .rail__seg button.sel { background: var(--sl-blue-600); color: var(--sl-white); }
+
+  .rail__section-h {
+    padding: 10px 16px 6px;
+    font: 800 11px/16px var(--font-mono);
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .rail__row {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px 8px 14px;
+    font: 400 14px/20px var(--font-sans);
+    color: var(--sl-grey-100);
+    cursor: pointer;
+  }
+  .rail__row:hover { background: rgba(255,255,255,0.04); }
+  .rail__row-chev { width: 14px; height: 14px; color: var(--sl-grey-400); flex: none; }
+  .rail__row-icon { width: 18px; height: 18px; color: var(--sl-grey-400); flex: none; }
+  .rail__row-lbl { flex: 1; }
+  .rail__row-count {
+    font: 400 12px/16px var(--font-mono);
+    color: var(--sl-grey-400);
+  }
+  .rail__pm {
+    margin-top: auto;
+    border-top: 1px solid rgba(156, 179, 225, 0.18);
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 10px;
+    font: 800 13px/20px var(--font-sans);
+    color: var(--sl-grey-100);
+    cursor: pointer;
+  }
+  .rail__pm svg { width: 18px; height: 18px; color: var(--sl-grey-400); }
+  .rail__pm:hover { background: rgba(255,255,255,0.04); }
+  .rail__collapse {
+    padding: 12px 16px;
+    color: var(--sl-grey-400);
+    cursor: pointer;
+    border-top: 1px solid rgba(156, 179, 225, 0.18);
+    text-align: right;
+  }
+  .rail__collapse svg { width: 16px; height: 16px; }
+
+  /* ─── Right column (toolbar + canvas + status bar) ────────────── */
+  .rcol {
+    display: grid;
+    grid-template-rows: auto 1fr 32px;
+    overflow: hidden;
+    min-width: 0;
+    container-type: inline-size;
+  }
+
+  /* Toolbar — labeled groups */
+  .tb {
+    display: flex; align-items: stretch;
+    padding: 0 56px 0 16px;
+    gap: 0;
+    background: #F5F6F8;
+    border-bottom: 1px solid var(--sl-grey-200);
+    position: relative;
+    overflow: hidden;
+  }
+  .tb__center {
+    display: inline-flex; align-items: stretch;
+    margin: 0 auto;
+    gap: 8px;
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+  .tb__group {
+    display: flex; flex-direction: column;
+    align-items: stretch;
+    padding: 6px 6px 8px;
+    border-right: 1px solid var(--sl-grey-300);
+    position: relative;
+    flex: none;
+  }
+  .tb__group:last-child { border-right: 0; padding-right: 14px; }
+  .tb__group--end { border-right: 0; padding-left: 14px; }
+  .tb__group-lbl {
+    font: 400 11px/14px var(--font-sans);
+    color: var(--color-text-subtle);
+    text-align: center;
+    margin-bottom: 4px;
+    min-height: 14px;
+  }
+  .tb__row {
+    display: flex; align-items: stretch;
+    gap: 0;
+    flex-wrap: nowrap;
+  }
+  .tb__item {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    padding: 4px 8px 4px;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    color: var(--sl-indigo-900);
+    font: 400 12px/16px var(--font-sans);
+    gap: 4px;
+    position: relative;
+    min-width: 56px;
+    border: 0;
+    background: transparent;
+    flex: none;
+    white-space: nowrap;
+  }
+  .tb__item:hover { background: var(--sl-white); }
+  .tb__item i, .tb__item svg {
+    width: 32px; height: 32px;
+    stroke-width: 1.5;
+    flex: none;
+  }
+  .tb__item .tb__dd {
+    position: absolute;
+    right: 0; bottom: 6px;
+    width: 14px; height: 14px;
+    color: var(--color-text-subtle);
+  }
+  .tb__item--dd { padding-right: 22px; }
+  .tb__item--play { color: var(--sl-blue-600); }
+  .tb__item--validate { color: var(--sl-green-600); }
+  .tb__item--more { color: var(--color-text-body); }
+
+  .tb__chevron {
+    position: absolute;
+    right: 12px; top: 50%; transform: translateY(-50%);
+    width: 32px; height: 32px;
+    border: 0; background: transparent;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    color: var(--color-text-body);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .tb__chevron:hover { background: var(--sl-white); }
+  .tb__chevron svg { width: 18px; height: 18px; }
+
+  /* Collapsed toolbar — icons only */
+  .tb--collapsed .tb__group-lbl { display: none; }
+  .tb--collapsed .tb__item span { display: none; }
+  .tb--collapsed .tb__item .tb__dd-chev { display: none; }
+  .tb--collapsed .tb__item {
+    padding: 8px 10px;
+    min-width: 40px;
+    gap: 0;
+  }
+  .tb--collapsed .tb__group { padding: 6px 4px; }
+  .tb--collapsed .tb__group--end { padding-left: 8px; }
+  .tb--collapsed .tb__row { gap: 2px; }
+
+  /* Canvas + tabs */
+  .canvas-wrap { display: flex; flex-direction: column; overflow: hidden; position: relative; }
+
+  .tabs {
+    display: flex; align-items: stretch;
+    padding: 14px 18px 0;
+    gap: 0;
+    background: var(--sl-white);
+    border-bottom: 1px solid var(--sl-blue-300);
+    position: relative;
+  }
+  .tabs__plus {
+    width: 30px; height: 36px;
+    border: 1px solid var(--sl-grey-300);
+    background: var(--sl-white);
+    border-radius: var(--field-radius);
+    margin-right: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--color-text-subtle);
+    cursor: pointer;
+  }
+  .tabs__plus svg { width: 16px; height: 16px; }
+  .tab {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 18px;
+    border: 1px solid var(--sl-grey-300);
+    border-radius: 4px 4px 0 0;
+    font: 400 14px/22px var(--font-sans);
+    color: var(--color-text-body);
+    background: var(--sl-white);
+    cursor: pointer;
+    margin-right: 4px;
+  }
+  .tab--active {
+    color: var(--sl-blue-600);
+    border-color: var(--sl-blue-300);
+    border-bottom-color: var(--sl-white);
+    position: relative;
+    top: 1px;
+  }
+  .tab__x {
+    width: 18px; height: 18px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--color-text-subtle);
+    cursor: pointer;
+  }
+  .tab__x:hover { background: var(--sl-grey-100); }
+  .tab__x svg { width: 12px; height: 12px; }
+
+  .canvas {
+    flex: 1;
+    background-color: var(--sl-white);
+    background-image: radial-gradient(circle, var(--sl-grey-300) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: 10px 10px;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+  }
+  .canvas__hint {
+    text-align: center;
+    color: var(--sl-grey-700);
+    font: 400 16px/26px var(--font-sans);
+    transform: translateY(-100px);
+  }
+  .canvas__hint .snapgpt-pill {
+    display: inline-flex; align-items: center;
+    padding: 6px 16px;
+    border-radius: var(--field-radius);
+    background: linear-gradient(112.63deg, #0B9D9B 12%, #0841B4 137%);
+    color: var(--sl-white);
+    font: 800 14px/20px var(--font-sans);
+    margin-top: 14px;
+    cursor: pointer;
+  }
+  .canvas__zoom {
+    position: absolute;
+    left: 18px; bottom: 18px;
+    display: flex; flex-direction: column; align-items: center;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--field-radius);
+    padding: 4px 0;
+    box-shadow: var(--shadow-raised);
+  }
+  .canvas__zoom button {
+    width: 36px; height: 32px;
+    border: 0; background: transparent;
+    color: var(--color-text-body);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .canvas__zoom button:hover { background: var(--sl-grey-100); }
+  .canvas__zoom button svg { width: 14px; height: 14px; }
+  .canvas__zoom-pct { padding: 6px 0 2px; font: 400 11px/14px var(--font-mono); color: var(--color-text-subtle); }
+
+  /* Right-edge collapse handle — removed per spec */
+  .right-collapse { display: none; }
+
+  /* ─── Status bar (only under canvas, not under rail) ─────────── */
+  .sb {
+    display: flex; align-items: center;
+    padding: 0 16px;
+    background: var(--sl-grey-100);
+    border-top: 1px solid var(--sl-grey-200);
+    font: 400 12px/16px var(--font-sans);
+    color: var(--color-text-subtle);
+    gap: 12px;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .sb__group { display: inline-flex; align-items: center; gap: 6px; flex: none; }
+  .sb__group .lbl { color: var(--color-text-body); }
+  .sb__group a { color: var(--color-text-link); font-weight: 800; text-decoration: none; }
+  .sb__sep { color: var(--sl-grey-300); flex: none; }
+  .sb__spacer { flex: 1; }
+  .sb__hint {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--color-text-subtle);
+    flex: none;
+    min-width: 0;
+  }
+  .sb__hint svg.bulb { width: 14px; height: 14px; color: var(--sl-yellow-600); flex: none; }
+  .sb__hint kbd { font: 800 11px/14px var(--font-mono); color: var(--color-text-body); }
+  .sb__hint-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--sl-yellow-100);
+    color: var(--sl-yellow-1000);
+    display: none; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex: none;
+  }
+  .sb__hint-icon svg { width: 14px; height: 14px; }
+
+  /* When the right column is narrow, collapse the hint to a single icon. */
+  @container (max-width: 1080px) {
+    .sb__hint { display: none; }
+    .sb__hint-icon { display: inline-flex; }
+  }
+
+  /* ─── Page spec ──────────────────────────────────────────────── */
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+
+  .spec { display: grid; grid-template-columns: 120px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+
+  /* ═══════════ Loading state (second frame) ═══════════
+     Chrome is skeletoned (header, rail, toolbar, tabs, status bar); the
+     canvas shows the SnapLogic mark breathing in a soft halo + caption. */
+
+  /* Skeleton band — shared opacity pulse; light + on-dark tokens */
+  @keyframes sk-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .sk2 {
+    display: inline-block; border-radius: var(--radius-sm);
+    background: var(--color-skeleton);
+    animation: sk-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  .sk2.on-dark { background: var(--color-skeleton-on-dark); }
+  .sk2.circle  { border-radius: 999px; }
+
+  /* Rail skeleton rows */
+  .ld-rail { padding: 20px 16px 0; display: flex; flex-direction: column; gap: 16px; }
+  .ld-rail .sk2 { display: block; height: 12px; }
+
+  /* Toolbar skeleton clusters */
+  .ld-tb-item { height: 30px; }
+  /* Loading toolbar is 2x taller; center the clusters vertically */
+  .tb--load { min-height: 88px; }
+  .tb--load .tb__group { justify-content: center; }
+
+  /* Canvas — branded loading moment */
+  .cv-brand { display: flex; flex-direction: column; align-items: center; gap: 30px; }
+  .cv-halo {
+    position: relative;
+    width: 240px; height: 240px; border-radius: 999px;
+    background: var(--sl-grey-100);
+    display: flex; align-items: center; justify-content: center;
+    animation: cv-breathe 2.6s ease-in-out infinite;
+  }
+  /* Swappable content slot — JS crossfades in the mark, a connector logo, or a toolbar icon */
+  .cv-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 100%;
+    transition: opacity 0.35s ease;
+  }
+  .cv-icon .cv-mark-img { width: 112px; height: 112px; filter: invert(1) brightness(0.16); } /* white mark → navy */
+  .cv-icon .cv-si { height: 92px; width: auto; max-width: 150px; }                            /* Simple Icons (already navy) */
+  .cv-icon i   { font-size: 96px; line-height: 1; color: var(--sl-indigo-900); }              /* connector logo (FA brand) */
+  .cv-icon svg { width: 104px; height: 104px; color: var(--sl-indigo-900); }                  /* toolbar glyph (currentColor) */
+  @keyframes cv-breathe {
+    0%, 100% { transform: scale(1);    opacity: 0.7; }
+    50%      { transform: scale(1.05); opacity: 1;   }
+  }
+  .cv-caption { font: 500 20px/28px var(--font-sans); color: var(--sl-indigo-900); transition: opacity 0.3s ease; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sk2, .cv-halo { animation: none; }
+  }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Designer · Loading state",
+  "section": "Templates",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/templates-designer-loading.html",
+  "tagline": "What the Designer shows while it loads — skeleton chrome + a branded canvas.",
+  "anatomy": "Skeleton chrome — dark bands on the navy header and rail (`--color-skeleton-on-dark`), light bands on the 2x-tall toolbar and status bar (`--color-skeleton`) — around a canvas that centers the SnapLogic mark breathing in a soft halo, with a caption beneath.",
+  "usage": "Point developers here for the Designer's load-time state. Show it until the pipeline graph is ready, then swap in the live canvas.",
+  "behaviors": "The caption cycles through what's loading ('Loading canvas …', 'Loading snaps …', 'Loading toolbar …', etc.). During 'Loading snaps' the halo crossfades through connector logos (Salesforce, AWS, Azure, Google, Slack, Shopify via Font Awesome; SAP, Snowflake, Databricks via Simple Icons); during 'Loading toolbar' through toolbar action glyphs. All skeletons pulse at 2s; the halo and pulses stop under prefers-reduced-motion. Connector logos load at runtime from the Simple Icons CDN. Workday, ServiceNow, NetSuite, and Oracle are omitted — no icon-library source exists; add licensed SVGs to /assets to include them."
+}
+</script>
+</head>
+<body>
+  <div class="card">
+    <!-- ═════════════════════ Loading state · skeleton chrome + branded canvas ═════════════════════ -->
+    <div>
+      <div class="section-h">Loading state <span class="meta">skeleton chrome · SnapLogic mark breathing on the canvas · caption</span></div>
+      <div class="frame" style="--rail-w: 280px;">
+        <!-- Global header skeleton -->
+        <header class="gn">
+          <div class="gn__left">
+            <span class="sk2 on-dark" style="width: 32px; height: 32px; border-radius: 8px;"></span>
+            <span class="sk2 on-dark" style="width: 92px; height: 14px;"></span>
+            <span class="sk2 on-dark" style="width: 150px; height: 30px;"></span>
+          </div>
+          <div class="gn__right">
+            <span class="sk2 on-dark" style="width: 68px; height: 16px;"></span>
+            <span class="sk2 on-dark circle" style="width: 28px; height: 28px;"></span>
+            <span class="sk2 on-dark circle" style="width: 28px; height: 28px;"></span>
+            <span class="sk2 on-dark circle" style="width: 28px; height: 28px;"></span>
+            <span class="sk2 on-dark" style="width: 26px; height: 26px; border-radius: 6px;"></span>
+          </div>
+        </header>
+
+        <div class="body">
+          <!-- Left rail skeleton -->
+          <aside class="rail rail--expanded">
+            <div class="ld-rail">
+              <span class="sk2 on-dark" style="width: 64px; height: 9px; margin-bottom: 2px;"></span>
+              <span class="sk2 on-dark" style="width: 88%;"></span>
+              <span class="sk2 on-dark" style="width: 74%;"></span>
+              <span class="sk2 on-dark" style="width: 92%;"></span>
+              <span class="sk2 on-dark" style="width: 68%;"></span>
+              <span class="sk2 on-dark" style="width: 80%;"></span>
+              <span class="sk2 on-dark" style="width: 60px; height: 9px; margin: 10px 0 2px;"></span>
+              <span class="sk2 on-dark" style="width: 84%;"></span>
+              <span class="sk2 on-dark" style="width: 70%;"></span>
+              <span class="sk2 on-dark" style="width: 90%;"></span>
+              <span class="sk2 on-dark" style="width: 64%;"></span>
+            </div>
+          </aside>
+
+          <div class="rcol">
+            <!-- Toolbar skeleton -->
+            <div class="tb tb--collapsed tb--load">
+              <div class="tb__center">
+                <div class="tb__group"><div class="tb__row">
+                  <span class="sk2 circle ld-tb-item" style="width: 30px;"></span>
+                  <span class="sk2 ld-tb-item" style="width: 46px; border-radius: 15px;"></span>
+                  <span class="sk2 circle ld-tb-item" style="width: 30px;"></span>
+                </div></div>
+                <div class="tb__group"><div class="tb__row">
+                  <span class="sk2 circle ld-tb-item" style="width: 30px;"></span>
+                  <span class="sk2 circle ld-tb-item" style="width: 30px;"></span>
+                  <span class="sk2 ld-tb-item" style="width: 46px; border-radius: 15px;"></span>
+                </div></div>
+                <div class="tb__group"><div class="tb__row">
+                  <span class="sk2 circle ld-tb-item" style="width: 30px;"></span>
+                  <span class="sk2 ld-tb-item" style="width: 46px; border-radius: 15px;"></span>
+                  <span class="sk2 circle ld-tb-item" style="width: 30px;"></span>
+                </div></div>
+                <div class="tb__group"><div class="tb__row">
+                  <span class="sk2 circle ld-tb-item" style="width: 30px;"></span>
+                  <span class="sk2 circle ld-tb-item" style="width: 30px;"></span>
+                </div></div>
+                <div class="tb__group tb__group--end"><div class="tb__row">
+                  <span class="sk2 circle ld-tb-item" style="width: 30px;"></span>
+                </div></div>
+              </div>
+            </div>
+
+            <div class="canvas-wrap">
+              <div class="canvas">
+                <div class="cv-brand">
+                  <div class="cv-halo"><span class="cv-icon" id="cv-icon"></span></div>
+                  <div class="cv-caption"><span id="cv-word">Loading canvas</span> &#8230;</div>
+                </div>
+                <span class="sk2" style="position: absolute; left: 18px; bottom: 18px; width: 36px; height: 72px;"></span>
+              </div>
+            </div>
+
+            <footer class="sb">
+              <span class="sk2" style="width: 120px; height: 8px; border-radius: 999px;"></span>
+              <span class="sb__spacer"></span>
+              <span class="sk2" style="width: 80px; height: 8px; border-radius: 999px;"></span>
+            </footer>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    lucide.createIcons();
+
+    /* Cycle the loading caption + the halo content through the parts of the app
+       being loaded. "Loading snaps" crossfades through connector logos (Font
+       Awesome brand icons — the system's vendor-logo source); "Loading toolbar"
+       crossfades through toolbar action glyphs; other phases show the mark. */
+    (function () {
+      const word = document.getElementById('cv-word');
+      const icon = document.getElementById('cv-icon');
+      if (!word || !icon) return;
+      const cap = word.closest('.cv-caption');
+
+      const MARK = '<img class="cv-mark-img" src="../assets/logo-mark-white.png" alt="SnapLogic">';
+      const fa   = n => '<i class="fa-brands ' + n + '"></i>';                                  // Font Awesome brand
+      const si   = s => '<img class="cv-si" src="https://cdn.simpleicons.org/' + s + '/131C35" alt="">';  // Simple Icons, navy
+      // Toolbar action glyphs (run / configure / validate / stats)
+      const TB = {
+        run:      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+        sliders:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.4" fill="var(--sl-grey-100)"/><line x1="4" y1="17" x2="20" y2="17"/><circle cx="15" cy="17" r="2.4" fill="var(--sl-grey-100)"/></svg>',
+        check:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
+        bars:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="5"/><line x1="18" y1="20" x2="18" y2="15"/></svg>',
+      };
+
+      const steps = [
+        { cap: 'Loading canvas',   html: MARK },
+        { cap: 'Loading snaps',    html: fa('fa-salesforce') },
+        { cap: 'Loading snaps',    html: fa('fa-aws') },
+        { cap: 'Loading snaps',    html: si('sap') },
+        { cap: 'Loading snaps',    html: fa('fa-microsoft') },
+        { cap: 'Loading snaps',    html: si('snowflake') },
+        { cap: 'Loading snaps',    html: fa('fa-google') },
+        { cap: 'Loading snaps',    html: si('databricks') },
+        { cap: 'Loading snaps',    html: fa('fa-slack') },
+        { cap: 'Loading snaps',    html: fa('fa-shopify') },
+        { cap: 'Loading toolbar',  html: TB.run },
+        { cap: 'Loading toolbar',  html: TB.sliders },
+        { cap: 'Loading toolbar',  html: TB.check },
+        { cap: 'Loading toolbar',  html: TB.bars },
+        { cap: 'Loading pipeline', html: MARK },
+        { cap: 'Loading assets',   html: MARK },
+      ];
+
+      let i = 0;
+      function render(step) { word.textContent = step.cap; icon.innerHTML = step.html; }
+      render(steps[0]);
+
+      setInterval(function () {
+        cap.style.opacity = '0';                 // fade caption + halo content out
+        icon.style.opacity = '0';
+        setTimeout(function () {
+          i = (i + 1) % steps.length;
+          render(steps[i]);                      // swap, then fade back in
+          cap.style.opacity = '1';
+          icon.style.opacity = '1';
+        }, 350);
+      }, 1900);
+    })();
+  </script>
+</body>
+</html>
