@@ -12,13 +12,17 @@
     50%      { opacity: 0.5; }
   }
   .sk {
-    background-color: var(--sl-grey-300);
+    background-color: var(--color-skeleton);
     border-radius: var(--radius-sm);
     animation: sk-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
   @media (prefers-reduced-motion: reduce) {
     .sk { animation: none; }
   }
+
+  /* On a dark surface, the light band reads far too bright — swap the fill for
+     the on-dark token (a white-alpha overlay). Same animation. */
+  .sk.on-dark { background-color: var(--color-skeleton-on-dark); }
   .row { display: flex; gap: 24px; }
   .col { display: flex; flex-direction: column; gap: 8px; flex: 1; }
   .col h5 { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); margin: 0 0 4px; }
@@ -38,9 +42,9 @@
   "section": "Building blocks",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-skeleton.html",
   "tagline": "Pulsing grey shape standing in for loading content.",
-  "anatomy": "Grey-200 fill · 4px radius · animated linear gradient sweep at 1500ms infinite (subtle, low contrast).",
-  "options": "Block (default), text (1em tall), avatar (circle), media (with aspect ratio).",
-  "usage": "Use for loading states on cards, rows, lists, and full views. Match the rough shape of the content that is loading — a row of three skeletons of varying widths suggests a body of text. Never animate aggressively; the sweep should sit at the edge of perception."
+  "anatomy": "Grey-300 fill · 4px radius · opacity pulse 1 → 0.5 → 1 at 2s infinite (subtle, low contrast). On dark surfaces, swap the fill for a white@10% overlay — grey reads too bright on navy.",
+  "options": "Block (default), text (1em tall), avatar (circle), media (with aspect ratio). On-dark variant for dark surfaces like the nav rail.",
+  "usage": "Use for loading states on cards, rows, lists, and full views. Match the rough shape of the content that is loading — a row of three skeletons of varying widths suggests a body of text. Never animate aggressively; the pulse should sit at the edge of perception. Pulse is disabled under prefers-reduced-motion."
 }
 </script>
 </head>
@@ -81,6 +85,45 @@
           <div style="padding: 10px 14px; display:flex; align-items:center; gap: 10px;">
             <div class="sk" style="width: 14px; height: 14px; border-radius: 999px;"></div>
             <div class="sk" style="height: 8px; flex: 1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row-label" style="margin-top: 8px"><span class="name">On dark surface</span><span class="meta">white@10% bands — grey reads too bright on navy</span></div>
+    <div class="row">
+      <div class="col">
+        <h5>Example card (dark)</h5>
+        <div class="card-skeleton" style="background: var(--sl-blue-1000); border-color: var(--sl-blue-1000);">
+          <div style="display:flex; justify-content: space-between; align-items: center;">
+            <div class="sk on-dark" style="width: 60%; height: 12px"></div>
+            <div style="display:flex; gap: 6px;">
+              <div class="sk on-dark" style="width: 12px; height: 12px; border-radius: 999px;"></div>
+              <div class="sk on-dark" style="width: 12px; height: 12px; border-radius: 999px;"></div>
+              <div class="sk on-dark" style="width: 12px; height: 12px; border-radius: 999px;"></div>
+            </div>
+          </div>
+          <div class="sk on-dark" style="width: 90%; height: 8px"></div>
+          <div class="sk on-dark" style="width: 75%; height: 8px"></div>
+          <div class="sk on-dark" style="width: 50%; height: 8px"></div>
+        </div>
+      </div>
+      <div class="col">
+        <h5>Example list (dark)</h5>
+        <div class="card-skeleton" style="padding: 0; background: var(--sl-blue-1000); border-color: var(--sl-blue-1000);">
+          <div style="padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <div class="sk on-dark" style="width: 60%; height: 10px"></div>
+          </div>
+          <div style="padding: 10px 14px; display:flex; align-items:center; gap: 10px;">
+            <div class="sk on-dark" style="width: 14px; height: 14px; border-radius: 999px;"></div>
+            <div class="sk on-dark" style="height: 8px; flex: 1"></div>
+          </div>
+          <div style="padding: 10px 14px; display:flex; align-items:center; gap: 10px;">
+            <div class="sk on-dark" style="width: 14px; height: 14px; border-radius: 999px;"></div>
+            <div class="sk on-dark" style="height: 8px; flex: 1"></div>
+          </div>
+          <div style="padding: 10px 14px; display:flex; align-items:center; gap: 10px;">
+            <div class="sk on-dark" style="width: 14px; height: 14px; border-radius: 999px;"></div>
+            <div class="sk on-dark" style="height: 8px; flex: 1"></div>
           </div>
         </div>
       </div>

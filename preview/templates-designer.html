@@ -476,15 +476,16 @@
   .spec dd { margin: 0; color: var(--color-text-subtle); }
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+
 </style>
 <script type="application/json" id="jellyroll-meta">
 {
   "name": "Designer · Empty canvas",
   "section": "Templates",
   "url": "https://sl-design-team.github.io/jellyroll/preview/templates-designer.html",
-  "tagline": "Full Designer template — global header, left rail, canvas, toolbar, properties panel.",
-  "usage": "Use as the reference layout for the Designer workspace. Composes the Global header, Left nav (snap palette), Canvas, Toolbar (Build / Execution / Configuration / Version Control / Transfer groups), and the right Properties panel. Empty state on the canvas shows the `Create your first pipeline` primary action.",
-  "behaviors": "Toolbar collapses to icons-only (state A) or expands with labels and group headers (state B); the chevron toggles. Left rail can be resized between 200–360px and persists per user. The properties panel is hidden until a snap is selected; selecting one opens it in the right column."
+  "tagline": "Full Designer template — global header, left rail, toolbar, and pipeline canvas.",
+  "usage": "Use as the reference layout for the Designer workspace. Composes the Global header, Left nav (snap palette), Toolbar (Build / Execution / Configuration / Version Control / Transfer groups), and the pipeline Canvas. The empty canvas shows a drag-Snaps hint.",
+  "behaviors": "Toolbar collapses to icons-only or expands with labels and group headers; the chevron toggles. Left rail can be resized and persists per user. The properties panel is hidden until a snap is selected. A standalone load-time treatment lives at preview/templates-designer-loading.html (kept out of the gallery because its head-level CSS/JS don't run when the gallery injects a preview body inline — open it directly)."
 }
 </script>
 </head>
@@ -650,7 +651,6 @@
         </div>
       </div>
     </div>
-
 
     <dl class="spec">
       <dt>frame</dt><dd>1440 × 900. Two-row grid: <b>56px navbar</b> (full width) + <b>flex body</b>. The body is itself a two-column grid: <b>rail</b> (variable width) + <b>right column</b>. The 4px brand gradient sits under the navbar.</dd>

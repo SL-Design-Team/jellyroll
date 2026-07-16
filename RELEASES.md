@@ -2,6 +2,24 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
+## 2026-07-16 · Skeleton loaders & Designer loading state
+
+### New components
+- **Left nav skeleton** (Composed components) — a loading placeholder for the dark navigation rail. Uses white-alpha bands tuned to the navy surface rather than the light-grey Skeleton loader, which reads too bright on `--sl-blue-1000`. Expanded (icon + label bars) and minimized (icon circles) states, matching the real nav's geometry.
+
+### Foundations
+- **Skeleton tokens reworked and unified.** `--color-skeleton` is now **Grey-400** (`#C4CAD6`, light surfaces) and there's a new **`--color-skeleton-on-dark`** (`rgba(255,255,255,0.10)`, dark surfaces like the nav rail). The vestigial `--color-skeleton-pulse` (a gradient-sweep stop no component used) was removed. Every skeleton — the component, the chart loader, the nav skeleton, and the foundations demo — now shares one **2s opacity pulse** (`1 → 0.5 → 1`), disabled under `prefers-reduced-motion`.
+
+### Components
+- **Skeleton loader** gains an **on-dark variant** (`.sk.on-dark`) and an "On dark surface" example. Its metadata was corrected — it described a "Grey-200 · gradient sweep at 1500ms" that never matched the actual flat-pulse implementation.
+- **Selection & skeleton** (Foundations) now demos both a light and a dark skeleton card and documents the two tokens.
+
+### Docs
+- **Global header** now documents the **combo loader bar** — the 5px teal → blue → teal gradient bar on the header's bottom edge that fills left→right over 4s while an inner band walks on a 1s loop for global loading.
+
+### Off-gallery
+- **Designer · Loading state** (`preview/templates-designer-loading.html`) — a full load-time treatment for the Designer: skeleton chrome around a canvas that centers the SnapLogic mark breathing in a soft halo, with a caption that cycles through what's loading and swaps in connector / toolbar glyphs. It is **kept out of the gallery catalog on purpose**: the gallery injects a preview's `<body>` inline and does not run head-level CSS/JS, so this page only animates when opened directly. Share the URL: `/preview/templates-designer-loading.html`.
+
 ## 2026-07-16 · Quiet in-cell Select for dense tables
 
 ### Components

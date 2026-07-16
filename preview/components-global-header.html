@@ -119,9 +119,9 @@
   "section": "Composed components",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-global-header.html",
   "tagline": "The dark Indigo-1000 chrome that spans every product.",
-  "anatomy": "56px tall · Indigo-1000 fill · left: waffle launcher + product wordmark · center: contextual search + breadcrumb · right: env picker + notifications + user menu.",
+  "anatomy": "56px tall · Indigo-1000 fill · left: waffle launcher + product wordmark · center: contextual search + breadcrumb · right: env picker + notifications + user menu. A 5px teal → blue → teal gradient loader bar sits on the bottom edge for global loading states.",
   "usage": "Use across every product as the only chrome that crosses product boundaries. Never inject product-specific controls into the global header — those belong on the Left nav or the page itself.",
-  "behaviors": "Sticky to the top of the viewport. Hover states on icons use a 12% white overlay; selected states use a 24% white overlay. The waffle launcher opens the Product launcher popover.",
+  "behaviors": "Sticky to the top of the viewport. Hover states on icons use a 12% white overlay; selected states use a 24% white overlay. The waffle launcher opens the Product launcher popover. The combo loader bar fills left → right over 4s while an inner band walks on a 1s loop — shown while a page or product-level action loads, hidden when idle. It uses the brand teal → blue gradient (matching `--color-background-primary-hover`).",
   "tokens": [
     "--color-surface-navbar",
     "--color-text-inverse"
