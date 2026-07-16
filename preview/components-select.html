@@ -72,6 +72,34 @@
   /* sizes */
   .sl-select--sm { height: var(--field-height-sm); padding: 4px 10px; font-size: 13px; }
 
+  /* quiet — for dense tables / editable cells: reads as text, reveals border on hover */
+  .sl-select--quiet {
+    display: inline-flex;         /* hug content + center via cell vertical-align */
+    vertical-align: middle;
+    height: 28px;                 /* fits inside a 40/32px row without touching the divider */
+    padding: 4px 6px;
+    margin: 0 -6px;               /* pull back so resting text aligns flush with other cells */
+    gap: 4px;
+    border-color: transparent;
+    background: transparent;
+    max-width: 100%;
+  }
+  .sl-select--quiet .caret { color: var(--color-text-subtle); }  /* subtle but always visible */
+  .sl-select--quiet .caret svg { width: 14px; height: 14px; }
+  .sl-select--quiet:hover { border-color: var(--sl-grey-300); background: var(--sl-white); }
+  .sl-select--quiet.focus, .sl-select--quiet.open {
+    border-color: var(--field-border-focus); background: var(--sl-white); box-shadow: var(--ring-focus);
+  }
+
+  /* mini demo table for the quiet variant */
+  .dt { width: 100%; border-collapse: collapse; border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); overflow: hidden; }
+  .dt th { font: 800 14px/22px var(--font-sans); color: var(--color-text-body); text-align: left; padding: 0 12px; height: 40px; border-bottom: 1px solid var(--sl-grey-300); }
+  .dt td { font: 400 14px/22px var(--font-sans); color: var(--color-text-body); padding: 0 12px; height: 40px; border-bottom: 1px solid var(--sl-grey-200); vertical-align: middle; }
+  .dt tbody tr:last-child td { border-bottom: none; }
+  .dt tbody tr:hover { background: var(--sl-grey-100); }
+  .dt td.role { overflow: visible; position: relative; }
+  .dt td.role .sl-select-wrap { position: relative; }
+
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
   .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
   .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
@@ -91,8 +119,8 @@
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-select.html",
   "tagline": "Single-choice dropdown with searchable + grouped variants.",
   "anatomy": "Trigger (same shape as Input) with trailing chevron · panel (white, Raised shadow, 4px radius, max-height with scroll) · options (40px rows, 12px left padding, optional leading icon, current selection marked).",
-  "options": "Variants: standard, searchable, grouped, with icons. Sizes: default 40px, compact 32px.",
-  "usage": "Use for picking one value from 5–50 options. Below 5, prefer a Segmented control or Radio group. Above 50 or for unbounded sets, use a Combobox.",
+  "options": "Variants: standard, searchable, grouped, with icons, plus a quiet (borderless, in-cell) variant for dense tables. Sizes: default 40px, compact 32px.",
+  "usage": "Use for picking one value from 5–50 options. Below 5, prefer a Segmented control or Radio group. Above 50 or for unbounded sets, use a Combobox. Inside a dense table, use the quiet variant — the cell reads as text with a subtle chevron and only reveals its border on hover — instead of putting a bordered field in every row.",
   "behaviors": "Click or Space/Enter opens. Arrow keys cycle options; typing jumps to the first match. Selecting closes the panel and updates the trigger. Esc closes without changing the value. The panel anchors to the trigger and flips above when it would clip below."
 }
 </script>
@@ -163,6 +191,41 @@
       </div>
     </div>
 
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">In a table · quiet variant <span class="meta">.sl-select--quiet</span></div>
+      <p style="font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); margin: 0 0 12px;">Inside a dense table, the bordered field repeated down every row reads as noise. The quiet variant shows the value as plain text with a subtle chevron, then reveals its border on hover and a teal ring when open — so the column reads as data, not a wall of boxes.</p>
+      <table class="dt">
+        <thead>
+          <tr><th style="width:40%">Name</th><th style="width:35%">Email</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>dave dave2</td><td>421_user@snaplogic.com</td>
+            <td class="role"><div class="sl-select sl-select--quiet"><span class="value">Env admin</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></td>
+          </tr>
+          <tr>
+            <td>lois li</td><td>6973@snaplogic.com</td>
+            <td class="role"><div class="sl-select sl-select--quiet"><span class="value">User</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></td>
+          </tr>
+          <tr>
+            <td>Anusha Adepu1</td><td>aanusha@snaplogic.com</td>
+            <td class="role">
+              <div class="sl-select-wrap">
+                <div class="sl-select sl-select--quiet open"><span class="value">User</span><span class="caret"><i data-lucide="chevron-down"></i></span></div>
+                <div class="sl-menu">
+                  <div class="sl-menu__item selected">User<span class="check"><i data-lucide="check"></i></span></div>
+                  <div class="sl-menu__item">Env admin<span class="check"><i data-lucide="check"></i></span></div>
+                  <div class="sl-menu__item">Org admin<span class="check"><i data-lucide="check"></i></span></div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <dl class="spec">
       <dt>trigger</dt><dd>Looks like a text field with a trailing <code>chevron-down</code>. Rotates 180° when open.</dd>
       <dt>menu</dt><dd>Positioned 4px below the trigger, same width. Max-height 260px (≈6 items) with scroll. Supports group labels (10px UPPERCASE mono) and dividers.</dd>
@@ -171,6 +234,7 @@
       <dt>keyboard</dt><dd><code>↑/↓</code> navigate · <code>Enter</code> select · <code>Esc</code> close · <code>Home/End</code> first/last · type-ahead jumps to first match.</dd>
       <dt>a11y</dt><dd><code>role="combobox" aria-expanded aria-haspopup="listbox" aria-controls="menu-id"</code>. Menu: <code>role="listbox"</code>; items: <code>role="option" aria-selected</code>.</dd>
       <dt>virtualize</dt><dd>For lists with &gt;200 options (Snaplex picker, account list), virtualize rows. Don't paint 5,000 DOM nodes.</dd>
+      <dt>quiet</dt><dd>Borderless in-cell variant (<code>.sl-select--quiet</code>) for dense tables and editable cells. Reads as plain text with a subtle always-visible chevron; reveals a Grey-300 border + white fill on hover, teal focus ring when open. Use it instead of a bordered field in every row.</dd>
     </dl>
   </div>
   <script>lucide.createIcons();</script>

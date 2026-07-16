@@ -2,7 +2,14 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
-## 2026-07-14 · Tooltip fixes + Avatar group popover & keyboard access
+## 2026-07-16 · Quiet in-cell Select for dense tables
+
+### Components
+- **Select** gains a **quiet** (borderless, in-cell) variant (`.sl-select--quiet`) for dense tables and editable cells. It reads as plain text with a subtle, always-visible chevron, then reveals a Grey-300 border + white fill on hover and the standard Teal-600 focus ring when open — the Select equivalent of the existing editable-cell affordance. This replaces the full bordered field in table cells, where repeating it down every row turned a column into a wall of boxes that competed with the data. No new tokens (reuses `--sl-grey-300`, `--field-border-focus`, `--ring-focus`, `--color-text-subtle`).
+- **Table** now demos the quiet Select in the real interactive data table — the Snaplex column reads as data, not chrome, while keeping its sort and per-column filter working.
+
+### Docs
+- **Select** usage now points to the quiet variant for dense tables instead of a bordered field in every row.
 
 ### Components
 - **Avatar group** now specs and demos the **overflow member-list popover**: click `+N` to open a white card (1px Grey-300 border, `radius-sm`, raised shadow, min-width 240px, no header) whose rows pair an xs avatar with the member's full name and a muted right-aligned presence label (**Inactive** where applicable), scrolling after ~5 rows. Wired with `aria-haspopup="dialog"` / `aria-expanded` / `aria-controls`; Escape closes and returns focus to the button.

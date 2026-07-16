@@ -663,8 +663,8 @@ window.JELLYROLL_DATA = {
           tagline: "Single-choice dropdown with searchable + grouped variants.",
           meta: {
             anatomy: "Trigger (same shape as Input) with trailing chevron · panel (white, Raised shadow, 4px radius, max-height with scroll) · options (40px rows, 12px left padding, optional leading icon, current selection marked).",
-            options: "Variants: standard, searchable, grouped, with icons. Sizes: default 40px, compact 32px.",
-            usage: "Use for picking one value from 5–50 options. Below 5, prefer a Segmented control or Radio group. Above 50 or for unbounded sets, use a Combobox.",
+            options: "Variants: standard, searchable, grouped, with icons, plus a quiet (borderless, in-cell) variant for dense tables. Sizes: default 40px, compact 32px.",
+            usage: "Use for picking one value from 5–50 options. Below 5, prefer a Segmented control or Radio group. Above 50 or for unbounded sets, use a Combobox. Inside a dense table, use the quiet variant — the cell reads as text with a subtle chevron and only reveals its border on hover — instead of putting a bordered field in every row.",
             behaviors: "Click or Space/Enter opens. Arrow keys cycle options; typing jumps to the first match. Selecting closes the panel and updates the trigger. Esc closes without changing the value. The panel anchors to the trigger and flips above when it would clip below."
           }
         },
