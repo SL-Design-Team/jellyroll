@@ -749,7 +749,7 @@ window.JELLYROLL_DATA = {
           name: "Tree select",
           tagline: "Hierarchical picker — folders, snaplexes, org units.",
           meta: {
-            anatomy: "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 16px per level. Single or multi-select.",
+            anatomy: "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select.",
             options: "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches.",
             usage: "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
             behaviors: "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants."
