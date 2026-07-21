@@ -380,10 +380,10 @@ window.JELLYROLL_DATA = {
           name: "Segmented control",
           tagline: "Compact horizontal switch for 2–5 mutually exclusive options.",
           meta: {
-            anatomy: "Pill container in Grey-100 · selected segment is white with shadow · text-only or icon + text segments.",
-            options: "Sizes: default 32px, small 28px. Text-only, icon-only, or icon + text segments.",
-            usage: "Use to flip between views inside a single surface (list / grid, day / week / month, summary / details). For navigating between unrelated screens, use Tabs. For more than 5 options, use a Select.",
-            behaviors: "Click selects; arrow keys cycle. Selection animates the white pill across segments in 150ms with no overshoot. Disabled segments drop opacity and reject input."
+            anatomy: "Inset track with a 1px outer border and 2–3px padding · selected segment is a Blue-600 pill with white text · unselected segments are transparent · text-only, icon-only, or icon + text segments.",
+            options: "Sizes: large 40px, medium 30px (default), small 24px. Surfaces: default transparent light track, white `sc--on-sunken` track for Grey-100 backgrounds, or `sc--inverse` for dark backgrounds.",
+            usage: "Use to flip between views inside a single surface (list / grid, day / week / month, summary / details). Use large in page or table toolbars beside 40px fields, medium as the standalone default, and small in dense toolbars or rails. Add `sc--on-sunken` only when the transparent track loses separation on a light grey surface. For navigating between unrelated screens, use Tabs. For more than 5 options, use a Select.",
+            behaviors: "Click selects; arrow keys cycle; Home and End jump to the first and last segments. Hover adds a subtle surface fill, focus uses the teal ring, and disabled segments reject input. The selected segment remains Blue-600 on every surface."
           }
         },
         {
