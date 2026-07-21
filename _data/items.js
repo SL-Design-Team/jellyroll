@@ -887,7 +887,7 @@ window.JELLYROLL_DATA = {
           tagline: "First-run, no-results, and after-clear states.",
           meta: {
             usage: "Empty states explain why the view is empty and what to do next. First-run states include a primary action (`Create your first pipeline`). No-results states explain that the filter is the cause and offer a `Clear filters` action. After-clear states are minimal — they confirm the action without offering more affordance.",
-            behaviors: "Illustration is optional and minimal — a flat icon, never a stock illustration of people. The primary action is a Button; secondary actions are text links."
+            behaviors: "Illustration is optional and minimal — a flat icon, never a stock illustration of people. The primary action is a Button; secondary actions are text links. The 64×64 medallion is kept for full-container first-encounter states (first-run, no-permission) and omitted for resolved or small secondary ones — when omitted the title becomes the anchor. Inline empty states are one line (optional 16px glyph + message + optional single action; no description, no medallion, no second action) and wrap message-then-action on narrow containers rather than truncating. When two actions can't fit side by side they stack vertically (primary on top) via a container query — never clipped in one row."
           }
         },
         {

@@ -118,7 +118,7 @@
   "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-empty-states.html",
   "tagline": "First-run, no-results, and after-clear states.",
   "usage": "Empty states explain why the view is empty and what to do next. First-run states include a primary action (`Create your first pipeline`). No-results states explain that the filter is the cause and offer a `Clear filters` action. After-clear states are minimal — they confirm the action without offering more affordance.",
-  "behaviors": "Illustration is optional and minimal — a flat icon, never a stock illustration of people. The primary action is a Button; secondary actions are text links."
+  "behaviors": "Illustration is optional and minimal — a flat icon, never a stock illustration of people. The primary action is a Button; secondary actions are text links. The 64×64 medallion is kept for full-container first-encounter states (first-run, no-permission) and omitted for resolved or small secondary ones — when omitted the title becomes the anchor. Inline empty states are one line (optional 16px glyph + message + optional single action; no description, no medallion, no second action) and wrap message-then-action on narrow containers rather than truncating. When two actions can't fit side by side they stack vertically (primary on top) via a container query — never clipped in one row."
 }
 </script>
 </head>
@@ -201,9 +201,12 @@
 
     <dl class="spec">
       <dt>anatomy</dt><dd>Round 64×64 icon medallion, <b>16px ExtraBold</b> title, <b>13px regular</b> description (≤2 lines, ≤140 chars), 1–2 action buttons. Centered, max-width 360px. Lives inside the container that would normally show data.</dd>
+      <dt>medallion</dt><dd><b>Optional, but tied to the state's weight</b> — not a per-instance toggle. <b>Keep it</b> for full-container, first-encounter states (first-run, no-permission): it's the figure the eye lands on in an empty region. <b>Omit it</b> for resolved or small secondary states (after-clear, minor sub-regions); when omitted, the layout stays centered and the <b>title becomes the anchor</b>.</dd>
       <dt>variants</dt><dd><b>First-run</b> (brand-tinted medallion, primary CTA) · <b>No results</b> (grey medallion, secondary "Clear filters") · <b>No permission</b> (yellow medallion, ghost link) · <b>Inline</b> (one-line, no medallion — for sub-sections inside a populated screen).</dd>
+      <dt>inline</dt><dd>One line: <b>optional 16px leading glyph · short message · optional single inline action</b> (text link or small button). <b>No description, no medallion, no second action</b> — if you need those, use the standard centered layout. Left-aligned, never centered. On a narrow container it <b>wraps</b> (message first, action beneath, still left-aligned); never truncate the message or clip the action.</dd>
       <dt>copy</dt><dd>Title is a <b>declarative phrase</b>, sentence case, names the missing object ("No pipelines in this project yet"). Description names <i>why</i> + the next step. Never apologize ("Sorry, no results"). Never use "Oops".</dd>
       <dt>actions</dt><dd>Primary CTA only when the user can resolve the empty state themselves. For no-permission, replace CTA with a ghost "Request access" link — never a disabled button. For no-results, the action is <b>always</b> "Clear filters" or "Adjust search", never "Create".</dd>
+      <dt>responsive actions</dt><dd>When two actions don't fit side by side, <b>stack vertically — primary on top</b>, matched/full width, via a <b>container query</b> on the empty container (its width, not the viewport's). Never keep one row and let the parent clip or scroll — that can hide the CTA or the recovery action, which an empty state must never lose. Raw <code>flex-wrap</code> only if the wrapped result is a clean stack.</dd>
       <dt>art</dt><dd>Single Lucide glyph in a flat medallion — no illustrations, no characters, no spot art. Brand-gradient tint reserved for first-run states only.</dd>
       <dt>vs. loading</dt><dd>Show a <b>skeleton</b> while data is fetching. Only render the empty state once the request resolves with zero rows — never flash empty before loading completes.</dd>
       <dt>a11y</dt><dd>Empty container has <code>role="status"</code> with the title as accessible name. Actions are real buttons, focusable, keyboard-reachable.</dd>
