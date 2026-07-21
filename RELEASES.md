@@ -2,6 +2,19 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
+## 2026-07-21 · Toast spec cleanup & Tree indentation
+
+### Docs
+- **Toast** spec reconciled after implementation questions:
+  - **Tones** corrected to the real set — **info / success / warning / alert · loading** (the metadata had invented a "neutral" tone and omitted info + loading).
+  - **Durations** resolved to the corroborated values: **3s** with no action, **10s** when there's an action link (auto-bump so action toasts don't vanish before they can be clicked), and **no timeout** while loading. The stray "5s / 8s" numbers are gone; the Undo pattern now reads **10s** (was inconsistently 8s in its metadata vs 10s in its spec).
+  - **Countdown bar** documented as appearing **only on toasts that carry an action** — a deadline indicator on a purely informational toast manufactures false urgency.
+  - **Loading tone is not user-dismissible** (no `×`) — it resolves in place into a success/alert toast; cancellable operations get an explicit `Cancel` action instead of overloading the `×`.
+- **Tree / Tree-select** now share a single **24px per-level indentation step** (Tree `8/32/56`, Tree-select `12/36`); the checkbox is a fixed 12px leading inset, not a per-level delta (was an inconsistent 22px vs 26px). Fixed the stale Tree-select anatomy (claimed 16px/level).
+
+### Fixes
+- **Undo-toast** action pill now uses `--radius-sm` instead of `--field-radius` (identical 4px value; drops a dependency on a non-vendored semantic token).
+
 ## 2026-07-16 · Skeleton loaders & Designer loading state
 
 ### New components

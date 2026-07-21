@@ -738,10 +738,10 @@ window.JELLYROLL_DATA = {
           name: "Toast",
           tagline: "Transient message anchored bottom-right.",
           meta: {
-            anatomy: "Card (white, Raised shadow, 4px radius) · leading status icon · message (14/22) · optional inline action link · optional dismiss `×`. Stacks vertically with 8px gap.",
-            options: "Tones: neutral / success / warning / danger. With or without action link (`Undo`, `View`).",
-            usage: "Use for ephemeral feedback after an action — saves, deletes (with Undo), background process completes. Auto-dismiss after 5s (8s if there is an action link). For errors that need user attention, use a Banner or Modal.",
-            behaviors: "Slide in from bottom-right in 200ms. Hover pauses the auto-dismiss timer. Stack is FIFO; new toasts push above older ones. Dismiss via `×`, the action, or auto-timeout."
+            anatomy: "Card (white, Raised shadow, 4px radius) · leading status icon · message (14/22) · optional inline action link · optional dismiss `×`. An accent countdown bar (2px, bottom edge) appears only on toasts that carry an action. Stacks vertically with 8px gap.",
+            options: "Tones: info / success / warning / alert · loading (indeterminate, grey). With or without action link (`Undo`, `View`).",
+            usage: "Use for ephemeral feedback after an action — saves, deletes (with Undo), background process completes. Auto-dismiss after 3s (10s if there is an action link — enough time to notice and click); loading toasts have no timeout. For errors that need user attention, use a Banner or Modal.",
+            behaviors: "Slide in from bottom-right in 200ms. Hover pauses the auto-dismiss timer (WCAG 2.2.1). Stack is FIFO; new toasts push above older ones. Dismiss via `×`, the action, or auto-timeout. The countdown bar shows only when there's an action to take. The loading tone is not user-dismissible (no `×`) — it resolves in place into a success/alert toast; if the operation is cancellable, expose an explicit `Cancel` action rather than the `×`."
           }
         },
         {
@@ -958,8 +958,8 @@ window.JELLYROLL_DATA = {
           name: "Undo via toast",
           tagline: "Reversible destructive actions skip the confirm modal and offer Undo in the toast.",
           meta: {
-            usage: "Prefer this over a confirm modal whenever the operation is genuinely reversible within a short window — archive a record, remove a list item, dismiss a notification. The toast persists 8 seconds with the Undo link active.",
-            behaviors: "Acting on Undo reverses the operation immediately and confirms with a second toast (`Pipeline restored`). After 8 seconds the toast auto-dismisses and the operation becomes permanent."
+            usage: "Prefer this over a confirm modal whenever the operation is genuinely reversible within a short window — archive a record, remove a list item, dismiss a notification. The toast persists 10 seconds with the Undo link active.",
+            behaviors: "Acting on Undo reverses the operation immediately and confirms with a second toast (`Pipeline restored`). After 10 seconds the toast auto-dismisses and the operation becomes permanent."
           }
         },
         {
