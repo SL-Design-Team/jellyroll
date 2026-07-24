@@ -50,6 +50,37 @@
   }
   .sl-field__control .icon { color: var(--color-text-subtle); display: inline-flex; flex: none; }
   .sl-field__control .icon svg { width: 16px; height: 16px; stroke-width: 2; }
+  /* Clear is a real button — the only interactive affordance in the trailing slot.
+     It sits innermost (nearest the value) because it is transient: it appears only
+     with content + hover/focus, so keeping it inside stops the right edge reflowing. */
+  .sl-field__control .clear {
+    border: 0; padding: 0; margin: 0; background: transparent;
+    color: var(--color-text-subtle);
+    display: inline-flex; flex: none; cursor: pointer;
+    border-radius: 2px;
+  }
+  .sl-field__control .clear svg { width: 16px; height: 16px; stroke-width: 2; }
+  .sl-field__control .clear:hover { color: var(--color-text-body); }
+  .sl-field__control .icon.status-ok { color: var(--sl-green-600); }
+  /* Inline loading uses the system Spinner (sm/16px) — never a Lucide loader glyph.
+     Same conic-ring construction as components-spinner.html, sized to the icon slot. */
+  .sl-spinner--sm {
+    --sl-spin-thick: 1px;
+    position: relative; display: inline-block; flex: none;
+    width: 16px; height: 16px; border-radius: 50%;
+    color: var(--sl-blue-600);
+    background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
+    -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+            mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+    animation: sl-spin 1.1s linear infinite;
+  }
+  .sl-spinner--sm::after {
+    content: ''; position: absolute; top: 0; left: 50%;
+    width: var(--sl-spin-thick); height: var(--sl-spin-thick);
+    border-radius: 50%; background: currentColor; transform: translateX(-50%);
+  }
+  @keyframes sl-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .sl-spinner--sm { animation-duration: 2.8s; } }
   .sl-field__control input {
     border: 0; outline: 0; background: transparent;
     flex: 1; min-width: 0;
@@ -244,6 +275,18 @@
         </div>
 
         <div class="sl-field">
+          <div class="sl-field__label">Clearable + trailing status</div>
+          <div class="sl-field__control"><input value="project-cdf-to-snowflake" /><button class="clear" type="button" aria-label="Clear"><i data-lucide="x"></i></button><span class="icon status-ok" aria-hidden="true"><i data-lucide="check"></i></span></div>
+          <div class="sl-field__meta"><span class="sl-field__helper">Clear (transient) sits innermost; the status icon pins the edge.</span></div>
+        </div>
+
+        <div class="sl-field">
+          <div class="sl-field__label">Loading (async validation)</div>
+          <div class="sl-field__control"><input value="checking..." /><span class="sl-spinner sl-spinner--sm" role="status" aria-label="Checking availability"></span></div>
+          <div class="sl-field__meta"><span class="sl-field__helper" aria-live="polite">Checking availability…</span></div>
+        </div>
+
+        <div class="sl-field">
           <div class="sl-field__label">With helper</div>
           <div class="sl-field__control"><input value="" placeholder="value" /></div>
           <div class="sl-field__meta"><span class="sl-field__helper">Helper explains the format expected.</span></div>
@@ -278,6 +321,8 @@
       <dt>control</dt><dd>40px default height · 12px horizontal padding · 4px radius · 1px Grey-400 border. Uses <code>--field-*</code> tokens — never invent new values.</dd>
       <dt>prefix / suffix</dt><dd>Inline static text (URLs, units, currency). Non-interactive. Colored <code>--color-text-subtle</code>. Sits inside the same control container, separated from input by 8px gap.</dd>
       <dt>icons</dt><dd>16px Lucide, inherits <code>currentColor</code>. Leading = context (search, link). Trailing = action (clear, dropdown, status).</dd>
+      <dt>clear + trailing</dt><dd>Pair a clear <code>×</code> with a trailing icon only when the trailing icon is <b>passive</b> (validation check, status). Never stack two interactive buttons — a dropdown chevron, password eye, or search already owns the slot. Order left→right: <b>clear innermost</b> (nearest the value, transient — shows on content + hover/focus), <b>persistent icon pins the edge</b>. Clear is a <code>&lt;button aria-label="Clear"&gt;</code>; the status icon is <code>aria-hidden</code> (state comes from <code>aria-invalid</code>/helper). Esc clears when focused.</dd>
+      <dt>loading</dt><dd>Async/in-field loading (e.g. availability checks) uses the system <b>Spinner at <code>sm</code> (16px)</b> in the trailing slot — <b>never a Lucide <code>loader</code> glyph</b>. Default Blue, or <code>--ai-accent</code> in AI contexts. Wrap in <code>role="status"</code> with an <code>aria-label</code>; pair with an <code>aria-live="polite"</code> helper. Replaces the trailing status/clear while pending.</dd>
       <dt>helper text</dt><dd>12/18 below the control, subtle grey. Use for format hints and examples. Disappears (or moves to error) when validation fails.</dd>
       <dt>error text</dt><dd>12/18 below the control, Red-700 with leading <code>alert-circle</code>. Always specific ("Must be a valid email") — never "Invalid input."</dd>
       <dt>counter</dt><dd>11px monospace, right-aligned in the meta row. Turns Red-700 at limit. <code>aria-live="polite"</code> when approaching limit.</dd>
