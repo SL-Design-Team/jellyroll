@@ -46,6 +46,37 @@
   .sl-search--sm { height: var(--field-height-sm); padding: 4px 10px; }
   .sl-search--sm input { font-size: 12px; line-height: 16px; }
 
+  /* inverse — surface modifier for dark rails and panels. Compose with --sm
+     for the compact rail size: .sl-search .sl-search--sm .sl-search--inverse.
+     Border is Blue-300 at 25%, the same value the inverse Segmented control
+     uses for its track, so dark-surface chrome stays consistent. */
+  .sl-search--inverse {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(156, 179, 225, 0.25);   /* --sl-blue-300 @ 25% */
+  }
+  .sl-search--inverse:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(156, 179, 225, 0.45);   /* --sl-blue-300 @ 45% */
+  }
+  .sl-search--inverse.focus {
+    border-color: var(--field-border-focus);   /* teal ring is identical on every surface */
+    box-shadow: var(--ring-focus);
+  }
+  .sl-search--inverse input { color: var(--sl-grey-100); }
+  .sl-search--inverse input::placeholder { color: var(--sl-grey-500); }
+  .sl-search--inverse .icon { color: var(--sl-grey-400); }
+  .sl-search--inverse .clear { color: var(--sl-grey-400); }
+  .sl-search--inverse .clear:hover { background: rgba(255, 255, 255, 0.12); color: var(--sl-white); }
+
+  /* dark backdrop for the inverse demo — Designer rail / SnapGPT panel surface */
+  .dark-stage {
+    background: var(--sl-blue-1000);
+    padding: 24px;
+    border-radius: var(--field-radius);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .dark-stage .sl-field__label { color: rgba(255, 255, 255, 0.65); }
+
   /* Kbd badge */
   .kbd {
     font: 800 10px/14px var(--font-mono);
@@ -75,7 +106,7 @@
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-search-field.html",
   "tagline": "Input with a leading search icon and a clear-on-typed affordance.",
   "anatomy": "Leading Lucide `search-sm` icon · field · trailing clear `×` button that appears once there is text. Placeholder describes the shape (`Search snaps`).",
-  "options": "Default 40px or compact 32px — use compact on dense surfaces such as table and filter toolbars. There is no filled variant: an opaque grey fill would collide with the state fills (Grey-100 read-only, Blue-100 disabled, Red-100 error, AI-100 review). Where a dense surface needs less chrome the system's move is the quiet treatment — transparent at rest, revealing border and fill on hover, as Select uses in table cells — not a filled background. A search field keeps its border even when compact, so the input target stays discoverable in a toolbar.",
+  "options": "Sizes: default 40px or compact 32px — use compact on dense surfaces such as table and filter toolbars. Surfaces: default bordered white field, or `sl-search--inverse` on dark surfaces (Designer rail, SnapGPT panel, Indigo 1000 nav), which swaps to a near-transparent fill with a Blue-300 25% border and keeps the teal focus ring. Inverse is a surface modifier only — compose it with the compact size for the rail. There is no filled variant: an opaque grey fill would collide with the state fills (Grey-100 read-only, Blue-100 disabled, Red-100 error, AI-100 review). On light surfaces the field keeps its border even when compact, so the input target stays discoverable in a toolbar.",
   "usage": "Use for filtering visible content on the current screen. For navigating to results on another screen, use the global Search overlay instead. Debounce input by 150ms before triggering a request.",
   "behaviors": "Esc clears when focused. Clear button removes text and refocuses the field. On submit (Enter), the request fires immediately, bypassing the debounce."
 }
@@ -143,11 +174,35 @@
       </div>
     </div>
 
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">On dark surfaces <span class="meta">add <code>sl-search--inverse</code> · Designer rail · SnapGPT panel</span></div>
+      <div class="dark-stage">
+        <div class="sl-field">
+          <label class="sl-field__label">Compact + inverse <span style="font-weight:400">(the Designer rail pattern)</span></label>
+          <div class="sl-search sl-search--sm sl-search--inverse">
+            <span class="icon"><i data-lucide="search"></i></span>
+            <input type="search" placeholder="Search snaps" />
+          </div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Focus <span style="font-weight:400">(same teal ring as every other surface)</span></label>
+          <div class="sl-search sl-search--sm sl-search--inverse focus">
+            <span class="icon"><i data-lucide="search"></i></span>
+            <input type="search" value="salesforce" />
+            <button class="clear" aria-label="Clear search"><i data-lucide="x"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <dl class="spec">
       <dt>icons</dt><dd>Leading magnifier 16px, subtle grey. Replaced with spinner during async debounced search (350ms). Trailing X appears only when input has content.</dd>
       <dt>debounce</dt><dd>Default <b>350ms</b> (<code>--validate-debounce</code>) before firing the search request. Adjust per use case — instant for local lists, longer for remote APIs.</dd>
       <dt>type</dt><dd>Use <code>type="search"</code> — provides native clear button on some platforms (which is hidden by the system's CSS reset; the explicit clear button replaces it).</dd>
       <dt>shortcut</dt><dd>Global search fields show <code>⌘K</code> / <code>Ctrl+K</code> badge inline. Pressing the shortcut opens the Search overlay component.</dd>
+      <dt>surfaces</dt><dd>Default is the bordered white field. Add <b>sl-search--inverse</b> on dark surfaces (Designer rail, SnapGPT panel, Indigo 1000 nav) for a near-transparent fill with a Blue-300 25% border — the same track border the inverse Segmented control uses. Inverse is a <em>surface</em> modifier only: compose it with <code>sl-search--sm</code> for the compact rail size. The teal focus ring is identical on every surface. There is no filled variant.</dd>
       <dt>a11y</dt><dd>Wrap in <code>&lt;form role="search"&gt;</code> if the field is the primary search affordance on the page. Clear button: <code>aria-label="Clear search"</code>.</dd>
     </dl>
   </div>
