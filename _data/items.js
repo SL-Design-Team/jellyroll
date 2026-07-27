@@ -306,10 +306,10 @@ window.JELLYROLL_DATA = {
           name: "Inputs",
           tagline: "Standard 40px-tall single-line text input.",
           meta: {
-            anatomy: "Label above (14/22 ExtraBold) · field (40px tall, 8px top/bottom × 12px left/right padding, 1.5px Grey-300 border, 4px radius) · optional help text below (12/18 Grey-700) · optional inline error.",
+            anatomy: "Label above (14/22 ExtraBold) · field (40px tall, 8px top/bottom × 12px left/right padding, 1px Grey-400 border, 4px radius) · optional help text below (12/18 Grey-700) · optional inline error.",
             options: "Sizes: default 40px, compact 32px. States: rest, hover, focus, filled, disabled, read-only, error. Optional leading or trailing icon slot.",
             usage: "Use for short single-line input — names, emails, IDs. Placeholder is Light Italic and describes the shape (`dd/mm/yyyy`, `Search snaps`), not an exhortation. Help text clarifies expectations rather than restating the label.",
-            behaviors: "Border shifts Grey-300 → Blue-600 on focus and pairs with the 3px Teal-600 35% focus halo. Error state replaces the border with Red-600 and shows an inline message. Disabled drops opacity and removes the pointer; read-only loses the border but keeps the value selectable."
+            behaviors: "Border shifts Grey-400 → Blue-600 on hover and → Teal-600 on focus, where it pairs with the `--ring-focus` halo. Error replaces the border with Red-600, fills Red-100, and shows an inline message. Disabled swaps to the disabled tokens (Blue-100 fill, Blue-200 border) with `cursor: not-allowed` — it does not change opacity. Read-only keeps a de-emphasized Grey-300 border on a Grey-100 fill, and the value stays selectable."
           }
         },
         {
@@ -370,7 +370,7 @@ window.JELLYROLL_DATA = {
           tagline: "Input with a leading search icon and a clear-on-typed affordance.",
           meta: {
             anatomy: "Leading Lucide `search-sm` icon · field · trailing clear `×` button that appears once there is text. Placeholder describes the shape (`Search snaps`).",
-            options: "Default 40px or compact 32px. Inline (chrome) or filled (in dense surfaces).",
+            options: "Default 40px or compact 32px — use compact on dense surfaces such as table and filter toolbars. There is no filled variant: an opaque grey fill would collide with the state fills (Grey-100 read-only, Blue-100 disabled, Red-100 error, AI-100 review). Where a dense surface needs less chrome the system's move is the quiet treatment — transparent at rest, revealing border and fill on hover, as Select uses in table cells — not a filled background. A search field keeps its border even when compact, so the input target stays discoverable in a toolbar.",
             usage: "Use for filtering visible content on the current screen. For navigating to results on another screen, use the global Search overlay instead. Debounce input by 150ms before triggering a request.",
             behaviors: "Esc clears when focused. Clear button removes text and refocuses the field. On submit (Enter), the request fires immediately, bypassing the debounce."
           }
@@ -434,7 +434,7 @@ window.JELLYROLL_DATA = {
             anatomy: "Label · field (min 80px tall, same border/radius/padding as Input) · optional help text · optional character counter bottom-right.",
             options: "Auto-grow vs fixed height; optional max-height with internal scroll; optional resize handle.",
             usage: "Use for free-form text over one line — descriptions, comments, paste targets. Auto-grow by default so the user sees what they have typed. Show a counter only when there is a real character limit.",
-            behaviors: "Focus and error states match the Input. Resize handle (when shown) is the standard CSS handle in Grey-500. Counter turns Red-600 within 10 characters of the limit."
+            behaviors: "Focus and error states match the Input. Resize handle (when shown) is the browser's native handle, used as-is — it is not recolored or replaced, as there is no cross-browser way to style it. To drop the handle entirely, use `resize: none` with auto-grow. Counter turns Red-600 within 10 characters of the limit."
           }
         },
         {
@@ -1156,7 +1156,7 @@ window.JELLYROLL_DATA = {
           name: "Code editor",
           tagline: "Embedded Monaco-style code editor — JSON, JS, SQL, Python.",
           meta: {
-            anatomy: "Container with a 1.5px Grey-300 border and 4px radius · 36px-tall toolbar with language picker, format, expand · gutter with line numbers · main editor (SF Mono 13/20) · status bar with cursor position and language.",
+            anatomy: "Container with a 1px Grey-400 border and 4px radius · 36px-tall toolbar with language picker, format, expand · gutter with line numbers · main editor (SF Mono 13/20) · status bar with cursor position and language.",
             options: "Languages: JSON, JavaScript, SQL, Python, plain text. Sizes: inline (200px), default (320px), expanded (full-screen).",
             usage: "Use anywhere the user writes more than a single line of code — pipeline expressions, custom SQL, JS snippets. For a one-line expression, use a plain Input with mono font.",
             behaviors: "Syntax highlighting and bracket matching per-language. `⌘ /` toggles comment on selection; `⌘ Enter` formats. Errors gutter-mark with Red-600 squiggles; warnings with Yellow-600."

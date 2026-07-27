@@ -33,4 +33,4 @@ Precise and confident. Engineering-grade and exact — the gallery should look a
 
 ## Accessibility & Inclusion
 
-WCAG 2.1 AA. Body text ≥4.5:1 contrast against its background (including placeholders); large text ≥3:1. Visible, consistent focus rings — `box-shadow: 0 0 0 2px rgba(9,129,127,0.18)` with `border-color: var(--sl-teal-600)`. Full keyboard navigability across the gallery nav and detail views. Every animation ships a `prefers-reduced-motion: reduce` alternative. Icon-only controls require `aria-label`. Selection state never relies on color alone (uses a thicker 3px Blue-600 border).
+WCAG 2.1 AA. Body text ≥4.5:1 contrast against its background (including placeholders); large text ≥3:1. Visible, consistent focus rings — `box-shadow: var(--ring-focus)` with `border-color: var(--sl-teal-600)`. Full keyboard navigability across the gallery nav and detail views. Every animation ships a `prefers-reduced-motion: reduce` alternative. Icon-only controls require `aria-label`. Selection state never relies on color alone (uses a thicker 3px Blue-600 border).

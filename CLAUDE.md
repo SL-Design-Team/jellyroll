@@ -49,7 +49,7 @@ The `index.html` gallery renders preview files by injecting their `<body>` conte
 - The **4-pt spacing grid** (`--space-1` = 4px through `--space-20` = 80px) governs **layout spacing** — the margin, padding, and gap *between* components and around them on a page. Use `--space-*` tokens here; never hardcode these values.
   - **Component-internal metrics are exempt.** A control's own padding is *derived* from a height-anchored sizing scale, not free layout space. Buttons anchor to fixed heights (lg 40 / md 36 / sm 28, all ×4); once height, line-height, and borders are fixed, the leftover vertical padding legitimately lands off-grid (e.g. md `6px 18px`, tertiary md `6px 10px`). **Do not round these to the grid** — it breaks the target height and Figma parity. Keep the inline height-math comment (`/* 36px */`) as the justification, or promote the values to component tokens (`--button-pad-y-md`). The grid is a layout contract, not a component-internals contract.
 - **Primary brand color:** `--sl-blue-600` (#0841B4). Primary hover is the teal→blue gradient in `--color-background-primary-hover` — not a darker blue.
-- **Focus rings:** always `box-shadow: 0 0 0 2px rgba(9,129,127,0.18)` with `border-color: var(--sl-teal-600)`.
+- **Focus rings:** always `box-shadow: var(--ring-focus)` with `border-color: var(--sl-teal-600)`. Reference the token — never hardcode the rgba value, or it drifts.
 
 ## Content and visual rules
 

@@ -55,7 +55,7 @@
   "anatomy": "Label · field (min 80px tall, same border/radius/padding as Input) · optional help text · optional character counter bottom-right.",
   "options": "Auto-grow vs fixed height; optional max-height with internal scroll; optional resize handle.",
   "usage": "Use for free-form text over one line — descriptions, comments, paste targets. Auto-grow by default so the user sees what they have typed. Show a counter only when there is a real character limit.",
-  "behaviors": "Focus and error states match the Input. Resize handle (when shown) is the standard CSS handle in Grey-500. Counter turns Red-600 within 10 characters of the limit."
+  "behaviors": "Focus and error states match the Input. Resize handle (when shown) is the browser's native handle, used as-is — it is not recolored or replaced, as there is no cross-browser way to style it. To drop the handle entirely, use `resize: none` with auto-grow. Counter turns Red-600 within 10 characters of the limit."
 }
 </script>
 </head>
