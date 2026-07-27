@@ -116,7 +116,7 @@
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-multi-select.html",
   "tagline": "Select-style trigger that accepts multiple values rendered as chips.",
   "anatomy": "Trigger field showing selected chips inline · trailing chevron · panel of checkboxes (so the multi-select intent is obvious). Each chip has a remove `×`.",
-  "options": "Plain, searchable, grouped. Optional `Select all` row at the top of the panel.",
+  "options": "Plain, searchable, grouped. Footer action bar with `Select all` + `Clear` (toggleable, default enabled for Select all).",
   "usage": "Use when the user can pick more than one value from a bounded list. For free-form text tags, use a Chip input instead. Limit visible chips inline and overflow to `+N more` past a sensible threshold.",
   "behaviors": "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip."
 }
@@ -173,7 +173,7 @@
     </div>
 
     <dl class="spec">
-      <dt>tokens</dt><dd>Selected values render inside the control as removable chip-tokens (Blue-100 / Blue-700, X to remove). Tokens wrap to multiple lines as needed — the control grows in height.</dd>
+      <dt>tokens</dt><dd>Selected values render inside the control as removable chip-tokens (Blue-100 / Blue-700, X to remove). Tokens wrap to multiple lines as needed — the control grows in height. Limit visible tokens via <code>maxVisibleTokens</code> (default 2–3); overflow renders as a distinct <code>+N more</code> chip (non-removable, clickable to expand).</dd>
       <dt>menu</dt><dd>Each row is a checkbox. Multiple selections allowed. Footer action bar: "Select all" + "Clear" (or "Select N matching" when filtered).</dd>
       <dt>search</dt><dd>Typing in the input filters the menu in-place. Matching substrings bolded. Backspace removes the last token when the input is empty.</dd>
       <dt>keyboard</dt><dd><code>↑/↓</code> navigate options · <code>Space</code> toggle · <code>Enter</code> close · <code>Esc</code> close without changes · <code>Backspace</code> in empty input removes last token.</dd>
