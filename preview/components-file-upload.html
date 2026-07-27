@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Primitives · File upload</title>
+<title>Composed components · File upload</title>
 <link rel="stylesheet" href="../colors_and_type.css" />
 <link rel="stylesheet" href="card.css" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
@@ -29,6 +29,16 @@
     cursor: pointer;
     flex: none;
   }
+  .sl-upload-inline .btn:focus-visible {
+    outline: none;
+    box-shadow: var(--ring-focus);
+    border-color: var(--sl-teal-600);
+  }
+  .sl-upload-inline .btn:disabled {
+    background: var(--field-bg-disabled);
+    color: var(--field-text-disabled);
+    cursor: not-allowed;
+  }
   .sl-upload-inline .btn svg { width: 14px; height: 14px; }
   .sl-upload-inline .hint { font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); flex: 1; }
 
@@ -41,9 +51,14 @@
     text-align: center;
     transition: border-color 150ms, background 150ms;
   }
-  .sl-dropzone:hover, .sl-dropzone.dragover {
+  .sl-dropzone.dragover {
     border-color: var(--sl-blue-600);
     background: var(--sl-blue-100);
+  }
+  .sl-dropzone:focus-visible {
+    outline: none;
+    box-shadow: var(--ring-focus);
+    border-color: var(--sl-teal-600);
   }
   .sl-dropzone__icon {
     display: inline-flex; align-items: center; justify-content: center;
@@ -160,6 +175,17 @@
       </div>
     </div>
 
+    <div>
+      <div class="section-h">Inline upload · disabled</div>
+      <div class="sl-field">
+        <label class="sl-field__label">Avatar image</label>
+        <div class="sl-upload-inline" style="background: var(--field-bg-disabled); border-color: var(--field-border-disabled);">
+          <button class="btn" disabled><i data-lucide="upload"></i>Choose file</button>
+          <span class="hint" style="color: var(--field-text-disabled);">PNG or JPG · max 2 MB · square recommended</span>
+        </div>
+      </div>
+    </div>
+
     <div class="divider"></div>
 
     <div>
@@ -180,6 +206,15 @@
         <div class="sl-dropzone__icon"><i data-lucide="upload-cloud"></i></div>
         <div class="sl-dropzone__title">Release to upload 3 files</div>
         <div class="sl-dropzone__hint">JSON, YAML, or .slp · up to 50 MB</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-h">Drop zone · disabled</div>
+      <div class="sl-dropzone" style="border-color: var(--field-border-disabled); background: var(--field-bg-disabled); cursor: not-allowed;">
+        <div class="sl-dropzone__icon" style="background: var(--field-bg-disabled); color: var(--field-text-disabled);"><i data-lucide="upload-cloud"></i></div>
+        <div class="sl-dropzone__title" style="color: var(--field-text-disabled);">Drop a file here or <a style="color: var(--field-text-disabled); text-decoration: none; cursor: not-allowed;">browse</a></div>
+        <div class="sl-dropzone__hint" style="color: var(--field-text-disabled);">JSON, YAML, or .slp · up to 50 MB</div>
       </div>
     </div>
 
@@ -223,10 +258,10 @@
     <dl class="spec">
       <dt>variants</dt><dd><b>Inline</b> for small, single-file uploads (avatar, signature). <b>Drop zone</b> for primary upload moments (pipeline import, schema load, asset upload).</dd>
       <dt>accept</dt><dd>Hint string ("JSON, YAML, or .slp · up to 50 MB") is always visible. Mirror it as <code>accept</code> attribute on the input + enforced client-side validation.</dd>
-      <dt>drag states</dt><dd>Default border Grey-400 dashed. On <code>dragover</code>: border + background shift to Blue-100. Title updates to "Release to upload N files".</dd>
+      <dt>drag states</dt><dd>Default border Grey-400 dashed. On <code>dragover</code>: border + background shift to Blue-600 + Blue-100. Title updates to "Release to upload N files". Hover (without drag) has no visual change.</dd>
       <dt>file list</dt><dd>Each file is a row with icon · name · meta · cancel/remove. States: <b>uploading</b> (blue border + progress bar), <b>success</b> (green border + check), <b>error</b> (red border + tint + reason).</dd>
       <dt>progress</dt><dd>4px bar inside the file row. Shows percent + size pair ("8.1 MB of 24.3 MB · 33%"). Cancel button is the same X.</dd>
-      <dt>a11y</dt><dd>Drop zone has a focusable button inside ("browse"). The dropzone itself is <code>role="region" aria-label="Upload files"</code>. Announce progress via <code>aria-live="polite"</code>.</dd>
+      <dt>a11y</dt><dd>Drop zone has a focusable button inside ("browse") with teal focus ring. The dropzone itself is <code>role="region" aria-label="Upload files"</code>. Announce progress via <code>aria-live="polite"</code> at milestones (25%, 50%, 75%, completion/error)—not every tick.</dd>
     </dl>
   </div>
   <script>lucide.createIcons();</script>
