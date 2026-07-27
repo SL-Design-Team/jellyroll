@@ -229,6 +229,15 @@
   --color-border-information: var(--sl-indigo-600);
   --color-border-discovery: var(--sl-purple-600);
 
+  /* Inverse borders — Blue-300 at three alphas, by role. For dark surfaces
+     only: the Designer rail, the SnapGPT panel, and the Indigo 1000 nav.
+     Grey borders disappear on these surfaces, which is why they get their
+     own scale rather than reusing --color-border-*. */
+  --color-border-inverse-control: rgba(156, 179, 225, 0.25);        /* control chrome — fields, pickers, segmented tracks */
+  --color-border-inverse-control-hover: rgba(156, 179, 225, 0.45);  /* same, on hover */
+  --color-border-inverse-edge: rgba(156, 179, 225, 0.30);           /* major structural edges — nav underline, rail edge */
+  --color-border-inverse-divider: rgba(156, 179, 225, 0.18);        /* dividers inside a dark panel */
+
   /* Interaction (hover/pressed overlays for clickable rows) */
   --color-interaction-hovered: var(--sl-blue-200);
   --color-interaction-pressed: var(--sl-blue-300);
