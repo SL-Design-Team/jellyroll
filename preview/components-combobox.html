@@ -142,9 +142,9 @@
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-combobox.html",
   "tagline": "Input combined with a filtered dropdown for very long or open-ended lists.",
   "anatomy": "Input · trailing chevron · panel of suggestions that updates as the user types. Highlighted match shown bold.",
-  "options": "Single-value, multi-value (chips), async-loaded suggestions, creatable (typed values become new options).",
+  "options": "Async-loaded suggestions, creatable (typed values become new options), grouped options, icons.",
   "usage": "Use for 50+ options, async-loaded sets, or open-ended pickers where the user may want to type a value that does not exist yet (tags, custom names). Below 50 options, use a Select.",
-  "behaviors": "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab accepts the current input. For creatable comboboxes, typing a new value and pressing Enter creates it."
+  "behaviors": "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab moves focus. For creatable comboboxes, typing a new value and pressing Enter creates it."
 }
 </script>
 </head>
@@ -204,11 +204,11 @@
     </div>
 
     <dl class="spec">
-      <dt>vs. select</dt><dd>Use a <b>Combobox</b> when there are many options (&gt;~20) and users will type to find. Use a <b>Select</b> for short, fully-known option lists.</dd>
+      <dt>vs. select</dt><dd>Use a <b>Combobox</b> when there are many options (&gt;50) and users will type to find. Use a <b>Select</b> for 5–50 option lists.</dd>
       <dt>filtering</dt><dd>Local for &lt;500 items (filter in JS). Async for remote/large datasets, with <code>--validate-debounce</code> (350ms) before firing. Show <b>loading state</b> via spinner replacing chevron + loading row in menu.</dd>
       <dt>matching</dt><dd>Substring match by default, bolded in the option. Consider fuzzy match (Fuse.js or similar) for long names with abbreviations.</dd>
       <dt>create-new</dt><dd>When async search returns empty, surface a "<b>+ Create … </b>" footer that resolves to a new entity. Critical for connection pickers.</dd>
-      <dt>keyboard</dt><dd>Type filters · <code>↑/↓</code> navigates · <code>Enter</code> selects active or creates · <code>Esc</code> closes without selecting · <code>Tab</code> selects active and closes.</dd>
+      <dt>keyboard</dt><dd>Type filters · <code>↑/↓</code> navigates · <code>Enter</code> selects active or creates · <code>Esc</code> closes without selecting · <code>Tab</code> moves focus.</dd>
       <dt>a11y</dt><dd><code>role="combobox" aria-autocomplete="list" aria-expanded aria-activedescendant="option-id"</code>. Menu: <code>role="listbox"</code>; items: <code>role="option"</code>.</dd>
     </dl>
   </div>
