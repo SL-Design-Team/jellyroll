@@ -1694,9 +1694,11 @@
           "name": "Wizard / multi-step flow",
           "file": "preview/patterns-wizard.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-wizard.html",
-          "tagline": "Stepper-driven flow for onboarding and complex setup.",
-          "usage": "Use for tasks that genuinely break into 3–7 sequential steps where each step builds on the last (account setup, pipeline scaffolding, integration onboarding). For shorter flows, use a single Modal with sections. For longer flows, reconsider.",
-          "behaviors": "Stepper at the top tracks progress. `Back` returns without losing values; `Next` validates the current step before advancing. Unsaved-changes confirm appears if the user closes mid-flow."
+          "tagline": "Guided multi-step flow with a numbered step indicator.",
+          "anatomy": "Step indicator · body panel · footer with `Cancel` (ghost, left) and `Back` / `Next` (right). Horizontal indicator: 24px numbered circles joined by 2px connectors, upcoming white with a 1.5px Grey-400 border, current white with a 2px Blue-600 ring and Blue-600 numeral, complete Blue-600 filled with a white check; connectors turn Blue-600 behind completed steps. Vertical indicator: a 240px rail of rows with 22px dots using the same three states. Step labels are 13/20 ExtraBold with an optional 11px regular sub-label.",
+          "options": "Horizontal indicator for 3–5 steps (modal or page wizard), or the vertical 240px rail for 7+ steps, branching, and review-able sections. Optional per-step sub-labels. `Save draft` in the header for long wizards.",
+          "usage": "Use for tasks that genuinely break into sequential steps where each builds on the last (account setup, pipeline scaffolding, integration onboarding). For shorter flows, use a single Modal with sections. Past 5 steps switch to the vertical rail rather than compressing the horizontal one. Always end with a Review step listing every input as label/value pairs with per-section `Edit` links. Note that this step indicator is not the Stepper component — Stepper is the minus/plus quantity control.",
+          "behaviors": "`Next` validates the current step before advancing and stays disabled until it does — never auto-advance. `Back` returns without losing values, and going back never resets downstream state. Clicking a completed step returns to it; jumping forward over uncompleted steps is not allowed. Wizards of 5+ steps offer `Save draft`, which persists 14 days and resumes at the last completed step. An unsaved-changes confirm appears if the user closes mid-flow. The indicator is a `nav` labelled `Steps`, with `aria-current=\"step\"` on the current step and `aria-disabled` (not removal) on locked forward steps."
         }
       ]
     },

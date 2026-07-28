@@ -132,7 +132,7 @@ Reusable flows that combine components to solve a recurring product problem.
 - [Pagination](https://sl-design-team.github.io/jellyroll/preview/patterns-pagination.html): Page number controls + page size selector for long tables.
 - [Save / discard](https://sl-design-team.github.io/jellyroll/preview/patterns-save-discard.html): Sticky action bar that surfaces when the user has unsaved changes.
 - [Undo via toast](https://sl-design-team.github.io/jellyroll/preview/patterns-undo-toast.html): Reversible destructive actions skip the confirm modal and offer Undo in the toast.
-- [Wizard / multi-step flow](https://sl-design-team.github.io/jellyroll/preview/patterns-wizard.html): Stepper-driven flow for onboarding and complex setup.
+- [Wizard / multi-step flow](https://sl-design-team.github.io/jellyroll/preview/patterns-wizard.html): Guided multi-step flow with a numbered step indicator.
 
 ## Data visualization
 
