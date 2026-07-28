@@ -690,17 +690,6 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "preview/components-stepper.html",
-          name: "Stepper",
-          tagline: "Minus/plus control for small integer ranges.",
-          meta: {
-            anatomy: "Three segments inside one bordered 40px field: a `−` button (36px) · a centered mono value input (64px) · a `+` button (36px), separated by 1px Grey-200 dividers. Border, radius, and fill are the standard field tokens.",
-            options: "Sizes: default 40px, compact 32px (28px buttons, 48px input). Min / max / step bounds. Error state swaps the field border to Red-600.",
-            usage: "Use for small integer ranges the user nudges by one or two — retries 0–10, concurrency 1–8, seats. For free-form or unbounded numerics (timeouts in ms, currency, file sizes), use Number input. Number input also offers a stepper affordance; the difference is prominence — this control makes ± the primary interaction, Number input keeps typing primary and tucks the steppers into the right edge.",
-            behaviors: "Click adjusts by `step` (default 1); hold to repeat with acceleration. ↑/↓ also adjust. Typing directly is allowed — on blur the value clamps to min/max and shows an inline error if invalid. Buttons disable at the limits. The focus ring is drawn on the whole control via `:focus-within`, not the inner input. Input is `type=\"number\" role=\"spinbutton\"` with `aria-valuemin` / `aria-valuemax` / `aria-valuenow`; buttons carry `aria-label=\"Increment\"` and `\"Decrement\"`."
-          }
-        },
-        {
           file: "preview/components-table.html",
           name: "Table",
           tagline: "Dense data table — the dominant shape for Manager and Monitor.",
@@ -969,7 +958,7 @@ window.JELLYROLL_DATA = {
           meta: {
             anatomy: "Step indicator · body panel · footer with `Cancel` (ghost, left) and `Back` / `Next` (right). Horizontal indicator: 24px numbered circles joined by 2px connectors, upcoming white with a 1.5px Grey-400 border, current white with a 2px Blue-600 ring and Blue-600 numeral, complete Blue-600 filled with a white check; connectors turn Blue-600 behind completed steps. Vertical indicator: a 240px rail of rows with 22px dots using the same three states. Step labels are 13/20 ExtraBold with an optional 11px regular sub-label.",
             options: "Horizontal indicator for 3–5 steps (modal or page wizard), or the vertical 240px rail for 7+ steps, branching, and review-able sections. Optional per-step sub-labels. `Save draft` in the header for long wizards.",
-            usage: "Use for tasks that genuinely break into sequential steps where each builds on the last (account setup, pipeline scaffolding, integration onboarding). For shorter flows, use a single Modal with sections. Past 5 steps switch to the vertical rail rather than compressing the horizontal one. Always end with a Review step listing every input as label/value pairs with per-section `Edit` links. Note that this step indicator is not the Stepper component — Stepper is the minus/plus quantity control.",
+            usage: "Use for tasks that genuinely break into sequential steps where each builds on the last (account setup, pipeline scaffolding, integration onboarding). For shorter flows, use a single Modal with sections. Past 5 steps switch to the vertical rail rather than compressing the horizontal one. Always end with a Review step listing every input as label/value pairs with per-section `Edit` links.",
             behaviors: "`Next` validates the current step before advancing and stays disabled until it does — never auto-advance. `Back` returns without losing values, and going back never resets downstream state. Clicking a completed step returns to it; jumping forward over uncompleted steps is not allowed. Wizards of 5+ steps offer `Save draft`, which persists 14 days and resumes at the last completed step. An unsaved-changes confirm appears if the user closes mid-flow. The indicator is a `nav` labelled `Steps`, with `aria-current=\"step\"` on the current step and `aria-disabled` (not removal) on locked forward steps."
           }
         }
