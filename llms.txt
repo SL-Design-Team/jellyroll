@@ -97,7 +97,7 @@ Several building blocks assembled into a complete piece of the interface.
 - [Notifications](https://sl-design-team.github.io/jellyroll/preview/components-notifications.html): Notification center surfaced from the global bell icon.
 - [Product launcher (waffle)](https://sl-design-team.github.io/jellyroll/preview/components-product-launcher.html): Grid of product tiles surfaced from the waffle icon in the global header.
 - [Search overlay](https://sl-design-team.github.io/jellyroll/preview/components-search-overlay.html): Full-page search modal triggered from anywhere by `⌘ K`.
-- [Select](https://sl-design-team.github.io/jellyroll/preview/components-select.html): Single-choice dropdown with searchable + grouped variants.
+- [Select](https://sl-design-team.github.io/jellyroll/preview/components-select.html): Single-choice dropdown with grouped and quiet (in-cell) variants.
 - [SnapGPT panel](https://sl-design-team.github.io/jellyroll/preview/components-snapgpt-panel.html): AI assistant side panel — woven through the suite as the AI accent.
 - [Stepper](https://sl-design-team.github.io/jellyroll/preview/components-stepper.html): Minus/plus control for small integer ranges.
 - [Table](https://sl-design-team.github.io/jellyroll/preview/components-table.html): Dense data table — the dominant shape for Manager and Monitor.
