@@ -58,3 +58,39 @@ body {
   color: var(--color-text-subtle);
   font-family: var(--font-mono);
 }
+
+/* ── Checkbox ──────────────────────────────────────────────────
+   Canonical checkbox shared by the Checkbox component, Tree, and
+   Tree select. Edit here once — every consumer updates together.
+   Default 20px; add .sl-checkbox--dense for the 16px table / tree /
+   popover size. State classes: is-checked, is-indeterminate,
+   is-disabled, is-error, is-hover, is-focus. */
+.sl-checkbox {
+  width: 20px; height: 20px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--sl-grey-600);
+  background: var(--sl-white);
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.sl-checkbox.is-hover { border-color: var(--sl-blue-600); }
+.sl-checkbox.is-focus { box-shadow: var(--shadow-focus-ring); }
+.sl-checkbox.is-checked { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+.sl-checkbox.is-checked::after {
+  content: ''; width: 12px; height: 7px; transform: rotate(-45deg) translate(1px, -1px);
+  border-left: 2px solid var(--sl-white); border-bottom: 2px solid var(--sl-white);
+}
+.sl-checkbox.is-indeterminate { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
+.sl-checkbox.is-indeterminate::after {
+  content: ''; width: 10px; height: 2px; background: var(--sl-white); border-radius: 1px;
+}
+.sl-checkbox.is-error { border-color: var(--sl-red-600); }
+.sl-checkbox.is-disabled { background: var(--sl-grey-100); border-color: var(--sl-grey-300); }
+.sl-checkbox.is-disabled.is-checked { background: var(--sl-blue-200); border-color: var(--sl-blue-200); }
+.sl-checkbox.is-disabled.is-checked::after { border-color: var(--sl-blue-400); }
+.sl-checkbox.is-disabled.is-indeterminate { background: var(--sl-blue-200); border-color: var(--sl-blue-200); }
+.sl-checkbox.is-disabled.is-indeterminate::after { background: var(--sl-blue-400); }
+
+/* Dense 16px — radius stays 4px; only the box + glyph scale down. */
+.sl-checkbox--dense { width: 16px; height: 16px; }
+.sl-checkbox--dense.is-checked::after { width: 8px; height: 4px; }
+.sl-checkbox--dense.is-indeterminate::after { width: 8px; }

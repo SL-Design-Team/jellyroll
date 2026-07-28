@@ -51,16 +51,8 @@
   .sl-tree__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sl-tree__count { margin-left: auto; font: 400 12px/16px var(--font-mono); color: var(--color-text-subtle); }
 
-  /* Checkbox variant (multi-select trees) */
-  .sl-tree__check {
-    width: 16px; height: 16px; flex: none;
-    border: 1.5px solid var(--sl-grey-600); border-radius: 2px;
-    background: var(--sl-white);
-    display: inline-flex; align-items: center; justify-content: center;
-    color: var(--sl-white);
-  }
-  .sl-tree__check.checked { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
-  .sl-tree__check svg { width: 12px; height: 12px; stroke-width: 3; }
+  /* Multi-select trees use the shared dense checkbox (.sl-checkbox
+     --dense + is-* states), defined once in card.css. */
 
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
   .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 12px; }
@@ -74,8 +66,8 @@
   "section": "Building blocks",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-tree.html",
   "tagline": "Hierarchical list of nodes with expand/collapse, indentation, and selection.",
-  "anatomy": "Rows of nodes indented by depth · a chevron toggle on parent nodes (rotates down when expanded) or a spacer on leaves · optional 16px leading Lucide icon (folder / pipeline / org) · 14/22 label · optional leading checkbox for multi-select. Selected row uses a Blue-100 fill with a 2px Blue-600 left marker.",
-  "options": "Single-select or multi-select (leading checkboxes); with or without node icons; lazy-loaded branches (spinner on expand); disabled / read-only nodes; optional per-node count.",
+  "anatomy": "Rows of nodes indented by depth · a chevron toggle on parent nodes (rotates down when expanded) or a spacer on leaves · optional 16px leading Lucide icon (folder / pipeline / org) · 14/22 label · optional leading checkbox for multi-select — the shared dense (16px) Checkbox, not a bespoke box. Selected row uses a Blue-100 fill with a 2px Blue-600 left marker.",
+  "options": "Single-select or multi-select (leading checkboxes); with or without node icons; lazy-loaded branches (spinner on expand); disabled / read-only nodes; optional per-node count. Multi-select parents are tri-state: checked when all descendants are selected, indeterminate when only some, empty when none.",
   "usage": "Use to navigate or pick from a hierarchy — project folders, snaplexes, org units. This is the primitive behind the Tree select component, which wraps it in a popover. For a flat list of options or commands, use Menu instead.",
   "behaviors": "Click a chevron (or the row) to expand/collapse; arrow keys move between visible nodes, Right/Left expand/collapse, Enter selects. Hover swaps the row to Grey-100; selected is Blue-100 with the Blue-600 left marker — never color alone."
 }
@@ -133,27 +125,27 @@
       <div>
         <div class="section-h">Multi-select <span class="meta">leading checkboxes</span></div>
         <div class="sl-tree" role="tree" aria-multiselectable="true">
-          <div class="sl-tree__node" data-depth="0" role="treeitem" aria-expanded="true">
+          <div class="sl-tree__node" data-depth="0" role="treeitem" aria-expanded="true" aria-checked="mixed">
             <span class="sl-tree__toggle"><i data-lucide="chevron-right"></i></span>
-            <span class="sl-tree__check checked"><i data-lucide="check"></i></span>
+            <span class="sl-checkbox sl-checkbox--dense is-indeterminate"></span>
             <span class="sl-tree__icon"><i data-lucide="folder-open"></i></span>
             <span class="sl-tree__label">Org units</span>
           </div>
-          <div class="sl-tree__node" data-depth="1" role="treeitem">
+          <div class="sl-tree__node" data-depth="1" role="treeitem" aria-checked="true">
             <span class="sl-tree__spacer"></span>
-            <span class="sl-tree__check checked"><i data-lucide="check"></i></span>
+            <span class="sl-checkbox sl-checkbox--dense is-checked"></span>
             <span class="sl-tree__icon"><i data-lucide="users"></i></span>
             <span class="sl-tree__label">Data Platform</span>
           </div>
-          <div class="sl-tree__node" data-depth="1" role="treeitem">
+          <div class="sl-tree__node" data-depth="1" role="treeitem" aria-checked="false">
             <span class="sl-tree__spacer"></span>
-            <span class="sl-tree__check"></span>
+            <span class="sl-checkbox sl-checkbox--dense"></span>
             <span class="sl-tree__icon"><i data-lucide="users"></i></span>
             <span class="sl-tree__label">Analytics</span>
           </div>
-          <div class="sl-tree__node" data-depth="1" role="treeitem">
+          <div class="sl-tree__node" data-depth="1" role="treeitem" aria-checked="false">
             <span class="sl-tree__spacer"></span>
-            <span class="sl-tree__check"></span>
+            <span class="sl-checkbox sl-checkbox--dense"></span>
             <span class="sl-tree__icon"><i data-lucide="users"></i></span>
             <span class="sl-tree__label">Integrations</span>
           </div>

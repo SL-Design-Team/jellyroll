@@ -266,8 +266,8 @@ window.JELLYROLL_DATA = {
           name: "Checkbox",
           tagline: "Binary selection with optional indeterminate state.",
           meta: {
-            anatomy: "20px square · 1.5px Grey-600 border · 3px radius · label to the right (14/22). Checked: Blue-600 fill with white check. Indeterminate: Blue-600 fill with white horizontal dash. Error: white fill with Red-600 border.",
-            options: "States: unchecked, checked, indeterminate, disabled, error. Sizes: default 20px; dense 16px for table, tree, and popover contexts.",
+            anatomy: "20px square · 1.5px Grey-600 border · 4px radius · label to the right (14/22). Checked: Blue-600 fill with white check. Indeterminate: Blue-600 fill with white horizontal dash. Error: white fill with Red-600 border.",
+            options: "States: unchecked, checked, indeterminate, disabled, error. Sizes: default 20px; dense 16px (same 4px radius) for table, tree, and popover contexts. The dense size is the same shared control the Tree and Tree select rows use.",
             usage: "Use for boolean selections in forms and for selecting rows in a table or list. For a single optional yes/no, prefer a Toggle. Indeterminate is reserved for the parent of a partially-selected group.",
             behaviors: "Click anywhere on the box or label toggles. Space toggles when focused. Disabled uses explicit muted fill, border, and label colors instead of opacity. Focus uses the global 3px Teal-600 halo."
           }
@@ -464,8 +464,8 @@ window.JELLYROLL_DATA = {
           name: "Tree",
           tagline: "Hierarchical list of nodes with expand/collapse, indentation, and selection.",
           meta: {
-            anatomy: "Rows of nodes indented by depth · a chevron toggle on parent nodes (rotates down when expanded) or a spacer on leaves · optional 16px leading Lucide icon (folder / pipeline / org) · 14/22 label · optional leading checkbox for multi-select. Selected row uses a Blue-100 fill with a 2px Blue-600 left marker.",
-            options: "Single-select or multi-select (leading checkboxes); with or without node icons; lazy-loaded branches (spinner on expand); disabled / read-only nodes; optional per-node count.",
+            anatomy: "Rows of nodes indented by depth · a chevron toggle on parent nodes (rotates down when expanded) or a spacer on leaves · optional 16px leading Lucide icon (folder / pipeline / org) · 14/22 label · optional leading checkbox for multi-select — the shared dense (16px) Checkbox, not a bespoke box. Selected row uses a Blue-100 fill with a 2px Blue-600 left marker.",
+            options: "Single-select or multi-select (leading checkboxes); with or without node icons; lazy-loaded branches (spinner on expand); disabled / read-only nodes; optional per-node count. Multi-select parents are tri-state: checked when all descendants are selected, indeterminate when only some, empty when none.",
             usage: "Use to navigate or pick from a hierarchy — project folders, snaplexes, org units. This is the primitive behind the Tree select component, which wraps it in a popover. For a flat list of options or commands, use Menu instead.",
             behaviors: "Click a chevron (or the row) to expand/collapse; arrow keys move between visible nodes, Right/Left expand/collapse, Enter selects. Hover swaps the row to Grey-100; selected is Blue-100 with the Blue-600 left marker — never color alone."
           }
@@ -739,7 +739,7 @@ window.JELLYROLL_DATA = {
           tagline: "Hierarchical picker — folders, snaplexes, org units.",
           meta: {
             anatomy: "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select.",
-            options: "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches.",
+            options: "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches. Single-select is leaf-only by default (parents expand only); set `parentsSelectable` to allow picking a folder (e.g. \"Move to folder\"), with a per-node `selectable` override for mixed trees. Multi-select value is minimal-cover: a fully-checked branch collapses to its parent key — meaning that node and all descendants, including any added later — while a partially-checked branch lists its explicit child keys; onChange also carries the expanded leaf list for filter consumers.",
             usage: "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
             behaviors: "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants."
           }

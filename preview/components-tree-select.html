@@ -125,22 +125,8 @@
   .ts-row__chev.empty { visibility: hidden; }
   .ts-row__chev.open i, .ts-row__chev.open svg { transform: rotate(0deg); }
 
-  /* Checkbox (matches design system) */
-  .ts-cb {
-    width: 16px; height: 16px; flex: none;
-    border-radius: 3px;
-    border: 1.5px solid var(--sl-grey-600);
-    background: var(--sl-white);
-    display: inline-flex; align-items: center; justify-content: center;
-    color: var(--sl-white);
-  }
-  .ts-cb.checked { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
-  .ts-cb.checked i, .ts-cb.checked svg { width: 12px; height: 12px; }
-  .ts-cb.indeterminate { background: var(--sl-blue-600); border-color: var(--sl-blue-600); position: relative; }
-  .ts-cb.indeterminate::after {
-    content: ""; width: 8px; height: 2px; background: var(--sl-white); border-radius: 1px;
-  }
-  .ts-cb.indeterminate i, .ts-cb.indeterminate svg { display: none; }
+  /* Checkbox rows use the shared dense checkbox (.sl-checkbox--dense
+     + is-* states), defined once in card.css. */
 
   /* Radio (single-select variant) */
   .ts-radio {
@@ -228,7 +214,7 @@
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-tree-select.html",
   "tagline": "Hierarchical picker — folders, snaplexes, org units.",
   "anatomy": "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select.",
-  "options": "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches.",
+  "options": "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches. Single-select is leaf-only by default (parents expand only); set `parentsSelectable` to allow picking a folder (e.g. \"Move to folder\"), with a per-node `selectable` override for mixed trees. Multi-select value is minimal-cover: a fully-checked branch collapses to its parent key — meaning that node and all descendants, including any added later — while a partially-checked branch lists its explicit child keys; onChange also carries the expanded leaf list for filter consumers.",
   "usage": "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
   "behaviors": "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants."
 }
@@ -299,7 +285,7 @@
                 <!-- Select All -->
                 <div class="ts-row ts-row--all">
                   <span class="ts-row__chev empty"></span>
-                  <span class="ts-cb indeterminate"></span>
+                  <span class="sl-checkbox sl-checkbox--dense is-indeterminate"></span>
                   <span class="ts-row__label">Select all</span>
                   <span class="ts-row__count">2 / 49</span>
                 </div>
@@ -307,30 +293,30 @@
                 <!-- Sales analytics (parent) -->
                 <div class="ts-row" style="padding-left: 12px;">
                   <span class="ts-row__chev open"><i data-lucide="chevron-down"></i></span>
-                  <span class="ts-cb indeterminate"></span>
+                  <span class="sl-checkbox sl-checkbox--dense is-indeterminate"></span>
                   <span class="ts-row__label"><i data-lucide="folder-open"></i>Sales analytics</span>
                   <span class="ts-row__count">2 / 12</span>
                 </div>
                 <div class="ts-row" style="padding-left: 36px;">
                   <span class="ts-row__chev empty"></span>
-                  <span class="ts-cb checked"><i data-lucide="check"></i></span>
+                  <span class="sl-checkbox sl-checkbox--dense is-checked"></span>
                   <span class="ts-row__label"><i data-lucide="git-branch"></i>orders-rollup</span>
                 </div>
                 <div class="ts-row" style="padding-left: 36px;">
                   <span class="ts-row__chev empty"></span>
-                  <span class="ts-cb checked"><i data-lucide="check"></i></span>
+                  <span class="sl-checkbox sl-checkbox--dense is-checked"></span>
                   <span class="ts-row__label"><i data-lucide="git-branch"></i>sf-to-snowflake-nightly</span>
                 </div>
                 <div class="ts-row" style="padding-left: 36px;">
                   <span class="ts-row__chev empty"></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="git-branch"></i>billing-monthly-export</span>
                 </div>
 
                 <!-- Identity (collapsed parent) -->
                 <div class="ts-row" style="padding-left: 12px;">
                   <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="folder"></i>Identity</span>
                   <span class="ts-row__count">8</span>
                 </div>
@@ -338,7 +324,7 @@
                 <!-- Ops (collapsed parent) -->
                 <div class="ts-row" style="padding-left: 12px;">
                   <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="folder"></i>Ops</span>
                   <span class="ts-row__count">14</span>
                 </div>
@@ -346,19 +332,19 @@
                 <!-- Marketing (expanded with grandchildren) -->
                 <div class="ts-row" style="padding-left: 12px;">
                   <span class="ts-row__chev open"><i data-lucide="chevron-down"></i></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="folder-open"></i>Marketing</span>
                   <span class="ts-row__count">0 / 15</span>
                 </div>
                 <div class="ts-row" style="padding-left: 36px;">
                   <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="folder"></i>Campaigns</span>
                   <span class="ts-row__count">7</span>
                 </div>
                 <div class="ts-row" style="padding-left: 36px;">
                   <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="folder"></i>Attribution</span>
                   <span class="ts-row__count">8</span>
                 </div>
@@ -388,30 +374,30 @@
               <div class="ts-pop__body">
                 <div class="ts-row" style="padding-left: 12px;">
                   <span class="ts-row__chev open"><i data-lucide="chevron-down"></i></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="folder-open"></i>Sales analytics</span>
                   <span class="ts-row__count">2 matches</span>
                 </div>
                 <div class="ts-row" style="padding-left: 36px;">
                   <span class="ts-row__chev empty"></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="git-branch"></i><b>orders</b>-rollup</span>
                 </div>
                 <div class="ts-row" style="padding-left: 36px;">
                   <span class="ts-row__chev empty"></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="git-branch"></i>hourly-<b>orders</b>-snapshot</span>
                 </div>
 
                 <div class="ts-row" style="padding-left: 12px;">
                   <span class="ts-row__chev open"><i data-lucide="chevron-down"></i></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="folder-open"></i>Ops</span>
                   <span class="ts-row__count">1 match</span>
                 </div>
                 <div class="ts-row" style="padding-left: 36px;">
                   <span class="ts-row__chev empty"></span>
-                  <span class="ts-cb"></span>
+                  <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="git-branch"></i><b>orders</b>-to-warehouse</span>
                 </div>
               </div>
@@ -428,7 +414,7 @@
     <div class="divider"></div>
 
     <div>
-      <div class="section-h">Open · single-select tree <span class="meta">radio per row · pick one leaf</span></div>
+      <div class="section-h">Open · single-select tree <span class="meta">radio per row · parentsSelectable on — folders pickable</span></div>
       <div class="row stage" style="min-height: 360px;">
         <div class="sl-field">
           <label class="sl-field__label">Move to folder</label>
@@ -525,7 +511,7 @@
     </div>
 
     <dl class="spec">
-      <dt>variants</dt><dd><b>Multi-select</b> (checkbox rows · tri-state parents · Select all header) — used for filtering by N pipelines / projects / snaplexes. <b>Single-select</b> (radio rows · click-to-pick · no Select all) — used for "move to folder", "pick parent", "choose snaplex".</dd>
+      <dt>variants</dt><dd><b>Multi-select</b> (checkbox rows · tri-state parents · Select all header) — used for filtering by N pipelines / projects / snaplexes. <b>Single-select</b> (radio rows · click-to-pick · no Select all) — used for "move to folder", "pick parent", "choose snaplex". Leaf-only by default; opt in with <code>parentsSelectable</code> (per-node <code>selectable</code> override for mixed trees) when folders should be pickable.</dd>
       <dt>row</dt><dd>Three slots in a fixed-width gutter: <b>chevron</b> (expand · hidden for leaves) · <b>checkbox/radio</b> · <b>label</b> (folder/branch icon + name). Trailing slot: optional count chip showing <code>N / M</code> selected or total.</dd>
       <dt>indent</dt><dd>Each tree level adds <b>26px</b> of left padding. Connector lines are not drawn — indentation + chevron carry hierarchy. Match the dom-shape: a child sits flush with its parent's label, not the chevron.</dd>
       <dt>tri-state</dt><dd>Parent checkbox state is derived: <b>checked</b> if all descendants are selected · <b>indeterminate</b> if some are · <b>empty</b> if none. Clicking a parent's checkbox toggles <i>all descendants</i> together. Clicking the chevron only expands.</dd>

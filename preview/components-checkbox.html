@@ -10,36 +10,8 @@
   .tag { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
   .opt { display: flex; align-items: center; gap: 8px; font: 400 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
   .opt.disabled { color: var(--color-text-disabled); }
-  .cb {
-    width: 20px; height: 20px; border-radius: 3px;
-    border: 1.5px solid var(--sl-grey-600);
-    background: var(--sl-white);
-    display: inline-flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .cb.hover { border-color: var(--sl-blue-600); }
-  .cb.focus { box-shadow: var(--shadow-focus-ring); }
-  .cb.selected { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
-  .cb.selected::after {
-    content: ''; width: 12px; height: 7px; transform: rotate(-45deg) translate(1px, -1px);
-    border-left: 2px solid white; border-bottom: 2px solid white;
-  }
-  .cb.indeterminate { background: var(--sl-blue-600); border-color: var(--sl-blue-600); }
-  .cb.indeterminate::after { content: ''; width: 10px; height: 2px; background: white; border-radius: 1px; }
-  .cb.error { border-color: var(--sl-red-600); }
-  .cb.disabled { background: var(--sl-grey-100); border-color: var(--sl-grey-300); }
-  .cb.disabled.selected { background: var(--sl-blue-200); border-color: var(--sl-blue-200); }
-  .cb.disabled.selected::after { border-color: var(--sl-blue-400); }
-  .cb--dense {
-    width: 16px; height: 16px;
-    border-radius: 2px;
-  }
-  .cb--dense.selected::after {
-    width: 8px; height: 4px;
-  }
-  .cb--dense.indeterminate::after {
-    width: 8px;
-  }
+  /* The checkbox itself (.sl-checkbox / .sl-checkbox--dense + is-* states)
+     is defined once in card.css and shared with Tree and Tree select. */
   .opt.error { color: var(--sl-red-700); font-weight: 800; }
   .divider { height: 1px; background: var(--sl-grey-200); margin: 18px 0; }
   .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
@@ -53,8 +25,8 @@
   "section": "Building blocks",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-checkbox.html",
   "tagline": "Binary selection with optional indeterminate state.",
-  "anatomy": "20px square · 1.5px Grey-600 border · 3px radius · label to the right (14/22). Checked: Blue-600 fill with white check. Indeterminate: Blue-600 fill with white horizontal dash. Error: white fill with Red-600 border.",
-  "options": "States: unchecked, checked, indeterminate, disabled, error. Sizes: default 20px; dense 16px for table, tree, and popover contexts.",
+  "anatomy": "20px square · 1.5px Grey-600 border · 4px radius · label to the right (14/22). Checked: Blue-600 fill with white check. Indeterminate: Blue-600 fill with white horizontal dash. Error: white fill with Red-600 border.",
+  "options": "States: unchecked, checked, indeterminate, disabled, error. Sizes: default 20px; dense 16px (same 4px radius) for table, tree, and popover contexts. The dense size is the same shared control the Tree and Tree select rows use.",
   "usage": "Use for boolean selections in forms and for selecting rows in a table or list. For a single optional yes/no, prefer a Toggle. Indeterminate is reserved for the parent of a partially-selected group.",
   "behaviors": "Click anywhere on the box or label toggles. Space toggles when focused. Disabled uses explicit muted fill, border, and label colors instead of opacity. Focus uses the global 3px Teal-600 halo."
 }
@@ -62,32 +34,32 @@
 </head>
 <body>
   <div class="card">
-    <div class="row-label"><span class="name">Checkbox</span><span class="meta">20px · 3px radius · checkmark + indeterminate</span></div>
+    <div class="row-label"><span class="name">Checkbox</span><span class="meta">20px · 4px radius · checkmark + indeterminate</span></div>
     <div class="grid">
       <div></div><span class="tag">Enabled</span><span class="tag">Disabled</span>
       <span class="tag">Unselected</span>
-      <span class="opt"><span class="cb"></span>Label</span>
-      <span class="opt disabled"><span class="cb disabled"></span>Label</span>
+      <span class="opt"><span class="sl-checkbox"></span>Label</span>
+      <span class="opt disabled"><span class="sl-checkbox is-disabled"></span>Label</span>
       <span class="tag">Hover</span>
-      <span class="opt"><span class="cb hover"></span>Label</span>
+      <span class="opt"><span class="sl-checkbox is-hover"></span>Label</span>
       <span></span>
       <span class="tag">Selected</span>
-      <span class="opt"><span class="cb selected"></span>Label</span>
-      <span class="opt disabled"><span class="cb disabled selected"></span>Label</span>
+      <span class="opt"><span class="sl-checkbox is-checked"></span>Label</span>
+      <span class="opt disabled"><span class="sl-checkbox is-disabled is-checked"></span>Label</span>
       <span class="tag">Indeterminate</span>
-      <span class="opt"><span class="cb indeterminate"></span>Label</span>
-      <span class="opt disabled"><span class="cb disabled indeterminate" style="background: var(--sl-blue-200); border-color: var(--sl-blue-200);"></span>Label</span>
+      <span class="opt"><span class="sl-checkbox is-indeterminate"></span>Label</span>
+      <span class="opt disabled"><span class="sl-checkbox is-disabled is-indeterminate"></span>Label</span>
       <span class="tag">Error</span>
-      <span class="opt error"><span class="cb error" aria-invalid="true"></span>Required</span>
+      <span class="opt error"><span class="sl-checkbox is-error" aria-invalid="true"></span>Required</span>
       <span></span>
       <span class="tag">Tab focus</span>
-      <span class="opt"><span class="cb focus"></span>Label</span>
+      <span class="opt"><span class="sl-checkbox is-focus"></span>Label</span>
       <span></span>
       <span class="tag">Selected focus</span>
-      <span class="opt"><span class="cb selected focus"></span>Label</span>
+      <span class="opt"><span class="sl-checkbox is-checked is-focus"></span>Label</span>
       <span></span>
       <span class="tag">Error focus</span>
-      <span class="opt error"><span class="cb error focus" aria-invalid="true"></span>Required</span>
+      <span class="opt error"><span class="sl-checkbox is-error is-focus" aria-invalid="true"></span>Required</span>
       <span></span>
     </div>
 
@@ -96,10 +68,10 @@
     <div>
       <div class="section-h">Sizes <span class="meta">default 20px · dense 16px · no 14px tier</span></div>
       <div class="size-row">
-        <span class="with-label"><span class="cb selected"></span>Default · 20</span>
-        <span class="with-label"><span class="cb cb--dense selected"></span>Dense · 16</span>
-        <span class="with-label"><span class="cb cb--dense indeterminate"></span>Dense mixed · 16</span>
-        <span class="with-label"><span class="cb cb--dense"></span>Dense empty · 16</span>
+        <span class="with-label"><span class="sl-checkbox is-checked"></span>Default · 20</span>
+        <span class="with-label"><span class="sl-checkbox sl-checkbox--dense is-checked"></span>Dense · 16</span>
+        <span class="with-label"><span class="sl-checkbox sl-checkbox--dense is-indeterminate"></span>Dense mixed · 16</span>
+        <span class="with-label"><span class="sl-checkbox sl-checkbox--dense"></span>Dense empty · 16</span>
       </div>
     </div>
   </div>
