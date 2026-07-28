@@ -692,12 +692,12 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/components-stepper.html",
           name: "Stepper",
-          tagline: "Numbered progress through a multi-step flow.",
+          tagline: "Minus/plus control for small integer ranges.",
           meta: {
-            anatomy: "Numbered circle (28px) per step · label below or to the right · 1px Grey-300 connector between steps · current is Blue-600 filled · complete is Green-600 with a check · upcoming is Grey-300 outlined.",
-            options: "Horizontal or vertical. With or without inline descriptions per step. Linear (must complete in order) or freely navigable.",
-            usage: "Use for tasks broken into 3–7 explicit steps (wizards, onboarding, API setup). For more than 7 steps, reconsider the task. For non-sequential progress, use Tabs or a Stepper variant.",
-            behaviors: "Click a completed step navigates back to it. Linear steppers reject clicks on future steps. Current step is announced to screen readers as `Step N of M`."
+            anatomy: "Three segments inside one bordered 40px field: a `−` button (36px) · a centered mono value input (64px) · a `+` button (36px), separated by 1px Grey-200 dividers. Border, radius, and fill are the standard field tokens.",
+            options: "Sizes: default 40px, compact 32px (28px buttons, 48px input). Min / max / step bounds. Error state swaps the field border to Red-600.",
+            usage: "Use for small integer ranges the user nudges by one or two — retries 0–10, concurrency 1–8, seats. For free-form or unbounded numerics (timeouts in ms, currency, file sizes), use Number input. Number input also offers a stepper affordance; the difference is prominence — this control makes ± the primary interaction, Number input keeps typing primary and tucks the steppers into the right edge.",
+            behaviors: "Click adjusts by `step` (default 1); hold to repeat with acceleration. ↑/↓ also adjust. Typing directly is allowed — on blur the value clamps to min/max and shows an inline error if invalid. Buttons disable at the limits. The focus ring is drawn on the whole control via `:focus-within`, not the inner input. Input is `type=\"number\" role=\"spinbutton\"` with `aria-valuemin` / `aria-valuemax` / `aria-valuenow`; buttons carry `aria-label=\"Increment\"` and `\"Decrement\"`."
           }
         },
         {
