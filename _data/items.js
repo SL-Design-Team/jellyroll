@@ -705,10 +705,10 @@ window.JELLYROLL_DATA = {
           name: "Tabs",
           tagline: "Horizontal tab bar that swaps views inside a single surface.",
           meta: {
-            anatomy: "Tab list with a 1px Grey-300 underline · active tab indicator is a 2px Blue-600 underline above the row · 14/22 ExtraBold labels · 12px horizontal padding · 8px vertical.",
-            options: "Sizes: default, compact. With or without leading icons. With optional badge/count next to the label.",
+            anatomy: "Tab list with a 1px Grey-300 underline · active tab indicator is a 2px Blue-600 underline above the row · 14/20 ExtraBold labels · 12px horizontal padding · 8px vertical.",
+            options: "Sizes: default. With or without leading icons. With optional badge/count next to the label. Compact size planned for future release.",
             usage: "Use to swap between views in the same surface that share context (Configuration / Logs / Settings on a pipeline). For independent navigation across pages, use the Left nav.",
-            behaviors: "Left/Right arrow moves focus; Home/End jump to first/last. Activation on click or Enter (or automatically on focus in `automatic activation` mode). Indicator slides between tabs in 150ms."
+            behaviors: "Left/Right arrow moves focus; Home/End jump to first/last. Activation on click or Enter (or automatically on focus in `automatic activation` mode). Indicator slides between tabs in 150ms. Disabled tabs are skipped during keyboard navigation. Overflow: native horizontal scroll with hidden scrollbar."
           }
         },
         {
