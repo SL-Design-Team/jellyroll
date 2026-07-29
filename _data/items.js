@@ -568,10 +568,10 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/components-form-row.html",
           name: "Form row",
-          tagline: "Horizontal label + control + help layout used inside forms.",
+          tagline: "Layout primitive that arranges fields in 1–3 columns with a consistent gutter.",
           meta: {
-            anatomy: "Label column (200px, right-aligned, top-aligned) · control column (flex) · help column or inline help below the control. 24px row gap.",
-            usage: "Use inside the Designer's properties panel and other dense configuration forms where labels and controls must line up across many rows. For looser layouts, use the standard Field anatomy (label above)."
+            anatomy: "Grid of equal or asymmetric columns (`--1` / `--2` / `--3` / `--2-1` / `--1-2`) with a 16px gutter. Wrap stacked rows in `.sl-form-rows` (flex column, 20px gap) so the spacing between rows stays consistent. Owns layout only — each field supplies its own chrome via the Field anatomy.",
+            usage: "Use to lay out related fields side by side inside a form: pick the column count per row (symmetric for related fields like first/last name, asymmetric when one field needs more room, e.g. URL + method). Compose each cell with the Field anatomy — Form row does not own field chrome."
           }
         },
         {
@@ -579,8 +579,8 @@ window.JELLYROLL_DATA = {
           name: "Form section",
           tagline: "Grouped fields under a heading + optional description.",
           meta: {
-            anatomy: "Heading (18/28 ExtraBold) · optional 14/22 description · stack of Form rows · 1px Grey-200 divider above the next section.",
-            usage: "Use to group related fields inside a long form. Sections do not collapse; if collapse is required, use Accordion sections instead."
+            anatomy: "Heading (18/26 ExtraBold) · optional 13/20 description · stack of Form rows · 1px Grey-200 divider above the next section.",
+            usage: "Use to group related fields inside a long form. Sections may carry an optional collapse toggle in the title for advanced or progressively-disclosed groups (e.g. Advanced settings, Notifications). For a set of peer, often-exclusive expandable panels, use Accordion instead."
           }
         },
         {

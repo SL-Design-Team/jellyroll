@@ -87,7 +87,7 @@ Several building blocks assembled into a complete piece of the interface.
 - [Drawer](https://sl-design-team.github.io/jellyroll/preview/components-drawer.html): Side panel that slides in from the right for details or secondary tasks.
 - [Environment picker](https://sl-design-team.github.io/jellyroll/preview/components-env-picker.html): Switcher for the active environment (Dev / Stage / Prod).
 - [File upload](https://sl-design-team.github.io/jellyroll/preview/components-file-upload.html): Drop zone, browse button, and progress.
-- [Form row](https://sl-design-team.github.io/jellyroll/preview/components-form-row.html): Horizontal label + control + help layout used inside forms.
+- [Form row](https://sl-design-team.github.io/jellyroll/preview/components-form-row.html): Layout primitive that arranges fields in 1–3 columns with a consistent gutter.
 - [Form section](https://sl-design-team.github.io/jellyroll/preview/components-form-section.html): Grouped fields under a heading + optional description.
 - [Global header](https://sl-design-team.github.io/jellyroll/preview/components-global-header.html): The dark Indigo-1000 chrome that spans every product.
 - [Left nav](https://sl-design-team.github.io/jellyroll/preview/components-left-nav.html): Contextual product navigation — collapsible to icons-only.

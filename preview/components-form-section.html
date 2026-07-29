@@ -92,8 +92,8 @@
   "section": "Composed components",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-form-section.html",
   "tagline": "Grouped fields under a heading + optional description.",
-  "anatomy": "Heading (18/28 ExtraBold) · optional 14/22 description · stack of Form rows · 1px Grey-200 divider above the next section.",
-  "usage": "Use to group related fields inside a long form. Sections do not collapse; if collapse is required, use Accordion sections instead."
+  "anatomy": "Heading (18/26 ExtraBold) · optional 13/20 description · stack of Form rows · 1px Grey-200 divider above the next section.",
+  "usage": "Use to group related fields inside a long form. Sections may carry an optional collapse toggle in the title for advanced or progressively-disclosed groups (e.g. Advanced settings, Notifications). For a set of peer, often-exclusive expandable panels, use Accordion instead."
 }
 </script>
 </head>
@@ -200,7 +200,7 @@
     </div>
 
     <dl class="spec">
-      <dt>layouts</dt><dd><b>Split</b> (default for settings pages) — 240px heading column + flexible fields column, 48px gap. <b>Stacked</b> (default for drawers and wizards) — heading-top, fields-below, narrower viewports.</dd>
+      <dt>layouts</dt><dd><b>Split</b> (default for settings pages) — 240px heading column + flexible fields column, 48px gap. <b>Stacked</b> (default for drawers and wizards) — heading-top, fields-below. Layout is a caller choice in v1; there is no automatic split→stacked breakpoint yet.</dd>
       <dt>head</dt><dd>Title 18/26 ExtraBold. Description 13/20 subtle grey, max 320px wide. Description is optional but recommended for non-obvious sections.</dd>
       <dt>spacing</dt><dd>28px padding above/below each section. Border between adjacent sections. Fields inside spaced 20px apart.</dd>
       <dt>collapsible</dt><dd>Optional toggle in the title area. Collapsed state hides the body, rotates the chevron −90°. Use for "Advanced" / "Notifications" / progressively-disclosed groups.</dd>

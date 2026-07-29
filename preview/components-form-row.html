@@ -25,9 +25,9 @@
 
   /* ─── FORM ROW ─────────────────────────────────────────────
      Compositional primitive. Lays out N fields horizontally
-     with consistent gutter. 1, 2, or 3 columns. Each column
-     is equal width by default; can be flagged "grow" for
-     single-wide rows with a long field.
+     with consistent gutter. 1, 2, or 3 columns, plus the
+     asymmetric 2:1 and 1:2 splits. Each column is equal
+     width by default.
   */
   .sl-form-row { display: grid; gap: 16px; }
   .sl-form-row--1 { grid-template-columns: 1fr; }
@@ -65,9 +65,9 @@
   "name": "Form row",
   "section": "Composed components",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-form-row.html",
-  "tagline": "Horizontal label + control + help layout used inside forms.",
-  "anatomy": "Label column (200px, right-aligned, top-aligned) · control column (flex) · help column or inline help below the control. 24px row gap.",
-  "usage": "Use inside the Designer's properties panel and other dense configuration forms where labels and controls must line up across many rows. For looser layouts, use the standard Field anatomy (label above)."
+  "tagline": "Layout primitive that arranges fields in 1–3 columns with a consistent gutter.",
+  "anatomy": "Grid of equal or asymmetric columns (`--1` / `--2` / `--3` / `--2-1` / `--1-2`) with a 16px gutter. Wrap stacked rows in `.sl-form-rows` (flex column, 20px gap) so the spacing between rows stays consistent. Owns layout only — each field supplies its own chrome via the Field anatomy.",
+  "usage": "Use to lay out related fields side by side inside a form: pick the column count per row (symmetric for related fields like first/last name, asymmetric when one field needs more room, e.g. URL + method). Compose each cell with the Field anatomy — Form row does not own field chrome."
 }
 </script>
 </head>
@@ -115,6 +115,17 @@
         <div class="sl-form-row sl-form-row--2-1">
           <div class="sl-field"><label class="sl-field__label">Endpoint URL</label><input class="sl-input" value="https://api.snaplogic.com/v2/pipelines" /></div>
           <div class="sl-field"><label class="sl-field__label">Method</label><input class="sl-input" value="POST" /></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-h">Asymmetric · 1:2</div>
+      <div class="demo">
+        <div class="lbl-mini">.sl-form-row--1-2</div>
+        <div class="sl-form-row sl-form-row--1-2">
+          <div class="sl-field"><label class="sl-field__label">Method</label><input class="sl-input" value="POST" /></div>
+          <div class="sl-field"><label class="sl-field__label">Endpoint URL</label><input class="sl-input" value="https://api.snaplogic.com/v2/pipelines" /></div>
         </div>
       </div>
     </div>
