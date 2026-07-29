@@ -377,6 +377,10 @@
   --field-border-success:  var(--sl-green-600);
   --field-border-disabled: var(--sl-blue-200);
   --field-border-readonly: var(--sl-grey-300);
+  /* Grouping-container enclosure (fieldset/legend). Deliberately quieter than
+     the --field-border-* control borders: a group boundary is a subtler
+     enclosure than an interactive input target. */
+  --field-group-border:    var(--sl-grey-200);
 
   --field-text-default:  var(--sl-indigo-900);
   --field-text-disabled: var(--sl-blue-300);

@@ -22,6 +22,13 @@
   }
   .sl-combobox:hover { border-color: var(--field-border-hover); }
   .sl-combobox.focus, .sl-combobox.open { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  /* Field states — border/bg/message only; the trailing chevron is untouched.
+     (Loading is the one state that swaps the chevron for a spinner — see below.) */
+  .sl-combobox.disabled { background: var(--field-bg-disabled); border-color: var(--field-border-disabled); cursor: not-allowed; }
+  .sl-combobox.disabled input { color: var(--field-text-disabled); cursor: not-allowed; }
+  .sl-combobox.readonly { background: var(--field-bg-readonly); border-color: var(--field-border-readonly); }
+  .sl-combobox.readonly input { color: var(--field-text-readonly); }
+  .sl-combobox.error { border-color: var(--field-border-error); background: var(--field-bg-error); }
   .sl-combobox input {
     border: 0; outline: 0; background: transparent;
     flex: 1; min-width: 0; padding: 0;
@@ -30,6 +37,10 @@
   .sl-combobox input::placeholder { color: var(--field-text-placeholder); font-style: italic; font-weight: 300; }
   .sl-combobox .caret { color: var(--color-text-subtle); display: inline-flex; flex: none; }
   .sl-combobox .caret svg { width: 16px; height: 16px; }
+
+  .sl-field__meta { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .sl-field__error { color: var(--sl-red-700); display: inline-flex; align-items: center; gap: 4px; }
+  .sl-field__error svg { width: 12px; height: 12px; }
   .sl-spinner {
     --sl-spin-thick: 1.25px;
     position: relative;
@@ -144,7 +155,7 @@
   "anatomy": "Input · trailing chevron · panel of suggestions that updates as the user types. Highlighted match shown bold.",
   "options": "Async-loaded suggestions, creatable (typed values become new options), grouped options, icons.",
   "usage": "Use for 50+ options, async-loaded sets, or open-ended pickers where the user may want to type a value that does not exist yet (tags, custom names). Below 50 options, use a Select.",
-  "behaviors": "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab moves focus. For creatable comboboxes, typing a new value and pressing Enter creates it."
+  "behaviors": "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab moves focus. For creatable comboboxes, typing a new value and pressing Enter creates it. Field states: default/hover/focus/disabled/read-only/error (border/background/message — chevron unchanged); loading is the one state that swaps the trailing chevron for a spinner during async fetch. No success state."
 }
 </script>
 </head>
@@ -200,6 +211,17 @@
           <div class="sl-combobox"><input value="Snowflake bulk loader" /><span class="caret"><i data-lucide="chevron-down"></i></span></div>
         </div>
 
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Field states <span class="meta">disabled · read-only · error — chevron unchanged</span></div>
+      <div class="row">
+        <div class="sl-field"><label class="sl-field__label">Disabled</label><div class="sl-combobox disabled"><input value="Snowflake" disabled /><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Read-only</label><div class="sl-combobox readonly"><input value="Snowflake bulk loader" readonly /><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Error</label><div class="sl-combobox error"><input placeholder="Search accounts" /><span class="caret"><i data-lucide="chevron-down"></i></span></div><div class="sl-field__meta"><span class="sl-field__error"><i data-lucide="alert-circle"></i>Pick an account to continue.</span></div></div>
       </div>
     </div>
 

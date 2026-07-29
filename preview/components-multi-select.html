@@ -24,6 +24,12 @@
   }
   .sl-multi:hover { border-color: var(--field-border-hover); }
   .sl-multi.focus, .sl-multi.open { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  /* Field states — border/bg/message only; the trailing chevron is untouched. */
+  .sl-multi.disabled { background: var(--field-bg-disabled); border-color: var(--field-border-disabled); cursor: not-allowed; }
+  .sl-multi.disabled .sl-multi__input { color: var(--field-text-disabled); cursor: not-allowed; }
+  .sl-multi.disabled .sl-multi__token { background: var(--sl-grey-200); color: var(--field-text-disabled); }
+  .sl-multi.readonly { background: var(--field-bg-readonly); border-color: var(--field-border-readonly); cursor: default; }
+  .sl-multi.error { border-color: var(--field-border-error); background: var(--field-bg-error); }
 
   .sl-multi__token {
     display: inline-flex; align-items: center; gap: 4px;
@@ -59,6 +65,10 @@
     display: inline-flex; padding: 4px;
   }
   .sl-multi .caret svg { width: 16px; height: 16px; }
+
+  .sl-field__meta { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .sl-field__error { color: var(--sl-red-700); display: inline-flex; align-items: center; gap: 4px; }
+  .sl-field__error svg { width: 12px; height: 12px; }
 
   /* Menu */
   .sl-multi-wrap { position: relative; }
@@ -118,7 +128,7 @@
   "anatomy": "Trigger field showing selected chips inline · trailing chevron · panel of checkboxes (so the multi-select intent is obvious). Each chip has a remove `×`.",
   "options": "Plain, searchable, grouped. Footer action bar with `Select all` + `Clear` (toggleable, default enabled for Select all).",
   "usage": "Use when the user can pick more than one value from a bounded list. For free-form text tags, use a Chip input instead. Limit visible chips inline and overflow to `+N more` past a sensible threshold.",
-  "behaviors": "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip."
+  "behaviors": "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip. Field states: default/hover/focus/disabled/read-only/error — all border/background/message treatments that leave the trailing chevron untouched. No success or loading state on the trigger."
 }
 </script>
 </head>
@@ -133,6 +143,17 @@
         <div class="sl-field"><label class="sl-field__label">1 selected</label><div class="sl-multi"><span class="sl-multi__token">prod-east-1<button class="x" aria-label="Remove"><i data-lucide="x"></i></button></span><input class="sl-multi__input" /><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
         <div class="sl-field"><label class="sl-field__label">Several selected</label><div class="sl-multi focus"><span class="sl-multi__token">prod-east-1<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">prod-west-1<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">staging-shared<button class="x"><i data-lucide="x"></i></button></span><input class="sl-multi__input" /><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
         <div class="sl-field"><label class="sl-field__label">Many · overflow wraps</label><div class="sl-multi"><span class="sl-multi__token">prod-east-1<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">prod-east-2<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">prod-west-1<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">staging-shared<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">dev-shared<button class="x"><i data-lucide="x"></i></button></span><span class="sl-multi__token">my-laptop<button class="x"><i data-lucide="x"></i></button></span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Field states <span class="meta">disabled · read-only · error — chevron unchanged</span></div>
+      <div class="row">
+        <div class="sl-field"><label class="sl-field__label">Disabled</label><div class="sl-multi disabled"><span class="sl-multi__token">prod-east-1<button class="x" aria-label="Remove"><i data-lucide="x"></i></button></span><input class="sl-multi__input" disabled /><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Read-only</label><div class="sl-multi readonly"><span class="sl-multi__token">prod-east-1<button class="x" aria-label="Remove"><i data-lucide="x"></i></button></span><span class="sl-multi__token">prod-west-1<button class="x" aria-label="Remove"><i data-lucide="x"></i></button></span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Error</label><div class="sl-multi error"><input class="sl-multi__input" placeholder="Choose environments" /><span class="caret"><i data-lucide="chevron-down"></i></span></div><div class="sl-field__meta"><span class="sl-field__error"><i data-lucide="alert-circle"></i>Select at least one environment.</span></div></div>
       </div>
     </div>
 

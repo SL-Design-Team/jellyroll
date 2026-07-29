@@ -26,6 +26,18 @@
   }
   .ts-trigger:hover { border-color: var(--field-border-hover); }
   .ts-trigger.open { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
+  /* Trigger field states — border/bg/message only; the trailing chevron is
+     untouched. (Loading lives in the popover body as a .ts-state row, not the
+     trigger — the trigger's slot stays a chevron.) */
+  .ts-trigger.disabled { background: var(--field-bg-disabled); border-color: var(--field-border-disabled); cursor: not-allowed; }
+  .ts-trigger.disabled .ts-trigger__placeholder, .ts-trigger.disabled .ts-trigger__value { color: var(--field-text-disabled); }
+  .ts-trigger.readonly { background: var(--field-bg-readonly); border-color: var(--field-border-readonly); cursor: default; }
+  .ts-trigger.readonly .ts-trigger__value { color: var(--field-text-readonly); }
+  .ts-trigger.error { border-color: var(--field-border-error); background: var(--field-bg-error); }
+
+  .sl-field__meta { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .sl-field__error { color: var(--sl-red-700); display: inline-flex; align-items: center; gap: 4px; }
+  .sl-field__error svg { width: 12px; height: 12px; }
   .ts-trigger__placeholder {
     flex: 1;
     color: var(--field-text-placeholder);
@@ -216,7 +228,7 @@
   "anatomy": "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select.",
   "options": "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches. Single-select is leaf-only by default (parents expand only); set `parentsSelectable` to allow picking a folder (e.g. \"Move to folder\"), with a per-node `selectable` override for mixed trees. Multi-select value is minimal-cover: a fully-checked branch collapses to its parent key — meaning that node and all descendants, including any added later — while a partially-checked branch lists its explicit child keys; onChange also carries the expanded leaf list for filter consumers.",
   "usage": "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
-  "behaviors": "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants."
+  "behaviors": "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants. Trigger field states: default/hover/focus/disabled/read-only/error — border/background/message treatments that leave the trailing chevron untouched. Loading and no-results render inside the popover body (a `.ts-state` row with a teal spinner), not on the trigger."
 }
 </script>
 </head>
@@ -256,6 +268,36 @@
             <span class="ts-trigger__value"><b style="font-weight:800; color: var(--sl-indigo-900);">14 pipelines</b> across 3 projects</span>
             <span class="caret"><i data-lucide="chevron-down"></i></span>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Field states <span class="meta">disabled · read-only · error — chevron unchanged</span></div>
+      <div class="row">
+        <div class="sl-field">
+          <label class="sl-field__label">Disabled</label>
+          <div class="ts-trigger disabled">
+            <span class="ts-trigger__value">Sales analytics / Daily</span>
+            <span class="caret"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Read-only</label>
+          <div class="ts-trigger readonly">
+            <span class="ts-trigger__value">Sales analytics / Daily / orders-rollup</span>
+            <span class="caret"><i data-lucide="chevron-down"></i></span>
+          </div>
+        </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Error</label>
+          <div class="ts-trigger error">
+            <span class="ts-trigger__placeholder">Choose pipelines</span>
+            <span class="caret"><i data-lucide="chevron-down"></i></span>
+          </div>
+          <div class="sl-field__meta"><span class="sl-field__error"><i data-lucide="alert-circle"></i>Select at least one pipeline.</span></div>
         </div>
       </div>
     </div>

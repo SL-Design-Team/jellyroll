@@ -298,7 +298,7 @@ window.JELLYROLL_DATA = {
           parent: "preview/components-inputs.html",
           tagline: "Rest, hover, focus, filled, disabled, read-only, error, AI-generating, AI-review.",
           meta: {
-            usage: "Visual reference for every state any field renders in. Use as the contract when implementing a new input variant — every state on this card has an explicit token and should not be invented per-component."
+            usage: "Canonical state *vocabulary* for fields — not a checklist every control fills in. Which states an input renders, and where they sit, follows that control's anatomy and slot budget. Universal (every input): default/hover/focus/disabled/read-only/error/warning — border and message treatments that need no icon slot. Anatomy-permitting (only where a trailing/leading slot is free): success and loading — a chevron, stepper, or reveal-eye already owning the slot forces success to border-only and loading to the leading slot, the panel, or N/A. Never invent token *values* — extend the `--field-*` set instead."
           }
         },
         {
@@ -508,7 +508,7 @@ window.JELLYROLL_DATA = {
             anatomy: "Input · trailing chevron · panel of suggestions that updates as the user types. Highlighted match shown bold.",
             options: "Async-loaded suggestions, creatable (typed values become new options), grouped options, icons.",
             usage: "Use for 50+ options, async-loaded sets, or open-ended pickers where the user may want to type a value that does not exist yet (tags, custom names). Below 50 options, use a Select.",
-            behaviors: "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab moves focus. For creatable comboboxes, typing a new value and pressing Enter creates it."
+            behaviors: "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab moves focus. For creatable comboboxes, typing a new value and pressing Enter creates it. Field states: default/hover/focus/disabled/read-only/error (border/background/message — chevron unchanged); loading is the one state that swaps the trailing chevron for a spinner during async fetch. No success state."
           }
         },
         {
@@ -634,7 +634,7 @@ window.JELLYROLL_DATA = {
             anatomy: "Trigger field showing selected chips inline · trailing chevron · panel of checkboxes (so the multi-select intent is obvious). Each chip has a remove `×`.",
             options: "Plain, searchable, grouped. Footer action bar with `Select all` + `Clear` (toggleable, default enabled for Select all).",
             usage: "Use when the user can pick more than one value from a bounded list. For free-form text tags, use a Chip input instead. Limit visible chips inline and overflow to `+N more` past a sensible threshold.",
-            behaviors: "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip."
+            behaviors: "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip. Field states: default/hover/focus/disabled/read-only/error — all border/background/message treatments that leave the trailing chevron untouched. No success or loading state on the trigger."
           }
         },
         {
@@ -676,7 +676,7 @@ window.JELLYROLL_DATA = {
             anatomy: "Trigger (same shape as Input) with trailing chevron · panel (white, Raised shadow, 4px radius, max-height with scroll) · options (40px rows, 12px left padding, optional leading icon, current selection marked).",
             options: "Variants: standard, grouped (with labels + dividers), with icons, and quiet (borderless in-cell for dense tables). Sizes: default 40px, compact 32px.",
             usage: "Use for picking one value from 5–50 options. Below 5, prefer a Segmented control or Radio group. Above 50 or for unbounded sets, use a Combobox. Inside a dense table, use the quiet variant — the cell reads as text with a subtle chevron and only reveals its border on hover — instead of putting a bordered field in every row.",
-            behaviors: "Click or Space/Enter opens. Arrow keys cycle options; typing jumps to the first match. Selecting closes the panel and updates the trigger. Esc closes without changing the value. The panel anchors to the trigger and flips above when it would clip below."
+            behaviors: "Click or Space/Enter opens. Arrow keys cycle options; typing jumps to the first match. Selecting closes the panel and updates the trigger. Esc closes without changing the value. The panel anchors to the trigger and flips above when it would clip below. Field states: default/hover/focus/disabled/read-only/error — all border/background/message treatments that leave the trailing chevron untouched. No success or loading state on the trigger; async resolution belongs to Combobox."
           }
         },
         {
@@ -741,7 +741,7 @@ window.JELLYROLL_DATA = {
             anatomy: "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select.",
             options: "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches. Single-select is leaf-only by default (parents expand only); set `parentsSelectable` to allow picking a folder (e.g. \"Move to folder\"), with a per-node `selectable` override for mixed trees. Multi-select value is minimal-cover: a fully-checked branch collapses to its parent key — meaning that node and all descendants, including any added later — while a partially-checked branch lists its explicit child keys; onChange also carries the expanded leaf list for filter consumers.",
             usage: "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
-            behaviors: "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants."
+            behaviors: "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants. Trigger field states: default/hover/focus/disabled/read-only/error — border/background/message treatments that leave the trailing chevron untouched. Loading and no-results render inside the popover body (a `.ts-state` row with a teal spinner), not on the trigger."
           }
         },
         {

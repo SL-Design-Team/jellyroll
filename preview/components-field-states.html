@@ -122,7 +122,7 @@
   "section": "Building blocks",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-field-states.html",
   "tagline": "Rest, hover, focus, filled, disabled, read-only, error, AI-generating, AI-review.",
-  "usage": "Visual reference for every state any field renders in. Use as the contract when implementing a new input variant — every state on this card has an explicit token and should not be invented per-component."
+  "usage": "Canonical state *vocabulary* for fields — not a checklist every control fills in. Which states an input renders, and where they sit, follows that control's anatomy and slot budget. Universal (every input): default/hover/focus/disabled/read-only/error/warning — border and message treatments that need no icon slot. Anatomy-permitting (only where a trailing/leading slot is free): success and loading — a chevron, stepper, or reveal-eye already owning the slot forces success to border-only and loading to the leading slot, the panel, or N/A. Never invent token *values* — extend the `--field-*` set instead."
 }
 </script>
 </head>
@@ -130,7 +130,7 @@
   <div class="card">
     <div class="row-label">
       <span class="name">Field states</span>
-      <span class="meta">canonical state vocabulary · applies to every input</span>
+      <span class="meta">canonical state vocabulary · placement follows each control's anatomy</span>
     </div>
 
     <div>
@@ -199,8 +199,10 @@
     </div>
 
     <dl class="spec">
-      <dt>contract</dt><dd>Every input primitive must visually implement <b>at least</b>: default, hover, focus, disabled, read-only, error. Should implement: warning, success, loading. May implement: AI generating, AI review (Wave 3).</dd>
-      <dt>tokens</dt><dd>Border colors via <code>--field-border-*</code>. Background via <code>--field-bg-*</code>. Text via <code>--field-text-*</code>. Focus halo via <code>--ring-focus</code>. <b>Never invent values</b> — extend the token set if a new state appears.</dd>
+      <dt>contract</dt><dd>This is the canonical state <b>vocabulary</b>, not a checklist every control fills in. <b>Universal</b> (every input must implement): default, hover, focus, disabled, read-only, error, warning — these are border / background / message treatments and need no icon slot. <b>Anatomy-permitting</b> (implement where a slot is free): success, loading. <b>May</b> implement: AI generating, AI review (Wave 3). Which states a control renders — and <i>where</i> they sit — follows that control's anatomy and slot budget.</dd>
+      <dt>slot precedence</dt><dd>The trailing icon slot is <b>single-occupancy</b>. Success (green <code>check</code>) and loading (spinner) both want it, so where a control already owns that slot they diverge: <b>chevron</b> (Select / Multi-select / Combobox / Tree select), <b>stepper</b> (Number), <b>reveal eye</b> (Password). Fallbacks: success drops to <b>border-only</b>; loading moves to the <b>leading slot</b> (Search replaces the magnifier), swaps the <b>chevron</b> for a spinner (Combobox), lives in the <b>open panel</b> (Tree select), or is simply <b>N/A</b> (Number / Password don't async-validate). Error and warning never contend for the slot, so they're always available.</dd>
+      <dt>coverage</dt><dd>Where <code>loading</code> lives today: <b>Combobox</b> → trigger chevron→spinner · <b>Search</b> → leading magnifier→spinner · <b>Tree select</b> → panel <code>.ts-state</code> row · <b>Select / Multi-select</b> → none · <b>Number / Password</b> → N/A. <code>success</code> renders as a trailing check only on the bare text input (free trailing slot); elsewhere it is border-only or omitted.</dd>
+      <dt>tokens</dt><dd>Border colors via <code>--field-border-*</code>. Background via <code>--field-bg-*</code>. Text via <code>--field-text-*</code>. Focus halo via <code>--ring-focus</code>. Grouping-container enclosures via <code>--field-group-border</code>. <b>Never invent values</b> — extend the token set if a new state appears.</dd>
       <dt>validation timing</dt><dd>Inline async validation: debounce <b>350ms</b> (<code>--validate-debounce</code>) before showing loading state. On-blur: validate immediately. On-submit: validate the whole form, focus the first invalid field, announce summary in a live region.</dd>
       <dt>error precedence</dt><dd>When a field could match multiple states, precedence is: <b>Error → Warning → AI review → Loading → Success → Focus → Hover → Default</b>.</dd>
     </dl>

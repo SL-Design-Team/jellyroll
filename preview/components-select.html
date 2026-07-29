@@ -32,6 +32,14 @@
   .sl-select .caret svg { width: 16px; height: 16px; }
   .sl-select.open .caret { transform: rotate(180deg); }
   .sl-select[disabled], .sl-select.disabled { background: var(--field-bg-disabled); color: var(--field-text-disabled); border-color: var(--field-border-disabled); cursor: not-allowed; }
+  /* Read-only: display-only trigger. Border/bg/message states never touch the
+     trailing chevron slot, so the caret is unchanged. */
+  .sl-select.readonly { background: var(--field-bg-readonly); color: var(--field-text-readonly); border-color: var(--field-border-readonly); cursor: default; }
+  .sl-select.error { border-color: var(--field-border-error); background: var(--field-bg-error); }
+
+  .sl-field__meta { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .sl-field__error { color: var(--sl-red-700); display: inline-flex; align-items: center; gap: 4px; }
+  .sl-field__error svg { width: 12px; height: 12px; }
 
   /* Dropdown panel */
   .sl-select-wrap { position: relative; }
@@ -121,7 +129,7 @@
   "anatomy": "Trigger (same shape as Input) with trailing chevron · panel (white, Raised shadow, 4px radius, max-height with scroll) · options (40px rows, 12px left padding, optional leading icon, current selection marked).",
   "options": "Variants: standard, grouped (with labels + dividers), with icons, and quiet (borderless in-cell for dense tables). Sizes: default 40px, compact 32px.",
   "usage": "Use for picking one value from 5–50 options. Below 5, prefer a Segmented control or Radio group. Above 50 or for unbounded sets, use a Combobox. Inside a dense table, use the quiet variant — the cell reads as text with a subtle chevron and only reveals its border on hover — instead of putting a bordered field in every row.",
-  "behaviors": "Click or Space/Enter opens. Arrow keys cycle options; typing jumps to the first match. Selecting closes the panel and updates the trigger. Esc closes without changing the value. The panel anchors to the trigger and flips above when it would clip below."
+  "behaviors": "Click or Space/Enter opens. Arrow keys cycle options; typing jumps to the first match. Selecting closes the panel and updates the trigger. Esc closes without changing the value. The panel anchors to the trigger and flips above when it would clip below. Field states: default/hover/focus/disabled/read-only/error — all border/background/message treatments that leave the trailing chevron untouched. No success or loading state on the trigger; async resolution belongs to Combobox."
 }
 </script>
 </head>
@@ -136,6 +144,8 @@
         <div class="sl-field"><label class="sl-field__label">Selected</label><div class="sl-select"><span class="value">prod-east-1</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
         <div class="sl-field"><label class="sl-field__label">Focused</label><div class="sl-select focus"><span class="value">prod-east-1</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
         <div class="sl-field"><label class="sl-field__label">Disabled</label><div class="sl-select disabled"><span class="value">prod-east-1</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Read-only</label><div class="sl-select readonly"><span class="value">prod-east-1</span><span class="caret"><i data-lucide="chevron-down"></i></span></div></div>
+        <div class="sl-field"><label class="sl-field__label">Error</label><div class="sl-select error"><span class="value placeholder">Choose a Snaplex</span><span class="caret"><i data-lucide="chevron-down"></i></span></div><div class="sl-field__meta"><span class="sl-field__error"><i data-lucide="alert-circle"></i>Select a Snaplex to continue.</span></div></div>
       </div>
     </div>
 
