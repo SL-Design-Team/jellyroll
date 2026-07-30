@@ -70,7 +70,6 @@
   @keyframes sl-spin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) { .sl-spinner { animation-duration: 2.8s; } }
   .sl-spinner--sm   { width: 16px; height: 16px; --sl-spin-thick: 1px; }
-  .sl-spinner--teal { color: var(--sl-teal-600); }
 
   .sl-combobox-wrap { position: relative; }
   .sl-menu {
@@ -155,7 +154,7 @@
   "anatomy": "Input · trailing chevron · panel of suggestions that updates as the user types. Highlighted match shown bold.",
   "options": "Async-loaded suggestions, creatable (typed values become new options), grouped options, icons.",
   "usage": "Use for 50+ options, async-loaded sets, or open-ended pickers where the user may want to type a value that does not exist yet (tags, custom names). Below 50 options, use a Select.",
-  "behaviors": "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab moves focus. For creatable comboboxes, typing a new value and pressing Enter creates it. Field states: default/hover/focus/disabled/read-only/error (border/background/message — chevron unchanged); loading is the one state that swaps the trailing chevron for a spinner during async fetch. No success state."
+  "behaviors": "Typing filters in 150ms debounce. Arrow keys cycle filtered results; Enter accepts the highlighted suggestion; Tab moves focus. For creatable comboboxes, typing a new value and pressing Enter creates it. Field states: default/hover/focus/disabled/read-only/error (border/background/message — chevron unchanged); loading is the one state that swaps the trailing chevron for a spinner during async fetch — the shared `.sl-spinner` at its default Blue-600, never tinted teal. No success state."
 }
 </script>
 </head>
@@ -185,9 +184,9 @@
         <div class="sl-field">
           <label class="sl-field__label">Loading (async)</label>
           <div class="sl-combobox-wrap">
-            <div class="sl-combobox open"><input value="acme corp" /><span class="sl-spinner sl-spinner--sm sl-spinner--teal"></span></div>
+            <div class="sl-combobox open"><input value="acme corp" /><span class="sl-spinner sl-spinner--sm"></span></div>
             <div class="sl-menu">
-              <div class="sl-menu__loading"><span class="sl-spinner sl-spinner--sm sl-spinner--teal"></span>Searching accounts…</div>
+              <div class="sl-menu__loading"><span class="sl-spinner sl-spinner--sm"></span>Searching accounts…</div>
             </div>
           </div>
         </div>
@@ -227,7 +226,7 @@
 
     <dl class="spec">
       <dt>vs. select</dt><dd>Use a <b>Combobox</b> when there are many options (&gt;50) and users will type to find. Use a <b>Select</b> for 5–50 option lists.</dd>
-      <dt>filtering</dt><dd>Local for &lt;500 items (filter in JS). Async for remote/large datasets, with <code>--validate-debounce</code> (350ms) before firing. Show <b>loading state</b> via spinner replacing chevron + loading row in menu.</dd>
+      <dt>filtering</dt><dd>Local for &lt;500 items (filter in JS). Async for remote/large datasets, with <code>--validate-debounce</code> (350ms) before firing. Show <b>loading state</b> via spinner replacing chevron + loading row in menu — both the shared <code>.sl-spinner</code> at its default Blue-600, never tinted teal (teal is the focus color, and this spinner already sits inside a teal focus ring).</dd>
       <dt>matching</dt><dd>Substring match by default, bolded in the option. Consider fuzzy match (Fuse.js or similar) for long names with abbreviations.</dd>
       <dt>create-new</dt><dd>When async search returns empty, surface a "<b>+ Create … </b>" footer that resolves to a new entity. Critical for connection pickers.</dd>
       <dt>keyboard</dt><dd>Type filters · <code>↑/↓</code> navigates · <code>Enter</code> selects active or creates · <code>Esc</code> closes without selecting · <code>Tab</code> moves focus.</dd>

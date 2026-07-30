@@ -205,15 +205,38 @@
     font: 400 13px/20px var(--font-sans);
   }
   .ts-state b { color: var(--color-text-body); font-weight: 800; display: block; }
-  .ts-state .spinner {
-    display: inline-block; width: 16px; height: 16px;
+  /* Loading row uses the shared comet-tail spinner primitive — Blue-600 by
+     default. Do not fork it, and do not tint it teal: teal is the focus
+     color, and this spinner sits inside an already-teal focus ring. */
+  .sl-spinner {
+    --sl-spin-thick: 1.25px;
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    border: 2px solid var(--sl-teal-600);
-    border-top-color: transparent;
-    animation: tsspin 0.9s linear infinite;
-    vertical-align: -3px; margin-right: 8px;
+    color: var(--sl-blue-600);
+    background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
+    -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+            mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+    animation: sl-spin 1.1s linear infinite;
+    flex: none;
   }
-  @keyframes tsspin { to { transform: rotate(360deg); } }
+  .sl-spinner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: var(--sl-spin-thick);
+    height: var(--sl-spin-thick);
+    border-radius: 50%;
+    background: currentColor;
+    transform: translateX(-50%);
+  }
+  @keyframes sl-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .sl-spinner { animation-duration: 2.8s; } }
+  .sl-spinner--sm { width: 16px; height: 16px; --sl-spin-thick: 1px; }
+  .ts-state .sl-spinner { vertical-align: -3px; margin-right: 8px; }
 
   /* Layout helpers */
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
@@ -237,7 +260,7 @@
   "anatomy": "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select. Multi-select trigger holds one chip token per value — a fully-checked branch is a single folder-icon chip — overflowing past `maxVisibleTokens` (default 3) into one non-removable `+N more` chip, the same overflow chip Multi-select uses. Never collapse the trigger to a bare \"N selected\" or a prose summary: chips keep the values identifiable and removable, and a leaf count would contradict the minimal-cover value.",
   "options": "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches. Single-select is leaf-only by default (parents expand only); set `parentsSelectable` to allow picking a folder (e.g. \"Move to folder\"), with a per-node `selectable` override for mixed trees. Multi-select value is minimal-cover: a fully-checked branch collapses to its parent key — meaning that node and all descendants, including any added later — while a partially-checked branch lists its explicit child keys; onChange also carries the expanded leaf list for filter consumers.",
   "usage": "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
-  "behaviors": "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants. Branch count chips are keyed to selection, not expansion — the copy never changes when a branch opens or closes: partially selected branches read `N / M`, branches with none or all selected read a plain `M` total (the checkbox already says which), and `0 / M` never renders. A collapsed branch holding selections is therefore never silent. Trigger field states: default/hover/focus/disabled/read-only/error — border/background/message treatments that leave the trailing chevron untouched. Loading and no-results render inside the popover body (a `.ts-state` row with a teal spinner), not on the trigger."
+  "behaviors": "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants. Branch count chips are keyed to selection, not expansion — the copy never changes when a branch opens or closes: partially selected branches read `N / M`, branches with none or all selected read a plain `M` total (the checkbox already says which), and `0 / M` never renders. A collapsed branch holding selections is therefore never silent. Trigger field states: default/hover/focus/disabled/read-only/error — border/background/message treatments that leave the trailing chevron untouched. Loading and no-results render inside the popover body (a `.ts-state` row with the shared Blue-600 `.sl-spinner`), not on the trigger."
 }
 </script>
 </head>
@@ -533,7 +556,7 @@
               </div>
               <div class="ts-pop__body">
                 <div class="ts-state">
-                  <span class="spinner"></span>Loading snaplex hierarchy…
+                  <span class="sl-spinner sl-spinner--sm" role="status" aria-label="Loading"></span>Loading snaplex hierarchy…
                 </div>
               </div>
             </div>
