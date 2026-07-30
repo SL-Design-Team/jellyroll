@@ -391,7 +391,7 @@ window.JELLYROLL_DATA = {
           name: "Skeleton loader",
           tagline: "Pulsing grey shape standing in for loading content.",
           meta: {
-            anatomy: "Grey-300 fill · 4px radius · opacity pulse 1 → 0.5 → 1 at 2s infinite (subtle, low contrast). On dark surfaces, swap the fill for a white@10% overlay — grey reads too bright on navy.",
+            anatomy: "`--color-skeleton` fill (Grey-400) · 4px radius · opacity pulse 1 → 0.5 → 1 at 2s infinite (subtle, low contrast). On dark surfaces, swap the fill for `--color-skeleton-on-dark` (white@10%) — grey reads too bright on navy. Reference the tokens, not the ramp step, so the two stay in sync.",
             options: "Block (default), text (1em tall), avatar (circle), media (with aspect ratio). On-dark variant for dark surfaces like the nav rail.",
             usage: "Use for loading states on cards, rows, lists, and full views. Match the rough shape of the content that is loading — a row of three skeletons of varying widths suggests a body of text. Never animate aggressively; the pulse should sit at the edge of perception. Pulse is disabled under prefers-reduced-motion."
           }
