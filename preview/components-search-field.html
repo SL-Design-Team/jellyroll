@@ -40,8 +40,45 @@
   }
   .sl-search .clear:hover { background: var(--sl-grey-200); color: var(--color-text-body); }
   .sl-search .clear svg { width: 12px; height: 12px; stroke-width: 2.5; }
-  .sl-search .spinner { animation: spin 1s linear infinite; color: var(--sl-teal-600); }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  /* Async search swaps the leading magnifier for the shared comet-tail spinner
+     primitive — Blue-600, never a Lucide `loader` glyph, never tinted teal
+     (teal is the focus color and this sits inside a teal focus ring). */
+  .sl-spinner {
+    --sl-spin-thick: 1px;
+    position: relative; display: inline-block; flex: none;
+    width: 16px; height: 16px; border-radius: 50%;
+    color: var(--sl-blue-600);
+    background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
+    -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+            mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
+    animation: sl-spin 1.1s linear infinite;
+  }
+  .sl-spinner::after {
+    content: ''; position: absolute; top: 0; left: 50%;
+    width: var(--sl-spin-thick); height: var(--sl-spin-thick);
+    border-radius: 50%; background: currentColor; transform: translateX(-50%);
+  }
+  @keyframes sl-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .sl-spinner { animation-duration: 2.8s; } }
+  .sl-search--inverse .sl-spinner { color: var(--sl-white); }
+
+  /* Rail exception — one icon-only view control acting on the list below may
+     share the trailing slot with clear when there is no toolbar row to move
+     into. Same subtle grey as the leading magnifier, no button chrome, and it
+     pins the edge so the transient clear × can come and go without shifting
+     it. See the `rail exception` spec row. */
+  .sl-search .view-ctl {
+    width: 20px; height: 20px;
+    border: 0; padding: 0; background: transparent;
+    color: var(--color-text-subtle);
+    cursor: pointer; flex: none;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 2px;
+  }
+  .sl-search .view-ctl:hover { color: var(--color-text-body); }
+  .sl-search .view-ctl svg { width: 16px; height: 16px; }
+  .sl-search--inverse .view-ctl { color: var(--sl-grey-400); }
+  .sl-search--inverse .view-ctl:hover { color: var(--sl-white); }
 
   .sl-search--sm { height: var(--field-height-sm); padding: 4px 10px; }
   .sl-search--sm input { font-size: 12px; line-height: 16px; }
@@ -105,7 +142,7 @@
   "section": "Building blocks",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-search-field.html",
   "tagline": "Input with a leading search icon and a clear-on-typed affordance.",
-  "anatomy": "Leading Lucide `search-sm` icon · field · trailing clear `×` button that appears once there is text. Placeholder describes the shape (`Search snaps`). The clear `×` owns the trailing slot — nothing else interactive goes in there. Only passive elements may share it: the `⌘K` badge, a validation check, a loading spinner. Controls that act on the *results* rather than on the text (group by, sort, density, saved view) sit outside as sibling buttons in the same toolbar row, per Filter, sort, faceted search.",
+  "anatomy": "Leading Lucide `search-sm` icon · field · trailing clear `×` button that appears once there is text. Placeholder describes the shape (`Search snaps`). The clear `×` owns the trailing slot. Passive elements may share it freely: the `⌘K` badge, a validation check, a loading spinner. Controls that act on the *results* rather than on the text (group by, sort, density, saved view) sit outside as sibling buttons in the same toolbar row, per Filter, sort, faceted search — except in a narrow rail, where there is no toolbar row to move into and one icon-only view control may share the slot (see Field anatomy's rail exception). Either way the order holds: clear innermost, the persistent control pinned to the edge, so the transient `×` can come and go without shifting it.",
   "options": "Sizes: default 40px or compact 32px — use compact on dense surfaces such as table and filter toolbars. Surfaces: default bordered white field, or `sl-search--inverse` on dark surfaces (Designer rail, SnapGPT panel, Indigo 1000 nav), which swaps to a near-transparent fill with a Blue-300 25% border and keeps the teal focus ring. Inverse is a surface modifier only — compose it with the compact size for the rail. There is no filled variant: an opaque grey fill would collide with the state fills (Grey-100 read-only, Blue-100 disabled, Red-100 error, AI-100 review). On light surfaces the field keeps its border even when compact, so the input target stays discoverable in a toolbar.",
   "usage": "Use for filtering visible content on the current screen. For navigating to results on another screen, use the global Search overlay instead. Debounce input by 150ms before triggering a request.",
   "behaviors": "Esc clears when focused. Clear button removes text and refocuses the field. On submit (Enter), the request fires immediately, bypassing the debounce."
@@ -140,7 +177,7 @@
         <div class="sl-field">
           <label class="sl-field__label">Loading (async)</label>
           <div class="sl-search">
-            <span class="icon spinner"><i data-lucide="loader"></i></span>
+            <span class="sl-spinner" role="status" aria-label="Searching"></span>
             <input type="search" value="snowflake" />
             <button class="clear" aria-label="Clear search"><i data-lucide="x"></i></button>
           </div>
@@ -194,15 +231,25 @@
             <button class="clear" aria-label="Clear search"><i data-lucide="x"></i></button>
           </div>
         </div>
+        <div class="sl-field">
+          <label class="sl-field__label">Rail exception <span style="font-weight:400">(one icon-only view control may share the slot — clear innermost, control pins the edge)</span></label>
+          <div class="sl-search sl-search--sm sl-search--inverse">
+            <span class="icon"><i data-lucide="search"></i></span>
+            <input type="search" value="d" />
+            <button class="clear" aria-label="Clear search"><i data-lucide="x"></i></button>
+            <button class="view-ctl" aria-label="Group snaps by" aria-haspopup="menu" aria-expanded="false"><i data-lucide="sliders-horizontal"></i></button>
+          </div>
+        </div>
       </div>
     </div>
 
     <dl class="spec">
-      <dt>icons</dt><dd>Leading magnifier 16px, subtle grey. Replaced with spinner during async debounced search (350ms). Trailing X appears only when input has content.</dd>
+      <dt>icons</dt><dd>Leading magnifier 16px, subtle grey. Replaced during async debounced search (350ms) by the system <b>Spinner at <code>sm</code> (16px)</b> at its default Blue-600 — never a Lucide <code>loader</code> glyph, never tinted teal. Trailing X appears only when input has content.</dd>
       <dt>debounce</dt><dd>Default <b>350ms</b> (<code>--validate-debounce</code>) before firing the search request. Adjust per use case — instant for local lists, longer for remote APIs.</dd>
       <dt>type</dt><dd>Use <code>type="search"</code> — provides native clear button on some platforms (which is hidden by the system's CSS reset; the explicit clear button replaces it).</dd>
       <dt>shortcut</dt><dd>Global search fields show <code>⌘K</code> / <code>Ctrl+K</code> badge inline. Pressing the shortcut opens the Search overlay component. The badge is passive text, so it may share the trailing slot with the clear <code>×</code>.</dd>
-      <dt>trailing slot</dt><dd>The clear <code>×</code> owns it. Nothing else interactive goes in there — see Field anatomy's <b>clear + trailing</b>. A <i>group by</i>, <i>sort</i>, <i>density</i>, or <i>saved view</i> control acts on the <b>results</b>, not on the text in the field, so it sits <b>outside as a sibling button in the same toolbar row</b> (the composition in <b>Filter, sort, faceted search</b>), where it can show a label and its current setting rather than hiding behind an icon. Only passive things may share the slot with clear: the <code>⌘K</code> badge, a validation check, a loading spinner.</dd>
+      <dt>trailing slot</dt><dd>The clear <code>×</code> owns it. Passive elements may share it freely: the <code>⌘K</code> badge, a validation check, a loading spinner. A <i>group by</i>, <i>sort</i>, <i>density</i>, or <i>saved view</i> control acts on the <b>results</b>, not on the text, so by default it sits <b>outside as a sibling button in the same toolbar row</b> — the composition in <b>Filter, sort, faceted search</b>, where it can show a label and its current setting.</dd>
+      <dt>rail exception</dt><dd>In a <b>narrow rail there is no toolbar row to move into</b>, so one icon-only view control may share the trailing slot with clear — see the compact inverse example above, and Field anatomy's <b>rail exception</b> for the full conditions. Keep the order: <b>clear innermost, the view control pinned to the edge.</b> Reversed, the view control jumps sideways every time the <code>×</code> appears or leaves, since <code>×</code> is transient and it is not.</dd>
       <dt>surfaces</dt><dd>Default is the bordered white field. Add <b>sl-search--inverse</b> on dark surfaces (Designer rail, SnapGPT panel, Indigo 1000 nav) for a near-transparent fill with a Blue-300 25% border — the same track border the inverse Segmented control uses. Inverse is a <em>surface</em> modifier only: compose it with <code>sl-search--sm</code> for the compact rail size. The teal focus ring is identical on every surface. There is no filled variant.</dd>
       <dt>a11y</dt><dd>Wrap in <code>&lt;form role="search"&gt;</code> if the field is the primary search affordance on the page. Clear button: <code>aria-label="Clear search"</code>.</dd>
     </dl>
