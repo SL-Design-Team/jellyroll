@@ -74,7 +74,16 @@
     border-radius: 999px; cursor: pointer; color: inherit; opacity: 0.7;
   }
   .ts-token .x:hover { opacity: 1; background: rgba(0,0,0,0.1); }
+  .ts-token i, .ts-token svg { width: 12px; height: 12px; flex: none; }
   .ts-token .x i, .ts-token .x svg { width: 11px; height: 11px; }
+  /* Overflow chip — non-removable, opens the popover */
+  .ts-token--more {
+    padding: 0 8px;
+    background: var(--sl-grey-200);
+    color: var(--color-text-subtle);
+    font-weight: 800;
+    cursor: pointer;
+  }
 
   /* ─── Popover ───────────────────────────────────────────────────── */
   .ts-wrap { position: relative; }
@@ -225,10 +234,10 @@
   "section": "Composed components",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-tree-select.html",
   "tagline": "Hierarchical picker — folders, snaplexes, org units.",
-  "anatomy": "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select.",
+  "anatomy": "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select. Multi-select trigger holds one chip token per value — a fully-checked branch is a single folder-icon chip — overflowing past `maxVisibleTokens` (default 3) into one non-removable `+N more` chip, the same overflow chip Multi-select uses. Never collapse the trigger to a bare \"N selected\" or a prose summary: chips keep the values identifiable and removable, and a leaf count would contradict the minimal-cover value.",
   "options": "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches. Single-select is leaf-only by default (parents expand only); set `parentsSelectable` to allow picking a folder (e.g. \"Move to folder\"), with a per-node `selectable` override for mixed trees. Multi-select value is minimal-cover: a fully-checked branch collapses to its parent key — meaning that node and all descendants, including any added later — while a partially-checked branch lists its explicit child keys; onChange also carries the expanded leaf list for filter consumers.",
   "usage": "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
-  "behaviors": "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants. Trigger field states: default/hover/focus/disabled/read-only/error — border/background/message treatments that leave the trailing chevron untouched. Loading and no-results render inside the popover body (a `.ts-state` row with a teal spinner), not on the trigger."
+  "behaviors": "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants. Branch count chips are keyed to selection, not expansion — the copy never changes when a branch opens or closes: partially selected branches read `N / M`, branches with none or all selected read a plain `M` total (the checkbox already says which), and `0 / M` never renders. A collapsed branch holding selections is therefore never silent. Trigger field states: default/hover/focus/disabled/read-only/error — border/background/message treatments that leave the trailing chevron untouched. Loading and no-results render inside the popover body (a `.ts-state` row with a teal spinner), not on the trigger."
 }
 </script>
 </head>
@@ -263,9 +272,12 @@
           </div>
         </div>
         <div class="sl-field">
-          <label class="sl-field__label">Many · summarized</label>
+          <label class="sl-field__label">Many · overflow chip</label>
           <div class="ts-trigger">
-            <span class="ts-trigger__value"><b style="font-weight:800; color: var(--sl-indigo-900);">14 pipelines</b> across 3 projects</span>
+            <span class="ts-token" title="Ops — whole folder"><i data-lucide="folder"></i>Ops<button class="x" aria-label="Remove Ops"><i data-lucide="x"></i></button></span>
+            <span class="ts-token" title="Sales analytics / Daily / orders-rollup">orders-rollup<button class="x" aria-label="Remove orders-rollup"><i data-lucide="x"></i></button></span>
+            <span class="ts-token" title="Identity / sso-user-sync">sso-user-sync<button class="x" aria-label="Remove sso-user-sync"><i data-lucide="x"></i></button></span>
+            <span class="ts-token ts-token--more">+4 more</span>
             <span class="caret"><i data-lucide="chevron-down"></i></span>
           </div>
         </div>
@@ -311,8 +323,10 @@
           <label class="sl-field__label">Filter pipelines</label>
           <div class="ts-wrap">
             <div class="ts-trigger open">
-              <span class="ts-token">orders-rollup<button class="x"><i data-lucide="x"></i></button></span>
-              <span class="ts-token">sf-to-snowflake-nightly<button class="x"><i data-lucide="x"></i></button></span>
+              <span class="ts-token" title="Sales analytics / Daily / orders-rollup">orders-rollup<button class="x"><i data-lucide="x"></i></button></span>
+              <span class="ts-token" title="Sales analytics / Nightly / sf-to-snowflake-nightly">sf-to-snowflake-nightly<button class="x"><i data-lucide="x"></i></button></span>
+              <span class="ts-token" title="Identity / sso-user-sync">sso-user-sync<button class="x"><i data-lucide="x"></i></button></span>
+              <span class="ts-token ts-token--more">+2 more</span>
               <span class="ts-trigger__placeholder" style="flex: 1; min-width: 0;"></span>
               <span class="caret"><i data-lucide="chevron-up"></i></span>
             </div>
@@ -329,7 +343,7 @@
                   <span class="ts-row__chev empty"></span>
                   <span class="sl-checkbox sl-checkbox--dense is-indeterminate"></span>
                   <span class="ts-row__label">Select all</span>
-                  <span class="ts-row__count">2 / 49</span>
+                  <span class="ts-row__count">5 / 49</span>
                 </div>
 
                 <!-- Sales analytics (parent) -->
@@ -355,12 +369,12 @@
                   <span class="ts-row__label"><i data-lucide="git-branch"></i>billing-monthly-export</span>
                 </div>
 
-                <!-- Identity (collapsed parent) -->
+                <!-- Identity (collapsed parent, partially selected — count stays visible) -->
                 <div class="ts-row" style="padding-left: 12px;">
                   <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
-                  <span class="sl-checkbox sl-checkbox--dense"></span>
+                  <span class="sl-checkbox sl-checkbox--dense is-indeterminate"></span>
                   <span class="ts-row__label"><i data-lucide="folder"></i>Identity</span>
-                  <span class="ts-row__count">8</span>
+                  <span class="ts-row__count">3 / 8</span>
                 </div>
 
                 <!-- Ops (collapsed parent) -->
@@ -376,7 +390,7 @@
                   <span class="ts-row__chev open"><i data-lucide="chevron-down"></i></span>
                   <span class="sl-checkbox sl-checkbox--dense"></span>
                   <span class="ts-row__label"><i data-lucide="folder-open"></i>Marketing</span>
-                  <span class="ts-row__count">0 / 15</span>
+                  <span class="ts-row__count">15</span>
                 </div>
                 <div class="ts-row" style="padding-left: 36px;">
                   <span class="ts-row__chev"><i data-lucide="chevron-right"></i></span>
@@ -393,7 +407,7 @@
               </div>
               <div class="ts-pop__foot">
                 <button class="clear">Clear selection</button>
-                <span><b style="font-weight: 800; color: var(--color-text-body);">2</b> / 49 selected</span>
+                <span><b style="font-weight: 800; color: var(--color-text-body);">5</b> / 49 selected</span>
               </div>
             </div>
           </div>
@@ -554,13 +568,14 @@
 
     <dl class="spec">
       <dt>variants</dt><dd><b>Multi-select</b> (checkbox rows · tri-state parents · Select all header) — used for filtering by N pipelines / projects / snaplexes. <b>Single-select</b> (radio rows · click-to-pick · no Select all) — used for "move to folder", "pick parent", "choose snaplex". Leaf-only by default; opt in with <code>parentsSelectable</code> (per-node <code>selectable</code> override for mixed trees) when folders should be pickable.</dd>
-      <dt>row</dt><dd>Three slots in a fixed-width gutter: <b>chevron</b> (expand · hidden for leaves) · <b>checkbox/radio</b> · <b>label</b> (folder/branch icon + name). Trailing slot: optional count chip showing <code>N / M</code> selected or total.</dd>
-      <dt>indent</dt><dd>Each tree level adds <b>26px</b> of left padding. Connector lines are not drawn — indentation + chevron carry hierarchy. Match the dom-shape: a child sits flush with its parent's label, not the chevron.</dd>
+      <dt>row</dt><dd>Three slots in a fixed-width gutter: <b>chevron</b> (expand · hidden for leaves) · <b>checkbox/radio</b> · <b>label</b> (folder/branch icon + name). Trailing slot: optional count chip (see <b>count chip</b>). Leaves never carry a count.</dd>
+      <dt>count chip</dt><dd>Keyed to <i>selection</i> state, never to expand state — the copy does not change when a branch opens or closes. Branch with <b>some</b> descendants selected (the indeterminate case) → <code>N / M</code>. Branch with <b>none</b> or <b>all</b> selected → plain <code>M</code> total, because the checkbox already says which. So a collapsed branch holding selections is <i>never</i> silent: the indeterminate box says "some", the chip says how many. Never render <code>0 / M</code> — that is the plain-<code>M</code> case. While a search is active the chip is overridden by the match count (see <b>search</b>).</dd>
+      <dt>indent</dt><dd>Each tree level adds <b>24px</b> of left padding (12px leading inset at root). Connector lines are not drawn — indentation + chevron carry hierarchy. Match the dom-shape: a child sits flush with its parent's label, not the chevron.</dd>
       <dt>tri-state</dt><dd>Parent checkbox state is derived: <b>checked</b> if all descendants are selected · <b>indeterminate</b> if some are · <b>empty</b> if none. Clicking a parent's checkbox toggles <i>all descendants</i> together. Clicking the chevron only expands.</dd>
       <dt>select all</dt><dd>Top "Select all" row (dashed bottom border) toggles every leaf in the tree. Inherits the same tri-state styling. Hidden in single-select mode.</dd>
       <dt>search</dt><dd>Filters leaves and auto-expands ancestors that contain matches. Matching substrings bolded. Parent counts switch to <b>"N matches"</b>. Footer offers <b>"Select all matching"</b> when results &gt; 0.</dd>
       <dt>footer</dt><dd>Left: <b>Clear selection</b> link (disabled when nothing selected). Right: live count <b>"X / Y selected"</b>, or match summary when filtered. No Apply/Cancel — changes commit immediately like Multi-select.</dd>
-      <dt>field display</dt><dd>0 selected → placeholder. 1 selected → full path ("Sales analytics / Daily / orders-rollup"). 2–4 → individual chip tokens. 5+ → summary ("14 pipelines across 3 projects").</dd>
+      <dt>field display</dt><dd>0 selected → placeholder. 1 selected → full path as plain text ("Sales analytics / Daily / orders-rollup"). 2+ → chip tokens, one per <i>value</i>, so a fully-checked branch is a single folder-icon chip meaning the whole folder. Past <code>maxVisibleTokens</code> (default 3) the remainder collapses to one <code>+N more</code> chip — the same overflow chip as Multi-select, non-removable, click to open the popover. Do <b>not</b> collapse the whole trigger to a bare "N selected" or a prose summary ("14 pipelines across 3 projects"): the noun is app-specific, and a leaf count contradicts the minimal-cover value, where a checked branch also means anything added to it later. Chips show the leaf/folder name only; the full path goes in <code>title</code> for disambiguation.</dd>
       <dt>keyboard</dt><dd><kbd>↑/↓</kbd> traverse visible rows · <kbd>→</kbd> expand collapsed branch · <kbd>←</kbd> collapse (or jump to parent if already collapsed) · <kbd>Space</kbd> toggle the row's checkbox/radio · <kbd>Enter</kbd> commit on single-select · <kbd>Esc</kbd> close. Typing focuses the search input.</dd>
       <dt>perf</dt><dd>Virtualize after <b>~200 visible rows</b>. Async branches load on first expand and cache; show inline spinner row beneath the parent while loading. Never load the full tree eagerly when it can have thousands of leaves.</dd>
       <dt>a11y</dt><dd>Pop is <code>role="tree" aria-multiselectable="true"</code> (false for single). Each row: <code>role="treeitem" aria-expanded aria-level aria-checked</code>. Search input <code>aria-controls</code> the tree. Tri-state announces as "mixed".</dd>

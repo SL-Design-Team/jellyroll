@@ -1149,7 +1149,7 @@
           "url": "https://sl-design-team.github.io/jellyroll/preview/components-tree.html",
           "tagline": "Hierarchical list of nodes with expand/collapse, indentation, and selection.",
           "anatomy": "Rows of nodes indented by depth · a chevron toggle on parent nodes (rotates down when expanded) or a spacer on leaves · optional 16px leading Lucide icon (folder / pipeline / org) · 14/22 label · optional leading checkbox for multi-select — the shared dense (16px) Checkbox, not a bespoke box. Selected row uses a Blue-100 fill with a 2px Blue-600 left marker.",
-          "options": "Single-select or multi-select (leading checkboxes); with or without node icons; lazy-loaded branches (spinner on expand); disabled / read-only nodes; optional per-node count. Multi-select parents are tri-state: checked when all descendants are selected, indeterminate when only some, empty when none.",
+          "options": "Single-select or multi-select (leading checkboxes); with or without node icons; lazy-loaded branches (spinner on expand); disabled / read-only nodes; optional per-node count. Multi-select parents are tri-state: checked when all descendants are selected, indeterminate when only some, empty when none. When a count is shown on a multi-select branch, follow Tree select's rule: `N / M` only while the branch is partially selected, plain `M` total otherwise — never `0 / M`, and never keyed to whether the branch is expanded.",
           "usage": "Use to navigate or pick from a hierarchy — project folders, snaplexes, org units. This is the primitive behind the Tree select component, which wraps it in a popover. For a flat list of options or commands, use Menu instead.",
           "behaviors": "Click a chevron (or the row) to expand/collapse; arrow keys move between visible nodes, Right/Left expand/collapse, Enter selects. Hover swaps the row to Grey-100; selected is Blue-100 with the Blue-600 left marker — never color alone."
         }
@@ -1460,10 +1460,10 @@
           "file": "preview/components-tabs.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/components-tabs.html",
           "tagline": "Horizontal tab bar that swaps views inside a single surface.",
-          "anatomy": "Tab list with a 1px Grey-300 underline · active tab indicator is a 2px Blue-600 underline above the row · 14/22 ExtraBold labels · 12px horizontal padding · 8px vertical.",
-          "options": "Sizes: default, compact. With or without leading icons. With optional badge/count next to the label.",
+          "anatomy": "Tab list with a 1px Grey-300 underline · active tab indicator is a 2px Blue-600 underline above the row · 14/20 ExtraBold labels · 12px horizontal padding · 8px vertical.",
+          "options": "Sizes: default. With or without leading icons. With optional badge/count next to the label. Compact size planned for future release.",
           "usage": "Use to swap between views in the same surface that share context (Configuration / Logs / Settings on a pipeline). For independent navigation across pages, use the Left nav.",
-          "behaviors": "Left/Right arrow moves focus; Home/End jump to first/last. Activation on click or Enter (or automatically on focus in `automatic activation` mode). Indicator slides between tabs in 150ms."
+          "behaviors": "Left/Right arrow moves focus; Home/End jump to first/last. Activation on click or Enter (or automatically on focus in `automatic activation` mode). Indicator slides between tabs in 150ms. Disabled tabs are skipped during keyboard navigation. Overflow: native horizontal scroll with hidden scrollbar."
         },
         {
           "name": "Time range selector",
@@ -1490,10 +1490,10 @@
           "file": "preview/components-tree-select.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/components-tree-select.html",
           "tagline": "Hierarchical picker — folders, snaplexes, org units.",
-          "anatomy": "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select.",
+          "anatomy": "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select. Multi-select trigger holds one chip token per value — a fully-checked branch is a single folder-icon chip — overflowing past `maxVisibleTokens` (default 3) into one non-removable `+N more` chip, the same overflow chip Multi-select uses. Never collapse the trigger to a bare \"N selected\" or a prose summary: chips keep the values identifiable and removable, and a leaf count would contradict the minimal-cover value.",
           "options": "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches. Single-select is leaf-only by default (parents expand only); set `parentsSelectable` to allow picking a folder (e.g. \"Move to folder\"), with a per-node `selectable` override for mixed trees. Multi-select value is minimal-cover: a fully-checked branch collapses to its parent key — meaning that node and all descendants, including any added later — while a partially-checked branch lists its explicit child keys; onChange also carries the expanded leaf list for filter consumers.",
           "usage": "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
-          "behaviors": "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants. Trigger field states: default/hover/focus/disabled/read-only/error — border/background/message treatments that leave the trailing chevron untouched. Loading and no-results render inside the popover body (a `.ts-state` row with a teal spinner), not on the trigger."
+          "behaviors": "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants. Branch count chips are keyed to selection, not expansion — the copy never changes when a branch opens or closes: partially selected branches read `N / M`, branches with none or all selected read a plain `M` total (the checkbox already says which), and `0 / M` never renders. A collapsed branch holding selections is therefore never silent. Trigger field states: default/hover/focus/disabled/read-only/error — border/background/message treatments that leave the trailing chevron untouched. Loading and no-results render inside the popover body (a `.ts-state` row with a teal spinner), not on the trigger."
         },
         {
           "name": "User menu",
