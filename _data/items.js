@@ -289,7 +289,7 @@ window.JELLYROLL_DATA = {
           parent: "preview/components-inputs.html",
           tagline: "Label, optional indicator, control, help text, error — in that order.",
           meta: {
-            usage: "Reference for the canonical field stack. Label above (14/22 ExtraBold) · optional optional/required indicator · control · help text below (12/18 Grey-700) · inline error in Red-600 with a `circle-alert` icon. Never invert this order, and never put help text above the control."
+            usage: "Reference for the canonical field stack. Label above (14/22 ExtraBold) · optional optional/required indicator · control · help text below (12/18 Grey-700) · inline error in Red-600 with a `circle-alert` icon. Never invert this order, and never put help text above the control. Trailing slot: never stack two interactive buttons — a clear `×` may pair only with a *passive* trailing element (validation check, status, loading spinner, `⌘K` badge). The test is scope: the trailing slot is for affordances acting on the value in this field (clear it, reveal it, validate it). Anything acting on the results the field filters (group by, sort, density, saved view) is a different object and moves outside as a sibling button in the same toolbar row, per Filter, sort, faceted search — where it can carry a visible label and its current setting instead of hiding behind an icon."
           }
         },
         {
@@ -369,7 +369,7 @@ window.JELLYROLL_DATA = {
           name: "Search field",
           tagline: "Input with a leading search icon and a clear-on-typed affordance.",
           meta: {
-            anatomy: "Leading Lucide `search-sm` icon · field · trailing clear `×` button that appears once there is text. Placeholder describes the shape (`Search snaps`).",
+            anatomy: "Leading Lucide `search-sm` icon · field · trailing clear `×` button that appears once there is text. Placeholder describes the shape (`Search snaps`). The clear `×` owns the trailing slot — nothing else interactive goes in there. Only passive elements may share it: the `⌘K` badge, a validation check, a loading spinner. Controls that act on the *results* rather than on the text (group by, sort, density, saved view) sit outside as sibling buttons in the same toolbar row, per Filter, sort, faceted search.",
             options: "Sizes: default 40px or compact 32px — use compact on dense surfaces such as table and filter toolbars. Surfaces: default bordered white field, or `sl-search--inverse` on dark surfaces (Designer rail, SnapGPT panel, Indigo 1000 nav), which swaps to a near-transparent fill with a Blue-300 25% border and keeps the teal focus ring. Inverse is a surface modifier only — compose it with the compact size for the rail. There is no filled variant: an opaque grey fill would collide with the state fills (Grey-100 read-only, Blue-100 disabled, Red-100 error, AI-100 review). On light surfaces the field keeps its border even when compact, so the input target stays discoverable in a toolbar.",
             usage: "Use for filtering visible content on the current screen. For navigating to results on another screen, use the global Search overlay instead. Debounce input by 150ms before triggering a request.",
             behaviors: "Esc clears when focused. Clear button removes text and refocuses the field. On submit (Enter), the request fires immediately, bypassing the debounce."
