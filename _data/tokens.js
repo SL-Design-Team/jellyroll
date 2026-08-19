@@ -100,7 +100,7 @@ window.JELLYROLL_TOKENS = {
     { name: "--color-text-link-hover",    value: "#09817F", role: "Link hover — Teal-600" },
     { name: "--color-text-link-pressed",  value: "#6BB3B2", role: "Link pressed — Teal-400" },
     { name: "--color-text-success",       value: "#014B10", role: "Success message text — Green-800" },
-    { name: "--color-text-warning",       value: "#C75209", role: "Warning message text — Orange-700" },
+    { name: "--color-text-warning",       value: "#322601", role: "Warning message text — Yellow-1000" },
     { name: "--color-text-alert",         value: "#B61631", role: "Error message text — Red-700" },
     { name: "--color-text-information",   value: "#26386A", role: "Informational accent — Indigo-700" },
     { name: "--color-text-discovery",     value: "#4E2B6A", role: "Discovery accent — Purple-700" },

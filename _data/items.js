@@ -149,7 +149,7 @@ window.JELLYROLL_DATA = {
           name: "Semantic text",
           tagline: "Body, subtle, link, status, information, discovery, accents.",
           meta: {
-            usage: "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-800 (success), Orange-700 (warning), Red-700 (alert/error). Information uses Indigo-700; Discovery uses Purple-700. AI uses the dedicated SL AI ramp — never substitute purple for AI."
+            usage: "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-800 (success), Yellow-1000 (warning), Red-700 (alert/error). Information uses Indigo-700; Discovery uses Purple-700. AI uses the dedicated SL AI ramp — never substitute purple for AI."
           }
         },
         {

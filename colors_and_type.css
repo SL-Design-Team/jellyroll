@@ -182,7 +182,7 @@
   --color-background-disabled: var(--sl-grey-200);
   --color-background-subtle: var(--sl-grey-100);
   --color-background-alert: var(--sl-red-100);
-  --color-background-warning: var(--sl-orange-100);
+  --color-background-warning: var(--sl-yellow-100);
   --color-background-success: var(--sl-green-100);
   --color-background-discovery: var(--sl-purple-100);
   --color-background-information: var(--sl-indigo-100);
@@ -224,7 +224,7 @@
   --color-border-disabled: var(--sl-grey-300);
   --color-border-error: var(--sl-red-600);      /* legacy alias of alert — kept for backward compat */
   --color-border-alert: var(--sl-red-600);
-  --color-border-warning: var(--sl-orange-600);
+  --color-border-warning: var(--sl-yellow-700);
   --color-border-success: var(--sl-green-600);
   --color-border-information: var(--sl-indigo-600);
   --color-border-discovery: var(--sl-purple-600);
