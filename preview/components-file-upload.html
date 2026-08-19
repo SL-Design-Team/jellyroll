@@ -55,11 +55,6 @@
     border-color: var(--sl-blue-600);
     background: var(--sl-blue-100);
   }
-  .sl-dropzone:focus-visible {
-    outline: none;
-    box-shadow: var(--ring-focus);
-    border-color: var(--sl-teal-600);
-  }
   .sl-dropzone__icon {
     display: inline-flex; align-items: center; justify-content: center;
     width: 48px; height: 48px;
@@ -75,7 +70,12 @@
     color: var(--sl-indigo-900);
     margin-bottom: 4px;
   }
-  .sl-dropzone__title a { color: var(--sl-blue-600); text-decoration: underline; cursor: pointer; }
+  .sl-dropzone__title a,
+  .sl-dropzone__browse { color: var(--sl-blue-600); text-decoration: underline; cursor: pointer; }
+  /* Browse is the drop zone's only keyboard stop (the zone itself is not
+     focusable) — a real button with the standard teal focus ring. */
+  .sl-dropzone__browse { background: none; border: 0; padding: 0; font: inherit; }
+  .sl-dropzone__browse:focus-visible { outline: none; border-radius: var(--radius-xs); box-shadow: var(--ring-focus); }
   .sl-dropzone__hint {
     font: 400 12px/18px var(--font-sans);
     color: var(--color-text-subtle);
@@ -192,9 +192,9 @@
       <div class="section-h">Drop zone <span class="meta">default · for files, schemas, pipeline imports</span></div>
       <div class="sl-field">
         <label class="sl-field__label">Pipeline file</label>
-        <div class="sl-dropzone">
+        <div class="sl-dropzone" role="region" aria-label="Upload files">
           <div class="sl-dropzone__icon"><i data-lucide="upload-cloud"></i></div>
-          <div class="sl-dropzone__title">Drop a file here or <a>browse</a></div>
+          <div class="sl-dropzone__title">Drop a file here or <button type="button" class="sl-dropzone__browse">browse</button></div>
           <div class="sl-dropzone__hint">JSON, YAML, or .slp · up to 50 MB · multiple files allowed</div>
         </div>
       </div>
@@ -202,7 +202,7 @@
 
     <div>
       <div class="section-h">Drop zone · active drag</div>
-      <div class="sl-dropzone dragover">
+      <div class="sl-dropzone dragover" role="region" aria-label="Upload files">
         <div class="sl-dropzone__icon"><i data-lucide="upload-cloud"></i></div>
         <div class="sl-dropzone__title">Release to upload 3 files</div>
         <div class="sl-dropzone__hint">JSON, YAML, or .slp · up to 50 MB</div>
@@ -211,7 +211,7 @@
 
     <div>
       <div class="section-h">Drop zone · disabled</div>
-      <div class="sl-dropzone" style="border-color: var(--field-border-disabled); background: var(--field-bg-disabled); cursor: not-allowed;">
+      <div class="sl-dropzone" role="region" aria-label="Upload files" aria-disabled="true" style="border-color: var(--field-border-disabled); background: var(--field-bg-disabled); cursor: not-allowed;">
         <div class="sl-dropzone__icon" style="background: var(--field-bg-disabled); color: var(--field-text-disabled);"><i data-lucide="upload-cloud"></i></div>
         <div class="sl-dropzone__title" style="color: var(--field-text-disabled);">Drop a file here or <a style="color: var(--field-text-disabled); text-decoration: none; cursor: not-allowed;">browse</a></div>
         <div class="sl-dropzone__hint" style="color: var(--field-text-disabled);">JSON, YAML, or .slp · up to 50 MB</div>
