@@ -30,6 +30,12 @@
   .sl-multi.disabled .sl-multi__token { background: var(--sl-grey-200); color: var(--field-text-disabled); }
   .sl-multi.readonly { background: var(--field-bg-readonly); border-color: var(--field-border-readonly); cursor: default; }
   .sl-multi.error { border-color: var(--field-border-error); background: var(--field-bg-error); }
+  /* Read-only and disabled can't mutate the value, so the chips drop their
+     remove affordance — the token becomes an inert label. */
+  .sl-multi.readonly .sl-multi__token .x,
+  .sl-multi.disabled .sl-multi__token .x { display: none; }
+  .sl-multi.readonly .sl-multi__token,
+  .sl-multi.disabled .sl-multi__token { padding-right: 8px; }
 
   .sl-multi__token {
     display: inline-flex; align-items: center; gap: 4px;
@@ -128,7 +134,7 @@
   "anatomy": "Trigger field showing selected chips inline · trailing chevron · panel of checkboxes (so the multi-select intent is obvious). Each chip has a remove `×`.",
   "options": "Plain, searchable, grouped. Footer action bar with `Select all` + `Clear` (toggleable, default enabled for Select all).",
   "usage": "Use when the user can pick more than one value from a bounded list. For free-form text tags, use a Chip input instead. Limit visible chips inline and overflow to `+N more` past a sensible threshold.",
-  "behaviors": "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip. Field states: default/hover/focus/disabled/read-only/error — all border/background/message treatments that leave the trailing chevron untouched. No success or loading state on the trigger."
+  "behaviors": "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip. In read-only or disabled, chips drop their remove `×` and become inert labels — the value can't be mutated. The `+N more` chip is non-removable and opens a non-modal overflow popover listing every selection with its own remove `×`; focus moves into the popover on open, and Escape, an outside click, or focus leaving all close it and return focus to the chip. Field states: default/hover/focus/disabled/read-only/error — all border/background/message treatments that leave the trailing chevron untouched. No success or loading state on the trigger."
 }
 </script>
 </head>

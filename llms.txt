@@ -70,7 +70,7 @@ Single-purpose controls — each does one job. The atoms you compose with.
 - [Slider](https://sl-design-team.github.io/jellyroll/preview/components-slider.html): Drag to pick a value from a continuous track.
 - [Spinner](https://sl-design-team.github.io/jellyroll/preview/components-spinner.html): Comet-tail loader — a tapered ring on a 1.1s rotation.
 - [Status atom](https://sl-design-team.github.io/jellyroll/preview/components-status.html): 6px colored dot + label — the minimal status indicator.
-- [Text area](https://sl-design-team.github.io/jellyroll/preview/components-textarea.html): Multi-line text input. Auto-grows by default; resize handle on demand.
+- [Text area](https://sl-design-team.github.io/jellyroll/preview/components-textarea.html): Multi-line text input. Fixed height by default with a vertical resize handle.
 - [Toggle](https://sl-design-team.github.io/jellyroll/preview/components-toggle.html): On/off switch for a setting that takes effect immediately.
 - [Tooltip](https://sl-design-team.github.io/jellyroll/preview/components-tooltip.html): Short label or description surfaced on hover or focus.
 - [Tree](https://sl-design-team.github.io/jellyroll/preview/components-tree.html): Hierarchical list of nodes with expand/collapse, indentation, and selection.

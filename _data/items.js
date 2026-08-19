@@ -337,9 +337,9 @@ window.JELLYROLL_DATA = {
           tagline: "Numeric input with optional stepper and unit suffix.",
           meta: {
             anatomy: "Field · optional stepper (chevron-up / chevron-down stacked on the right) · optional unit suffix inside the field (e.g., `MB`, `ms`).",
-            options: "Plain, with stepper, with unit. Integer or decimal precision. Min/max/step bounds.",
+            options: "Plain (no affix), unit suffix, or prefix — the stepper is independent and available with any of them. Integer or decimal precision. Min/max/step bounds.",
             usage: "Use for bounded numeric values — counts, timeouts, sizes. Use with a unit suffix when the unit clarifies meaning. For unbounded text-like numerics (phone, ID), use a plain Input.",
-            behaviors: "Arrow up/down increments by step; Shift+arrow by 10× step. Steppers respect min/max bounds and disable at the limits. Pasting non-numeric input is rejected silently. Decimal separator matches the user's locale."
+            behaviors: "Arrow up/down increments by step; Shift+arrow by 10× step. Steppers respect min/max bounds and disable at the limits. Pasting non-numeric input is rejected silently. On blur, a value outside min/max snaps to the nearest bound and the field surfaces its own inline error — it does not rewrite the value while the user is still typing. Decimal separator matches the user's locale."
           }
         },
         {
@@ -350,7 +350,7 @@ window.JELLYROLL_DATA = {
             anatomy: "Field with the value rendered as bullet characters · trailing eye icon button (Lucide `eye` / `eye-off`) that toggles visibility.",
             options: "Plain, with strength meter, with show/hide toggle (default on).",
             usage: "Use for any credential or sensitive token. Auto-disable browser auto-fill suggestions only on confirm / current-password fields where the prompt would be misleading.",
-            behaviors: "Toggling visibility does not refocus the field. The strength meter, when shown, updates on each keystroke and uses Green-600 / Yellow-600 / Red-600 — no numeric score."
+            behaviors: "Toggling visibility does not refocus the field. The strength meter, when shown, is a 4-bar meter on the 600 ramp — weak (Red-600) · fair (Orange-600) · good (Yellow-700) · strong (Green-600), no numeric score. Error state borders Red-600 and fills Red-100 like Text input. On a read-only field the reveal eye stays enabled — viewing is not editing; it is disabled only when the whole field is disabled."
           }
         },
         {
@@ -371,8 +371,8 @@ window.JELLYROLL_DATA = {
           meta: {
             anatomy: "Leading Lucide `search-sm` icon · field · trailing clear `×` button that appears once there is text. Placeholder describes the shape (`Search snaps`). The clear `×` owns the trailing slot. Passive elements may share it freely: the `⌘K` badge, a validation check, a loading spinner. Controls that act on the *results* rather than on the text (group by, sort, density, saved view) sit outside as sibling buttons in the same toolbar row, per Filter, sort, faceted search — except in a narrow rail, where there is no toolbar row to move into and one icon-only view control may share the slot (see Field anatomy's rail exception). Either way the order holds: clear innermost, the persistent control pinned to the edge, so the transient `×` can come and go without shifting it.",
             options: "Sizes: default 40px or compact 32px — use compact on dense surfaces such as table and filter toolbars. Surfaces: default bordered white field, or `sl-search--inverse` on dark surfaces (Designer rail, SnapGPT panel, Indigo 1000 nav), which swaps to a near-transparent fill with a Blue-300 25% border and keeps the teal focus ring. Inverse is a surface modifier only — compose it with the compact size for the rail. There is no filled variant: an opaque grey fill would collide with the state fills (Grey-100 read-only, Blue-100 disabled, Red-100 error, AI-100 review). On light surfaces the field keeps its border even when compact, so the input target stays discoverable in a toolbar.",
-            usage: "Use for filtering visible content on the current screen. For navigating to results on another screen, use the global Search overlay instead. Debounce input by 150ms before triggering a request.",
-            behaviors: "Esc clears when focused. Clear button removes text and refocuses the field. On submit (Enter), the request fires immediately, bypassing the debounce."
+            usage: "Use for filtering visible content on the current screen. For navigating to results on another screen, use the global Search overlay instead. Debounce input by 350ms (`--validate-debounce`) before triggering a request.",
+            behaviors: "Esc clears when focused. Clear button removes text and refocuses the field. On submit (Enter), the request fires immediately, bypassing the debounce. A view control that acts on the results (not the field's text) stays enabled when the field is read-only; it is disabled only when the field itself is disabled."
           }
         },
         {
@@ -429,12 +429,12 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/components-textarea.html",
           name: "Text area",
-          tagline: "Multi-line text input. Auto-grows by default; resize handle on demand.",
+          tagline: "Multi-line text input. Fixed height by default with a vertical resize handle.",
           meta: {
-            anatomy: "Label · field (min 80px tall, same border/radius/padding as Input) · optional help text · optional character counter bottom-right.",
-            options: "Auto-grow vs fixed height; optional max-height with internal scroll; optional resize handle.",
-            usage: "Use for free-form text over one line — descriptions, comments, paste targets. Auto-grow by default so the user sees what they have typed. Show a counter only when there is a real character limit.",
-            behaviors: "Focus and error states match the Input. Resize handle (when shown) is the browser's native handle, used as-is — it is not recolored or replaced, as there is no cross-browser way to style it. To drop the handle entirely, use `resize: none` with auto-grow. Counter turns Red-600 within 10 characters of the limit."
+            anatomy: "Label · field (min 88px tall ≈3 lines, same border/radius/padding as Input) · optional help text · optional character counter bottom-right.",
+            options: "Fixed height with a vertical resize handle by default; optional auto-grow; optional max-height with internal scroll.",
+            usage: "Use for free-form text over one line — descriptions, comments, paste targets. Fixed height by default (min 88px, ≈3 lines) with a vertical resize handle; opt into auto-grow when the field should expand to fit. Show a counter only when there is a real character limit.",
+            behaviors: "Focus and error states match the Input. Resize handle (when shown) is the browser's native handle, used as-is — it is not recolored or replaced, as there is no cross-browser way to style it. To drop the handle entirely, use `resize: none` with auto-grow. Counter turns Red-700 once over the max."
           }
         },
         {
@@ -530,7 +530,7 @@ window.JELLYROLL_DATA = {
             anatomy: "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill.",
             options: "Single date or range; min/max bounds; disabled dates; locale-aware first-day-of-week and format.",
             usage: "Use for any date input where the user benefits from seeing a calendar. For purely typed dates (e.g., dates a backend system fills in), use a plain Input with a date mask.",
-            behaviors: "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill."
+            behaviors: "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill. Validation: error borders Red-600 with a message below; success is border-only (or omitted) because the trailing calendar icon holds the slot — the field exposes no success message."
           }
         },
         {
@@ -634,7 +634,7 @@ window.JELLYROLL_DATA = {
             anatomy: "Trigger field showing selected chips inline · trailing chevron · panel of checkboxes (so the multi-select intent is obvious). Each chip has a remove `×`.",
             options: "Plain, searchable, grouped. Footer action bar with `Select all` + `Clear` (toggleable, default enabled for Select all).",
             usage: "Use when the user can pick more than one value from a bounded list. For free-form text tags, use a Chip input instead. Limit visible chips inline and overflow to `+N more` past a sensible threshold.",
-            behaviors: "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip. Field states: default/hover/focus/disabled/read-only/error — all border/background/message treatments that leave the trailing chevron untouched. No success or loading state on the trigger."
+            behaviors: "Click options to toggle (no auto-close). Click outside or Esc closes. Removing a chip refocuses the trigger. Backspace inside an empty trigger removes the last chip. In read-only or disabled, chips drop their remove `×` and become inert labels — the value can't be mutated. The `+N more` chip is non-removable and opens a non-modal overflow popover listing every selection with its own remove `×`; focus moves into the popover on open, and Escape, an outside click, or focus leaving all close it and return focus to the chip. Field states: default/hover/focus/disabled/read-only/error — all border/background/message treatments that leave the trailing chevron untouched. No success or loading state on the trigger."
           }
         },
         {
@@ -741,7 +741,7 @@ window.JELLYROLL_DATA = {
             anatomy: "Same trigger as Select · panel showing a tree with chevron disclosure on each parent · indentation 24px per level (12px leading inset for the checkbox). Single or multi-select. Multi-select trigger holds one chip token per value — a fully-checked branch is a single folder-icon chip — overflowing past `maxVisibleTokens` (default 3) into one non-removable `+N more` chip, the same overflow chip Multi-select uses. Never collapse the trigger to a bare \"N selected\" or a prose summary: chips keep the values identifiable and removable, and a leaf count would contradict the minimal-cover value.",
             options: "Single or multi (with `Select children` toggle when multi); searchable; lazy-loaded branches. Single-select is leaf-only by default (parents expand only); set `parentsSelectable` to allow picking a folder (e.g. \"Move to folder\"), with a per-node `selectable` override for mixed trees. Multi-select value is minimal-cover: a fully-checked branch collapses to its parent key — meaning that node and all descendants, including any added later — while a partially-checked branch lists its explicit child keys; onChange also carries the expanded leaf list for filter consumers.",
             usage: "Use when the items form a real hierarchy the user navigates — project folders, snaplex groups, org charts. For a flat tagged list, use a Multi-select.",
-            behaviors: "Chevron toggles expand/collapse; clicking the row label selects. Search collapses non-matching branches and highlights matched nodes. Selecting a parent in multi-mode optionally selects all descendants. Branch count chips are keyed to selection, not expansion — the copy never changes when a branch opens or closes: partially selected branches read `N / M`, branches with none or all selected read a plain `M` total (the checkbox already says which), and `0 / M` never renders. A collapsed branch holding selections is therefore never silent. Trigger field states: default/hover/focus/disabled/read-only/error — border/background/message treatments that leave the trailing chevron untouched. Loading and no-results render inside the popover body (a `.ts-state` row with the shared Blue-600 `.sl-spinner`), not on the trigger."
+            behaviors: "Chevron toggles expand/collapse; clicking the row label selects. Search matches both leaf and folder names, collapses non-matching branches, highlights matched substrings, and auto-expands ancestors of matches; when a folder's own name matches, `Select all matching` covers its whole subtree. Selecting a parent in multi-mode optionally selects all descendants. Branch count chips are keyed to selection, not expansion — the copy never changes when a branch opens or closes: partially selected branches read `N / M`, branches with none or all selected read a plain `M` total (the checkbox already says which), and `0 / M` never renders. A collapsed branch holding selections is therefore never silent. Trigger field states: default/hover/focus/disabled/read-only/error — border/background/message treatments that leave the trailing chevron untouched. Loading and no-results render inside the popover body (a `.ts-state` row with the shared Blue-600 `.sl-spinner`), not on the trigger."
           }
         },
         {

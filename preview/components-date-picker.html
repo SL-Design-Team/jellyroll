@@ -81,12 +81,12 @@
     color: var(--sl-indigo-900);
     cursor: pointer;
     border-radius: 999px;
-    border: 0; background: transparent;
+    border: 1.5px solid transparent; background: transparent;
   }
   .sl-cal__day:hover { background: var(--sl-blue-100); }
   .sl-cal__day.muted { color: var(--sl-grey-500); }
-  .sl-cal__day.today { box-shadow: inset 0 0 0 1px var(--sl-blue-600); font-weight: 800; }
-  .sl-cal__day.selected { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; }
+  .sl-cal__day.today { border-color: var(--sl-blue-600); font-weight: 800; }
+  .sl-cal__day.selected { background: var(--sl-blue-600); border-color: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; }
   .sl-cal__day.selected:hover { background: var(--sl-blue-700); }
   .sl-cal__day.range { background: var(--sl-blue-100); border-radius: 0; color: var(--sl-blue-700); }
   .sl-cal__day.range-start { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; border-radius: 999px 0 0 999px; }
@@ -149,7 +149,7 @@
   "anatomy": "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill.",
   "options": "Single date or range; min/max bounds; disabled dates; locale-aware first-day-of-week and format.",
   "usage": "Use for any date input where the user benefits from seeing a calendar. For purely typed dates (e.g., dates a backend system fills in), use a plain Input with a date mask.",
-  "behaviors": "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill."
+  "behaviors": "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill. Validation: error borders Red-600 with a message below; success is border-only (or omitted) because the trailing calendar icon holds the slot — the field exposes no success message."
 }
 </script>
 </head>
@@ -215,7 +215,7 @@
           <label class="sl-field__label">Runs in last…</label>
           <div class="sl-date-wrap">
             <div class="sl-date open" style="max-width: 320px;"><span class="value">12 May 2026 — 19 May 2026</span><span class="icon"><i data-lucide="calendar"></i></span></div>
-            <div class="sl-cal" style="display: grid; grid-template-columns: auto auto auto; gap: 0 16px;">
+            <div class="sl-cal" style="display: grid; grid-template-columns: auto auto auto; gap: 0 24px;">
               <div class="sl-cal__presets">
                 <button class="sl-cal__preset">Today</button>
                 <button class="sl-cal__preset">Yesterday</button>
@@ -273,7 +273,8 @@
       <dt>trigger</dt><dd>Field with calendar icon trailing. Displays selected date(s) formatted per locale.</dd>
       <dt>popover</dt><dd>Floats below the trigger. Single picker = one month. Range picker = two months side-by-side + preset sidebar.</dd>
       <dt>presets</dt><dd>Range picker offers common selections (Today, Last 7 days, Last 30 days, This/Last month, Custom). Active preset highlighted Blue-100.</dd>
-      <dt>states</dt><dd><b>Today</b>: outline ring · <b>Selected</b>: blue fill · <b>Range</b>: blue tint between endpoints, solid blue endpoints · <b>Muted</b>: previous/next month · <b>Disabled</b>: grey, no hover.</dd>
+      <dt>states</dt><dd><b>Today</b>: 1.5px Blue-600 border · <b>Selected</b>: blue fill · <b>Range</b>: blue tint between endpoints, solid blue endpoints · <b>Muted</b>: previous/next month · <b>Disabled</b>: grey, no hover.</dd>
+      <dt>validation</dt><dd>Error borders Red-600 with a message below. <b>Success is border-only</b> (or omitted) — the trailing calendar icon holds the slot, so there's no room for a success check or message; the field exposes no success message.</dd>
       <dt>keyboard</dt><dd>Arrow keys move day-by-day · <code>PgUp/PgDn</code> month-by-month · <code>Shift+PgUp/PgDn</code> year · <code>Enter</code> apply · <code>Esc</code> close.</dd>
       <dt>a11y</dt><dd><code>role="dialog" aria-modal="true" aria-label="Choose date"</code>. Grid: <code>role="grid"</code>; day buttons: <code>role="gridcell" aria-selected aria-current="date"</code>.</dd>
       <dt>related</dt><dd><b>Time picker</b> and <b>Datetime picker</b> follow the same anatomy with an added time control. Coming in Wave 2.</dd>

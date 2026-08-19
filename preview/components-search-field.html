@@ -76,9 +76,14 @@
     border-radius: 2px;
   }
   .sl-search .view-ctl:hover { color: var(--color-text-body); }
+  /* Open state — the control opens a menu, so the "active" look is keyed to
+     aria-expanded="true" (the menu-open state), not aria-pressed. Reserve
+     aria-pressed for a control that toggles a mode directly with no menu. */
+  .sl-search .view-ctl[aria-expanded="true"] { color: var(--color-text-body); background: var(--sl-grey-100); }
   .sl-search .view-ctl svg { width: 16px; height: 16px; }
   .sl-search--inverse .view-ctl { color: var(--sl-grey-400); }
   .sl-search--inverse .view-ctl:hover { color: var(--sl-white); }
+  .sl-search--inverse .view-ctl[aria-expanded="true"] { color: var(--sl-white); background: rgba(255,255,255,0.12); }
 
   .sl-search--sm { height: var(--field-height-sm); padding: 4px 10px; }
   .sl-search--sm input { font-size: 12px; line-height: 16px; }
@@ -144,8 +149,8 @@
   "tagline": "Input with a leading search icon and a clear-on-typed affordance.",
   "anatomy": "Leading Lucide `search-sm` icon · field · trailing clear `×` button that appears once there is text. Placeholder describes the shape (`Search snaps`). The clear `×` owns the trailing slot. Passive elements may share it freely: the `⌘K` badge, a validation check, a loading spinner. Controls that act on the *results* rather than on the text (group by, sort, density, saved view) sit outside as sibling buttons in the same toolbar row, per Filter, sort, faceted search — except in a narrow rail, where there is no toolbar row to move into and one icon-only view control may share the slot (see Field anatomy's rail exception). Either way the order holds: clear innermost, the persistent control pinned to the edge, so the transient `×` can come and go without shifting it.",
   "options": "Sizes: default 40px or compact 32px — use compact on dense surfaces such as table and filter toolbars. Surfaces: default bordered white field, or `sl-search--inverse` on dark surfaces (Designer rail, SnapGPT panel, Indigo 1000 nav), which swaps to a near-transparent fill with a Blue-300 25% border and keeps the teal focus ring. Inverse is a surface modifier only — compose it with the compact size for the rail. There is no filled variant: an opaque grey fill would collide with the state fills (Grey-100 read-only, Blue-100 disabled, Red-100 error, AI-100 review). On light surfaces the field keeps its border even when compact, so the input target stays discoverable in a toolbar.",
-  "usage": "Use for filtering visible content on the current screen. For navigating to results on another screen, use the global Search overlay instead. Debounce input by 150ms before triggering a request.",
-  "behaviors": "Esc clears when focused. Clear button removes text and refocuses the field. On submit (Enter), the request fires immediately, bypassing the debounce."
+  "usage": "Use for filtering visible content on the current screen. For navigating to results on another screen, use the global Search overlay instead. Debounce input by 350ms (`--validate-debounce`) before triggering a request.",
+  "behaviors": "Esc clears when focused. Clear button removes text and refocuses the field. On submit (Enter), the request fires immediately, bypassing the debounce. A view control that acts on the results (not the field's text) stays enabled when the field is read-only; it is disabled only when the field itself is disabled."
 }
 </script>
 </head>
@@ -249,7 +254,7 @@
       <dt>type</dt><dd>Use <code>type="search"</code> — provides native clear button on some platforms (which is hidden by the system's CSS reset; the explicit clear button replaces it).</dd>
       <dt>shortcut</dt><dd>Global search fields show <code>⌘K</code> / <code>Ctrl+K</code> badge inline. Pressing the shortcut opens the Search overlay component. The badge is passive text, so it may share the trailing slot with the clear <code>×</code>.</dd>
       <dt>trailing slot</dt><dd>The clear <code>×</code> owns it. Passive elements may share it freely: the <code>⌘K</code> badge, a validation check, a loading spinner. A <i>group by</i>, <i>sort</i>, <i>density</i>, or <i>saved view</i> control acts on the <b>results</b>, not on the text, so by default it sits <b>outside as a sibling button in the same toolbar row</b> — the composition in <b>Filter, sort, faceted search</b>, where it can show a label and its current setting.</dd>
-      <dt>rail exception</dt><dd>In a <b>narrow rail there is no toolbar row to move into</b>, so one icon-only view control may share the trailing slot with clear — see the compact inverse example above, and Field anatomy's <b>rail exception</b> for the full conditions. Keep the order: <b>clear innermost, the view control pinned to the edge.</b> Reversed, the view control jumps sideways every time the <code>×</code> appears or leaves, since <code>×</code> is transient and it is not.</dd>
+      <dt>rail exception</dt><dd>In a <b>narrow rail there is no toolbar row to move into</b>, so one icon-only view control may share the trailing slot with clear — see the compact inverse example above, and Field anatomy's <b>rail exception</b> for the full conditions. Keep the order: <b>clear innermost, the view control pinned to the edge.</b> Reversed, the view control jumps sideways every time the <code>×</code> appears or leaves, since <code>×</code> is transient and it is not. The control opens a menu (<code>aria-haspopup="menu"</code>), so its <b>active look is the menu-open state</b> (<code>aria-expanded="true"</code>) — not <code>aria-pressed</code>, which belongs to a control that toggles a mode directly.</dd>
       <dt>surfaces</dt><dd>Default is the bordered white field. Add <b>sl-search--inverse</b> on dark surfaces (Designer rail, SnapGPT panel, Indigo 1000 nav) for a near-transparent fill with a Blue-300 25% border — the same track border the inverse Segmented control uses. Inverse is a <em>surface</em> modifier only: compose it with <code>sl-search--sm</code> for the compact rail size. The teal focus ring is identical on every surface. There is no filled variant.</dd>
       <dt>a11y</dt><dd>Wrap in <code>&lt;form role="search"&gt;</code> if the field is the primary search affordance on the page. Clear button: <code>aria-label="Clear search"</code>.</dd>
     </dl>

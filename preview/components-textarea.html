@@ -51,11 +51,11 @@
   "name": "Text area",
   "section": "Building blocks",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-textarea.html",
-  "tagline": "Multi-line text input. Auto-grows by default; resize handle on demand.",
-  "anatomy": "Label · field (min 80px tall, same border/radius/padding as Input) · optional help text · optional character counter bottom-right.",
-  "options": "Auto-grow vs fixed height; optional max-height with internal scroll; optional resize handle.",
-  "usage": "Use for free-form text over one line — descriptions, comments, paste targets. Auto-grow by default so the user sees what they have typed. Show a counter only when there is a real character limit.",
-  "behaviors": "Focus and error states match the Input. Resize handle (when shown) is the browser's native handle, used as-is — it is not recolored or replaced, as there is no cross-browser way to style it. To drop the handle entirely, use `resize: none` with auto-grow. Counter turns Red-600 within 10 characters of the limit."
+  "tagline": "Multi-line text input. Fixed height by default with a vertical resize handle.",
+  "anatomy": "Label · field (min 88px tall ≈3 lines, same border/radius/padding as Input) · optional help text · optional character counter bottom-right.",
+  "options": "Fixed height with a vertical resize handle by default; optional auto-grow; optional max-height with internal scroll.",
+  "usage": "Use for free-form text over one line — descriptions, comments, paste targets. Fixed height by default (min 88px, ≈3 lines) with a vertical resize handle; opt into auto-grow when the field should expand to fit. Show a counter only when there is a real character limit.",
+  "behaviors": "Focus and error states match the Input. Resize handle (when shown) is the browser's native handle, used as-is — it is not recolored or replaced, as there is no cross-browser way to style it. To drop the handle entirely, use `resize: none` with auto-grow. Counter turns Red-700 once over the max."
 }
 </script>
 </head>
