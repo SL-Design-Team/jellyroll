@@ -47,28 +47,33 @@
     border-color: var(--field-border-error);
     background: var(--field-bg-error);
   }
-  .field--err .help { color: var(--color-text-alert); font-weight: 800; }
+  .field--err .help { color: var(--color-text-alert); }
   .field--err .help i, .field--err .help svg { color: var(--color-text-alert); }
   .field--err label::after { content: ""; }
 
   /* Warning */
   .field--warn input { border-color: var(--field-border-warning); }
-  .field--warn .help { color: var(--sl-yellow-1000); font-weight: 800; }
+  .field--warn .help { color: var(--sl-yellow-1000); }
 
   /* Success / async ok */
   .field--ok input { border-color: var(--field-border-success); }
-  .field--ok .help { color: var(--color-text-success); font-weight: 800; }
+  .field--ok .help { color: var(--color-text-success); }
   .field--ok .help i, .field--ok .help svg { color: var(--color-text-success); }
 
   /* Async checking */
   .field--checking input { border-color: var(--sl-teal-400); }
   .field--checking .help { color: var(--sl-teal-800); }
-  /* The checking indicator is the shared comet-tail spinner at xs (12px) to
-     match the helper text — Blue-600, never a rotated Lucide `loader` glyph. */
+  /* The checking indicator is the shared comet-tail spinner at sm (16px) in the
+     field's trailing slot, matching Field anatomy's in-field loading spinner —
+     Blue-600, never a rotated Lucide `loader` glyph. */
+  .field .control { position: relative; display: flex; }
+  .field .control input { flex: 1; }
+  .field--checking .control input { padding-right: 34px; }
+  .field--checking .control .sl-spinner { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); }
   .sl-spinner {
     --sl-spin-thick: 1px;
     position: relative; display: inline-block; flex: none;
-    width: 12px; height: 12px; border-radius: 50%;
+    width: 16px; height: 16px; border-radius: 50%;
     color: var(--sl-blue-600);
     background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
     -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
@@ -117,9 +122,10 @@
     flex: 1; height: 4px; border-radius: 2px;
     background: var(--sl-grey-200);
   }
-  .strength__seg.on-1 { background: var(--sl-red-500); }
-  .strength__seg.on-2 { background: var(--sl-yellow-500); }
-  .strength__seg.on-3 { background: var(--sl-green-500); }
+  .strength__seg.on-1 { background: var(--sl-red-600); }
+  .strength__seg.on-2 { background: var(--sl-orange-600); }
+  .strength__seg.on-3 { background: var(--sl-yellow-700); }
+  .strength__seg.on-4 { background: var(--sl-green-600); }
   .strength__lbl {
     font: 800 11px/16px var(--font-sans);
     margin-top: 4px;
@@ -160,8 +166,11 @@
 
         <div class="field field--req field--checking">
           <label>Account URL</label>
-          <input value="prod.us-east-1.snowflakecomputing.com" />
-          <span class="help"><span class="sl-spinner" role="status" aria-label="Checking reachability"></span>Checking reachability…</span>
+          <div class="control">
+            <input value="prod.us-east-1.snowflakecomputing.com" />
+            <span class="sl-spinner" role="status" aria-label="Checking reachability"></span>
+          </div>
+          <span class="help">Checking reachability…</span>
         </div>
 
         <div class="field field--req field--err">
@@ -226,7 +235,7 @@
             <span class="strength__seg"></span>
             <span class="strength__seg"></span>
           </div>
-          <span class="strength__lbl" style="color: var(--sl-red-700);">Weak — add a number, symbol, and 4 more characters.</span>
+          <span class="strength__lbl" style="color: var(--sl-red-600);">Weak — add a number, symbol, and 4 more characters.</span>
         </div>
       </div>
     </div>
@@ -234,11 +243,11 @@
     <dl class="spec">
       <dt>when to validate</dt><dd><b>On blur</b> for required + format checks · <b>on commit</b> (Save / Next) for cross-field rules · <b>on debounced change</b> (<code>--validate-debounce</code>) for async checks like name-availability. Never validate <i>while</i> the user is typing — flashing errors mid-keystroke is hostile.</dd>
       <dt>required marker</dt><dd>Red asterisk <code>*</code> after the label, with <code>aria-required="true"</code>. <b>Optional</b> fields show a muted "(optional)" — never mark every required field <i>and</i> every optional one; pick one convention per form. SnapLogic convention: mark required.</dd>
-      <dt>error</dt><dd>Border <code>--field-border-error</code>, background <code>--field-bg-error</code>. Help text turns red ExtraBold with an alert-circle icon. Message is <b>specific and actionable</b> — never "Invalid input." Cite the offending characters when possible.</dd>
-      <dt>warning</dt><dd>Yellow border + yellow ExtraBold help text. For non-blocking concerns (cost implications, deprecations, unusual values). Doesn't prevent save.</dd>
-      <dt>async / checking</dt><dd>Teal border (the focus border, since the user just typed) + the shared Blue-600 <code>.sl-spinner</code> at <code>xs</code> while the check runs ("Checking reachability…"). Resolves to <b>success</b> (green check, "Available") or <b>error</b> (red, specific failure). Debounce 300ms after last keystroke.</dd>
+      <dt>error</dt><dd>Border <code>--field-border-error</code>, background <code>--field-bg-error</code>. Help text turns red (regular weight) with an alert-circle icon. Message is <b>specific and actionable</b> — never "Invalid input." Cite the offending characters when possible.</dd>
+      <dt>warning</dt><dd>Yellow border + yellow help text (regular weight). For non-blocking concerns (cost implications, deprecations, unusual values). Doesn't prevent save.</dd>
+      <dt>async / checking</dt><dd>Teal border (the focus border, since the user just typed) + the shared Blue-600 <code>.sl-spinner</code> at <code>sm</code> (16px) in the field's trailing slot while the check runs ("Checking reachability…"). Resolves to <b>success</b> (green check, "Available") or <b>error</b> (red, specific failure). Debounce 350ms after last keystroke.</dd>
       <dt>summary banner</dt><dd>On <b>submit failure</b>, render a red banner at the top of the form listing all errored fields as anchor links to the field. Headline counts errors ("3 fields need attention"). Focus moves to the banner, then the user can tab into links.</dd>
-      <dt>strength meter</dt><dd>Reserved for password / passphrase / API-key fields. 4 segments, colored Red → Yellow → Green. Label states the rule that would advance to the next level — never just "weak / strong" without guidance.</dd>
+      <dt>strength meter</dt><dd>Reserved for password / passphrase / API-key fields. 4 segments on the 600 ramp — <b>weak</b> (Red-600) · <b>fair</b> (Orange-600) · <b>good</b> (Yellow-700) · <b>strong</b> (Green-600), matching the Password field. Label states the rule that would advance to the next level — never just "weak / strong" without guidance.</dd>
       <dt>positioning</dt><dd>Help / error text always <b>beneath</b> the field, never beside it (alignment breaks at narrow widths). Character counters go bottom-right of the field, opposite the help.</dd>
       <dt>save guards</dt><dd>Save button stays enabled until clicked — disabled-on-error pattern hides why the form can't submit. On click, validate everything, show errors, focus the first.</dd>
       <dt>a11y</dt><dd>Each field uses <code>aria-describedby</code> pointing to its help/error node. Errored field gets <code>aria-invalid="true"</code>. Banner is <code>role="alert"</code>. Async-checking states use <code>aria-live="polite"</code>.</dd>
