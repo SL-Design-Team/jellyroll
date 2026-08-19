@@ -27,6 +27,9 @@
   .radio.error { border-color: var(--sl-red-600); }
   .radio.disabled { border-color: var(--sl-grey-300); background: var(--sl-grey-100); }
   .radio.disabled.selected::after { background: var(--sl-grey-400); }
+  /* Dense — 16px control for table, tree, and popover rows; center dot scales to 8px. */
+  .radio--dense { width: 16px; height: 16px; }
+  .radio--dense.selected::after { width: 8px; height: 8px; }
   .opt.error { color: var(--sl-red-700); font-weight: 800; }
 
   .divider { height: 1px; background: var(--sl-grey-200); margin: 18px 0; }
@@ -88,6 +91,17 @@
       <span class="tag">Selected focus</span>
       <span class="opt"><span class="radio selected focus"></span>Label</span>
       <span></span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">Sizes <span class="meta">default 20px · dense 16px for table, tree, and popover rows</span></div>
+      <div class="radio-group radio-group--horizontal" role="radiogroup" aria-label="Sizes">
+        <span class="opt"><span class="radio selected"></span>Default (20px)</span>
+        <span class="opt"><span class="radio radio--dense selected"></span>Dense (16px)</span>
+        <span class="opt"><span class="radio radio--dense"></span>Dense</span>
+      </div>
     </div>
 
     <div class="divider"></div>
