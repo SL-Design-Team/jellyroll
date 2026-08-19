@@ -199,7 +199,7 @@
   --color-text-link-pressed: var(--sl-teal-400);
   --color-text-link-visited: var(--sl-blue-800);
   --color-text-alert: var(--sl-red-700);
-  --color-text-warning: var(--sl-orange-700);
+  --color-text-warning: var(--sl-yellow-1000);
   --color-text-success: var(--sl-green-800);
   --color-text-discovery: var(--sl-purple-700);
   --color-text-information: var(--sl-indigo-700);
@@ -387,7 +387,7 @@
   --field-text-readonly: var(--sl-grey-800);
   --field-text-placeholder: var(--sl-grey-700);
   --field-text-error:    var(--sl-red-700);
-  --field-text-warning:  var(--sl-orange-700);
+  --field-text-warning:  var(--sl-yellow-1000);
   --field-text-success:  var(--sl-green-800);
 
   /* Standardized focus halo — use on every focusable control */
