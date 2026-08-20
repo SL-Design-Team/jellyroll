@@ -206,8 +206,8 @@
             },
             {
               "name": "--color-surface-navbar",
-              "value": "#031A48",
-              "role": "Global navbar (Indigo-1000)"
+              "value": "#020D24",
+              "role": "Global navbar (Blue-1000)"
             },
             {
               "name": "--color-scrim",
@@ -1284,8 +1284,8 @@
           "tokens": [
             {
               "name": "--color-surface-navbar",
-              "value": "#031A48",
-              "role": "Global navbar background — Indigo-1000"
+              "value": "#020D24",
+              "role": "Global navbar background — Blue-1000"
             },
             {
               "name": "--color-text-inverse",
@@ -1440,7 +1440,7 @@
             },
             {
               "name": "--color-text-body",
-              "value": "#031A48",
+              "value": "#131C35",
               "role": "Header label + cell text (Indigo-900)"
             },
             {

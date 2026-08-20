@@ -120,7 +120,7 @@ window.JELLYROLL_TOKENS = {
     { name: "--color-surface-raised",  value: "#FFFFFF", role: "Cards and drawers (with shadow)" },
     { name: "--color-surface-sunken",  value: "#F5F6F8", role: "Pressed-in section (Grey-100)" },
     { name: "--color-surface-overlay", value: "#FFFFFF", role: "Modal / popover" },
-    { name: "--color-surface-navbar",  value: "#031A48", role: "Global navbar (Indigo-1000)" },
+    { name: "--color-surface-navbar",  value: "#020D24", role: "Global navbar (Blue-1000)" },
     { name: "--color-scrim",           value: "rgba(9, 30, 66, 0.54)", role: "Modal scrim (no backdrop blur)" },
   ],
   "preview/colors-gradient-brand.html": [
@@ -206,12 +206,12 @@ window.JELLYROLL_TOKENS = {
     { name: "--sl-blue-100",                value: "#E6ECF8", role: "Selected row background" },
     { name: "--sl-grey-200",                value: "#EBEDF1", role: "Row divider + subtle vertical header dividers" },
     { name: "--sl-grey-300",                value: "#D7DCE3", role: "Table border + header bottom border" },
-    { name: "--color-text-body",            value: "#031A48", role: "Header label + cell text (Indigo-900)" },
+    { name: "--color-text-body",            value: "#131C35", role: "Header label + cell text (Indigo-900)" },
     { name: "--color-text-subtle",          value: "#7D8695", role: "Muted cell text (em-dash placeholders, monospace IDs)" },
     { name: "--sl-blue-600",                value: "#0841B4", role: "Toolbar text-button actions + filter-funnel indicator" },
   ],
   "preview/components-global-header.html": [
-    { name: "--color-surface-navbar", value: "#031A48", role: "Global navbar background — Indigo-1000" },
+    { name: "--color-surface-navbar", value: "#020D24", role: "Global navbar background — Blue-1000" },
     { name: "--color-text-inverse",   value: "#FFFFFF", role: "Text + icons on the navbar" },
   ],
 
