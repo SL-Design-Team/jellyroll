@@ -132,12 +132,19 @@
     cursor: pointer; border-radius: 999px; border: 0; background: transparent;
   }
   .sl-cal__day:hover { background: var(--sl-blue-100); }
-  .sl-cal__day.muted { color: var(--sl-grey-500); }
+  .sl-cal__day.muted { color: var(--color-text-subtle); }
   .sl-cal__day.today { box-shadow: inset 0 0 0 1px var(--sl-blue-600); font-weight: 800; }
   .sl-cal__day.selected { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; }
-  .sl-cal__day.range { background: var(--sl-blue-100); border-radius: 0; color: var(--sl-blue-700); }
+  .sl-cal__day.in-range { background: var(--sl-blue-100); border-radius: 0; color: var(--sl-blue-700); }
+  .sl-cal__day.in-range:hover { background: var(--sl-blue-200); }
   .sl-cal__day.range-start { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; border-radius: 999px 0 0 999px; }
   .sl-cal__day.range-end   { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; border-radius: 0 999px 999px 0; }
+
+  /* Two-month range view — see Date picker for the full rule. Every
+     out-of-month cell is inert: it holds the fixed six-row height and nothing
+     else. The neighbouring pane owns those dates, and a date is live in
+     exactly one pane, so a boundary-crossing range renders once. */
+  .sl-cal__day.inert { color: var(--color-text-subtle); cursor: default; pointer-events: none; }
 
   .sl-cal__foot {
     grid-column: 1 / -1;
@@ -191,7 +198,7 @@
   "anatomy": "Small segmented control with quick presets (24h · 7d · 30d · 12mo) and a trailing `More` segment. More opens a Menu (Last month · Last quarter · Custom range…); Custom range… opens the two-month date-range calendar in a popover with a range readout and Cancel / Apply.",
   "options": "Sizes: small (default, 24px) and default (30px). Preset set is configurable per context — as few as two segments (down to one preset + More) up to five. Single active range, mutually exclusive.",
   "usage": "Use to scope a dashboard, chart, or log view to a time window. Placement depends on what it scopes: the page header at the page level when it drives the whole view; the upper right-hand corner outside a table (aligned with its title or above the header row); or inside the table actions row alongside search and filters when it scopes just that table. Quick presets cover the common windows; the More menu carries period-relative ranges and the custom calendar. Composes Segmented control + Menu + the Date picker range calendar; don't rebuild those.",
-  "behaviors": "Selecting a preset applies immediately. More opens the menu; choosing an overflow range or applying a custom range moves selection onto the More segment, which then shows the active value with a caret while the presets deselect. Custom range… opens the range calendar; Apply commits, Cancel and Esc discard."
+  "behaviors": "Selecting a preset applies immediately. More opens the menu; choosing an overflow range or applying a custom range moves selection onto the More segment, which then shows the active value with a caret while the presets deselect. Custom range… opens the range calendar; Apply commits, Cancel and Esc discard. The range calendar inherits Date picker's two-month rule: grids are always six rows, and every out-of-month day is inert — muted, unhoverable, never tinted — so a range crossing the month boundary renders once, not once per pane."
 }
 </script>
 </head>
@@ -245,7 +252,7 @@
 
     <!-- ── Custom range picker ───────────────────────────────── -->
     <div>
-      <div class="section-h">Custom range <span class="meta">two-month calendar · 12 → 19 May</span></div>
+      <div class="section-h">Custom range <span class="meta">two-month calendar · 26 May → 4 Jun · crosses the month boundary</span></div>
       <div class="stage">
         <div class="tr-pop">
           <div class="tr-pop__title">Custom range</div>
@@ -258,11 +265,12 @@
               </div>
               <div class="sl-cal__grid">
                 <span class="sl-cal__dow">M</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">W</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">F</span><span class="sl-cal__dow">S</span><span class="sl-cal__dow">S</span>
-                <button class="sl-cal__day muted">27</button><button class="sl-cal__day muted">28</button><button class="sl-cal__day muted">29</button><button class="sl-cal__day muted">30</button><button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button>
+                <button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">27</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">28</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">29</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">30</button><button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button>
                 <button class="sl-cal__day">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button><button class="sl-cal__day">8</button><button class="sl-cal__day">9</button><button class="sl-cal__day">10</button>
-                <button class="sl-cal__day">11</button><button class="sl-cal__day range-start">12</button><button class="sl-cal__day range">13</button><button class="sl-cal__day range">14</button><button class="sl-cal__day range">15</button><button class="sl-cal__day range">16</button><button class="sl-cal__day range">17</button>
-                <button class="sl-cal__day range">18</button><button class="sl-cal__day range-end today">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button><button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button>
-                <button class="sl-cal__day">25</button><button class="sl-cal__day">26</button><button class="sl-cal__day">27</button><button class="sl-cal__day">28</button><button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day">31</button>
+                <button class="sl-cal__day">11</button><button class="sl-cal__day">12</button><button class="sl-cal__day">13</button><button class="sl-cal__day">14</button><button class="sl-cal__day">15</button><button class="sl-cal__day">16</button><button class="sl-cal__day">17</button>
+                <button class="sl-cal__day">18</button><button class="sl-cal__day today">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button><button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button>
+                <button class="sl-cal__day">25</button><button class="sl-cal__day range-start">26</button><button class="sl-cal__day in-range">27</button><button class="sl-cal__day in-range">28</button><button class="sl-cal__day in-range">29</button><button class="sl-cal__day in-range">30</button><button class="sl-cal__day in-range">31</button>
+                <button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">1</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">2</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">3</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">4</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">5</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">6</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">7</button>
               </div>
             </div>
             <div class="sl-cal__month">
@@ -273,15 +281,16 @@
               </div>
               <div class="sl-cal__grid">
                 <span class="sl-cal__dow">M</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">W</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">F</span><span class="sl-cal__dow">S</span><span class="sl-cal__dow">S</span>
-                <button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button><button class="sl-cal__day">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button>
+                <button class="sl-cal__day in-range">1</button><button class="sl-cal__day in-range">2</button><button class="sl-cal__day in-range">3</button><button class="sl-cal__day range-end">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button>
                 <button class="sl-cal__day">8</button><button class="sl-cal__day">9</button><button class="sl-cal__day">10</button><button class="sl-cal__day">11</button><button class="sl-cal__day">12</button><button class="sl-cal__day">13</button><button class="sl-cal__day">14</button>
                 <button class="sl-cal__day">15</button><button class="sl-cal__day">16</button><button class="sl-cal__day">17</button><button class="sl-cal__day">18</button><button class="sl-cal__day">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button>
                 <button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button><button class="sl-cal__day">25</button><button class="sl-cal__day">26</button><button class="sl-cal__day">27</button><button class="sl-cal__day">28</button>
-                <button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day muted">1</button><button class="sl-cal__day muted">2</button><button class="sl-cal__day muted">3</button><button class="sl-cal__day muted">4</button><button class="sl-cal__day muted">5</button>
+                <button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">1</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">2</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">3</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">4</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">5</button>
+                <button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">6</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">7</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">8</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">9</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">10</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">11</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">12</button>
               </div>
             </div>
             <div class="sl-cal__foot">
-              <span class="selected-text">12 May 2026 – 19 May 2026 · 7 days</span>
+              <span class="selected-text">26 May 2026 – 4 Jun 2026 · 10 days</span>
               <div class="actions">
                 <button class="btn btn-secondary" type="button">Cancel</button>
                 <button class="btn btn-primary" type="button">Apply</button>
@@ -315,7 +324,7 @@
               <button class="sc__item" type="button">7d</button>
               <button class="sc__item" type="button">30d</button>
               <button class="sc__item" type="button">12mo</button>
-              <button class="sc__item sc__item--more selected" type="button" aria-haspopup="menu" aria-expanded="false">12 May – 19 May <i data-lucide="chevron-down"></i></button>
+              <button class="sc__item sc__item--more selected" type="button" aria-haspopup="menu" aria-expanded="false">26 May – 4 Jun <i data-lucide="chevron-down"></i></button>
             </div>
             <span class="lbl">Custom range active — held on More</span>
           </div>
@@ -385,7 +394,7 @@
       <dt>presets</dt><dd>Quick windows live as segments. Configure the set per context — <code>24h / 7d / 30d / 12mo</code> is the dashboard default. As few as two segments (down to one preset + More) up to five.</dd>
       <dt>more</dt><dd>Trailing segment with a hairline divider and caret. Opens the <b>Menu</b> with period-relative ranges (Last month, Last quarter) and Custom range…</dd>
       <dt>custom range</dt><dd>Reuses the <b>Date picker</b> two-month range calendar — round endpoints, Blue-100 tint between, range readout, Cancel / Apply. No preset sidebar; presets live in the More menu.</dd>
-      <dt>active value</dt><dd>One range active at a time. A non-preset choice moves selection onto More, which shows the value (<code>12 May – 19 May</code>) with its caret; presets deselect.</dd>
+      <dt>active value</dt><dd>One range active at a time. A non-preset choice moves selection onto More, which shows the value (<code>26 May – 4 Jun</code>) with its caret; presets deselect.</dd>
       <dt>sizes</dt><dd><b>Small</b> (24px) is the default. <b>Default</b> (30px) for roomier page headers.</dd>
       <dt>a11y</dt><dd>Control is a <code>role="group"</code> of toggle buttons; the active segment carries <code>aria-pressed</code>. More carries <code>aria-haspopup="menu"</code> + <code>aria-expanded</code>. Calendar follows the Date picker dialog/grid semantics.</dd>
     </dl>

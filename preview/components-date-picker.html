@@ -84,15 +84,39 @@
     border: 1.5px solid transparent; background: transparent;
   }
   .sl-cal__day:hover { background: var(--sl-blue-100); }
-  .sl-cal__day.muted { color: var(--sl-grey-500); }
+  .sl-cal__day.muted { color: var(--color-text-subtle); }
   .sl-cal__day.today { border-color: var(--sl-blue-600); font-weight: 800; }
   .sl-cal__day.selected { background: var(--sl-blue-600); border-color: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; }
   .sl-cal__day.selected:hover { background: var(--sl-blue-700); }
-  .sl-cal__day.range { background: var(--sl-blue-100); border-radius: 0; color: var(--sl-blue-700); }
+  .sl-cal__day.in-range { background: var(--sl-blue-100); border-radius: 0; color: var(--sl-blue-700); }
+  .sl-cal__day.in-range:hover { background: var(--sl-blue-200); }
   .sl-cal__day.range-start { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; border-radius: 999px 0 0 999px; }
   .sl-cal__day.range-end   { background: var(--sl-blue-600); color: var(--sl-white); font-weight: 800; border-radius: 0 999px 999px 0; }
+  /* Start and end on the same day — one whole pill, not two half pills. */
+  .sl-cal__day.range-start.range-end { border-radius: 999px; }
   .sl-cal__day.disabled { color: var(--sl-grey-400); cursor: not-allowed; }
   .sl-cal__day.disabled:hover { background: transparent; }
+  .sl-cal__day:focus-visible { outline: none; box-shadow: var(--ring-focus); border-color: var(--sl-teal-600); }
+
+  /* Single-month popover follows the Calendar rule: out-of-month days are muted
+     but live, so they hover, select, and take the range tint. */
+  .sl-cal__day.muted.in-range { color: var(--sl-blue-500); }
+  .sl-cal__day.muted.selected,
+  .sl-cal__day.muted.range-start,
+  .sl-cal__day.muted.range-end { color: var(--sl-white); }
+
+  /* ── The two-month rule ─────────────────────────────────────────────
+     In the two-month range view every date is live in exactly ONE pane.
+     The May pane's copy of 1 Jun and the June pane's copy of 31 May are the
+     same date drawn twice, so every out-of-month cell here goes `inert`:
+     muted, unhoverable, unfocusable, never tinted, never an endpoint cap.
+     It exists only to hold the fixed six-row height.
+     Tint both copies and a range crossing the boundary renders twice, side
+     by side, which reads as two ranges. That was DI-1067.
+     Inert applies to ALL out-of-month cells in this view, not just the
+     duplicated ones — two identical-looking muted cells that behave
+     differently is worse than paging back a month to reach April. */
+  .sl-cal__day.inert { color: var(--color-text-subtle); cursor: default; pointer-events: none; }
 
   /* Presets sidebar (range picker) */
   .sl-cal__presets {
@@ -146,10 +170,10 @@
   "section": "Composed components",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-date-picker.html",
   "tagline": "Calendar dropdown attached to an input for picking a date or range.",
-  "anatomy": "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill.",
+  "anatomy": "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill. Grids are always six rows, padded with out-of-month days so the popover height never changes as you page through months.",
   "options": "Single date or range; min/max bounds; disabled dates; locale-aware first-day-of-week and format.",
   "usage": "Use for any date input where the user benefits from seeing a calendar. For purely typed dates (e.g., dates a backend system fills in), use a plain Input with a date mask.",
-  "behaviors": "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill. Validation: error borders Red-600 with a message below; success is border-only (or omitted) because the trailing calendar icon holds the slot — the field exposes no success message."
+  "behaviors": "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover, or abandons a half-picked range. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill. Out-of-month days behave differently by view, on purpose: in a single-month grid they are muted but live (they hover, select, and take the range tint), while in the two-month range view every out-of-month day is inert — muted, unhoverable, unfocusable, never tinted, never an endpoint cap — because the neighbouring pane already shows those dates live and a date must be live in exactly one pane. A range crossing the boundary therefore ends flat at the last day of the left pane and resumes flat at the first day of the right; endpoint pills mark the true start and end only. Validation: error borders Red-600 with a message below; success is border-only (or omitted) because the trailing calendar icon holds the slot — the field exposes no success message."
 }
 </script>
 </head>
@@ -170,32 +194,33 @@
     <div class="divider"></div>
 
     <div>
-      <div class="section-h">Single date · calendar popover</div>
+      <div class="section-h">Single date · calendar popover <span class="meta">live — click a day, or focus the grid and use the arrow keys</span></div>
       <div class="row stage">
-        <div class="sl-field">
+        <div class="sl-field" id="dp-single">
           <label class="sl-field__label">Scheduled run</label>
           <div class="sl-date-wrap">
-            <div class="sl-date open"><span class="value">19 May 2026</span><span class="icon"><i data-lucide="calendar"></i></span></div>
+            <div class="sl-date open"><span class="value" id="dps-value">19 May 2026</span><span class="icon"><i data-lucide="calendar"></i></span></div>
             <div class="sl-cal sl-cal--single">
               <div class="sl-cal__month">
                 <div class="sl-cal__head">
-                  <button class="sl-cal__nav" aria-label="Previous month"><i data-lucide="chevron-left"></i></button>
-                  <span class="sl-cal__title">May 2026</span>
-                  <button class="sl-cal__nav" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
+                  <button class="sl-cal__nav" data-nav="-1" aria-label="Previous month"><i data-lucide="chevron-left"></i></button>
+                  <span class="sl-cal__title" id="dps-title">May 2026</span>
+                  <button class="sl-cal__nav" data-nav="1" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
                 </div>
-                <div class="sl-cal__grid">
+                <div class="sl-cal__grid" id="dps-grid" role="grid" aria-label="Choose date">
                   <span class="sl-cal__dow">M</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">W</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">F</span><span class="sl-cal__dow">S</span><span class="sl-cal__dow">S</span>
                   <button class="sl-cal__day muted">27</button><button class="sl-cal__day muted">28</button><button class="sl-cal__day muted">29</button><button class="sl-cal__day muted">30</button><button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button>
                   <button class="sl-cal__day">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button><button class="sl-cal__day">8</button><button class="sl-cal__day">9</button><button class="sl-cal__day">10</button>
                   <button class="sl-cal__day">11</button><button class="sl-cal__day">12</button><button class="sl-cal__day">13</button><button class="sl-cal__day">14</button><button class="sl-cal__day">15</button><button class="sl-cal__day">16</button><button class="sl-cal__day">17</button>
                   <button class="sl-cal__day">18</button><button class="sl-cal__day today selected">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button><button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button>
                   <button class="sl-cal__day">25</button><button class="sl-cal__day">26</button><button class="sl-cal__day">27</button><button class="sl-cal__day">28</button><button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day">31</button>
+                  <button class="sl-cal__day muted">1</button><button class="sl-cal__day muted">2</button><button class="sl-cal__day muted">3</button><button class="sl-cal__day muted">4</button><button class="sl-cal__day muted">5</button><button class="sl-cal__day muted">6</button><button class="sl-cal__day muted">7</button>
                 </div>
                 <div class="sl-cal__foot">
-                  <span class="selected-text">19 May 2026</span>
+                  <span class="selected-text" id="dps-readout">19 May 2026</span>
                   <div class="actions">
-                    <button class="btn btn-secondary">Today</button>
-                    <button class="btn btn-primary">Apply</button>
+                    <button class="btn btn-secondary" id="dps-today">Today</button>
+                    <button class="btn btn-primary" id="dps-apply">Apply</button>
                   </div>
                 </div>
               </div>
@@ -209,58 +234,68 @@
     <div class="divider"></div>
 
     <div>
-      <div class="section-h">Date range · two months + presets</div>
+      <div class="section-h">Date range · two months + presets <span class="meta">live — the default range crosses the month boundary on purpose</span></div>
       <div class="stage stage--wide">
-        <div class="sl-field">
+        <div class="sl-field" id="dp-range">
           <label class="sl-field__label">Runs in last…</label>
           <div class="sl-date-wrap">
-            <div class="sl-date open" style="max-width: 320px;"><span class="value">12 May 2026 — 19 May 2026</span><span class="icon"><i data-lucide="calendar"></i></span></div>
+            <div class="sl-date open" style="max-width: 320px;"><span class="value" id="dpr-value">26 May 2026 — 4 Jun 2026</span><span class="icon"><i data-lucide="calendar"></i></span></div>
             <div class="sl-cal" style="display: grid; grid-template-columns: auto auto auto; gap: 0 24px;">
-              <div class="sl-cal__presets">
-                <button class="sl-cal__preset">Today</button>
-                <button class="sl-cal__preset">Yesterday</button>
-                <button class="sl-cal__preset active">Last 7 days</button>
-                <button class="sl-cal__preset">Last 14 days</button>
-                <button class="sl-cal__preset">Last 30 days</button>
-                <button class="sl-cal__preset">This month</button>
-                <button class="sl-cal__preset">Last month</button>
-                <button class="sl-cal__preset">Custom…</button>
+              <div class="sl-cal__presets" id="dpr-presets">
+                <button class="sl-cal__preset" data-preset="today">Today</button>
+                <button class="sl-cal__preset" data-preset="yesterday">Yesterday</button>
+                <button class="sl-cal__preset" data-preset="last7">Last 7 days</button>
+                <button class="sl-cal__preset" data-preset="last14">Last 14 days</button>
+                <button class="sl-cal__preset" data-preset="last30">Last 30 days</button>
+                <button class="sl-cal__preset" data-preset="thismonth">This month</button>
+                <button class="sl-cal__preset" data-preset="lastmonth">Last month</button>
+                <button class="sl-cal__preset active" data-preset="custom">Custom…</button>
               </div>
+              <!-- ── May pane ──
+                   The range starts here on 26 and runs off the right edge. Note
+                   what row 6 does NOT do: 1–7 Jun are inert, even though they
+                   are inside the selected range. June's own pane owns them. -->
               <div class="sl-cal__month">
                 <div class="sl-cal__head">
-                  <button class="sl-cal__nav"><i data-lucide="chevron-left"></i></button>
-                  <span class="sl-cal__title">May 2026</span>
+                  <button class="sl-cal__nav" data-nav="-1" aria-label="Previous month"><i data-lucide="chevron-left"></i></button>
+                  <span class="sl-cal__title" id="dpr-title-a">May 2026</span>
                   <span style="width: 24px;"></span>
                 </div>
-                <div class="sl-cal__grid">
+                <div class="sl-cal__grid" id="dpr-grid-a" role="grid" aria-label="Choose start date">
                   <span class="sl-cal__dow">M</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">W</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">F</span><span class="sl-cal__dow">S</span><span class="sl-cal__dow">S</span>
-                  <button class="sl-cal__day muted">27</button><button class="sl-cal__day muted">28</button><button class="sl-cal__day muted">29</button><button class="sl-cal__day muted">30</button><button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button>
+                  <button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">27</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">28</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">29</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">30</button><button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button>
                   <button class="sl-cal__day">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button><button class="sl-cal__day">8</button><button class="sl-cal__day">9</button><button class="sl-cal__day">10</button>
-                  <button class="sl-cal__day">11</button><button class="sl-cal__day range-start">12</button><button class="sl-cal__day range">13</button><button class="sl-cal__day range">14</button><button class="sl-cal__day range">15</button><button class="sl-cal__day range">16</button><button class="sl-cal__day range">17</button>
-                  <button class="sl-cal__day range">18</button><button class="sl-cal__day range-end today">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button><button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button>
-                  <button class="sl-cal__day">25</button><button class="sl-cal__day">26</button><button class="sl-cal__day">27</button><button class="sl-cal__day">28</button><button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day">31</button>
+                  <button class="sl-cal__day">11</button><button class="sl-cal__day">12</button><button class="sl-cal__day">13</button><button class="sl-cal__day">14</button><button class="sl-cal__day">15</button><button class="sl-cal__day">16</button><button class="sl-cal__day">17</button>
+                  <button class="sl-cal__day">18</button><button class="sl-cal__day today">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button><button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button>
+                  <button class="sl-cal__day">25</button><button class="sl-cal__day range-start">26</button><button class="sl-cal__day in-range">27</button><button class="sl-cal__day in-range">28</button><button class="sl-cal__day in-range">29</button><button class="sl-cal__day in-range">30</button><button class="sl-cal__day in-range">31</button>
+                  <button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">1</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">2</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">3</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">4</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">5</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">6</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">7</button>
                 </div>
               </div>
+              <!-- ── June pane ──
+                   The range arrives already open: 1 Jun is a square tinted cell,
+                   not a start pill, because the range did not begin here. Only
+                   the true end (4 Jun) gets a pill. -->
               <div class="sl-cal__month">
                 <div class="sl-cal__head">
                   <span style="width: 24px;"></span>
-                  <span class="sl-cal__title">June 2026</span>
-                  <button class="sl-cal__nav"><i data-lucide="chevron-right"></i></button>
+                  <span class="sl-cal__title" id="dpr-title-b">June 2026</span>
+                  <button class="sl-cal__nav" data-nav="1" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
                 </div>
-                <div class="sl-cal__grid">
+                <div class="sl-cal__grid" id="dpr-grid-b" role="grid" aria-label="Choose end date">
                   <span class="sl-cal__dow">M</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">W</span><span class="sl-cal__dow">T</span><span class="sl-cal__dow">F</span><span class="sl-cal__dow">S</span><span class="sl-cal__dow">S</span>
-                  <button class="sl-cal__day">1</button><button class="sl-cal__day">2</button><button class="sl-cal__day">3</button><button class="sl-cal__day">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button>
+                  <button class="sl-cal__day in-range">1</button><button class="sl-cal__day in-range">2</button><button class="sl-cal__day in-range">3</button><button class="sl-cal__day range-end">4</button><button class="sl-cal__day">5</button><button class="sl-cal__day">6</button><button class="sl-cal__day">7</button>
                   <button class="sl-cal__day">8</button><button class="sl-cal__day">9</button><button class="sl-cal__day">10</button><button class="sl-cal__day">11</button><button class="sl-cal__day">12</button><button class="sl-cal__day">13</button><button class="sl-cal__day">14</button>
                   <button class="sl-cal__day">15</button><button class="sl-cal__day">16</button><button class="sl-cal__day">17</button><button class="sl-cal__day">18</button><button class="sl-cal__day">19</button><button class="sl-cal__day">20</button><button class="sl-cal__day">21</button>
                   <button class="sl-cal__day">22</button><button class="sl-cal__day">23</button><button class="sl-cal__day">24</button><button class="sl-cal__day">25</button><button class="sl-cal__day">26</button><button class="sl-cal__day">27</button><button class="sl-cal__day">28</button>
-                  <button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day muted">1</button><button class="sl-cal__day muted">2</button><button class="sl-cal__day muted">3</button><button class="sl-cal__day muted">4</button><button class="sl-cal__day muted">5</button>
+                  <button class="sl-cal__day">29</button><button class="sl-cal__day">30</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">1</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">2</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">3</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">4</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">5</button>
+                  <button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">6</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">7</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">8</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">9</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">10</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">11</button><button class="sl-cal__day inert" tabindex="-1" aria-hidden="true">12</button>
                 </div>
               </div>
               <div class="sl-cal__foot" style="grid-column: 2 / -1;">
-                <span class="selected-text">12 May 2026 — 19 May 2026 · 7 days</span>
+                <span class="selected-text" id="dpr-readout">26 May 2026 — 4 Jun 2026 · 10 days</span>
                 <div class="actions">
-                  <button class="btn btn-secondary">Cancel</button>
-                  <button class="btn btn-primary">Apply</button>
+                  <button class="btn btn-secondary" id="dpr-cancel">Cancel</button>
+                  <button class="btn btn-primary" id="dpr-apply">Apply</button>
                 </div>
               </div>
             </div>
@@ -273,13 +308,334 @@
       <dt>trigger</dt><dd>Field with calendar icon trailing. Displays selected date(s) formatted per locale.</dd>
       <dt>popover</dt><dd>Floats below the trigger. Single picker = one month. Range picker = two months side-by-side + preset sidebar.</dd>
       <dt>presets</dt><dd>Range picker offers common selections (Today, Last 7 days, Last 30 days, This/Last month, Custom). Active preset highlighted Blue-100.</dd>
-      <dt>states</dt><dd><b>Today</b>: 1.5px Blue-600 border · <b>Selected</b>: blue fill · <b>Range</b>: blue tint between endpoints, solid blue endpoints · <b>Muted</b>: previous/next month · <b>Disabled</b>: grey, no hover.</dd>
+      <dt>states</dt><dd><b>Today</b>: 1.5px Blue-600 border · <b>Selected</b>: blue fill · <b>Range</b>: blue tint between endpoints, solid blue endpoints · <b>Muted</b>: previous/next month, still live · <b>Inert</b>: previous/next month in the two-month view, not live · <b>Disabled</b>: grey, no hover.</dd>
+      <dt>grid</dt><dd><b>Always six rows</b>, padded with out-of-month days. The grid height must not change as you page through months — a popover that resizes under the cursor moves the day you were aiming at. A trailing row that is entirely out-of-month is expected; leave it.</dd>
+      <dt>overflow</dt><dd>Depends on the view, and the two rules are opposites on purpose.<br>
+        <b>Single month</b> — out-of-month days are muted but <b>live</b>: they hover, select, and take the range tint, and an endpoint landing on one renders as a full pill. This is the only copy of that date on screen.<br>
+        <b>Two months</b> — every out-of-month day is <b>inert</b>: muted, unhoverable, unfocusable (<code>tabindex="-1" aria-hidden="true"</code>), never tinted, never an endpoint cap. The neighbouring pane already shows those dates live, and a date must be live in exactly one pane. Tint both copies and a boundary-crossing range draws twice, side by side, reading as two ranges.</dd>
+      <dt>crossing</dt><dd>A range that spans the two panes ends <b>flat</b> at the last day of the left pane and resumes <b>flat</b> at the first day of the right. Endpoint pills mark the true start and end only — a pill means "the range stops here," so a cap at a pane edge is a lie. The May pane above closes square on 31; the June pane opens square on 1.</dd>
       <dt>validation</dt><dd>Error borders Red-600 with a message below. <b>Success is border-only</b> (or omitted) — the trailing calendar icon holds the slot, so there's no room for a success check or message; the field exposes no success message.</dd>
-      <dt>keyboard</dt><dd>Arrow keys move day-by-day · <code>PgUp/PgDn</code> month-by-month · <code>Shift+PgUp/PgDn</code> year · <code>Enter</code> apply · <code>Esc</code> close.</dd>
+      <dt>keyboard</dt><dd>Arrow keys move day-by-day · <code>Home/End</code> to the ends of the week · <code>PgUp/PgDn</code> month-by-month · <code>Shift+PgUp/PgDn</code> year · <code>Enter</code> selects · <code>Esc</code> closes the popover, or abandons a half-picked range. One roving tab stop per grid: <code>Tab</code> reaches the focused day, arrows move within.</dd>
+      <dt>demo</dt><dd>Both pickers above are <b>live</b> — click, hover and type in them. The range grid previews the pending range as you hover the second endpoint, and Apply / Cancel commit or revert against the trigger. The JS is progressive enhancement over the static grids, which remain the markup reference if it doesn't run; it also holds the overflow rule in executable form, so read <code>paintCell</code> rather than reimplementing from prose.</dd>
       <dt>a11y</dt><dd><code>role="dialog" aria-modal="true" aria-label="Choose date"</code>. Grid: <code>role="grid"</code>; day buttons: <code>role="gridcell" aria-selected aria-current="date"</code>.</dd>
       <dt>related</dt><dd><b>Time picker</b> and <b>Datetime picker</b> follow the same anatomy with an added time control. Coming in Wave 2.</dd>
     </dl>
   </div>
   <script>lucide.createIcons();</script>
+
+  <script>
+  /* ── Live date picker ──────────────────────────────────────────────────────
+     Progressive enhancement. The static grids in the markup above are the no-JS
+     fallback and the copy-paste markup reference; this script replaces them with
+     working ones so the overflow rule is executable rather than just described.
+
+     The rule lives in `paintCell` and is the whole point of the file:
+       · single-month grid — an out-of-month day is `muted` but LIVE.
+       · two-month grid    — an out-of-month day is `inert` and takes no state
+                             classes, ever. The neighbouring pane owns that date.
+     Drop the `inert` branch and a range crossing the month boundary paints in
+     both panes at once, which is what DI-1067 reported. */
+  (function () {
+    // index.html renders previews inside a Shadow DOM and re-executes inline
+    // scripts there, so plain `document` lookups miss. Find the hosting root the
+    // same way components-table.html does.
+    function findHostingRoot() {
+      if (document.getElementById('dp-range')) return document;
+      const stack = Array.from(document.querySelectorAll('*'));
+      while (stack.length) {
+        const el = stack.pop();
+        if (el.shadowRoot) {
+          if (el.shadowRoot.getElementById && el.shadowRoot.getElementById('dp-range')) return el.shadowRoot;
+          stack.push(...el.shadowRoot.querySelectorAll('*'));
+        }
+      }
+      return null;
+    }
+    const root = findHostingRoot();
+    if (!root) { console.warn('[date picker] hosting root not found — keeping the static grids'); return; }
+    const byId = (id) => (root.getElementById ? root.getElementById(id) : root.querySelector('#' + id));
+
+    const MONTH  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const DOW    = ['M','T','W','T','F','S','S'];
+    const DOWFUL = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+    const day    = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const addD   = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+    const addM   = (d, n) => new Date(d.getFullYear(), d.getMonth() + n, 1);
+    const mStart = (d) => new Date(d.getFullYear(), d.getMonth(), 1);
+    const mLast  = (d) => new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    const same   = (a, b) => !!a && !!b && a.getTime() === b.getTime();
+    const fmt    = (d) => d.getDate() + ' ' + MONTH[d.getMonth()].slice(0, 3) + ' ' + d.getFullYear();
+    const label  = (d) => DOWFUL[(d.getDay() + 6) % 7] + ' ' + d.getDate() + ' ' + MONTH[d.getMonth()] + ' ' + d.getFullYear();
+    const nDays  = (a, b) => Math.round((b - a) / 86400000) + 1;
+    const TODAY  = day(new Date());
+
+    function shiftM(d, n) {
+      const t = new Date(d.getFullYear(), d.getMonth() + n, 1);
+      return new Date(t.getFullYear(), t.getMonth(), Math.min(d.getDate(), mLast(t).getDate()));
+    }
+
+    // Monday-first, always 42 cells. The six-row height is fixed on purpose: a
+    // popover that resizes as you page moves the day you were aiming at.
+    function gridDates(view) {
+      const first = addD(view, -((view.getDay() + 6) % 7));
+      return Array.from({ length: 42 }, (_, i) => addD(first, i));
+    }
+
+    function makeGrid(container) {
+      container.innerHTML = '';
+      DOW.forEach((d, i) => {
+        const s = document.createElement('span');
+        s.className = 'sl-cal__dow';
+        s.setAttribute('role', 'columnheader');
+        s.setAttribute('aria-label', DOWFUL[i]);
+        s.textContent = d;
+        container.appendChild(s);
+      });
+      return Array.from({ length: 42 }, () => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('role', 'gridcell');
+        container.appendChild(b);
+        return b;
+      });
+    }
+
+    // ── The rule ──────────────────────────────────────────────────────────
+    function paintCell(btn, date, view, o) {
+      const out = date.getMonth() !== view.getMonth() || date.getFullYear() !== view.getFullYear();
+      btn.textContent = String(date.getDate());
+      btn._date = date;
+
+      // Two-month view: this date is already live in the neighbouring pane, so
+      // this copy is a spacer holding the six-row height and nothing else.
+      if (out && o.twoMonth) {
+        btn.className = 'sl-cal__day inert';
+        btn.tabIndex = -1;
+        btn.setAttribute('aria-hidden', 'true');
+        btn.removeAttribute('aria-selected');
+        btn.removeAttribute('aria-current');
+        btn._live = false;
+        return;
+      }
+
+      const cls = ['sl-cal__day'];
+      if (out) cls.push('muted');                    // single-month: muted but live
+      if (same(date, TODAY)) cls.push('today');
+
+      let picked = false;
+      if (o.mode === 'single') {
+        if (same(date, o.selected)) { cls.push('selected'); picked = true; }
+      } else if (o.a && o.b) {
+        const isA = same(date, o.a), isB = same(date, o.b);
+        if (isA) cls.push('range-start');
+        if (isB) cls.push('range-end');
+        if (!isA && !isB && date > o.a && date < o.b) cls.push('in-range');
+        picked = isA || isB;
+      } else if (o.a && same(date, o.a)) {
+        cls.push('range-start', 'range-end');        // start chosen, end still pending
+        picked = true;
+      }
+
+      btn.className = cls.join(' ');
+      btn.removeAttribute('aria-hidden');
+      btn.setAttribute('aria-label', label(date));
+      btn.setAttribute('aria-selected', picked ? 'true' : 'false');
+      if (same(date, TODAY)) btn.setAttribute('aria-current', 'date');
+      else btn.removeAttribute('aria-current');
+      btn.tabIndex = same(date, o.focus) ? 0 : -1;   // roving tab stop
+      btn._live = true;
+    }
+
+    // Every grid needs one tab stop, even when the focused day is off-view.
+    function ensureTabStop(cells) {
+      if (cells.some(c => c.tabIndex === 0)) return;
+      const first = cells.find(c => c._live);
+      if (first) first.tabIndex = 0;
+    }
+    function focusDay(cells, date) {
+      const c = cells.find(x => x._live && same(x._date, date));
+      if (c) c.focus();
+    }
+
+    // ── Single date ───────────────────────────────────────────────────────
+    const sGrid = byId('dps-grid');
+    if (sGrid) {
+      const S = { view: mStart(TODAY), selected: TODAY, focus: TODAY, applied: TODAY };
+      const cells = makeGrid(sGrid);
+
+      const render = () => {
+        byId('dps-title').textContent = MONTH[S.view.getMonth()] + ' ' + S.view.getFullYear();
+        gridDates(S.view).forEach((d, i) => paintCell(cells[i], d, S.view, {
+          mode: 'single', selected: S.selected, focus: S.focus, twoMonth: false
+        }));
+        ensureTabStop(cells);
+        byId('dps-readout').textContent = fmt(S.selected);
+        byId('dps-value').textContent = fmt(S.applied);
+      };
+
+      sGrid.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.sl-cal__day');
+        if (!btn || !btn._live) return;
+        S.selected = S.focus = btn._date;
+        if (btn.classList.contains('muted')) S.view = mStart(btn._date);
+        render(); focusDay(cells, S.focus);
+      });
+      sGrid.addEventListener('keydown', (e) => onKey(e, S, render, cells, false));
+      byId('dp-single').querySelectorAll('[data-nav]').forEach(b =>
+        b.addEventListener('click', () => { S.view = addM(S.view, +b.dataset.nav); render(); }));
+      byId('dps-today').addEventListener('click', () => {
+        S.selected = S.focus = TODAY; S.view = mStart(TODAY); render(); focusDay(cells, TODAY);
+      });
+      byId('dps-apply').addEventListener('click', () => { S.applied = S.selected; render(); });
+      render();
+    }
+
+    // ── Date range ────────────────────────────────────────────────────────
+    const gA = byId('dpr-grid-a'), gB = byId('dpr-grid-b');
+    if (gA && gB) {
+      // Default to a range that crosses the month boundary — the case that used
+      // to render twice. Anchored to the real current month so it never goes stale.
+      const thisMonth = mStart(TODAY);
+      const R = {
+        view: addM(thisMonth, -1),
+        a: addD(thisMonth, -6),
+        b: addD(thisMonth, 3),
+        pending: null, hover: null, preset: 'custom'
+      };
+      R.focus = R.a;
+      R.applied = { a: R.a, b: R.b };
+
+      const cellsA = makeGrid(gA), cellsB = makeGrid(gB);
+      const all = () => cellsA.concat(cellsB);
+
+      // While picking, the range previews from the anchor to whatever is hovered.
+      function effective() {
+        if (!R.pending) return { a: R.a, b: R.b };
+        if (!R.hover) return { a: R.pending, b: null };
+        return R.hover < R.pending ? { a: R.hover, b: R.pending } : { a: R.pending, b: R.hover };
+      }
+
+      const render = () => {
+        const vA = R.view, vB = addM(R.view, 1);
+        byId('dpr-title-a').textContent = MONTH[vA.getMonth()] + ' ' + vA.getFullYear();
+        byId('dpr-title-b').textContent = MONTH[vB.getMonth()] + ' ' + vB.getFullYear();
+        const eff = effective();
+        const o = { mode: 'range', a: eff.a, b: eff.b, focus: R.focus, twoMonth: true };
+        gridDates(vA).forEach((d, i) => paintCell(cellsA[i], d, vA, o));
+        gridDates(vB).forEach((d, i) => paintCell(cellsB[i], d, vB, o));
+        ensureTabStop(all());
+
+        byId('dpr-readout').textContent =
+          eff.a && eff.b ? fmt(eff.a) + ' — ' + fmt(eff.b) + ' · ' + nDays(eff.a, eff.b) + ' days'
+          : eff.a        ? fmt(eff.a) + ' — select an end date'
+                         : 'Select a start and end date';
+        byId('dpr-value').textContent = fmt(R.applied.a) + ' — ' + fmt(R.applied.b);
+        byId('dpr-presets').querySelectorAll('[data-preset]').forEach(p =>
+          p.classList.toggle('active', p.dataset.preset === R.preset));
+      };
+
+      function pick(date) {
+        if (!R.pending) { R.pending = date; R.hover = null; }
+        else {
+          R.a = date < R.pending ? date : R.pending;
+          R.b = date < R.pending ? R.pending : date;
+          R.pending = R.hover = null;
+          R.preset = 'custom';
+        }
+        R.focus = date;
+      }
+      R.pick = pick;
+
+      [gA, gB].forEach(g => {
+        g.addEventListener('click', (e) => {
+          const btn = e.target.closest('button.sl-cal__day');
+          if (!btn || !btn._live) return;
+          pick(btn._date); render(); focusDay(all(), R.focus);
+        });
+        g.addEventListener('mouseover', (e) => {
+          const btn = e.target.closest('button.sl-cal__day');
+          if (!btn || !btn._live || !R.pending || same(btn._date, R.hover)) return;
+          R.hover = btn._date; render();
+        });
+        g.addEventListener('mouseleave', () => {
+          if (R.pending && R.hover) { R.hover = null; render(); }
+        });
+        g.addEventListener('keydown', (e) => onKey(e, R, render, all(), true));
+      });
+
+      byId('dp-range').querySelectorAll('[data-nav]').forEach(b =>
+        b.addEventListener('click', () => { R.view = addM(R.view, +b.dataset.nav); render(); }));
+
+      const PRESETS = {
+        today:     () => [TODAY, TODAY],
+        yesterday: () => [addD(TODAY, -1), addD(TODAY, -1)],
+        last7:     () => [addD(TODAY, -6), TODAY],
+        last14:    () => [addD(TODAY, -13), TODAY],
+        last30:    () => [addD(TODAY, -29), TODAY],
+        thismonth: () => [mStart(TODAY), TODAY],
+        lastmonth: () => [addM(TODAY, -1), addD(mStart(TODAY), -1)]
+      };
+      byId('dpr-presets').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-preset]');
+        if (!btn) return;
+        R.preset = btn.dataset.preset;
+        const make = PRESETS[R.preset];
+        if (make) {
+          const [a, b] = make();
+          R.a = a; R.b = b; R.pending = R.hover = null; R.focus = a;
+          // Page so the range is visible: two panes cover at most two months.
+          const gap = (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+          R.view = gap <= 1 ? mStart(a) : addM(mStart(b), -1);
+        }
+        render();
+      });
+
+      byId('dpr-cancel').addEventListener('click', () => {
+        R.a = R.applied.a; R.b = R.applied.b;
+        R.pending = R.hover = null; R.preset = 'custom';
+        render();
+      });
+      byId('dpr-apply').addEventListener('click', () => {
+        if (R.pending) return;                       // half-picked range — nothing to commit
+        R.applied = { a: R.a, b: R.b };
+        render();
+      });
+      render();
+    }
+
+    // ── Keyboard, as documented in the spec below ─────────────────────────
+    // Arrows by day · PageUp/Down by month · Shift+PageUp/Down by year ·
+    // Enter selects · Esc abandons a half-picked range.
+    function onKey(e, st, render, cells, isRange) {
+      const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+      let next = null;
+
+      if (e.key in step)            next = addD(st.focus, step[e.key]);
+      else if (e.key === 'Home')    next = addD(st.focus, -((st.focus.getDay() + 6) % 7));
+      else if (e.key === 'End')     next = addD(st.focus, 6 - ((st.focus.getDay() + 6) % 7));
+      else if (e.key === 'PageUp')  next = shiftM(st.focus, e.shiftKey ? -12 : -1);
+      else if (e.key === 'PageDown')next = shiftM(st.focus, e.shiftKey ? 12 : 1);
+      else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (isRange) st.pick(st.focus); else st.selected = st.focus;
+        render(); focusDay(cells, st.focus);
+        return;
+      } else if (e.key === 'Escape') {
+        if (isRange && st.pending) { e.preventDefault(); st.pending = st.hover = null; render(); }
+        return;
+      } else return;
+
+      e.preventDefault();
+      st.focus = next;
+      // Keep the focused day on screen.
+      const lastVisible = mLast(isRange ? addM(st.view, 1) : st.view);
+      if (next < st.view) st.view = mStart(next);
+      else if (next > lastVisible) st.view = isRange ? addM(mStart(next), -1) : mStart(next);
+      if (isRange && st.pending) st.hover = next;
+      render(); focusDay(cells, st.focus);
+    }
+  })();
+  </script>
 </body>
 </html>

@@ -244,10 +244,10 @@ window.JELLYROLL_DATA = {
           name: "Calendar",
           tagline: "Month grid with prev/next navigation, today marker, and date or range selection.",
           meta: {
-            anatomy: "Month/year header with prev/next chevron buttons · weekday header row · 6-week grid of day cells. Today is marked with a 1.5px Blue-600 border; the selected day is a Blue-600 fill with white text; a range fills its endpoints and tints the days between in Blue-100.",
+            anatomy: "Month/year header with prev/next chevron buttons · weekday header row · always a fixed 6-week grid of day cells, padded with out-of-month days so the height never changes as you page through months. Today is marked with a 1.5px Blue-600 border; the selected day is a Blue-600 fill with white text; a range fills its endpoints and tints the days between in Blue-100.",
             options: "Single date or range; min/max bounds and disabled dates; out-of-month days muted; locale-aware first-day-of-week.",
             usage: "Use as the always-visible month grid — scheduling, range filters — and as the primitive inside Date picker, which wraps it in a popover anchored to an input. Reach for Date picker when the calendar opens from a typed field; use Calendar directly when the grid is always shown. For a flat list, use Menu; for a hierarchy, use Tree.",
-            behaviors: "Prev/next move by month; arrow keys move by day, Page Up/Down by month, Enter selects. Today always carries the Blue-600 border; selection never relies on color alone (fill + white text)."
+            behaviors: "Prev/next move by month; arrow keys move by day, Page Up/Down by month, Enter selects. Today always carries the Blue-600 border; selection never relies on color alone (fill + white text). In a single-month grid, out-of-month days are muted but fully live — they hover, select, and take the range tint, and an endpoint landing on one renders as a full pill, because this is the only copy of that date on screen. The two-month range view in Date picker inverts this: there the duplicate copies go inert."
           }
         },
         {
@@ -527,10 +527,10 @@ window.JELLYROLL_DATA = {
           name: "Date picker",
           tagline: "Calendar dropdown attached to an input for picking a date or range.",
           meta: {
-            anatomy: "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill.",
+            anatomy: "Input with `dd/mm/yyyy` placeholder · trailing `calendar` icon · popover with month grid, prev/next month chevrons, today highlight, and selected fill. Grids are always six rows, padded with out-of-month days so the popover height never changes as you page through months.",
             options: "Single date or range; min/max bounds; disabled dates; locale-aware first-day-of-week and format.",
             usage: "Use for any date input where the user benefits from seeing a calendar. For purely typed dates (e.g., dates a backend system fills in), use a plain Input with a date mask.",
-            behaviors: "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill. Validation: error borders Red-600 with a message below; success is border-only (or omitted) because the trailing calendar icon holds the slot — the field exposes no success message."
+            behaviors: "Arrow keys move the focused day; Page Up/Down moves a month; Shift+Page Up/Down moves a year; Enter selects. Esc closes the popover, or abandons a half-picked range. Today is marked with a 1.5px Blue-600 border; selected is the Blue-600 fill. Out-of-month days behave differently by view, on purpose: in a single-month grid they are muted but live (they hover, select, and take the range tint), while in the two-month range view every out-of-month day is inert — muted, unhoverable, unfocusable, never tinted, never an endpoint cap — because the neighbouring pane already shows those dates live and a date must be live in exactly one pane. A range crossing the boundary therefore ends flat at the last day of the left pane and resumes flat at the first day of the right; endpoint pills mark the true start and end only. Validation: error borders Red-600 with a message below; success is border-only (or omitted) because the trailing calendar icon holds the slot — the field exposes no success message."
           }
         },
         {
@@ -719,7 +719,7 @@ window.JELLYROLL_DATA = {
             anatomy: "Small segmented control with quick presets (24h · 7d · 30d · 12mo) and a trailing `More` segment. More opens a Menu (Last month · Last quarter · Custom range…); Custom range… opens the two-month date-range calendar in a popover with a range readout and Cancel / Apply.",
             options: "Sizes: small (default, 24px) and default (30px). Preset set is configurable per context — as few as two segments (down to one preset + More) up to five. Single active range, mutually exclusive.",
             usage: "Use to scope a dashboard, chart, or log view to a time window. Placement depends on what it scopes: the page header at the page level when it drives the whole view; the upper right-hand corner outside a table (aligned with its title or above the header row); or inside the table actions row alongside search and filters when it scopes just that table. Quick presets cover the common windows; the More menu carries period-relative ranges and the custom calendar. Composes Segmented control + Menu + the Date picker range calendar; don't rebuild those.",
-            behaviors: "Selecting a preset applies immediately. More opens the menu; choosing an overflow range or applying a custom range moves selection onto the More segment, which then shows the active value with a caret while the presets deselect. Custom range… opens the range calendar; Apply commits, Cancel and Esc discard."
+            behaviors: "Selecting a preset applies immediately. More opens the menu; choosing an overflow range or applying a custom range moves selection onto the More segment, which then shows the active value with a caret while the presets deselect. Custom range… opens the range calendar; Apply commits, Cancel and Esc discard. The range calendar inherits Date picker's two-month rule: grids are always six rows, and every out-of-month day is inert — muted, unhoverable, never tinted — so a range crossing the month boundary renders once, not once per pane."
           }
         },
         {
