@@ -7,29 +7,53 @@
 <link rel="stylesheet" href="card.css" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
-  .stage { background: var(--color-scrim); padding: 24px; border-radius: var(--radius-sm); display: flex; justify-content: center; }
-  .modal { width: 480px; background: var(--sl-white); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-overlay-strong); }
-  .mh { display:flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 12px; }
-  .mt { font: 800 18px/26px var(--font-sans); color: var(--sl-indigo-900); flex: 1; }
-  .mx {
-    flex: none;
-    width: 32px; height: 32px;
-    margin: -4px -4px 0 0;
-    display: inline-flex; align-items: center; justify-content: center;
-    border: 0; background: transparent;
-    border-radius: var(--radius-xs);
-    color: var(--color-text-body);
-    cursor: pointer;
-    transition: background-color 150ms ease-out;
+  .card { gap: 16px; width: 100%; }
+  .stage { background: var(--color-scrim); padding: 28px; border-radius: var(--radius-sm); display: flex; justify-content: center; }
+  .size-demo { display: flex; flex-direction: column; gap: 8px; }
+  .size-demo__label { display: flex; align-items: baseline; gap: 8px; font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); }
+  .size-demo__label span { color: var(--color-text-subtle); font: 400 11px/16px var(--font-mono); }
+
+  .modal {
+    --modal-width: var(--modal-width-md);
+    box-sizing: border-box;
+    inline-size: min(var(--modal-width), calc(100dvw - var(--space-8)));
+    max-inline-size: 100%;
+    background: var(--color-surface-overlay);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-overlay-strong);
   }
+  .modal--sm { --modal-width: var(--modal-width-sm); }
+  .modal--lg { --modal-width: var(--modal-width-lg); }
+  .mh { display:flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 12px; }
+  .mt { font: 800 18px/26px var(--font-sans); color: var(--color-text-heading); flex: 1; }
+  .mx { flex: none; width: 32px; height: 32px; margin: -4px -4px 0 0; display: inline-flex; align-items: center; justify-content: center; border: 0; background: transparent; border-radius: var(--radius-xs); color: var(--color-text-body); cursor: pointer; transition: background-color 150ms ease-out; }
   .mx:hover { background: var(--sl-grey-100); }
-  .mx:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+  .mx:focus-visible { outline: none; box-shadow: var(--shadow-focus-ring); }
   .mx svg { width: 20px; height: 20px; stroke-width: 2; }
-  .mb { font: 400 14px/22px var(--font-sans); color: var(--sl-indigo-900); margin-bottom: 24px; }
-  .mf { display:flex; justify-content: flex-end; gap: 8px; }
+  .mb { font: 400 14px/22px var(--font-sans); color: var(--color-text-body); margin-bottom: 24px; }
+  .mf { display:flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
   .sl-btn { font: 800 14px/22px var(--font-sans); padding: 6px 18px; border-radius: var(--radius-sm); cursor: pointer; border: 1.5px solid transparent; }
   .sl-btn--secondary { background: var(--sl-white); color: var(--sl-blue-600); border-color: var(--sl-blue-600); }
   .sl-btn--primary { background: var(--sl-blue-600); color: var(--sl-white); }
+  .modal__form { display: grid; gap: 6px; margin-bottom: 24px; }
+  .modal__form label { font: 800 13px/20px var(--font-sans); color: var(--color-text-body); }
+  .modal__form input { box-sizing: border-box; width: 100%; height: var(--field-height-md); padding: 8px 12px; border: 1px solid var(--field-border-default); border-radius: var(--field-radius); font: var(--field-font); }
+  .modal__form input:focus { outline: none; border-color: var(--sl-teal-600); box-shadow: var(--shadow-focus-ring); }
+  .modal__flow { display: grid; grid-template-columns: 172px 1fr; gap: 24px; margin-bottom: 24px; }
+  .modal__steps { display: grid; gap: 10px; align-content: start; padding-right: 20px; border-right: 1px solid var(--sl-grey-200); }
+  .modal__step { display: flex; gap: 8px; align-items: center; font: 800 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .modal__step b { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--sl-grey-200); color: var(--color-text-subtle); font: 800 11px/16px var(--font-mono); }
+  .modal__step--active { color: var(--color-text-heading); }
+  .modal__step--active b { background: var(--sl-blue-600); color: var(--sl-white); }
+  .modal__summary { padding: 12px; border: 1px solid var(--sl-grey-200); border-radius: var(--radius-sm); background: var(--sl-grey-100); font: 400 13px/20px var(--font-sans); color: var(--color-text-body); }
+  .modal__summary b { font-weight: 800; }
+  @media (max-width: 640px) {
+    .stage { padding: 16px; }
+    .modal__flow { grid-template-columns: 1fr; gap: 16px; }
+    .modal__steps { grid-template-columns: repeat(3, 1fr); padding: 0 0 12px; border-right: 0; border-bottom: 1px solid var(--sl-grey-200); }
+    .modal__step { font-size: 11px; }
+  }
 </style>
 <script type="application/json" id="jellyroll-meta">
 {
@@ -37,14 +61,17 @@
   "section": "Composed components",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-modal.html",
   "tagline": "Overlay surface for confirms, focused tasks, and destructive actions.",
-  "anatomy": "Scrim `rgba(9, 30, 66, 0.54)` · panel (white, 6–8px radius, `0 8px 24px rgba(38, 40, 44, 0.18)` shadow) · header (question or noun-title) · body (specific, quotes the object being acted on) · footer (right-aligned actions; primary on the right).",
-  "options": "Sizes: small (confirm), medium (form), large (multi-step). With or without close `×` in the header.",
-  "usage": "Use for confirms (destructive actions), short focused tasks, and content that requires the user's full attention. Do not use for navigation, casual previews, or anything that could live inline. The header is a question or noun-title; the body names the specific object being acted on.",
+  "anatomy": "Scrim `rgba(9, 30, 66, 0.54)` · white panel with an 8px radius and `--shadow-overlay-strong` · header (question or noun-title) · body · footer (right-aligned actions; primary on the right).",
+  "options": "Max widths: small 300px (compact alerts), medium 500px (forms and confirmations), large 800px (multi-step or complex tasks). Each size contracts to the available viewport with a 16px minimum gutter. With or without close `×` in the header.",
+  "usage": "Use for confirms (destructive actions), short focused tasks, and content that requires the user's full attention. Do not use for navigation, casual previews, or anything that could live inline. Use small only for genuinely compact acknowledgements; destructive confirms with explanatory copy use medium. The header is a question or noun-title; the body names the specific object being acted on.",
   "behaviors": "Esc dismisses (except in unsaved-changes flows). Click outside the panel dismisses unless the modal is confirming a destructive action. Focus traps inside the panel; on close, focus returns to the trigger. Animation: 200ms scrim fade + panel slide-up 8px.",
   "tokens": [
     "--color-scrim",
     "--color-surface-overlay",
-    "--shadow-overlay",
+    "--modal-width-sm",
+    "--modal-width-md",
+    "--modal-width-lg",
+    "--shadow-overlay-strong",
     "--radius-lg",
     "--space-6"
   ]
@@ -53,17 +80,41 @@
 </head>
 <body>
   <div class="card">
-    <div class="row-label"><span class="name">Modal</span><span class="meta">scrim 9/30/66 @ 54% · 24px padding</span></div>
-    <div class="stage">
-      <div class="modal">
-        <div class="mh">
-          <div class="mt">Are you sure you want to delete this pipeline?</div>
-          <button class="mx" aria-label="Close"><i data-lucide="x"></i></button>
+    <div class="row-label"><span class="name">Modal</span><span class="meta">300 / 500 / 800px max widths · strong overlay shadow</span></div>
+
+    <div class="size-demo">
+      <div class="size-demo__label">Small <span>300px · compact acknowledgement</span></div>
+      <div class="stage">
+        <div class="modal modal--sm">
+          <div class="mh"><div class="mt">Connection created</div><button class="mx" aria-label="Close"><i data-lucide="x"></i></button></div>
+          <div class="mb">Your Salesforce production connection is ready to use.</div>
+          <div class="mf"><button class="sl-btn sl-btn--primary">Done</button></div>
         </div>
-        <div class="mb">"MG-pipeline-Nov2022" will be moved to the Recycle Bin and deleted forever after 30 days. Pipelines do not run while they are in the Recycle Bin.</div>
-        <div class="mf">
-          <button class="sl-btn sl-btn--secondary">Cancel</button>
-          <button class="sl-btn sl-btn--primary">Delete</button>
+      </div>
+    </div>
+
+    <div class="size-demo">
+      <div class="size-demo__label">Medium <span>500px · standard form or confirmation</span></div>
+      <div class="stage">
+        <div class="modal">
+          <div class="mh"><div class="mt">Create a connection</div><button class="mx" aria-label="Close"><i data-lucide="x"></i></button></div>
+          <div class="mb">Add a connection name before choosing its credentials and destination.</div>
+          <div class="modal__form"><label for="connection-name">Connection name</label><input id="connection-name" value="Salesforce production" /></div>
+          <div class="mf"><button class="sl-btn sl-btn--secondary">Cancel</button><button class="sl-btn sl-btn--primary">Continue</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="size-demo">
+      <div class="size-demo__label">Large <span>800px · multi-step or complex task</span></div>
+      <div class="stage">
+        <div class="modal modal--lg">
+          <div class="mh"><div class="mt">Create pipeline</div><button class="mx" aria-label="Close"><i data-lucide="x"></i></button></div>
+          <div class="modal__flow">
+            <div class="modal__steps"><div class="modal__step modal__step--active"><b>1</b> Details</div><div class="modal__step"><b>2</b> Sources</div><div class="modal__step"><b>3</b> Review</div></div>
+            <div><div class="mb">Set the basic details for the pipeline. You can add sources and review the configuration in the next steps.</div><div class="modal__summary"><b>Pipeline name</b><br />Daily Salesforce to Snowflake</div></div>
+          </div>
+          <div class="mf"><button class="sl-btn sl-btn--secondary">Cancel</button><button class="sl-btn sl-btn--primary">Continue</button></div>
         </div>
       </div>
     </div>

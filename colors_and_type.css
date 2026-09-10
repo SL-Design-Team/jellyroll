@@ -337,14 +337,19 @@
   --radius-lg: 8px;     /* large surfaces, modals */
   --radius-pill: 999px;
 
+  /* ─── Modal sizing ───────────────────────────────────────── */
+  --modal-width-sm: 300px;  /* compact alerts and acknowledgements */
+  --modal-width-md: 500px;  /* standard forms and confirmations */
+  --modal-width-lg: 800px;  /* multi-step and complex tasks */
+
   /* ─── Elevation / Shadows ───────────────────────────────────
      Five surfaces in Jellyroll: Navbar (lowest), Canvas, Sunken, Raised, Overlay.
      Shadows below are derived from observed Figma shadows (rgba(38,40,44,0.x), Blue-shadow 206,217,240).
   */
   --shadow-raised: 0px 2px 4px rgba(206, 217, 240, 0.8);     /* card resting */
   --shadow-raised-hover: 0px 4px 8px rgba(206, 217, 240, 1);
-  --shadow-overlay: 0px 8px 24px rgba(38, 40, 44, 0.18);     /* modal / popover */
-  --shadow-overlay-strong: 0px 12px 32px rgba(38, 40, 44, 0.28);
+  --shadow-overlay: 0px 8px 24px rgba(38, 40, 44, 0.18);     /* popover / lightweight overlay */
+  --shadow-overlay-strong: 0px 12px 32px rgba(38, 40, 44, 0.28); /* modal panel / top-of-stack overlay */
   --shadow-focus-ring: 0 0 0 3px rgba(9, 129, 127, 0.35);    /* teal-600 focus halo */
   --shadow-inset-sunken: inset 0 1px 2px rgba(38, 40, 44, 0.08);
 

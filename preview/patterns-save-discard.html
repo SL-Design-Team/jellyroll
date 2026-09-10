@@ -81,7 +81,9 @@
     display: flex; justify-content: center;
   }
   .confirm {
-    width: 440px;
+    box-sizing: border-box;
+    inline-size: min(var(--modal-width-md), calc(100dvw - var(--space-8)));
+    max-inline-size: 100%;
     background: var(--sl-white);
     border-radius: var(--radius-lg);
     padding: 24px;

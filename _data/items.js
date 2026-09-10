@@ -10,7 +10,7 @@ window.JELLYROLL_DATA = {
       num: "01",
       id: "foundations",
       name: "Foundations",
-      description: "The rules every component inherits — design tokens, spacing, motion, elevation, and accessibility.",
+      description: "The rules every component inherits — design tokens, spacing, motion, elevation, accessibility, and shared UX behavior.",
       items: [
         {
           file: "preview/foundations-accessibility.html",
@@ -19,6 +19,16 @@ window.JELLYROLL_DATA = {
           meta: {
             usage: "Apply these guidelines to every SnapLogic surface. All components in JellyRoll are built to meet WCAG 2.1 AA as a baseline. When building new components or patterns, review the keyboard interaction, focus management, and ARIA sections before implementation.",
             behaviors: "The page covers the four POUR principles, contrast ratios for core token pairings, keyboard interaction patterns, semantic HTML vs ARIA guidance, form labeling rules, image alt text requirements, focus management for modals and drawers, a testing checklist, and links to external resources."
+          }
+        },
+        {
+          file: "preview/foundations-design-principles.html",
+          name: "Design principles",
+          tagline: "Human-centered principles and cross-component behavior rules.",
+          meta: {
+            anatomy: "Eight human-centered design principles paired with seven shared behavior rules: communicate outcomes, preserve control, choose the least disruptive surface, protect consequential actions, handle async work, place errors near recovery, and support keyboard and responsive use.",
+            usage: "Start with the design principles to define the intended experience, then apply the behavior rules before adding component-specific mechanics. Component and pattern pages define the detailed interactions.",
+            behaviors: "Every meaningful action communicates its result; keyboard focus follows the active task; errors preserve input and point to recovery; and async work prevents duplicates without blocking unrelated work."
           }
         },
         {
@@ -45,7 +55,7 @@ window.JELLYROLL_DATA = {
           name: "Shadows",
           tagline: "Light, blueish, low-spread — borders carry more weight than shadows in this system.",
           meta: {
-            usage: "Resting card shadow is `0 2px 4px rgba(206, 217, 240, 0.8)` — literally a tint of Blue-200. Modals use `0 8px 24px rgba(38, 40, 44, 0.18)`. Focus rings use a 3px Teal-600 halo at 35% alpha. No heavy drop shadows, no neumorphism, no glow."
+            usage: "Resting card shadow is `0 2px 4px rgba(206, 217, 240, 0.8)` — literally a tint of Blue-200. Modal panels use `--shadow-overlay-strong`; popovers and lightweight overlays use `--shadow-overlay`. Focus rings use a 3px Teal-600 halo at 35% alpha. No heavy drop shadows, no neumorphism, no glow."
           }
         },
         {
@@ -620,9 +630,9 @@ window.JELLYROLL_DATA = {
           name: "Modal",
           tagline: "Overlay surface for confirms, focused tasks, and destructive actions.",
           meta: {
-            anatomy: "Scrim `rgba(9, 30, 66, 0.54)` · panel (white, 6–8px radius, `0 8px 24px rgba(38, 40, 44, 0.18)` shadow) · header (question or noun-title) · body (specific, quotes the object being acted on) · footer (right-aligned actions; primary on the right).",
-            options: "Sizes: small (confirm), medium (form), large (multi-step). With or without close `×` in the header.",
-            usage: "Use for confirms (destructive actions), short focused tasks, and content that requires the user's full attention. Do not use for navigation, casual previews, or anything that could live inline. The header is a question or noun-title; the body names the specific object being acted on.",
+            anatomy: "Scrim `rgba(9, 30, 66, 0.54)` · white panel with an 8px radius and `--shadow-overlay-strong` · header (question or noun-title) · body · footer (right-aligned actions; primary on the right).",
+            options: "Max widths: small 300px (compact alerts), medium 500px (forms and confirmations), large 800px (multi-step or complex tasks). Each size contracts to the available viewport with a 16px minimum gutter. With or without close `×` in the header.",
+            usage: "Use for confirms (destructive actions), short focused tasks, and content that requires the user's full attention. Do not use for navigation, casual previews, or anything that could live inline. Use small only for genuinely compact acknowledgements; destructive confirms with explanatory copy use medium. The header is a question or noun-title; the body names the specific object being acted on.",
             behaviors: "Esc dismisses (except in unsaved-changes flows). Click outside the panel dismisses unless the modal is confirming a destructive action. Focus traps inside the panel; on close, focus returns to the trigger. Animation: 200ms scrim fade + panel slide-up 8px."
           }
         },
@@ -837,10 +847,10 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/patterns-destructive-confirm.html",
           name: "Destructive confirm",
-          tagline: "Modal with positive-phrasing button labels.",
+          tagline: "Confirmation modal for irreversible actions.",
           meta: {
             usage: "Use before any irreversible action — deleting a pipeline, removing a connection, ending a session. The modal header is a question (`Are you sure you want to delete this pipeline?`); the body names the object (`'MG-pipeline-Nov2022' will be moved to the Recycle Bin and deleted forever after 30 days.`).",
-            behaviors: "Buttons use the `Yes, delete` / `No, keep it` pattern — confirming destructive actions uses positive phrasing instead of generic `OK / Cancel`. The destructive button is red and appears on the right; the safe action is on the left."
+            behaviors: "Use medium modal width (500px) when the confirmation includes explanatory copy. The safe action defaults to `Cancel`; the destructive button is red and appears on the right. Use positive paired labels only when both actions are affirmative choices, such as `No, don't save` / `Yes, save`."
           }
         },
         {

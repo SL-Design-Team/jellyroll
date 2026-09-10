@@ -21,7 +21,9 @@
   }
 
   .modal {
-    width: 440px;
+    box-sizing: border-box;
+    inline-size: min(var(--modal-width-md), calc(100dvw - var(--space-8)));
+    max-inline-size: 100%;
     background: var(--sl-white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-overlay-strong);
@@ -122,15 +124,15 @@
   "name": "Destructive confirm",
   "section": "Patterns",
   "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-destructive-confirm.html",
-  "tagline": "Modal with positive-phrasing button labels.",
+  "tagline": "Confirmation modal for irreversible actions.",
   "usage": "Use before any irreversible action — deleting a pipeline, removing a connection, ending a session. The modal header is a question (`Are you sure you want to delete this pipeline?`); the body names the object (`'MG-pipeline-Nov2022' will be moved to the Recycle Bin and deleted forever after 30 days.`).",
-  "behaviors": "Buttons use the `Yes, delete` / `No, keep it` pattern — confirming destructive actions uses positive phrasing instead of generic `OK / Cancel`. The destructive button is red and appears on the right; the safe action is on the left."
+  "behaviors": "Use medium modal width (500px) when the confirmation includes explanatory copy. The safe action defaults to `Cancel`; the destructive button is red and appears on the right. Use positive paired labels only when both actions are affirmative choices, such as `No, don't save` / `Yes, save`."
 }
 </script>
 </head>
 <body>
   <div class="card">
-    <div class="row-label"><span class="name">Destructive confirm</span><span class="meta">delete · soft-delete · type-to-confirm · revert</span></div>
+    <div class="row-label"><span class="name">Destructive confirm</span><span class="meta">medium 500px · delete · type-to-confirm · revert</span></div>
 
     <div>
       <div class="section-h">Standard delete <span class="meta">soft-delete → Recycle Bin · 30 day retention</span></div>

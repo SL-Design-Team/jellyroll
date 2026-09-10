@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Foundations · Design principles</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .card { gap: var(--space-5); }
+  .intro { padding: var(--space-5); border: 1px solid var(--sl-blue-200); border-radius: var(--radius-md); background: var(--sl-blue-50); }
+  .intro h2 { margin: 0 0 var(--space-2); font: 800 20px/28px var(--font-sans); color: var(--color-text-heading); }
+  .intro p { margin: 0; font: 400 14px/22px var(--font-sans); color: var(--color-text-body); }
+  .section-label { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+  .section-label h3 { margin: 0; font: 800 14px/22px var(--font-sans); color: var(--color-text-heading); }
+  .section-label span { color: var(--color-text-subtle); font: 400 11px/16px var(--font-mono); text-align: right; }
+
+  .principle-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+  .principle { padding: var(--space-4); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); background: var(--sl-white); }
+  .principle__number { display: block; margin-bottom: var(--space-2); color: var(--sl-blue-600); font: 800 11px/16px var(--font-mono); }
+  .principle h4 { margin: 0 0 var(--space-1); font: 800 14px/22px var(--font-sans); color: var(--color-text-heading); }
+  .principle p { margin: 0; color: var(--color-text-body); font: 400 13px/20px var(--font-sans); }
+
+  .rule-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+  .rule { display: grid; grid-template-columns: 28px 1fr; gap: var(--space-3); padding: var(--space-4); border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); background: var(--sl-white); }
+  .rule--wide { grid-column: 1 / -1; }
+  .rule__number { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: var(--radius-pill); background: var(--sl-teal-100); color: var(--sl-teal-700); font: 800 11px/16px var(--font-mono); }
+  .rule h4 { margin: 0 0 var(--space-1); font: 800 14px/22px var(--font-sans); color: var(--color-text-heading); }
+  .rule p { margin: 0; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); }
+  .rule__cue { margin-top: var(--space-2); color: var(--color-text-subtle); font: 400 11px/16px var(--font-mono); }
+
+  .decision { display: grid; grid-template-columns: 136px 1fr; border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); overflow: hidden; }
+  .decision__head, .decision__item { display: contents; }
+  .decision__head span { padding: var(--space-2) var(--space-3); background: var(--sl-grey-100); border-bottom: 1px solid var(--sl-grey-300); color: var(--color-text-subtle); font: 800 10px/16px var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; }
+  .decision__item span { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--sl-grey-200); color: var(--color-text-body); font: 400 12px/18px var(--font-sans); }
+  .decision__item span:first-child { font-weight: 800; }
+  .decision__item:last-child span { border-bottom: 0; }
+  @media (max-width: 560px) {
+    .principle-grid, .rule-grid { grid-template-columns: 1fr; }
+    .rule--wide { grid-column: auto; }
+    .decision { grid-template-columns: 112px 1fr; }
+  }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Design principles",
+  "section": "Foundations",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-design-principles.html",
+  "tagline": "Human-centered principles and cross-component behavior rules.",
+  "anatomy": "Eight human-centered design principles paired with seven shared behavior rules: communicate outcomes, preserve control, choose the least disruptive surface, protect consequential actions, handle async work, place errors near recovery, and support keyboard and responsive use.",
+  "usage": "Start with the design principles to define the intended experience, then apply the behavior rules before adding component-specific mechanics. Component and pattern pages define the detailed interactions.",
+  "behaviors": "Every meaningful action communicates its result; keyboard focus follows the active task; errors preserve input and point to recovery; and async work prevents duplicates without blocking unrelated work."
+}
+</script>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">Design principles</span><span class="meta">intent first · behavior second</span></div>
+
+    <div class="intro">
+      <h2>Design for confident progress</h2>
+      <p>Principles define the experience we want people to have. Behavior rules turn that intent into consistent decisions across components and patterns.</p>
+    </div>
+
+    <div class="section-label"><h3>Design principles</h3><span>the experience to optimize for</span></div>
+    <div class="principle-grid">
+      <section class="principle"><span class="principle__number">01</span><h4>Defer nonessential decisions</h4><p>Ask for a choice when it becomes relevant, not before. Start with sensible defaults and let people refine later.</p></section>
+      <section class="principle"><span class="principle__number">02</span><h4>Reveal complexity when needed</h4><p>Lead with the essential path. Progressively disclose advanced settings, detail, and exceptions when they help someone complete the task.</p></section>
+      <section class="principle"><span class="principle__number">03</span><h4>Provide good defaults</h4><p>Make the most likely successful path easy to accept. Defaults should be clear, editable, and based on useful context.</p></section>
+      <section class="principle"><span class="principle__number">04</span><h4>Make exploration reversible</h4><p>Let people inspect, compare, and try changes without fear. Prefer preview, cancel, restore, and undo when the action can be recovered.</p></section>
+      <section class="principle"><span class="principle__number">05</span><h4>Give immediate feedback</h4><p>Acknowledge every meaningful action right away. When work takes time, show what is happening and what will happen next.</p></section>
+      <section class="principle"><span class="principle__number">06</span><h4>Be consistent and predictable</h4><p>Use the same language, placement, and response for the same kind of action. Familiar behavior reduces the effort of every later task.</p></section>
+      <section class="principle"><span class="principle__number">07</span><h4>Preserve progress in steps</h4><p>Break complex work into manageable parts and retain what has already been entered. People should be able to pause, return, and continue.</p></section>
+      <section class="principle"><span class="principle__number">08</span><h4>Make frequent work fast</h4><p>Support repetition with remembered choices, recent items, templates, and shortcuts—without hiding the standard path from occasional users.</p></section>
+    </div>
+
+    <div class="section-label"><h3>Behavior rules</h3><span>the decisions that apply everywhere</span></div>
+    <div class="rule-grid">
+      <section class="rule"><span class="rule__number">01</span><div><h4>Make the result visible</h4><p>Every meaningful action ends with a clear result. Show a durable change inline; use a toast for background completion or a reversible action. Never leave a person to infer whether work succeeded.</p><div class="rule__cue">Action → visible result → next step</div></div></section>
+      <section class="rule"><span class="rule__number">02</span><div><h4>Keep the user in control</h4><p>Do not discard work, navigate away, or close a task while its result is uncertain. Offer a safe exit when possible, preserve entered values, and make recovery obvious.</p><div class="rule__cue">Preserve progress · explain consequences</div></div></section>
+      <section class="rule"><span class="rule__number">03</span><div><h4>Choose the least disruptive surface</h4><p>Keep people in context whenever the task can be completed inline. Escalate to a focused layer only when a decision or task requires undivided attention. The relevant component page defines the mechanics.</p><div class="rule__cue">Inline first · focused layer only when needed</div></div></section>
+      <section class="rule"><span class="rule__number">04</span><div><h4>Protect consequential actions</h4><p>Name the object and consequence before asking someone to commit. Make the safe path clear. For recoverable removal, offer Undo; for permanent or broad-impact changes, require deliberate confirmation.</p><div class="rule__cue">Specific object · safe default · recovery where possible</div></div></section>
+      <section class="rule"><span class="rule__number">05</span><div><h4>Make async work legible</h4><p>Show progress as soon as work starts and prevent duplicate submission only for the active action. Keep unrelated controls available, surface a useful failure state, and offer Retry when someone can reasonably try again.</p><div class="rule__cue">Pending → success or actionable failure</div></div></section>
+      <section class="rule"><span class="rule__number">06</span><div><h4>Put errors beside recovery</h4><p>Keep invalid values in place and explain how to fix them next to the affected field or task. When several errors exist, add a summary that moves focus to the first problem.</p><div class="rule__cue">Preserve input · describe fix · focus the first error</div></div></section>
+      <section class="rule rule--wide"><span class="rule__number">07</span><div><h4>Design for keyboard and constrained space</h4><p>Keyboard behavior follows the visual task order: Tab enters and leaves controls, arrow keys move within a composite control, Enter activates the focused safe default, and Escape dismisses only when dismissal is safe. At smaller viewports, reflow content before hiding it; focused content scrolls within its available space rather than beyond the viewport.</p><div class="rule__cue">Native semantics first · visible focus always · responsive reflow before omission</div></div></section>
+    </div>
+
+    <div class="section-label"><h3>Decision reference</h3><span>choose feedback by consequence</span></div>
+    <div class="decision">
+      <div class="decision__head"><span>When this happens</span><span>Default behavior</span></div>
+      <div class="decision__item"><span>Simple completed action</span><span>Update the surface immediately; add a toast when the result could otherwise be missed.</span></div>
+      <div class="decision__item"><span>Recoverable removal</span><span>Explain the outcome and make restoration easy through Undo or an equivalent recovery path.</span></div>
+      <div class="decision__item"><span>Permanent or broad-impact action</span><span>Describe impact, require deliberate confirmation, and add extra proof only when the risk warrants it.</span></div>
+      <div class="decision__item"><span>Validation or request failure</span><span>Preserve input, explain the recovery inline, and offer Retry when appropriate.</span></div>
+    </div>
+  </div>
+</body>
+</html>

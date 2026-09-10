@@ -11,9 +11,10 @@ tokens over raw ramp variables. Sentence case; no emoji; Lucide icons only.
 
 ## Foundations
 
-The rules every component inherits — design tokens, spacing, motion, elevation, and accessibility.
+The rules every component inherits — design tokens, spacing, motion, elevation, accessibility, and shared UX behavior.
 
 - [Accessibility](https://sl-design-team.github.io/jellyroll/preview/foundations-accessibility.html): WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.
+- [Design principles](https://sl-design-team.github.io/jellyroll/preview/foundations-design-principles.html): Human-centered principles and cross-component behavior rules.
 - [Iconography](https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html): 202 outlined line icons — 24×24 viewbox, currentColor stroke.
 - [Radius](https://sl-design-team.github.io/jellyroll/preview/spacing-radius.html): Restrained corners: 2 / 4 / 6–8 / 999px.
 - [Shadows](https://sl-design-team.github.io/jellyroll/preview/spacing-shadows.html): Light, blueish, low-spread — borders carry more weight than shadows in this system.
@@ -118,7 +119,7 @@ Reusable flows that combine components to solve a recurring product problem.
 - [AI confidence](https://sl-design-team.github.io/jellyroll/preview/patterns-ai-confidence.html): Visual treatment for AI output the user should sanity-check.
 - [AI-assisted input](https://sl-design-team.github.io/jellyroll/preview/patterns-ai-assisted-input.html): Field with an inline AI generate button.
 - [Bulk selection](https://sl-design-team.github.io/jellyroll/preview/patterns-bulk-selection.html): Header checkbox + per-row checkbox + sticky action bar.
-- [Destructive confirm](https://sl-design-team.github.io/jellyroll/preview/patterns-destructive-confirm.html): Modal with positive-phrasing button labels.
+- [Destructive confirm](https://sl-design-team.github.io/jellyroll/preview/patterns-destructive-confirm.html): Confirmation modal for irreversible actions.
 - [Drag and drop](https://sl-design-team.github.io/jellyroll/preview/patterns-drag-drop.html): Drop affordances on canvas, lists, and tables.
 - [Drawer + SnapGPT](https://sl-design-team.github.io/jellyroll/preview/patterns-drawer-snapgpt.html): SnapGPT panel composed inside a Drawer surface.
 - [Editable AI output](https://sl-design-team.github.io/jellyroll/preview/patterns-editable-ai-output.html): AI-generated content the user can review and edit before accepting.

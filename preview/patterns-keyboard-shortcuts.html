@@ -38,7 +38,9 @@
     display: flex; justify-content: center;
   }
   .sheet {
-    width: 720px;
+    box-sizing: border-box;
+    inline-size: min(var(--modal-width-lg), calc(100dvw - var(--space-8)));
+    max-inline-size: 100%;
     background: var(--sl-white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-overlay-strong);

@@ -40,8 +40,8 @@ window.JELLYROLL_TOKENS = {
   "preview/spacing-shadows.html": [
     { name: "--shadow-raised",         value: "0 2px 4px rgba(206, 217, 240, 0.8)",  role: "Card resting — a tint of Blue-200" },
     { name: "--shadow-raised-hover",   value: "0 4px 8px rgba(206, 217, 240, 1)",    role: "Card hover" },
-    { name: "--shadow-overlay",        value: "0 8px 24px rgba(38, 40, 44, 0.18)",   role: "Modal / popover" },
-    { name: "--shadow-overlay-strong", value: "0 12px 32px rgba(38, 40, 44, 0.28)",  role: "Top-of-stack overlay" },
+    { name: "--shadow-overlay",        value: "0 8px 24px rgba(38, 40, 44, 0.18)",   role: "Popover / lightweight overlay" },
+    { name: "--shadow-overlay-strong", value: "0 12px 32px rgba(38, 40, 44, 0.28)",  role: "Modal panel / top-of-stack overlay" },
     { name: "--shadow-focus-ring",     value: "0 0 0 3px rgba(9, 129, 127, 0.35)",   role: "Focus halo — Teal-600 at 35% alpha" },
     { name: "--shadow-inset-sunken",   value: "inset 0 1px 2px rgba(38, 40, 44, 0.08)", role: "Sunken surface inner shadow" },
   ],
@@ -192,7 +192,10 @@ window.JELLYROLL_TOKENS = {
   "preview/components-modal.html": [
     { name: "--color-scrim",           value: "rgba(9, 30, 66, 0.54)", role: "Modal scrim (no blur)" },
     { name: "--color-surface-overlay", value: "#FFFFFF", role: "Modal panel fill" },
-    { name: "--shadow-overlay",        value: "0 8px 24px rgba(38, 40, 44, 0.18)", role: "Modal shadow" },
+    { name: "--modal-width-sm",        value: "300px", role: "Compact alert or acknowledgement max width" },
+    { name: "--modal-width-md",        value: "500px", role: "Form and confirmation max width" },
+    { name: "--modal-width-lg",        value: "800px", role: "Multi-step or complex-task max width" },
+    { name: "--shadow-overlay-strong", value: "0 12px 32px rgba(38, 40, 44, 0.28)", role: "Modal panel shadow" },
     { name: "--radius-lg",             value: "8px",     role: "Modal corner radius" },
     { name: "--space-6",               value: "24px",    role: "Modal internal padding" },
   ],
