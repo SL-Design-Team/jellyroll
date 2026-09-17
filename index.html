@@ -746,97 +746,15 @@
     margin-top: 4px;
   }
 
-  /* Shared section heading used by every block inside the Getting Started card
-     (Get started · What's in the system). One style, consistent rhythm. */
-  .gs-heading {
-    max-width: 64ch;
-    margin: 40px 0 20px;
-  }
-  .gs-heading:first-child { margin-top: 0; }
-  .gs-heading h3 {
-    font-size: 22px;
-    line-height: 28px;
-    font-weight: 800;
-    color: var(--color-text-heading);
-    margin: 0 0 6px;
-    letter-spacing: -0.01em;
-  }
-  .gs-heading p {
-    font-size: 14px;
-    line-height: 22px;
-    color: var(--color-text-subtle);
-    margin: 0;
-  }
-
-  .category-strip {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 8px;
-  }
-  .cs-row {
-    display: grid;
-    grid-template-columns: 10px 1fr;
-    gap: 12px;
-    align-items: start;
-    padding: 10px 12px;
-    background: var(--sl-white);
-    border: 1px solid var(--sl-grey-200, #E5E8EE);
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    color: inherit;
-    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
-  }
-  .cs-row:hover {
-    border-color: var(--cs-color, var(--sl-blue-600));
-    box-shadow: 0 1px 4px rgba(15,23,42,0.06);
-  }
-  .cs-row .dot {
-    width: 10px; height: 10px;
-    border-radius: 999px;
-    background: var(--cs-color, var(--sl-blue-600));
-    margin-top: 4px;
-  }
-  .cs-row .cs-name {
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 800;
-    color: var(--color-text-heading);
-  }
-  .cs-row .cs-desc {
-    margin: 3px 0 0;
-    font-size: 11px;
-    line-height: 16px;
-    color: var(--color-text-subtle);
-  }
-  .cs-row .cs-count {
-    margin-top: 4px;
-    font-size: 10px;
-    line-height: 14px;
-    color: var(--color-text-subtle);
-    font-family: var(--font-mono);
-  }
-
   /* ── Get started ─────────────────────────────────────────── */
-  .gs-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-8, 32px);
-    flex-wrap: wrap;
-    margin-bottom: var(--space-8, 32px);
-  }
-  .gs-top .gs-heading { margin: 0; flex: 1 1 440px; max-width: 68ch; }
-  .gs-top .gs-heading h3 { font-size: 30px; line-height: 38px; }
-  .gs-top .gs-heading p { font-size: 15px; line-height: 24px; }
 
-  .gs-cols {
-    display: grid;
-    grid-template-columns: minmax(260px, 0.62fr) minmax(440px, 1.38fr);
+  /* The two panels are stacked, not side by side: Build comes first because
+     it's the task most people arrive here to do, Explore second as the
+     reference shelf. Side by side they competed for the same attention. */
+  .gs-stack {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-6, 24px);
-    align-items: stretch;
-  }
-  @media (max-width: 980px) {
-    .gs-cols { grid-template-columns: 1fr; }
   }
 
   .gs-panel {
@@ -847,15 +765,8 @@
     box-shadow: var(--shadow-raised);
   }
   .gs-panel--explore {
-    background: linear-gradient(180deg, var(--sl-teal-50, #F2F8F8) 0%, var(--sl-white) 55%);
-    display: flex;
-    flex-direction: column;
-    padding: var(--space-6, 24px);
+    background: linear-gradient(180deg, var(--sl-teal-50, #F2F8F8) 0%, var(--sl-white) 40%);
   }
-  .gs-panel--explore .gs-panel-head { gap: var(--space-3, 12px); }
-  .gs-panel--explore .gs-panel-head .r-icon { width: 50px; height: 50px; }
-  .gs-panel--explore .gs-panel-head .r-icon svg { width: 26px; height: 26px; }
-  .gs-panel--explore .gs-panel-head h4 { font-size: 20px; line-height: 26px; }
 
   .gs-panel-head {
     display: flex;
@@ -879,8 +790,27 @@
     stroke-width: 2;
     color: var(--sl-teal-700, #076766);
   }
-  .gs-panel--build .gs-panel-head .r-icon { background: var(--sl-blue-100, #E6ECF8); }
-  .gs-panel--build .gs-panel-head .r-icon svg { color: var(--sl-blue-600, #0841B4); }
+  /* The Build panel leads with the title at display size instead of an icon
+     tile — it is the first thing on the page, so it carries the page. */
+  .gs-build-head { margin-bottom: var(--space-8, 32px); }
+  .gs-build-head h4 {
+    margin: 0 0 var(--space-2, 8px);
+    font-size: 40px;
+    line-height: 46px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    letter-spacing: -0.02em;
+  }
+  .gs-build-head p {
+    margin: 0;
+    max-width: 80ch;
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--color-text-subtle);
+  }
+  @media (max-width: 720px) {
+    .gs-build-head h4 { font-size: 30px; line-height: 38px; }
+  }
   .gs-panel-head h4 {
     margin: 0 0 6px;
     font-size: 22px;
@@ -897,35 +827,56 @@
     max-width: 62ch;
   }
 
-  /* Explore list */
-  .gs-links { list-style: none; margin: 0 0 var(--space-6, 24px); padding: 0; }
-  .gs-links li + li { border-top: 1px solid var(--sl-grey-300, #D7DCE3); }
+  /* Explore destinations — laid out horizontally as a tile grid. There is no
+     order to these six, so a vertical list wrongly implied a sequence; a grid
+     reads as six peers you pick from. Cards use the standard card treatment:
+     border, not shadow, carries the edge; the border thickens on hover. */
+  .gs-links {
+    list-style: none;
+    margin: 0 0 var(--space-6, 24px);
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-3, 12px);
+  }
   .gs-links a {
     display: flex;
-    align-items: center;
-    gap: var(--space-3, 12px);
-    padding: var(--space-3, 12px) 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2, 8px);
+    height: 100%;
+    padding: var(--space-4, 16px);
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300, #D7DCE3);
+    border-radius: var(--radius-sm, 4px);
+    box-shadow: var(--shadow-raised);
     text-decoration: none;
     color: inherit;
+    transition: border-color var(--duration-fast, 120ms) var(--ease-standard),
+                box-shadow var(--duration-fast, 120ms) var(--ease-standard);
+  }
+  .gs-links a:hover {
+    border-color: var(--sl-blue-600, #0841B4);
+    box-shadow: var(--shadow-raised-hover);
   }
   .gs-links .l-icon {
-    width: 46px;
-    height: 46px;
+    width: 40px;
+    height: 40px;
     flex: none;
     border-radius: var(--radius-md, 6px);
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
-  .gs-links .l-icon svg { width: 24px; height: 24px; stroke-width: 2; }
-  .gs-links .l-text { flex: 1; min-width: 0; }
+  .gs-links .l-icon svg { width: 22px; height: 22px; stroke-width: 2; }
+  .gs-links .l-text { min-width: 0; }
   .gs-links strong {
     display: block;
-    font-size: 16px;
-    line-height: 23px;
+    font-size: 15px;
+    line-height: 22px;
     font-weight: 800;
     color: var(--color-text-heading);
-    margin-bottom: 3px;
+    margin-bottom: 2px;
   }
   .gs-links span {
     display: block;
@@ -934,19 +885,33 @@
     color: var(--color-text-subtle);
   }
   .gs-links .r-chev {
+    margin-top: auto;
+    align-self: flex-end;
     flex: none;
     width: 18px;
     height: 18px;
     stroke-width: 2;
-    color: var(--sl-grey-600, #98A0AD);
+    color: var(--sl-grey-600, #9CA7BA);
+    transition: color var(--duration-fast, 120ms) var(--ease-standard),
+                transform var(--duration-fast, 120ms) var(--ease-standard);
   }
   .gs-links a:hover strong { color: var(--sl-blue-600, #0841B4); }
   .gs-links a:hover .r-chev { color: var(--sl-blue-600, #0841B4); transform: translateX(2px); }
   .gs-links a:focus-visible {
     outline: none;
     box-shadow: var(--ring-focus);
-    border-radius: var(--radius-sm);
+    border-color: var(--sl-teal-600);
   }
+
+  /* Explore footer — token stylesheet, live count, and the CTA on one row. */
+  .gs-explore-foot {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4, 16px);
+    flex-wrap: wrap;
+  }
+  .gs-explore-foot .gs-tokenbar { flex: 1 1 340px; margin-bottom: 0; }
+  .gs-explore-foot .gs-count { margin: 0; }
 
   .gs-tokenbar {
     display: flex;
@@ -982,8 +947,7 @@
     color: var(--color-text-subtle);
   }
   .gs-cta {
-    align-self: flex-start;
-    margin-top: auto;
+    flex: none;
     display: inline-flex;
     align-items: center;
     gap: var(--space-2, 8px);
@@ -1000,53 +964,253 @@
   .gs-cta:focus-visible { outline: none; box-shadow: var(--ring-focus); border-color: var(--sl-teal-600); }
   .gs-cta svg { width: 16px; height: 16px; stroke-width: 2.5; }
 
-  /* Build steps */
-  .gs-steps { list-style: none; margin: 0; padding: 0; }
-  .gs-step { display: flex; gap: var(--space-4, 16px); }
-  .gs-step-rail {
+  /* Build steps — one horizontal row of four equal columns, read left to
+     right. Evenness is doing the work here, three ways: the columns are
+     separated by full-height rules so they read as one table rather than four
+     floating cards; every column carries a bordered block at roughly the same
+     height, so no column looks empty next to its neighbours; and the number
+     badges sit on a shared baseline joined by an arrowed rail. */
+  .gs-flow {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  @media (max-width: 1180px) {
+    .gs-flow { grid-template-columns: repeat(2, 1fr); row-gap: var(--space-8, 32px); }
+  }
+  @media (max-width: 720px) {
+    .gs-flow { grid-template-columns: 1fr; }
+  }
+
+  .gs-flow-step {
+    min-width: 0;
+    padding: 0 var(--space-6, 24px);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    flex: none;
   }
-  .gs-step-n {
-    width: 28px;
-    height: 28px;
+  .gs-flow-step:first-child { padding-left: 0; }
+  .gs-flow-step:last-child  { padding-right: 0; }
+  /* Column rules — the strongest evenness cue in the row. */
+  .gs-flow-step + .gs-flow-step { border-left: 1px solid var(--sl-grey-300, #D7DCE3); }
+  @media (max-width: 1180px) {
+    /* Two-up: only the second column in each row keeps a rule, and the first
+       column of row two must not inherit one. */
+    .gs-flow-step { padding: 0 var(--space-6, 24px); }
+    .gs-flow-step:nth-child(odd) { padding-left: 0; border-left: 0; }
+    .gs-flow-step:nth-child(even) { padding-right: 0; }
+  }
+  @media (max-width: 720px) {
+    .gs-flow-step { padding: 0; border-left: 0; }
+  }
+
+  /* ── Number badge + arrowed rail ── */
+  .gs-flow-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3, 12px);
+    margin-bottom: var(--space-5, 20px);
+  }
+  .gs-flow-n {
+    width: 56px;
+    height: 56px;
     flex: none;
     border-radius: 50%;
-    background: var(--sl-blue-100, #E6ECF8);
-    color: var(--sl-blue-600, #0841B4);
-    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
     font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  /* One tint per step so the eye can tell the columns apart at a glance
+     without any of them reading as more important than the others. */
+  .gs-flow-step:nth-child(1) .gs-flow-n { background: var(--sl-blue-100,   #E6ECF8); color: var(--sl-blue-600,   #0841B4); }
+  .gs-flow-step:nth-child(2) .gs-flow-n { background: var(--sl-teal-100,   #E6F2F2); color: var(--sl-teal-700,   #076766); }
+  .gs-flow-step:nth-child(3) .gs-flow-n { background: var(--sl-purple-100, #EFEBF3); color: var(--sl-purple-600, #623684); }
+  .gs-flow-step:nth-child(4) .gs-flow-n { background: var(--sl-yellow-200, #FEF2CD); color: var(--sl-yellow-800, #977102); }
+
+  .gs-flow-rail {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--sl-grey-400, #C4CAD6);
+    min-width: 0;
+  }
+  .gs-flow-rail::before {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+  }
+  .gs-flow-rail svg { flex: none; width: 15px; height: 15px; stroke-width: 2; }
+  /* The last step ends the sequence — the rail runs out but points nowhere. */
+  .gs-flow-step:last-child .gs-flow-rail svg { display: none; }
+  @media (max-width: 1180px) {
+    .gs-flow-step:nth-child(even) .gs-flow-rail svg { display: none; }
+  }
+
+  /* ── Step body ── */
+  .gs-flow-step h5 {
+    margin: 0 0 var(--space-2, 8px);
+    font-size: 17px;
+    line-height: 24px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    letter-spacing: -0.005em;
+  }
+  .gs-flow-step p {
+    margin: 0 0 var(--space-3, 12px);
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--color-text-subtle);
+  }
+  .gs-flow-step p:last-child { margin-bottom: 0; }
+  .gs-flow-step ul {
+    margin: 0 0 var(--space-2, 8px);
+    padding-left: 20px;
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--color-text-subtle);
+  }
+  .gs-flow-step .gs-codewrap { margin-bottom: var(--space-3, 12px); }
+  .gs-flow-step .gs-codewrap .code-block { font-size: 11px; line-height: 17px; }
+
+  /* Prompt examples — the boxed block for step 3, so that column carries the
+     same visual weight as the two that hold real commands. It is a
+     .gs-codewrap, so border, radius, fill and head chrome are all inherited
+     from the same place as the other boxes; only the body differs, because
+     these are prompts you'd say out loud rather than shell commands. */
+  .gs-flow-quotes ul {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-3, 12px) var(--space-4, 16px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2, 8px);
+  }
+  .gs-flow-quotes li {
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--color-text-body);
+  }
+
+  /* Live-prototype result — the boxed block for step 4. */
+  .gs-flow-live {
+    border: 1px solid var(--sl-green-300, #99CBA4);
+    border-radius: var(--radius-md, 6px);
+    background: var(--sl-green-50, #F2F8F3);
+    padding: var(--space-4, 16px);
+    margin-bottom: var(--space-3, 12px);
+  }
+  .gs-flow-live .live-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3, 12px);
+    margin-bottom: var(--space-3, 12px);
+  }
+  .gs-flow-live .live-check {
+    width: 32px;
+    height: 32px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--sl-green-600, #017D1B);
+    color: var(--sl-white);
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .gs-step-line {
-    flex: 1;
-    width: 1px;
-    min-height: 12px;
-    background: var(--sl-grey-300, #D7DCE3);
-    margin: 6px 0;
-  }
-  .gs-step:last-child .gs-step-line { display: none; }
-  .gs-step-body { flex: 1; min-width: 0; padding-bottom: var(--space-5, 20px); }
-  .gs-step:last-child .gs-step-body { padding-bottom: 0; }
-  .gs-step-body h5 {
-    margin: 5px 0 4px;
+  .gs-flow-live .live-check svg { width: 18px; height: 18px; stroke-width: 3; }
+  .gs-flow-live .live-head strong {
     font-size: 15px;
     line-height: 22px;
     font-weight: 800;
     color: var(--color-text-heading);
   }
-  .gs-step-body p {
-    margin: 0 0 var(--space-2, 8px);
-    max-width: 72ch;
+  .gs-flow-live .live-url {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2, 8px);
+    padding: var(--space-2, 8px) var(--space-3, 12px);
+    border: 1px solid var(--sl-green-200, #CCE5D1);
+    border-radius: var(--radius-sm, 4px);
+    background: var(--sl-white);
+  }
+  .gs-flow-live .live-url code {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: none;
+    padding: 0;
+    font-size: 12px;
+    color: var(--color-text-body);
+  }
+  /* Illustrative only — this block previews what step 4 produces, so the
+     copy glyph is decoration, not a control. A real button here would copy
+     the elided placeholder URL. */
+  .gs-flow-live .live-copy {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-subtle);
+  }
+  .gs-flow-live .live-copy svg { width: 14px; height: 14px; stroke-width: 2; }
+
+  /* ── Footer band ── */
+  .gs-flow-foot {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6, 24px);
+    margin-top: var(--space-8, 32px);
+    padding: var(--space-4, 16px) var(--space-5, 20px);
+    background: var(--sl-blue-50, #F2F6FC);
+    border: 1px solid var(--sl-blue-200, #CED9F0);
+    border-radius: var(--radius-md, 6px);
+  }
+  @media (max-width: 860px) {
+    .gs-flow-foot { flex-direction: column; align-items: flex-start; gap: var(--space-4, 16px); }
+  }
+  .gs-flow-foot .foot-main { flex: 1; min-width: 0; }
+  .gs-flow-foot .foot-main > strong {
+    display: block;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    margin-bottom: 2px;
+  }
+  .gs-flow-foot p {
+    margin: 0;
     font-size: 14px;
     line-height: 21px;
     color: var(--color-text-subtle);
   }
-  .gs-step-body p:last-child { margin-bottom: 0; }
+  .gs-flow-foot p a { font-weight: 800; color: var(--color-text-link); text-decoration: none; }
+  .gs-flow-foot p a:hover { color: var(--color-text-link-hover); text-decoration: underline; }
+  .gs-flow-foot p a:focus-visible { outline: none; box-shadow: var(--ring-focus); border-radius: var(--radius-xs); }
+  .gs-flow-foot .foot-rule { width: 1px; align-self: stretch; background: var(--sl-blue-200, #CED9F0); flex: none; }
+  @media (max-width: 860px) { .gs-flow-foot .foot-rule { display: none; } }
+  .gs-flow-foot .foot-help {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3, 12px);
+  }
+  .gs-flow-foot .foot-help > svg {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+    color: var(--sl-blue-600, #0841B4);
+  }
 
   /* Code blocks with a source label + copy */
   .gs-codewrap {
@@ -1107,38 +1271,6 @@
   .gs-codewrap .code-block .tk-str   { color: var(--sl-blue-700, #063490); }
   .gs-codewrap .code-block .tk-comment { color: var(--color-text-subtle); font-style: italic; }
 
-  /* Callouts */
-  .gs-note {
-    display: flex;
-    gap: var(--space-4, 16px);
-    background: var(--sl-blue-50, #F2F6FC);
-    border: 1px solid var(--sl-blue-200, #CED9F0);
-    border-radius: var(--radius-md, 6px);
-    padding: var(--space-4, 16px) var(--space-5, 20px);
-  }
-  .gs-note svg {
-    flex: none;
-    width: 22px;
-    height: 22px;
-    margin-top: 1px;
-    stroke-width: 2;
-    color: var(--sl-blue-600, #0841B4);
-  }
-  .gs-note-body { flex: 1; min-width: 0; }
-  .gs-note strong {
-    display: block;
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--color-text-heading);
-    margin-bottom: 3px;
-  }
-  .gs-note span {
-    display: block;
-    font-size: 14px;
-    line-height: 21px;
-    color: var(--color-text-subtle);
-  }
-  .gs-note--top { flex: 0 1 380px; align-self: flex-start; }
 
   .section { margin-top: 44px; scroll-margin-top: calc(var(--topbar-h) + 16px); }
   .section[data-hide="true"] { display: none; }
@@ -1834,27 +1966,113 @@
 
       <section class="getting-started" id="getting-started">
 
-        <div class="gs-top">
-          <div class="gs-heading">
-            <h3>Get started with JellyRoll</h3>
-            <p>JellyRoll is the source of truth for SnapLogic product UI. Explore the design system, or set it up with an AI agent to prototype and build consistent, high-quality experiences.</p>
-          </div>
-          <div class="gs-note gs-note--top">
-            <i data-lucide="sparkles"></i>
-            <div class="gs-note-body">
-              <strong>Always up to date</strong>
-              <span><code>/jellyroll</code> pulls from the live design system, so you always get the latest components, tokens, and guidance.</span>
+        <div class="gs-stack">
+
+          <div class="gs-panel gs-panel--build">
+            <div class="gs-build-head">
+              <h4>Build with JellyRoll</h4>
+              <p>Describe the screen you want and an AI agent will build it using the real JellyRoll components and tokens. No coding required — these steps are the same for everyone.</p>
+            </div>
+
+            <ol class="gs-flow">
+              <li class="gs-flow-step">
+                <div class="gs-flow-head">
+                  <span class="gs-flow-n">1</span>
+                  <span class="gs-flow-rail"><i data-lucide="chevron-right"></i></span>
+                </div>
+                <h5>Install the JellyRoll command</h5>
+                <p>Install once in your terminal. This adds <code>/jellyroll</code> to any Claude Code session.</p>
+                <div class="gs-codewrap">
+                  <div class="gs-code-head"><span class="gs-where">Terminal</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
+<pre class="code-block"><span class="tk-prop">BASE</span>=https://raw.githubusercontent.com/SL-Design-Team/jellyroll/main/.claude/commands
+mkdir -p ~/.claude/commands
+curl -sL <span class="tk-var">$BASE</span>/jellyroll.md -o ~/.claude/commands/jellyroll.md
+curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/commands/jellyroll-setup.md</pre>
+                </div>
+                <p>Restart Claude Code, then type <code>/jell</code> to make sure it worked.</p>
+              </li>
+
+              <li class="gs-flow-step">
+                <div class="gs-flow-head">
+                  <span class="gs-flow-n">2</span>
+                  <span class="gs-flow-rail"><i data-lucide="chevron-right"></i></span>
+                </div>
+                <h5>Describe what you want to build</h5>
+                <p>Start a new Claude Code session and tell the agent what you need. Plain English is fine.</p>
+                <div class="gs-codewrap">
+                  <div class="gs-code-head"><span class="gs-where">Claude Code</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
+<pre class="code-block"><span class="tk-var">/jellyroll</span> <span class="tk-str">build a connection list page with a KPI row and a status table</span></pre>
+                </div>
+                <p>Describe it like you would to a designer:</p>
+                <ul>
+                  <li>what the screen is for</li>
+                  <li>what the user is doing</li>
+                  <li>any key requirements</li>
+                </ul>
+                <p>Name the product area if you know it (Designer, Monitor, AutoSync, etc.).</p>
+              </li>
+
+              <li class="gs-flow-step">
+                <div class="gs-flow-head">
+                  <span class="gs-flow-n">3</span>
+                  <span class="gs-flow-rail"><i data-lucide="chevron-right"></i></span>
+                </div>
+                <h5>Open it, then ask for changes</h5>
+                <p>The agent will create a working prototype and give you a <code>.html</code> file. Open it in your browser — nothing to install.</p>
+                <div class="gs-codewrap gs-flow-quotes">
+                  <div class="gs-code-head"><span class="gs-where">Claude Code</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
+                  <ul>
+                    <li>“Make the table denser.”</li>
+                    <li>“Add an empty state.”</li>
+                    <li>“Try a mobile layout.”</li>
+                  </ul>
+                </div>
+                <p>Keep refining in the same conversation.</p>
+              </li>
+
+              <li class="gs-flow-step">
+                <div class="gs-flow-head">
+                  <span class="gs-flow-n">4</span>
+                  <span class="gs-flow-rail"><i data-lucide="chevron-right"></i></span>
+                </div>
+                <h5>Publish it when you're ready</h5>
+                <p>Ask the agent to publish the prototype and share the link. It will create a repo in SL-Design-Team and turn on GitHub Pages for you.</p>
+                <div class="gs-flow-live">
+                  <div class="live-head">
+                    <span class="live-check"><i data-lucide="check"></i></span>
+                    <strong>Your prototype is live</strong>
+                  </div>
+                  <div class="live-url">
+                    <code>https://sl-design-team.github.io/…</code>
+                    <span class="live-copy" aria-hidden="true"><i data-lucide="copy"></i></span>
+                  </div>
+                </div>
+                <p>Share the link with your team for feedback. Internal repos are visible to SnapLogic accounts only.</p>
+              </li>
+            </ol>
+
+            <div class="gs-flow-foot">
+              <div class="foot-main">
+                <strong>Works with any AI agent, or coding by hand</strong>
+                <p>Use <code>/jellyroll</code> in Claude Code, other AI agents, or in your own code. You'll always get the latest JellyRoll components, tokens, and guidance.</p>
+              </div>
+              <div class="foot-rule"></div>
+              <div class="foot-help">
+                <i data-lucide="message-circle"></i>
+                <div class="foot-main">
+                  <strong>Need help?</strong>
+                  <p>Ask in <a href="https://snaplogic-all.slack.com/archives/C0C29CCQ6PR" target="_blank" rel="noopener">#design-system</a> — someone on the design systems team will get back to you.</p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="gs-cols">
           <div class="gs-panel gs-panel--explore">
             <div class="gs-panel-head">
               <span class="r-icon"><i data-lucide="palette"></i></span>
               <div>
                 <h4>Explore JellyRoll</h4>
-                <p>Browse the components, styles, and guidance that make up the JellyRoll design system.</p>
+                <p>Browse the components, styles, and guidance that make up the JellyRoll design system. Six places to start — pick whichever matches what you're after.</p>
               </div>
             </div>
             <ul class="gs-links">
@@ -1889,87 +2107,19 @@
                 <i data-lucide="chevron-right" class="r-chev"></i>
               </a></li>
             </ul>
-            <div class="gs-tokenbar">
-              <div>
-                <strong>Use the tokens directly</strong>
-                <span>One stylesheet, no install — colors, type, spacing, shadows.</span>
+            <div class="gs-explore-foot">
+              <div class="gs-tokenbar">
+                <div>
+                  <strong>Use the tokens directly</strong>
+                  <span>One stylesheet, no install — colors, type, spacing, shadows.</span>
+                </div>
+                <button type="button" class="gs-copy" onclick="copyTokenLink(this)"><i data-lucide="copy"></i>Copy &lt;link&gt;</button>
               </div>
-              <button type="button" class="gs-copy" onclick="copyTokenLink(this)"><i data-lucide="copy"></i>Copy &lt;link&gt;</button>
+              <p class="gs-count" id="gsExploreCount"></p>
+              <a class="gs-cta" href="#section-foundations">Explore the design system<i data-lucide="arrow-right"></i></a>
             </div>
-            <p class="gs-count" id="gsExploreCount"></p>
-            <a class="gs-cta" href="#section-foundations">Explore the design system<i data-lucide="arrow-right"></i></a>
-          </div>
-
-          <div class="gs-panel gs-panel--build">
-            <div class="gs-panel-head">
-              <span class="r-icon"><i data-lucide="code-2"></i></span>
-              <div>
-                <h4>Build with JellyRoll</h4>
-                <p>Describe the screen you want and an AI agent builds it, using the real components and tokens. No coding required — these steps are the same for everyone.</p>
-              </div>
-            </div>
-
-            <ul class="gs-steps">
-              <li class="gs-step">
-                <div class="gs-step-rail"><span class="gs-step-n">1</span><span class="gs-step-line"></span></div>
-                <div class="gs-step-body">
-                  <h5>Install the JellyRoll command</h5>
-                  <p>Once, ever. Paste into Terminal — not into Claude. Need Claude Code? Get it at <a href="https://claude.com/claude-code" target="_blank" rel="noopener">claude.com/claude-code</a>.</p>
-                  <div class="gs-codewrap">
-                    <div class="gs-code-head"><span class="gs-where">Terminal</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
-<pre class="code-block"><span class="tk-prop">BASE</span>=https://raw.githubusercontent.com/SL-Design-Team/jellyroll/main/.claude/commands
-mkdir -p ~/.claude/commands
-curl -sL <span class="tk-var">$BASE</span>/jellyroll.md -o ~/.claude/commands/jellyroll.md</pre>
-                  </div>
-                  <p>Restart Claude Code, then type <code>/jell</code> — if <code>jellyroll</code> appears, it worked.</p>
-                </div>
-              </li>
-
-              <li class="gs-step">
-                <div class="gs-step-rail"><span class="gs-step-n">2</span><span class="gs-step-line"></span></div>
-                <div class="gs-step-body">
-                  <h5>Describe what you want to build</h5>
-                  <p>Start with <code>/jellyroll</code> and say what you need in plain English.</p>
-                  <div class="gs-codewrap">
-                    <div class="gs-code-head"><span class="gs-where">Claude Code (or your AI agent)</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
-<pre class="code-block"><span class="tk-var">/jellyroll</span> <span class="tk-str">build a connection list page with a KPI row and a status table</span></pre>
-                  </div>
-                  <p>Brief it like a designer: what the screen is for, what's on it, what the user is doing. Name the surface if you know it — Designer, Monitor, AutoSync.</p>
-                </div>
-              </li>
-
-              <li class="gs-step">
-                <div class="gs-step-rail"><span class="gs-step-n">3</span><span class="gs-step-line"></span></div>
-                <div class="gs-step-body">
-                  <h5>Open it, then ask for changes</h5>
-                  <p>You get one <code>.html</code> file — double-click to open it, nothing to install. Keep talking to refine it: <em>make the table denser</em>, <em>add an empty state</em>. Say React for a <code>.tsx</code> file instead.</p>
-                </div>
-              </li>
-
-              <li class="gs-step">
-                <div class="gs-step-rail"><span class="gs-step-n">4</span><span class="gs-step-line"></span></div>
-                <div class="gs-step-body">
-                  <h5>Publish a link to review with customers</h5>
-                  <p>Ask the agent to publish it, or run this yourself — it creates a repo in SL-Design-Team and turns on GitHub Pages.</p>
-                  <div class="gs-codewrap">
-                    <div class="gs-code-head"><span class="gs-where">Terminal</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
-<pre class="code-block"><span class="tk-comment"># from the folder holding your prototype</span>
-gh repo create SL-Design-Team/<span class="tk-var">&lt;prototype-name&gt;</span> --internal --source . --push
-gh api -X POST repos/SL-Design-Team/<span class="tk-var">&lt;prototype-name&gt;</span>/pages \
-  -f <span class="tk-str">"source[branch]=main"</span> -f <span class="tk-str">"source[path]=/"</span></pre>
-                  </div>
-                  <p>Live a minute later at <code>sl-design-team.github.io/&lt;prototype-name&gt;/</code>. Internal repos are visible to SnapLogic accounts only — for external customers, make it public and keep anything confidential out.</p>
-                </div>
-              </li>
-            </ul>
           </div>
         </div>
-
-        <div class="gs-heading">
-          <h3>What's in the system</h3>
-          <p>Every foundation, building block, component, pattern, template, and chart that ships with JellyRoll — grouped by category.</p>
-        </div>
-        <div class="category-strip" id="gsCategoryStrip"></div>
       </section>
 
       <div id="sections"></div>
@@ -2133,21 +2283,6 @@ gh api -X POST repos/SL-Design-Team/<span class="tk-var">&lt;prototype-name&gt;<
 
   totalCountEl.textContent = flat.length + " assets";
   searchInput.placeholder = "Search " + flat.length + " assets";
-
-  // Getting Started · category strip — quick visual index of all 9 categories.
-  const gsStrip = document.getElementById("gsCategoryStrip");
-  if (gsStrip) {
-    gsStrip.innerHTML = sections.map(sec => `
-      <a class="cs-row" href="#section-${sec.id}" style="--cs-color: var(--cat-${sec.id});">
-        <span class="dot"></span>
-        <div>
-          <div class="cs-name">${escapeHtml(sec.num)} · ${escapeHtml(sec.name)}</div>
-          ${sec.description ? `<div class="cs-desc">${escapeHtml(sec.description)}</div>` : ""}
-          <div class="cs-count">${sec.items.length} ${sec.items.length === 1 ? "asset" : "assets"}</div>
-        </div>
-      </a>
-    `).join("");
-  }
 
   // Live asset count — keeps the explore column, hero status, and search
   // placeholder honest as items.js grows.
@@ -3054,8 +3189,10 @@ function copyTokenLink(btn) {
   });
 }
 function copyBlock(btn) {
-  const pre = btn.closest('.gs-codewrap').querySelector('pre');
-  navigator.clipboard.writeText(pre.innerText.trim()).then(() => {
+  const box = btn.closest('.gs-codewrap');
+  const src = box.querySelector('pre') || box.querySelector('ul');
+  if (!src) return;
+  navigator.clipboard.writeText(src.innerText.trim()).then(() => {
     const label = btn.lastChild;
     label.textContent = 'Copied';
     setTimeout(() => { label.textContent = 'Copy'; }, 1600);
