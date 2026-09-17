@@ -1,11 +1,10 @@
 ---
 name: jellyroll
-description: "Implement any UI — components, screens, patterns, or data visualizations — using the live JellyRoll SnapLogic design system with pixel-perfect token fidelity. Output is a standalone HTML file by default, or a React (.tsx) component when the user mentions React/JSX/TSX/Next.js. Use this skill whenever the user wants to build, create, implement, design, update, or style any UI in the SnapLogic product context: buttons, forms, modals, tables, nav, dashboards, AI interaction patterns, data viz. Also trigger for use the design system, SnapLogic design, JellyRoll, or any request to match SnapLogic's look and feel. Always fetch the live system before implementing." 
+description: "Implement any UI — components, screens, patterns, or data visualizations — using the live JellyRoll SnapLogic design system with pixel-perfect token fidelity. Output is a standalone HTML file by default, or a React (.tsx) component when the user mentions React/JSX/TSX/Next.js. Use this skill whenever the user wants to build, create, implement, design, update, or style any UI in the SnapLogic product context: buttons, forms, modals, tables, nav, dashboards, AI interaction patterns, data viz. Also trigger for use the design system, SnapLogic design, JellyRoll, or any request to match SnapLogic's look and feel. Always fetch the live system before implementing."
+allowed-tools: Bash(curl -s https://sl-design-team.github.io/jellyroll/*)
 ---
 
 # JellyRoll Design System
-
-> **First time?** This skill fetches live tokens via `curl`. Run `/jellyroll-setup` once to allow it silently — or add `"Bash(curl -s https://sl-design-team.github.io/jellyroll/*)"` to the `permissions.allow` array in `~/.claude/settings.json`.
 
 **Your deliverable is a UI implementation** — a standalone HTML file by default, or a React component when the user opts in (see "Output mode" below). Do not produce documentation, READMEs, or code explanations. Implement the UI the user described.
 

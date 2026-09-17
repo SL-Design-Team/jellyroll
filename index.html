@@ -747,7 +747,7 @@
   }
 
   /* Shared section heading used by every block inside the Getting Started card
-     (Get started · Principles · What's in the system). One style, consistent rhythm. */
+     (Get started · What's in the system). One style, consistent rhythm. */
   .gs-heading {
     max-width: 64ch;
     margin: 40px 0 20px;
@@ -767,278 +767,6 @@
     color: var(--color-text-subtle);
     margin: 0;
   }
-
-  /* ── Principles — diagrammatic ───────────────────────────── */
-  .principles {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-  }
-  .principle {
-    background: var(--sl-white);
-    border: 1px solid var(--sl-grey-200, #E5E8EE);
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  .principle .visual {
-    height: 210px;
-    background: var(--p-tint, var(--sl-grey-50));
-    border-bottom: 1px solid var(--sl-grey-200, #E5E8EE);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 18px;
-    position: relative;
-  }
-  .principle .text {
-    padding: 16px 18px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .principle .p-name {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 800;
-    color: var(--color-text-heading);
-  }
-  .principle .p-name::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: var(--p-color, var(--sl-teal-700));
-    flex: none;
-  }
-  .principle .p-body {
-    font-size: 12px;
-    line-height: 17px;
-    color: var(--color-text-subtle);
-    margin: 0;
-  }
-  .principle .p-body code {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    background: var(--sl-grey-100, #F5F6F8);
-    padding: 1px 4px;
-    border-radius: 3px;
-    color: var(--color-text-body);
-  }
-
-  /* Shared visual primitives */
-  .diag {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .diag .row-label {
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-text-subtle);
-  }
-  .diag .row-label.good { color: var(--p-color, var(--sl-teal-700)); }
-  .diag .row-label.bad { color: var(--sl-grey-500, #B0B9C8); }
-  .diag .strike { text-decoration: line-through; text-decoration-color: var(--sl-red-400, #EE778B); text-decoration-thickness: 1.5px; opacity: 0.55; }
-
-  /* 01 Calm and technical — message panels */
-  .diag-calm { gap: 10px; }
-  .diag-calm .msg {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--sl-white);
-    border: 1px solid var(--sl-grey-200, #E5E8EE);
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 11px;
-    line-height: 16px;
-    color: var(--color-text-body);
-  }
-  .diag-calm .msg.good { border-left: 3px solid var(--sl-green-600, #017D1B); }
-  .diag-calm .msg .dot {
-    width: 14px; height: 14px;
-    border-radius: 999px;
-    background: var(--sl-green-100, #E6F2E8);
-    color: var(--sl-green-700, #016416);
-    font-size: 10px;
-    font-weight: 800;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-  }
-  .diag-calm .msg.bad .dot { background: var(--sl-grey-100); color: var(--sl-grey-700); }
-
-  /* 02 Density before whitespace — sparse vs dense tables */
-  .diag-density {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 10px;
-    align-items: end;
-  }
-  .diag-density .col { display: flex; flex-direction: column; gap: 4px; }
-  .diag-density .col .row-label { margin-bottom: 2px; }
-  .diag-density .tbl {
-    background: var(--sl-white);
-    border: 1px solid var(--sl-grey-200, #E5E8EE);
-    border-radius: 4px;
-    padding: 4px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .diag-density .tbl.good { border-color: var(--p-color, var(--sl-blue-700)); border-width: 1.5px; }
-  .diag-density .tbl .r {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 6px;
-    border-radius: 2px;
-  }
-  .diag-density .tbl.sparse .r { padding: 10px 6px; }
-  .diag-density .tbl.sparse .r + .r { border-top: 1px solid var(--sl-grey-100); }
-  .diag-density .tbl.dense .r + .r { border-top: 1px solid var(--sl-grey-100); }
-  .diag-density .tbl .r .d { width: 6px; height: 6px; border-radius: 999px; background: var(--sl-green-600); flex: none; }
-  .diag-density .tbl .r .b { height: 4px; border-radius: 2px; background: var(--sl-grey-200); flex: 1; }
-  .diag-density .tbl .r .ts { font: 800 8px/10px var(--font-mono); color: var(--sl-grey-700); flex: none; }
-  .diag-density .tbl.sparse .r .b { height: 8px; }
-
-  /* 03 Restraint — noisy vs clean panels */
-  .diag-restraint { gap: 10px; }
-  .diag-restraint .panel {
-    background: var(--sl-white);
-    border: 1px solid var(--sl-grey-200, #E5E8EE);
-    border-radius: 6px;
-    padding: 8px 10px;
-    position: relative;
-    overflow: hidden;
-    min-height: 44px;
-  }
-  .diag-restraint .panel.noisy {
-    background: linear-gradient(135deg, #FCC936 0%, #E31C73 100%);
-    color: var(--sl-white);
-  }
-  .diag-restraint .panel.noisy .blob {
-    position: absolute;
-    width: 60px; height: 60px;
-    right: -10px; top: -10px;
-    background: rgba(255,255,255,0.4);
-    border-radius: 999px;
-    filter: blur(8px);
-  }
-  .diag-restraint .panel.noisy .arrow {
-    font-family: var(--font-sans);
-    font-size: 14px;
-    font-weight: 800;
-    position: relative;
-    z-index: 1;
-  }
-  .diag-restraint .panel.noisy::after {
-    content: "";
-    position: absolute;
-    inset: 4px;
-    background: linear-gradient(135deg, transparent calc(50% - 1px), rgba(227, 28, 61, 0.7) 50%, transparent calc(50% + 1px)),
-                linear-gradient(45deg, transparent calc(50% - 1px), rgba(227, 28, 61, 0.7) 50%, transparent calc(50% + 1px));
-    pointer-events: none;
-    border-radius: 4px;
-  }
-  .diag-restraint .panel.clean { border: 1.5px solid var(--p-color, var(--sl-yellow-700)); }
-  .diag-restraint .panel.clean .l { height: 4px; border-radius: 2px; background: var(--sl-grey-200); margin: 4px 0; }
-  .diag-restraint .panel.clean .l.short { width: 60%; }
-
-  /* 04 Verb-led, sentence case — button rows */
-  .diag-buttons { gap: 12px; }
-  .diag-buttons .row { display: flex; gap: 6px; flex-wrap: wrap; }
-  .diag-buttons .btn {
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 14px;
-    padding: 5px 10px;
-    border-radius: 4px;
-    background: var(--sl-white);
-    border: 1.5px solid var(--p-color, var(--sl-orange-700));
-    color: var(--p-color, var(--sl-orange-700));
-  }
-  .diag-buttons .btn.bad {
-    border-color: var(--sl-grey-300, #D7DCE3);
-    color: var(--sl-grey-700, #7D8695);
-  }
-
-  /* 01 Clarity — 3-step focus flow */
-  .diag-clarity {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    width: 100%;
-  }
-  .diag-clarity .step {
-    width: 26px;
-    height: 26px;
-    border-radius: 999px;
-    background: var(--sl-white);
-    border: 1.5px solid var(--sl-grey-300, #D7DCE3);
-    flex: none;
-  }
-  .diag-clarity .step.focus {
-    background: var(--p-color, var(--sl-indigo-700));
-    border-color: var(--p-color, var(--sl-indigo-700));
-    width: 40px;
-    height: 40px;
-    box-shadow: 0 0 0 4px var(--p-tint, var(--sl-indigo-100));
-    position: relative;
-  }
-  .diag-clarity .step.focus::after {
-    content: "";
-    position: absolute;
-    inset: 6px;
-    border-radius: 999px;
-    background: var(--sl-white);
-    opacity: 0.95;
-  }
-  .diag-clarity .step.focus::before {
-    content: "";
-    position: absolute;
-    inset: 11px;
-    border-radius: 999px;
-    background: var(--p-color, var(--sl-indigo-700));
-    z-index: 1;
-  }
-  .diag-clarity .connector {
-    height: 2px;
-    width: 36px;
-    background: var(--sl-grey-300, #D7DCE3);
-  }
-  .diag-clarity .connector.active { background: var(--p-color, var(--sl-indigo-700)); }
-
-  /* 05 Real icons — outlined good row vs mixed bad row */
-  .diag-icons { gap: 12px; align-items: stretch; }
-  .diag-icons .row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    justify-content: flex-start;
-  }
-  .diag-icons .row svg { width: 22px; height: 22px; stroke-width: 1.5; flex: none; }
-  .diag-icons .row.good svg { color: var(--p-color, var(--sl-purple-700)); }
-  .diag-icons .row.bad .badico {
-    width: 22px; height: 22px;
-    display: inline-flex; align-items: center; justify-content: center;
-    flex: none;
-  }
-  .diag-icons .row.bad .badico.b1 { background: var(--sl-red-500); border-radius: 4px; }
-  .diag-icons .row.bad .badico.b2 { background: var(--sl-yellow-500); border-radius: 999px; }
-  .diag-icons .row.bad .badico.b3 { color: var(--sl-pink-600); font-size: 18px; font-weight: 800; }
-  .diag-icons .row.bad .badico.b4 { background: linear-gradient(135deg, var(--sl-orange-500), var(--sl-purple-500)); border-radius: 4px; }
-  .diag-icons .row.bad .badico.b5 { color: var(--sl-green-500); font-size: 18px; font-weight: 800; }
 
   .category-strip {
     display: grid;
@@ -1088,149 +816,329 @@
     font-family: var(--font-mono);
   }
 
-  .gs-roles {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
+  /* ── Get started ─────────────────────────────────────────── */
+  .gs-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-8, 32px);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-8, 32px);
   }
-  .gs-role {
-    background: linear-gradient(180deg, var(--sl-indigo-1000, #031A48) 0%, var(--sl-indigo-900, #131C35) 100%);
-    border: 1px solid var(--sl-indigo-800, #1D2A4F);
-    border-radius: var(--radius-md, 6px);
-    padding: 22px 20px 20px;
+  .gs-top .gs-heading { margin: 0; flex: 1 1 440px; max-width: 68ch; }
+  .gs-top .gs-heading h3 { font-size: 30px; line-height: 38px; }
+  .gs-top .gs-heading p { font-size: 15px; line-height: 24px; }
+
+  .gs-cols {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.62fr) minmax(440px, 1.38fr);
+    gap: var(--space-6, 24px);
+    align-items: stretch;
+  }
+  @media (max-width: 980px) {
+    .gs-cols { grid-template-columns: 1fr; }
+  }
+
+  .gs-panel {
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300, #D7DCE3);
+    border-radius: var(--radius-lg, 8px);
+    padding: var(--space-8, 32px);
+    box-shadow: var(--shadow-raised);
+  }
+  .gs-panel--explore {
+    background: linear-gradient(180deg, var(--sl-teal-50, #F2F8F8) 0%, var(--sl-white) 55%);
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    color: var(--sl-white);
+    padding: var(--space-6, 24px);
   }
-  .gs-role h3 {
-    font-size: 14px;
+  .gs-panel--explore .gs-panel-head { gap: var(--space-3, 12px); }
+  .gs-panel--explore .gs-panel-head .r-icon { width: 50px; height: 50px; }
+  .gs-panel--explore .gs-panel-head .r-icon svg { width: 26px; height: 26px; }
+  .gs-panel--explore .gs-panel-head h4 { font-size: 20px; line-height: 26px; }
+
+  .gs-panel-head {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4, 16px);
+    margin-bottom: var(--space-5, 20px);
+  }
+  .gs-panel-head .r-icon {
+    width: 52px;
+    height: 52px;
+    flex: none;
+    border-radius: var(--radius-md, 6px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--sl-teal-100, #E6F2F2);
+  }
+  .gs-panel-head .r-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+    color: var(--sl-teal-700, #076766);
+  }
+  .gs-panel--build .gs-panel-head .r-icon { background: var(--sl-blue-100, #E6ECF8); }
+  .gs-panel--build .gs-panel-head .r-icon svg { color: var(--sl-blue-600, #0841B4); }
+  .gs-panel-head h4 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    line-height: 28px;
     font-weight: 800;
-    color: var(--sl-white);
+    color: var(--color-text-heading);
+    letter-spacing: -0.01em;
+  }
+  .gs-panel-head p {
     margin: 0;
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--color-text-subtle);
+    max-width: 62ch;
+  }
+
+  /* Explore list */
+  .gs-links { list-style: none; margin: 0 0 var(--space-6, 24px); padding: 0; }
+  .gs-links li + li { border-top: 1px solid var(--sl-grey-300, #D7DCE3); }
+  .gs-links a {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--space-3, 12px);
+    padding: var(--space-3, 12px) 0;
+    text-decoration: none;
+    color: inherit;
   }
-  .gs-role h3 .r-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-sm);
-    background: rgba(11, 157, 155, 0.18);
-    border: 1px solid rgba(107, 179, 178, 0.30);
+  .gs-links .l-icon {
+    width: 46px;
+    height: 46px;
+    flex: none;
+    border-radius: var(--radius-md, 6px);
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
-  .gs-role h3 .r-icon svg {
+  .gs-links .l-icon svg { width: 24px; height: 24px; stroke-width: 2; }
+  .gs-links .l-text { flex: 1; min-width: 0; }
+  .gs-links strong {
+    display: block;
+    font-size: 16px;
+    line-height: 23px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    margin-bottom: 3px;
+  }
+  .gs-links span {
+    display: block;
+    font-size: 13px;
+    line-height: 19px;
+    color: var(--color-text-subtle);
+  }
+  .gs-links .r-chev {
+    flex: none;
     width: 18px;
     height: 18px;
     stroke-width: 2;
-    color: var(--sl-teal-300, #9DCDCC);
+    color: var(--sl-grey-600, #98A0AD);
   }
-  .gs-role .r-intro {
-    font-size: 12px;
-    line-height: 18px;
-    color: var(--sl-blue-200, #B7D6FF);
-    opacity: 0.85;
-    margin: 0;
-  }
-  .gs-role .code-block {
-    background: rgba(0, 0, 0, 0.32);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+  .gs-links a:hover strong { color: var(--sl-blue-600, #0841B4); }
+  .gs-links a:hover .r-chev { color: var(--sl-blue-600, #0841B4); transform: translateX(2px); }
+  .gs-links a:focus-visible {
+    outline: none;
+    box-shadow: var(--ring-focus);
     border-radius: var(--radius-sm);
-    padding: 14px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    line-height: 17px;
-    color: rgba(255, 255, 255, 0.92);
-    white-space: pre-wrap;
-    word-break: break-all;
-    margin: 0;
   }
-  .gs-role .code-block .tk-var   { color: #9DCDCC; }
-  .gs-role .code-block .tk-prop  { color: #B7D6FF; }
-  .gs-role .code-block .tk-tag   { color: #FBBC04; }
-  .gs-role .code-block .tk-attr  { color: #6BB3B2; }
-  .gs-role .code-block .tk-str   { color: #F4A5C7; }
-  .gs-role .code-block .tk-comment { color: rgba(255, 255, 255, 0.45); font-style: italic; }
-  .gs-agent-panel p code {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: #9DCDCC;
-    background: rgba(255, 255, 255, 0.08);
-    padding: 1px 5px;
-    border-radius: 3px;
-  }
-  .gs-role .r-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+
+  .gs-tokenbar {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3, 12px);
+    flex-wrap: wrap;
+    padding: var(--space-3, 12px);
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300, #D7DCE3);
+    border-radius: var(--radius-md, 6px);
+    box-shadow: var(--shadow-raised);
+    margin-bottom: var(--space-4, 16px);
   }
-  .gs-role .r-list li {
-    display: grid;
-    grid-template-columns: 18px 1fr;
-    align-items: start;
-    gap: 10px;
-    font-size: 12px;
-    line-height: 17px;
-    color: rgba(255, 255, 255, 0.78);
-  }
-  .gs-role .r-list li svg {
-    width: 14px;
-    height: 14px;
-    stroke-width: 2;
-    color: var(--sl-teal-300, #9DCDCC);
-    margin-top: 2px;
-  }
-  .gs-role .r-list li strong {
-    color: var(--sl-white);
+  .gs-tokenbar strong {
+    display: block;
+    font-size: 14px;
+    line-height: 20px;
     font-weight: 800;
+    color: var(--color-text-heading);
   }
-  .gs-role a {
-    color: var(--sl-blue-200, #B7D6FF);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+  .gs-tokenbar span {
+    display: block;
+    font-size: 13px;
+    line-height: 19px;
+    color: var(--color-text-subtle);
   }
-  /* Segmented control — inline on dark card */
-  .gs-agent-tabs {
-    margin: 4px 0 12px;
-    --sc-border: var(--color-border-inverse-control);
-    --sc-text: var(--sl-white);
-    --sc-text-muted: var(--sl-grey-400);
-    --sc-hover-bg: rgba(255,255,255,0.06);
-    --sc-h: 26px;
-    --sc-pad: 2px;
-    display: inline-flex;
-    align-items: stretch;
-    padding: var(--sc-pad);
-    border: 1px solid var(--sc-border);
-    border-radius: 4px;
-    font: 800 12px/16px var(--font-sans);
+  .gs-count {
+    margin: 0 0 var(--space-4, 16px);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 16px;
+    color: var(--color-text-subtle);
   }
-  .gs-agent-tabs .sc__item {
-    height: calc(var(--sc-h) - var(--sc-pad) * 2 - 2px);
-    padding: 0 12px;
-    border: 0;
-    border-radius: 3px;
-    background: transparent;
-    color: var(--sc-text-muted);
+  .gs-cta {
+    align-self: flex-start;
+    margin-top: auto;
     display: inline-flex;
     align-items: center;
-    cursor: pointer;
-    transition: background 150ms, color 150ms;
-    font: inherit;
-    white-space: nowrap;
+    gap: var(--space-2, 8px);
+    padding: 12px 18px;
+    border-radius: var(--radius-md, 6px);
+    background: var(--sl-teal-800, #054D4C);
+    border: 1px solid var(--sl-teal-800, #054D4C);
+    color: var(--sl-white);
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
   }
-  .gs-agent-tabs .sc__item:hover { color: var(--sc-text); background: var(--sc-hover-bg); }
-  .gs-agent-tabs .sc__item.selected { background: var(--color-background-primary-hover); color: var(--sl-white); }
-  .gs-agent-tabs .sc__item.selected:hover { background: var(--color-background-primary-hover); filter: brightness(1.08); }
-  .gs-agent-tabs { width: 100%; }
-  .gs-agent-tabs .sc__item { flex: 1; justify-content: center; }
-  .gs-role a:hover { color: var(--sl-white); }
+  .gs-cta:hover { background: var(--sl-teal-700, #076766); border-color: var(--sl-teal-700, #076766); }
+  .gs-cta:focus-visible { outline: none; box-shadow: var(--ring-focus); border-color: var(--sl-teal-600); }
+  .gs-cta svg { width: 16px; height: 16px; stroke-width: 2.5; }
+
+  /* Build steps */
+  .gs-steps { list-style: none; margin: 0; padding: 0; }
+  .gs-step { display: flex; gap: var(--space-4, 16px); }
+  .gs-step-rail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: none;
+  }
+  .gs-step-n {
+    width: 28px;
+    height: 28px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--sl-blue-100, #E6ECF8);
+    color: var(--sl-blue-600, #0841B4);
+    font-size: 14px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gs-step-line {
+    flex: 1;
+    width: 1px;
+    min-height: 12px;
+    background: var(--sl-grey-300, #D7DCE3);
+    margin: 6px 0;
+  }
+  .gs-step:last-child .gs-step-line { display: none; }
+  .gs-step-body { flex: 1; min-width: 0; padding-bottom: var(--space-5, 20px); }
+  .gs-step:last-child .gs-step-body { padding-bottom: 0; }
+  .gs-step-body h5 {
+    margin: 5px 0 4px;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+  }
+  .gs-step-body p {
+    margin: 0 0 var(--space-2, 8px);
+    max-width: 72ch;
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--color-text-subtle);
+  }
+  .gs-step-body p:last-child { margin-bottom: 0; }
+
+  /* Code blocks with a source label + copy */
+  .gs-codewrap {
+    border: 1px solid var(--sl-grey-300, #D7DCE3);
+    border-radius: var(--radius-md, 6px);
+    overflow: hidden;
+    background: var(--sl-grey-50, #FAFAFB);
+    margin-bottom: var(--space-2, 8px);
+  }
+  .gs-code-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2, 8px);
+    padding: 6px 6px 6px 14px;
+    border-bottom: 1px solid var(--sl-grey-300, #D7DCE3);
+  }
+  .gs-where {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .gs-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-300, #D7DCE3);
+    color: var(--color-text-body);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .gs-copy:hover { background: var(--sl-grey-100, #F5F6F8); border-color: var(--sl-grey-400); }
+  .gs-copy:focus-visible { outline: none; box-shadow: var(--ring-focus); border-color: var(--sl-teal-600); }
+  .gs-copy svg { width: 13px; height: 13px; stroke-width: 2; }
+  .gs-codewrap .code-block {
+    margin: 0;
+    padding: 12px 14px;
+    background: transparent;
+    border: 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 20px;
+    color: var(--color-text-body);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .gs-codewrap .code-block .tk-var   { color: var(--sl-teal-700, #076766); }
+  .gs-codewrap .code-block .tk-prop  { color: var(--sl-purple-700, #4E2B6A); }
+  .gs-codewrap .code-block .tk-tag   { color: var(--sl-orange-700, #C75209); }
+  .gs-codewrap .code-block .tk-attr  { color: var(--sl-blue-600, #0841B4); }
+  .gs-codewrap .code-block .tk-str   { color: var(--sl-blue-700, #063490); }
+  .gs-codewrap .code-block .tk-comment { color: var(--color-text-subtle); font-style: italic; }
+
+  /* Callouts */
+  .gs-note {
+    display: flex;
+    gap: var(--space-4, 16px);
+    background: var(--sl-blue-50, #F2F6FC);
+    border: 1px solid var(--sl-blue-200, #CED9F0);
+    border-radius: var(--radius-md, 6px);
+    padding: var(--space-4, 16px) var(--space-5, 20px);
+  }
+  .gs-note svg {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    stroke-width: 2;
+    color: var(--sl-blue-600, #0841B4);
+  }
+  .gs-note-body { flex: 1; min-width: 0; }
+  .gs-note strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+    margin-bottom: 3px;
+  }
+  .gs-note span {
+    display: block;
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--color-text-subtle);
+  }
+  .gs-note--top { flex: 0 1 380px; align-self: flex-start; }
 
   .section { margin-top: 44px; scroll-margin-top: calc(var(--topbar-h) + 16px); }
   .section[data-hide="true"] { display: none; }
@@ -1846,7 +1754,7 @@
         <input
           type="search"
           id="searchInput"
-          placeholder="Search 106 assets"
+          placeholder="Search 120 assets"
           aria-label="Search the design system"
           autocomplete="off"
           spellcheck="false"
@@ -1915,7 +1823,7 @@
             </div>
             <div class="hv hv-status">
               <span class="dot"></span>
-              <span>106 assets · live</span>
+              <span id="heroAssetCount">120 assets · live</span>
             </div>
           </div>
         </div>
@@ -1926,224 +1834,135 @@
 
       <section class="getting-started" id="getting-started">
 
-        <div class="gs-heading">
-          <h3>Get started</h3>
-          <p>Three paths into JellyRoll, depending on who's doing the building.</p>
+        <div class="gs-top">
+          <div class="gs-heading">
+            <h3>Get started with JellyRoll</h3>
+            <p>JellyRoll is the source of truth for SnapLogic product UI. Explore the design system, or set it up with an AI agent to prototype and build consistent, high-quality experiences.</p>
+          </div>
+          <div class="gs-note gs-note--top">
+            <i data-lucide="sparkles"></i>
+            <div class="gs-note-body">
+              <strong>Always up to date</strong>
+              <span><code>/jellyroll</code> pulls from the live design system, so you always get the latest components, tokens, and guidance.</span>
+            </div>
+          </div>
         </div>
-        <div class="gs-roles">
-          <div class="gs-role">
-            <h3><span class="r-icon"><i data-lucide="palette"></i></span>Designers</h3>
-            <p class="r-intro">This site is the most recent version of JellyRoll — the source of truth, not Figma or Confluence.</p>
-            <ul class="r-list">
-              <li><i data-lucide="layout-grid"></i><span><strong>Component library</strong> — ready-made elements for new projects and refactors</span></li>
-              <li><i data-lucide="palette"></i><span><strong>Style guide</strong> — colors, type, spacing for visual consistency</span></li>
-              <li><i data-lucide="compass"></i><span><strong>Design principles</strong> — guidance for interaction and user flows</span></li>
-              <li><i data-lucide="git-branch"></i><span>Streamline your workflow; smoother handoff to developers</span></li>
+
+        <div class="gs-cols">
+          <div class="gs-panel gs-panel--explore">
+            <div class="gs-panel-head">
+              <span class="r-icon"><i data-lucide="palette"></i></span>
+              <div>
+                <h4>Explore JellyRoll</h4>
+                <p>Browse the components, styles, and guidance that make up the JellyRoll design system.</p>
+              </div>
+            </div>
+            <ul class="gs-links">
+              <li><a href="#section-components">
+                <span class="l-icon" style="background:var(--sl-blue-100);color:var(--sl-blue-600)"><i data-lucide="layout-grid"></i></span>
+                <span class="l-text"><strong>Component library</strong><span>Ready-made components for new projects and refactors.</span></span>
+                <i data-lucide="chevron-right" class="r-chev"></i>
+              </a></li>
+              <li><a href="#section-foundations">
+                <span class="l-icon" style="background:var(--sl-teal-100);color:var(--sl-teal-700)"><i data-lucide="droplet"></i></span>
+                <span class="l-text"><strong>Style guide</strong><span>Colors, type, spacing, and more for visual consistency.</span></span>
+                <i data-lucide="chevron-right" class="r-chev"></i>
+              </a></li>
+              <li><a href="#section-patterns">
+                <span class="l-icon" style="background:var(--sl-purple-100);color:var(--sl-purple-700)"><i data-lucide="layers"></i></span>
+                <span class="l-text"><strong>Patterns and templates</strong><span>Whole flows and page layouts, already assembled.</span></span>
+                <i data-lucide="chevron-right" class="r-chev"></i>
+              </a></li>
+              <li><a href="#section-primitives">
+                <span class="l-icon" style="background:var(--sl-indigo-100);color:var(--sl-indigo-700)"><i data-lucide="box"></i></span>
+                <span class="l-text"><strong>Building blocks</strong><span>The primitives components are assembled from.</span></span>
+                <i data-lucide="chevron-right" class="r-chev"></i>
+              </a></li>
+              <li><a href="#section-data-viz">
+                <span class="l-icon" style="background:var(--sl-green-100);color:var(--sl-green-700)"><i data-lucide="bar-chart-3"></i></span>
+                <span class="l-text"><strong>Data visualization</strong><span>Charts, KPI tiles, and dashboard patterns.</span></span>
+                <i data-lucide="chevron-right" class="r-chev"></i>
+              </a></li>
+              <li><a href="#preview/foundations-design-principles.html">
+                <span class="l-icon" style="background:var(--sl-orange-100);color:var(--sl-orange-700)"><i data-lucide="compass"></i></span>
+                <span class="l-text"><strong>Design principles</strong><span>Visual principles, behavior rules, and interaction guidance.</span></span>
+                <i data-lucide="chevron-right" class="r-chev"></i>
+              </a></li>
+            </ul>
+            <div class="gs-tokenbar">
+              <div>
+                <strong>Use the tokens directly</strong>
+                <span>One stylesheet, no install — colors, type, spacing, shadows.</span>
+              </div>
+              <button type="button" class="gs-copy" onclick="copyTokenLink(this)"><i data-lucide="copy"></i>Copy &lt;link&gt;</button>
+            </div>
+            <p class="gs-count" id="gsExploreCount"></p>
+            <a class="gs-cta" href="#section-foundations">Explore the design system<i data-lucide="arrow-right"></i></a>
+          </div>
+
+          <div class="gs-panel gs-panel--build">
+            <div class="gs-panel-head">
+              <span class="r-icon"><i data-lucide="code-2"></i></span>
+              <div>
+                <h4>Build with JellyRoll</h4>
+                <p>Describe the screen you want and an AI agent builds it, using the real components and tokens. No coding required — these steps are the same for everyone.</p>
+              </div>
+            </div>
+
+            <ul class="gs-steps">
+              <li class="gs-step">
+                <div class="gs-step-rail"><span class="gs-step-n">1</span><span class="gs-step-line"></span></div>
+                <div class="gs-step-body">
+                  <h5>Install the JellyRoll command</h5>
+                  <p>Once, ever. Paste into Terminal — not into Claude. Need Claude Code? Get it at <a href="https://claude.com/claude-code" target="_blank" rel="noopener">claude.com/claude-code</a>.</p>
+                  <div class="gs-codewrap">
+                    <div class="gs-code-head"><span class="gs-where">Terminal</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
+<pre class="code-block"><span class="tk-prop">BASE</span>=https://raw.githubusercontent.com/SL-Design-Team/jellyroll/main/.claude/commands
+mkdir -p ~/.claude/commands
+curl -sL <span class="tk-var">$BASE</span>/jellyroll.md -o ~/.claude/commands/jellyroll.md</pre>
+                  </div>
+                  <p>Restart Claude Code, then type <code>/jell</code> — if <code>jellyroll</code> appears, it worked.</p>
+                </div>
+              </li>
+
+              <li class="gs-step">
+                <div class="gs-step-rail"><span class="gs-step-n">2</span><span class="gs-step-line"></span></div>
+                <div class="gs-step-body">
+                  <h5>Describe what you want to build</h5>
+                  <p>Start with <code>/jellyroll</code> and say what you need in plain English.</p>
+                  <div class="gs-codewrap">
+                    <div class="gs-code-head"><span class="gs-where">Claude Code (or your AI agent)</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
+<pre class="code-block"><span class="tk-var">/jellyroll</span> <span class="tk-str">build a connection list page with a KPI row and a status table</span></pre>
+                  </div>
+                  <p>Brief it like a designer: what the screen is for, what's on it, what the user is doing. Name the surface if you know it — Designer, Monitor, AutoSync.</p>
+                </div>
+              </li>
+
+              <li class="gs-step">
+                <div class="gs-step-rail"><span class="gs-step-n">3</span><span class="gs-step-line"></span></div>
+                <div class="gs-step-body">
+                  <h5>Open it, then ask for changes</h5>
+                  <p>You get one <code>.html</code> file — double-click to open it, nothing to install. Keep talking to refine it: <em>make the table denser</em>, <em>add an empty state</em>. Say React for a <code>.tsx</code> file instead.</p>
+                </div>
+              </li>
+
+              <li class="gs-step">
+                <div class="gs-step-rail"><span class="gs-step-n">4</span><span class="gs-step-line"></span></div>
+                <div class="gs-step-body">
+                  <h5>Publish a link to review with customers</h5>
+                  <p>Ask the agent to publish it, or run this yourself — it creates a repo in SL-Design-Team and turns on GitHub Pages.</p>
+                  <div class="gs-codewrap">
+                    <div class="gs-code-head"><span class="gs-where">Terminal</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
+<pre class="code-block"><span class="tk-comment"># from the folder holding your prototype</span>
+gh repo create SL-Design-Team/<span class="tk-var">&lt;prototype-name&gt;</span> --internal --source . --push
+gh api -X POST repos/SL-Design-Team/<span class="tk-var">&lt;prototype-name&gt;</span>/pages \
+  -f <span class="tk-str">"source[branch]=main"</span> -f <span class="tk-str">"source[path]=/"</span></pre>
+                  </div>
+                  <p>Live a minute later at <code>sl-design-team.github.io/&lt;prototype-name&gt;/</code>. Internal repos are visible to SnapLogic accounts only — for external customers, make it public and keep anything confidential out.</p>
+                </div>
+              </li>
             </ul>
           </div>
-          <div class="gs-role">
-            <h3><span class="r-icon"><i data-lucide="code-2"></i></span>Developers</h3>
-            <p class="r-intro">Build directly with the tokens, or hand the spec to an AI coding agent.</p>
-            <div class="sc sc--inverse sc--sm gs-agent-tabs" role="radiogroup" aria-label="Development approach">
-              <button class="sc__item selected" data-tab="manual" onclick="switchAgentTab(this,'manual')">Manual</button>
-              <button class="sc__item" data-tab="claude" onclick="switchAgentTab(this,'claude')">Claude Code</button>
-              <button class="sc__item" data-tab="other" onclick="switchAgentTab(this,'other')">Other agents</button>
-            </div>
-            <div class="gs-agent-panel" id="gs-tab-manual">
-<pre class="code-block"><span class="tk-comment">&lt;!-- 1. Link tokens — no install needed --&gt;</span>
-<span class="tk-tag">&lt;link</span> <span class="tk-attr">rel</span>=<span class="tk-str">"stylesheet"</span> <span class="tk-attr">href</span>=<span class="tk-str">"https://sl-design-team.github.io/jellyroll/colors_and_type.css"</span><span class="tk-tag">&gt;</span>
-
-<span class="tk-comment">&lt;!-- 2. Browse components at sl-design-team.github.io/jellyroll/
-        Open any tile, view its source at /preview/&lt;name&gt;.html,
-        and copy the &lt;style&gt; block + markup into your project --&gt;</span>
-
-<span class="tk-comment">&lt;!-- 3. Use the component classes --&gt;</span>
-<span class="tk-tag">&lt;button</span> <span class="tk-attr">class</span>=<span class="tk-str">"sl-btn sl-btn--primary sl-btn--md"</span><span class="tk-tag">&gt;</span>Save changes<span class="tk-tag">&lt;/button&gt;</span>
-<span class="tk-tag">&lt;button</span> <span class="tk-attr">class</span>=<span class="tk-str">"sl-btn sl-btn--secondary sl-btn--md"</span><span class="tk-tag">&gt;</span>Cancel<span class="tk-tag">&lt;/button&gt;</span>
-
-<span class="tk-comment">&lt;!-- Need React/TSX? Switch to the Claude Code tab and say "React" --&gt;</span></pre>
-            </div>
-            <div class="gs-agent-panel" id="gs-tab-claude" style="display:none">
-              <p style="margin-bottom:10px;font-size:11px;color:var(--sl-grey-400)">Install once. <code>/jellyroll</code> then works in any Claude Code session — no need to clone this repo. Source lives at <a href="https://github.com/SL-Design-Team/jellyroll/blob/main/.claude/commands/jellyroll.md" target="_blank" rel="noopener" style="color:var(--sl-blue-200);text-underline-offset:2px">.claude/commands/jellyroll.md</a>.</p>
-<pre class="code-block"><span class="tk-comment"># 1. Install both skills (global, any project)</span>
-<span class="tk-prop">BASE</span>=https://raw.githubusercontent.com/SL-Design-Team/jellyroll/main/.claude/commands
-mkdir -p ~/.claude/commands
-curl -sL <span class="tk-var">$BASE</span>/jellyroll.md       -o ~/.claude/commands/jellyroll.md
-curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/commands/jellyroll-setup.md
-
-<span class="tk-comment"># 2. One-time permission setup (run once, works across all projects)</span>
-<span class="tk-var">/jellyroll-setup</span>
-
-<span class="tk-comment"># 3. Use it — HTML output by default</span>
-<span class="tk-var">/jellyroll</span> <span class="tk-str">build a connection list page with a KPI row and a status table</span>
-
-<span class="tk-comment"># React component? Just say so</span>
-<span class="tk-var">/jellyroll</span> <span class="tk-str">build a React component for the search overlay</span></pre>
-            </div>
-            <div class="gs-agent-panel" id="gs-tab-other" style="display:none">
-<pre class="code-block">Read <span class="tk-str">https://sl-design-team.github.io/jellyroll/README.md</span>,
-fetch <span class="tk-str">https://sl-design-team.github.io/jellyroll/colors_and_type.css</span>,
-then fetch relevant previews at
-<span class="tk-str">https://sl-design-team.github.io/jellyroll/preview/&lt;name&gt;.html</span>.
-Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre>
-            </div>
-          </div>
-        </div>
-
-        <div class="gs-heading">
-          <h3>Principles</h3>
-          <p>The rules that keep JellyRoll clear, consistent, and usable across complex product surfaces.</p>
-        </div>
-        <div class="principles">
-
-          <!-- 01 Clarity — focus flow -->
-          <div class="principle" style="--p-color: var(--sl-indigo-700); --p-tint: var(--sl-indigo-50);">
-            <div class="visual">
-              <div class="diag diag-clarity">
-                <span class="step"></span>
-                <span class="connector active"></span>
-                <span class="step focus"></span>
-                <span class="connector"></span>
-                <span class="step"></span>
-              </div>
-            </div>
-            <div class="text">
-              <div class="p-name">Clarity</div>
-              <p class="p-body">Simplicity drives momentum.</p>
-            </div>
-          </div>
-
-          <!-- 02 Calm and technical — message panels -->
-          <div class="principle" style="--p-color: var(--sl-teal-700); --p-tint: var(--sl-teal-50);">
-            <div class="visual">
-              <div class="diag diag-calm">
-                <div class="msg good">
-                  <span class="dot">✓</span>
-                  <span>Pipeline validated.</span>
-                </div>
-                <div class="msg bad strike">
-                  <span class="dot">!</span>
-                  <span>Great job! Your pipeline is amazing!</span>
-                </div>
-              </div>
-            </div>
-            <div class="text">
-              <div class="p-name">Calm and technical</div>
-              <p class="p-body">Declarative, never apologetic. No hype.</p>
-            </div>
-          </div>
-
-          <!-- 02 Density before whitespace — sparse vs dense table -->
-          <div class="principle" style="--p-color: var(--sl-blue-700); --p-tint: var(--sl-blue-50);">
-            <div class="visual">
-              <div class="diag diag-density">
-                <div class="col">
-                  <div class="row-label bad">Sparse</div>
-                  <div class="tbl sparse">
-                    <div class="r"><span class="d" style="background:var(--sl-grey-400)"></span><span class="b"></span></div>
-                    <div class="r"><span class="d" style="background:var(--sl-grey-400)"></span><span class="b"></span></div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="row-label good">Dense</div>
-                  <div class="tbl dense good">
-                    <div class="r"><span class="d"></span><span class="b"></span><span class="ts">10:23</span></div>
-                    <div class="r"><span class="d" style="background:var(--sl-blue-600)"></span><span class="b"></span><span class="ts">10:24</span></div>
-                    <div class="r"><span class="d"></span><span class="b"></span><span class="ts">10:24</span></div>
-                    <div class="r"><span class="d" style="background:var(--sl-red-600)"></span><span class="b"></span><span class="ts">10:25</span></div>
-                    <div class="r"><span class="d"></span><span class="b"></span><span class="ts">10:25</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="text">
-              <div class="p-name">Density before whitespace</div>
-              <p class="p-body">Operators scan — tables, rows, timestamps.</p>
-            </div>
-          </div>
-
-          <!-- 03 Restraint — noisy vs clean panel -->
-          <div class="principle" style="--p-color: var(--sl-yellow-700); --p-tint: var(--sl-yellow-50);">
-            <div class="visual">
-              <div class="diag diag-restraint">
-                <div class="row-label bad strike" style="text-decoration: none;">Noisy</div>
-                <div class="panel noisy">
-                  <div class="blob"></div>
-                  <div class="arrow">Action ↗</div>
-                </div>
-                <div class="row-label good">Clean</div>
-                <div class="panel clean">
-                  <div class="l"></div>
-                  <div class="l short"></div>
-                </div>
-              </div>
-            </div>
-            <div class="text">
-              <div class="p-name">Restraint</div>
-              <p class="p-body">No gradients in normal UI. No backdrop blur. No bounce.</p>
-            </div>
-          </div>
-
-          <!-- 04 Verb-led, sentence case — button row contrast -->
-          <div class="principle" style="--p-color: var(--sl-orange-700); --p-tint: var(--sl-orange-50);">
-            <div class="visual">
-              <div class="diag diag-buttons">
-                <div>
-                  <div class="row-label good" style="margin-bottom:6px;">Use</div>
-                  <div class="row">
-                    <span class="btn">Save</span>
-                    <span class="btn">Validate</span>
-                    <span class="btn">Execute</span>
-                  </div>
-                </div>
-                <div>
-                  <div class="row-label bad" style="margin-bottom:6px;">Avoid</div>
-                  <div class="row">
-                    <span class="btn bad strike">OK</span>
-                    <span class="btn bad strike">Submit form</span>
-                    <span class="btn bad strike">Click here</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="text">
-              <div class="p-name">Verb-led, sentence case</div>
-              <p class="p-body">"Save". "Validate". Never "OK" or "Submit form".</p>
-            </div>
-          </div>
-
-          <!-- 05 Real icons — outlined good row vs mixed bad row -->
-          <div class="principle" style="--p-color: var(--sl-purple-700); --p-tint: var(--sl-purple-50);">
-            <div class="visual">
-              <div class="diag diag-icons">
-                <div>
-                  <div class="row-label good" style="margin-bottom:6px;">Use</div>
-                  <div class="row good">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12L9 17L20 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="M20 20L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M12 3C8.5 3 6 5.5 6 9V13L4 16H20L18 13V9C18 5.5 15.5 3 12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 19A2 2 0 0014 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M12 2V5M12 19V22M2 12H5M19 12H22M4.93 4.93L7.05 7.05M16.95 16.95L19.07 19.07M4.93 19.07L7.05 16.95M16.95 7.05L19.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20C4 16 7.5 14 12 14C16.5 14 20 16 20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  </div>
-                </div>
-                <div>
-                  <div class="row-label bad" style="margin-bottom:6px;">Avoid</div>
-                  <div class="row bad strike" style="text-decoration: none;">
-                    <span class="badico b1"></span>
-                    <span class="badico b2"></span>
-                    <span class="badico b3">★</span>
-                    <span class="badico b4"></span>
-                    <span class="badico b5">♥</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="text">
-              <div class="p-name">Real icons</div>
-              <p class="p-body">Outlined glyphs in <code>currentColor</code>. Never emoji or random fills.</p>
-            </div>
-          </div>
-
         </div>
 
         <div class="gs-heading">
@@ -2329,6 +2148,17 @@ Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre
       </a>
     `).join("");
   }
+
+  // Live asset count — keeps the explore column, hero status, and search
+  // placeholder honest as items.js grows.
+  const totalAssets = sections.reduce((n, sec) => n + sec.items.length, 0);
+  const assetLabel = `${totalAssets} assets · ${sections.length} categories`;
+  const gsCount = document.getElementById("gsExploreCount");
+  if (gsCount) gsCount.textContent = assetLabel;
+  const heroStatus = document.getElementById("heroAssetCount");
+  if (heroStatus) heroStatus.textContent = `${totalAssets} assets · live`;
+  const searchBox = document.getElementById("searchInput");
+  if (searchBox) searchBox.setAttribute("placeholder", `Search ${totalAssets} assets`);
 
   // Sidebar — top-level Getting Started link, an icon-search results section,
   // then the categorized accordion.
@@ -3215,11 +3045,21 @@ Implement: <span class="tk-var">&lt;describe what you want built&gt;</span></pre
   applyHash();
 })();
 
-function switchAgentTab(btn, tab) {
-  btn.closest('.gs-role').querySelectorAll('.sc__item').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  btn.closest('.gs-role').querySelectorAll('.gs-agent-panel').forEach(p => p.style.display = 'none');
-  document.getElementById('gs-tab-' + tab).style.display = '';
+const TOKEN_LINK = '<link rel="stylesheet" href="https://sl-design-team.github.io/jellyroll/colors_and_type.css">';
+function copyTokenLink(btn) {
+  navigator.clipboard.writeText(TOKEN_LINK).then(() => {
+    const label = btn.lastChild;
+    label.textContent = 'Copied';
+    setTimeout(() => { label.textContent = 'Copy <link>'; }, 1600);
+  });
+}
+function copyBlock(btn) {
+  const pre = btn.closest('.gs-codewrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText.trim()).then(() => {
+    const label = btn.lastChild;
+    label.textContent = 'Copied';
+    setTimeout(() => { label.textContent = 'Copy'; }, 1600);
+  });
 }
 </script>
 

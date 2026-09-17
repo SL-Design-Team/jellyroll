@@ -14,7 +14,7 @@ tokens over raw ramp variables. Sentence case; no emoji; Lucide icons only.
 The rules every component inherits — design tokens, spacing, motion, elevation, accessibility, and shared UX behavior.
 
 - [Accessibility](https://sl-design-team.github.io/jellyroll/preview/foundations-accessibility.html): WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.
-- [Design principles](https://sl-design-team.github.io/jellyroll/preview/foundations-design-principles.html): Human-centered principles and cross-component behavior rules.
+- [Design principles](https://sl-design-team.github.io/jellyroll/preview/foundations-design-principles.html): Human-centered principles, visual principles, and cross-component behavior rules.
 - [Iconography](https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html): 202 outlined line icons — 24×24 viewbox, currentColor stroke.
 - [Radius](https://sl-design-team.github.io/jellyroll/preview/spacing-radius.html): Restrained corners: 2 / 4 / 6–8 / 999px.
 - [Shadows](https://sl-design-team.github.io/jellyroll/preview/spacing-shadows.html): Light, blueish, low-spread — borders carry more weight than shadows in this system.

@@ -6,21 +6,58 @@ The design system for **SnapLogic** — an enterprise iPaaS for connecting appli
 
 ### Claude Code slash command (recommended)
 
+Install once. `/jellyroll` then works in any Claude Code **terminal** session — no need to clone this repo.
+
+> Cowork, cloud sessions, and claude.ai don't read `~/.claude/`. Use the manual prompt below in those.
+
+**1. Install**
+
 ```bash
-# 1. Install both skills (global, any project)
 BASE=https://raw.githubusercontent.com/SL-Design-Team/jellyroll/main/.claude/commands
 mkdir -p ~/.claude/commands
-curl -sL $BASE/jellyroll.md       -o ~/.claude/commands/jellyroll.md
-curl -sL $BASE/jellyroll-setup.md -o ~/.claude/commands/jellyroll-setup.md
+curl -sL $BASE/jellyroll.md -o ~/.claude/commands/jellyroll.md
+```
 
-# 2. One-time permission setup (run once, works across all projects)
-/jellyroll-setup
+Restart Claude Code (or start a new session) so it picks up the command. Type `/jell` — you should see `jellyroll` in the autocomplete.
 
-# 3. Use it
+**2. Build**
+
+```text
 /jellyroll build a connection list page with a KPI row and a status table
 ```
 
-`/jellyroll-setup` adds `Bash(curl -s https://sl-design-team.github.io/jellyroll/*)` to your `~/.claude/settings.json` so the skill can fetch live tokens without prompting. Run it once — it's a no-op if already configured. Or add the rule manually if you prefer.
+For React:
+
+```text
+/jellyroll build a React component for the search overlay
+```
+
+**3. Share it for review**
+
+Ask the agent to publish it, or run this yourself — it creates a repo in the SL-Design-Team org and turns on GitHub Pages, so customers and stakeholders get a link instead of a file.
+
+```bash
+gh repo create SL-Design-Team/<prototype-name> --internal --source . --push
+gh api -X POST repos/SL-Design-Team/<prototype-name>/pages \
+  -f "source[branch]=main" -f "source[path]=/"
+```
+
+Live a minute later at `https://sl-design-team.github.io/<prototype-name>/`. Internal repos are visible to SnapLogic accounts only — for an external customer review, make the repo public first and keep anything confidential out of it.
+
+`/jellyroll` fetches the live design system at invocation time and pulls the relevant components, tokens, and patterns before it writes anything. The command declares its own `allowed-tools`, so the token fetch runs without a permission prompt — no separate setup step.
+
+<details>
+<summary>If you still get a permission prompt</summary>
+
+Older Claude Code versions ignore per-command `allowed-tools`. Either approve the prompt once, or add this to the `permissions.allow` array in `~/.claude/settings.json`:
+
+```json
+"Bash(curl -s https://sl-design-team.github.io/jellyroll/*)"
+```
+
+`/jellyroll-setup` (also in [`.claude/commands`](https://github.com/SL-Design-Team/jellyroll/tree/main/.claude/commands)) does exactly that one edit and nothing else.
+
+</details>
 
 ### Manual prompt (Cursor, Copilot, other agents)
 

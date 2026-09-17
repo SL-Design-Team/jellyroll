@@ -5,6 +5,8 @@ description: "One-time setup for the JellyRoll skill. Adds the curl permission n
 
 # JellyRoll Setup
 
+> **Usually unnecessary.** `jellyroll.md` declares its own `allowed-tools`, so the token fetch runs without prompting. Use this only if your Claude Code version still prompts.
+
 Add the one-time permission that lets `/jellyroll` fetch live design tokens without a permission prompt.
 
 ## Steps

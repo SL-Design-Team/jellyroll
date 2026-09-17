@@ -24,10 +24,10 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/foundations-design-principles.html",
           name: "Design principles",
-          tagline: "Human-centered principles and cross-component behavior rules.",
+          tagline: "Human-centered principles, visual principles, and cross-component behavior rules.",
           meta: {
-            anatomy: "Eight human-centered design principles paired with seven shared behavior rules: communicate outcomes, preserve control, choose the least disruptive surface, protect consequential actions, handle async work, place errors near recovery, and support keyboard and responsive use.",
-            usage: "Start with the design principles to define the intended experience, then apply the behavior rules before adding component-specific mechanics. Component and pattern pages define the detailed interactions.",
+            anatomy: "Eight human-centered design principles, six visual principles (clarity, calm and technical, density before whitespace, restraint, verb-led sentence case, real icons), and seven shared behavior rules: communicate outcomes, preserve control, choose the least disruptive surface, protect consequential actions, handle async work, place errors near recovery, and support keyboard and responsive use.",
+            usage: "Start with the design principles to define the intended experience, apply the visual principles to how it looks and reads, then apply the behavior rules before adding component-specific mechanics. Component and pattern pages define the detailed interactions.",
             behaviors: "Every meaningful action communicates its result; keyboard focus follows the active task; errors preserve input and point to recovery; and async work prevents duplicates without blocking unrelated work."
           }
         },
