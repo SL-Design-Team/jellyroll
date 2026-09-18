@@ -7,17 +7,23 @@
 <link rel="stylesheet" href="card.css" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
-  .card { gap: 18px; width: 100%; }
+  .card { width: 100%; }
 
   /* ─── DRAWER ───────────────────────────────────────────────
-     Slides in from the right. Modal — has a scrim, covers
-     content beneath, takes focus. Used for configuration tasks
-     that used to be modal dialogs (build pipeline, snap config,
-     account settings, etc).
+     Slides in from the right. Two types — position and behavior
+     always travel together:
 
-     Width  — 480px (narrow · default) · 560px (medium) · 720px (wide)
+     OVERLAY drawer — floats over the content, with a scrim.
+       Modal: blocks the page, traps focus. Fixed width.
+       For focused tasks (build pipeline, snap config, settings).
+     PUSH drawer — docks beside the content; the content reflows
+       narrower. No scrim, non-modal: page stays interactive.
+       Resizable. For details kept open alongside the work.
+
+     Never float a panel over content without a scrim.
+
+     Width  — 480 (narrow) · 560 (medium · default) · 720 (wide)
      Slide  — 240ms cubic-bezier(0.2, 0, 0, 1)
-     Dismiss — X · Esc · scrim click
   */
   .drawer-frame {
     position: relative;
@@ -174,6 +180,91 @@
     z-index: 1;
   }
 
+  /* ─── PUSH DRAWER ─────────────────────────────────────────
+     Docks beside the canvas instead of floating over it: the
+     canvas reflows narrower and stays fully interactive. No
+     scrim, no shadow — a 1px Grey-300 left border separates it.
+  */
+  .push-frame {
+    display: grid;
+    grid-template-columns: 48px 1fr 320px;
+    grid-template-rows: 40px 1fr;
+    height: 300px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow-raised);
+  }
+  .push-frame .ws__header { grid-column: 1 / -1; }
+  .push-canvas { background: var(--sl-white); padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .push-canvas .row { height: 28px; border-bottom: 1px solid var(--sl-grey-200); }
+  .push-canvas .row.sel { background: var(--sl-blue-50); }
+  .drawer--push {
+    position: relative;
+    background: var(--sl-white);
+    border-left: 1px solid var(--sl-grey-300);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  /* Resize handle — 8px hit area straddling the left edge; the
+     2px line only appears on hover, drag, or keyboard focus. */
+  .drawer__resize {
+    position: absolute;
+    top: 0; bottom: 0; left: -4px;
+    width: 8px;
+    cursor: col-resize;
+    z-index: 3;
+  }
+  .drawer__resize::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: 3px;
+    width: 2px;
+    background: transparent;
+    transition: background 120ms linear;
+  }
+  .drawer__resize:hover::after,
+  .drawer__resize.is-dragging::after { background: var(--sl-blue-600); }
+  .drawer__resize:focus-visible { outline: none; }
+  .drawer__resize:focus-visible::after { background: var(--sl-teal-600); box-shadow: var(--shadow-focus-ring); }
+
+  /* Push variant of the mini diagram — drawer is a grid column, body reflows */
+  .mini--push { grid-template-columns: 32px 1fr 180px; }
+  .mini--push .mini__drawer { position: static; width: auto; box-shadow: none; border-left: 1px solid var(--sl-grey-300); }
+  .mini__body .blk { height: 8px; background: var(--sl-grey-300); border-radius: 2px; margin-bottom: 6px; }
+
+  /* Page sections — clear heading tier above the demos */
+  .card { gap: 32px; }
+  .sec { display: flex; flex-direction: column; gap: 16px; }
+  .sec + .sec { padding-top: 32px; border-top: 1px solid var(--sl-grey-200); }
+  .sec__head { display: flex; flex-direction: column; gap: 2px; }
+  .sec__h { margin: 0; font: 800 18px/28px var(--font-sans); color: var(--color-text-heading); }
+  .sec__sub { margin: 0; font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); }
+  .sub-h { font: 800 13px/20px var(--font-sans); color: var(--color-text-heading); margin-bottom: -8px; }
+
+  /* Choose a type — two cards */
+  .types { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .type { border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); overflow: hidden; background: var(--sl-white); }
+  .type .mini { border: 0; border-bottom: 1px solid var(--sl-grey-200); border-radius: 0; }
+  .type__body { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .type__name { font: 800 16px/24px var(--font-sans); color: var(--color-text-heading); }
+  .type__one { margin: 0; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); }
+  .type__h { font: 800 12px/16px var(--font-sans); color: var(--color-text-body); margin-top: 4px; }
+  .type ul { margin: 0; padding-left: 18px; font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); }
+  .type__eg { margin: 4px 0 0; padding-top: 10px; border-top: 1px solid var(--sl-grey-200); font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+
+  /* At a glance */
+  .compare { width: 100%; border-collapse: collapse; font: 400 13px/20px var(--font-sans); }
+  .compare th, .compare td { text-align: left; vertical-align: top; padding: 8px 12px; border-bottom: 1px solid var(--sl-grey-200); }
+  .compare thead th { font-weight: 800; color: var(--color-text-heading); border-bottom: 1px solid var(--sl-grey-300); }
+  .compare tbody th { font-weight: 800; color: var(--color-text-body); width: 150px; }
+  .compare td { color: var(--color-text-body); }
+  .compare tbody tr:nth-child(even) { background: var(--sl-grey-50); }
+  .compare code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 11px; }
+
+  .rule { font: 400 13px/20px var(--font-sans); color: var(--color-text-body); padding: 10px 12px; border-left: 3px solid var(--sl-blue-600); background: var(--sl-blue-50); border-radius: var(--radius-xs); }
+
   /* Layout helpers */
   .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
   .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
@@ -181,7 +272,7 @@
 
   .spec {
     display: grid;
-    grid-template-columns: 110px 1fr;
+    grid-template-columns: 150px 1fr;
     gap: 4px 16px;
     font: 400 11px/16px var(--font-sans);
     padding: 10px 12px;
@@ -199,10 +290,10 @@
   "section": "Composed components",
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-drawer.html",
   "tagline": "Side panel that slides in from the right for details or secondary tasks.",
-  "anatomy": "Scrim (same token as Modal) · panel slides from right · 400–600px wide depending on content · header with title and close `×` · body · sticky footer for actions.",
-  "options": "Widths: narrow (320), default (480), wide (640). Modal (with scrim) or inline (no scrim, doesn't block the page).",
-  "usage": "Use for details about a selected object (preview, full edit form) or for secondary tasks that can run alongside the main canvas. For confirms, use a Modal. For temporary notifications, use a Toast.",
-  "behaviors": "Slides in 240ms ease-out. Esc closes. Inline variant does not block the canvas — the canvas remains interactive. Modal variant traps focus inside the drawer.",
+  "anatomy": "Two types: overlay drawer (floats over the page with a scrim) and push drawer (a column beside the page; the page reflows). Both: panel slides from right · 56px header with title and close `×` · scrolling body padded 20/24 · 64px footer (required on overlay, optional on push).",
+  "options": "Overlay drawer: modal, scrim, fixed widths 480 / 560 (default) / 720. Push drawer: non-modal, no scrim, 1px Grey-300 left border, resizable 320–720 (default 480). Never float a panel over content without a scrim.",
+  "usage": "Pick an overlay drawer for one focused task the user starts, finishes and closes (build pipeline, configure a Snap, account settings). Pick a push drawer when the user needs the drawer and the page at the same time — details about a selected object, or a reference that stays open (run details, lint results, patterns catalog, MCP servers). For confirms, use a Modal. For temporary notifications, use a Toast.",
+  "behaviors": "Slides in 240ms. Overlay drawer: scrim fades 200ms, blocks the page, traps focus (`role=\"dialog\" aria-modal=\"true\"`), closes on X / Esc / scrim click. Push drawer: the page reflows narrower and stays fully interactive, no focus trap (`role=\"region\"`), outside click does not close, selecting another object swaps content in place. Push drawers resize via an 8px left-edge handle (`role=\"separator\"`, arrow keys ±16px) showing a 2px Blue-600 line on hover/drag and Teal-600 on keyboard focus. Under a 960px workspace a push drawer opens as an overlay drawer.",
   "tokens": [
     "--color-scrim",
     "--color-surface-overlay",
@@ -215,12 +306,65 @@
   <div class="card">
     <div class="row-label">
       <span class="name">Drawer</span>
-      <span class="meta">configuration · modal · slides from right</span>
+      <span class="meta">two types · overlay or push · slides from right</span>
     </div>
 
-    <!-- ─── ANATOMY ──────────────────────────────────────────── -->
-    <div>
-      <div class="section-h">Anatomy <span class="meta">scrim over workspace · drawer on top right</span></div>
+    <!-- ─── 1 · CHOOSE A TYPE ─────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Choose a type</h2>
+        <p class="sec__sub">Pick by what the user does while the drawer is open.</p>
+      </header>
+      <div class="types">
+        <div class="type">
+  <div class="mini" style="height: 160px;">
+          <div class="mini__header"><span class="logo"></span><span class="title">DESIGNER</span></div>
+          <div class="mini__rail"></div>
+          <div class="mini__body"><div class="blk" style="width: 90%;"></div><div class="blk" style="width: 70%;"></div><div class="blk" style="width: 80%;"></div></div>
+          <div class="mini__scrim" style="right: 180px;"></div>
+          <div class="mini__drawer" style="width: 180px;"><div class="h">Overlay drawer</div><div class="line"></div><div class="line" style="width: 80%;"></div></div>
+        </div>
+          <div class="type__body">
+            <div class="type__name">Overlay drawer</div>
+            <p class="type__one">Floats <b>over</b> the page behind a scrim. The page is blocked until the drawer closes.</p>
+            <div class="type__h">Use for one focused task</div>
+            <ul>
+              <li>Started, finished, closed</li>
+              <li>Has a Save / Create / Continue action</li>
+              <li>Touching the page mid-task would lose work</li>
+            </ul>
+            <p class="type__eg">Build pipeline · configure a Snap · account settings</p>
+          </div>
+        </div>
+        <div class="type">
+  <div class="mini mini--push" style="height: 160px;">
+          <div class="mini__header"><span class="logo"></span><span class="title">DESIGNER</span></div>
+          <div class="mini__rail"></div>
+          <div class="mini__body"><div class="blk" style="width: 90%;"></div><div class="blk" style="width: 70%;"></div><div class="blk" style="width: 80%;"></div></div>
+          <div class="mini__drawer"><div class="h">Push drawer</div><div class="line"></div><div class="line" style="width: 80%;"></div></div>
+        </div>
+          <div class="type__body">
+            <div class="type__name">Push drawer</div>
+            <p class="type__one"><b>Pushes</b> the page over to make room. Nothing is covered; the page keeps working.</p>
+            <div class="type__h">Use alongside the page</div>
+            <ul>
+              <li>Details about something selected on the page</li>
+              <li>Follows the user as they click around</li>
+              <li>Can stay open like a reference</li>
+            </ul>
+            <p class="type__eg">Run details · lint results · patterns catalog · MCP servers</p>
+          </div>
+        </div>
+      </div>
+      <div class="rule"><b>Never float a panel over the page without a scrim.</b> Covered content is blocked (overlay). Usable content moves over (push). Existing no-scrim panels that cover the page migrate to push drawers.</div>
+    </section>
+
+    <!-- ─── 2 · OVERLAY DRAWER ────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Overlay drawer</h2>
+        <p class="sec__sub">Modal · scrim · fixed width</p>
+      </header>
       <div class="drawer-frame" style="height: 440px;">
         <div class="ws">
           <div class="ws__header"></div>
@@ -263,20 +407,14 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- ─── WIDTHS ───────────────────────────────────────────── -->
-    <div>
-      <div class="section-h">Widths</div>
+      <div class="sub-h">Widths</div>
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
         <div class="mini" style="height: 200px;">
           <div class="mini__header"><span class="logo"></span><span class="title">DESIGNER</span></div>
           <div class="mini__rail"></div>
           <div class="mini__body"></div>
-          <div class="mini__scrim" style="right: 180px;"></div>
-          <div class="mini__drawer" style="width: 180px;">
+          <div class="mini__scrim" style="right: 44%;"></div>
+          <div class="mini__drawer" style="width: 44%;">
             <div class="h">Narrow · 480px</div>
             <div class="line"></div><div class="line" style="width: 80%;"></div><div class="line" style="width: 60%;"></div>
           </div>
@@ -285,8 +423,8 @@
           <div class="mini__header"><span class="logo"></span><span class="title">DESIGNER</span></div>
           <div class="mini__rail"></div>
           <div class="mini__body"></div>
-          <div class="mini__scrim" style="right: 240px;"></div>
-          <div class="mini__drawer" style="width: 240px;">
+          <div class="mini__scrim" style="right: 54%;"></div>
+          <div class="mini__drawer" style="width: 54%;">
             <div class="h">Medium · 560px</div>
             <div class="line"></div><div class="line" style="width: 80%;"></div><div class="line" style="width: 60%;"></div>
           </div>
@@ -295,32 +433,103 @@
           <div class="mini__header"><span class="logo"></span><span class="title">DESIGNER</span></div>
           <div class="mini__rail"></div>
           <div class="mini__body"></div>
-          <div class="mini__scrim" style="right: 300px;"></div>
-          <div class="mini__drawer" style="width: 300px;">
+          <div class="mini__scrim" style="right: 68%;"></div>
+          <div class="mini__drawer" style="width: 68%;">
             <div class="h">Wide · 720px</div>
             <div class="line"></div><div class="line" style="width: 80%;"></div><div class="line" style="width: 60%;"></div>
           </div>
         </div>
       </div>
-    </div>
+      <dl class="spec">
+        <dt>widths</dt>
+        <dd><b>480</b> narrow (forms, single task) · <b>560</b> medium (default) · <b>720</b> wide (rich content, two-column body). Not resizable.</dd>
+        <dt>scrim</dt>
+        <dd><code>--color-scrim</code> over the workspace. The global header stays visible. Fades in <b>200ms</b> linear.</dd>
+        <dt>footer</dt>
+        <dd>Required. Right-aligned Secondary + Primary.</dd>
+        <dt>dismiss</dt>
+        <dd>X · <kbd>Esc</kbd> · scrim click. For destructive or in-progress forms, confirm before closing.</dd>
+        <dt>a11y</dt>
+        <dd>Focus trapped in the drawer; restored to the trigger on close. <code>role="dialog" aria-modal="true" aria-labelledby="…"</code>; <code>aria-label="Close drawer"</code> on the X.</dd>
+      </dl>
+    </section>
 
-    <!-- ─── SPEC ─────────────────────────────────────────────── -->
-    <dl class="spec">
-      <dt>widths</dt>
-      <dd><b>480</b> narrow (forms, single-task) · <b>560</b> medium (default — most config) · <b>720</b> wide (rich content, two-column body)</dd>
-      <dt>chrome</dt>
-      <dd>Header 56px (Title 18/28 ExtraBold + close X) · Body padded 20/24 with scroll · Footer 64px (right-aligned, Secondary + Primary buttons)</dd>
-      <dt>scrim</dt>
-      <dd><code>--color-scrim</code> · rgba(9, 30, 66, 0.54). Covers the workspace below the global header — header stays visible.</dd>
-      <dt>motion</dt>
-      <dd>Slide-in <b>240ms</b> cubic-bezier(0.2, 0, 0, 1) · scrim fades in <b>200ms</b> linear. Same out, reverse order.</dd>
-      <dt>dismiss</dt>
-      <dd>X click · <kbd>Esc</kbd> · scrim click. <b>Don't</b> auto-dismiss on outside click for destructive or in-progress forms — confirm first.</dd>
-      <dt>a11y</dt>
-      <dd>Focus trap inside drawer. Restore focus to trigger on close. <code>role="dialog" aria-modal="true" aria-labelledby="…"</code> on the drawer; <code>aria-label="Close drawer"</code> on the X.</dd>
-      <dt>with SnapGPT</dt>
-      <dd>When SnapGPT is open, the Drawer's right edge anchors to the <b>SnapGPT panel's left edge</b> (not the viewport). The scrim covers only the workspace area — SnapGPT stays uncovered and interactive so users can keep chatting while configuring. See <b>Drawer + SnapGPT</b> pattern card.</dd>
-    </dl>
+    <!-- ─── 3 · PUSH DRAWER ───────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Push drawer</h2>
+        <p class="sec__sub">Non-modal · page reflows · resizable (handle shown in hover state)</p>
+      </header>
+      <div class="push-frame">
+        <div class="ws__header"></div>
+        <div class="ws__rail"></div>
+        <div class="push-canvas">
+          <div class="row"></div><div class="row sel"></div><div class="row"></div><div class="row"></div><div class="row"></div>
+        </div>
+        <aside class="drawer--push" role="region" aria-labelledby="push-drawer-title">
+          <div class="drawer__resize is-dragging" role="separator" aria-orientation="vertical" aria-label="Resize panel" aria-valuenow="480" aria-valuemin="320" aria-valuemax="720" tabindex="0"></div>
+          <div class="drawer__head">
+            <span class="drawer__title" id="push-drawer-title">orders-rollup · run 4821</span>
+            <button class="drawer__close" aria-label="Close panel"><i data-lucide="x"></i></button>
+          </div>
+          <div class="drawer__body">
+            <div class="lead">Details for the selected row. Selecting another row swaps this content in place.</div>
+          </div>
+        </aside>
+      </div>
+      <dl class="spec">
+        <dt>layout</dt>
+        <dd>A layout column, not a floating layer. The workspace reflows narrower and is <b>never covered</b>. No scrim, no shadow; 1px <code>Grey 300</code> left border. Workspace width animates with the 240ms slide.</dd>
+        <dt>behavior</dt>
+        <dd>Page stays <b>fully interactive</b>. Outside click does not close. Selecting another object swaps content in place. Close with X or <kbd>Esc</kbd> (focus inside). One at a time. Footer optional.</dd>
+        <dt>a11y</dt>
+        <dd><b>No focus trap.</b> <code>role="region" aria-labelledby="…"</code>. Opened from a button → focus to the title; opened by selecting an object → focus stays put. On close, focus returns to the trigger or object.</dd>
+        <dt>resize</dt>
+        <dd>Default <b>480</b> · min <b>320</b> · max <b>720</b> or 60% of workspace. 8px hit area on the left edge, <code>col-resize</code>. 2px line on hover/drag (<code>Blue 600</code>) and keyboard focus (<code>Teal 600</code> + <code>--shadow-focus-ring</code>). Double-click resets; width persists per drawer.</dd>
+        <dt>resize a11y</dt>
+        <dd><code>role="separator" aria-orientation="vertical"</code>, <code>aria-valuenow/min/max</code>, <code>tabindex="0"</code>. <kbd>←</kbd>/<kbd>→</kbd> ±16px · <kbd>Shift</kbd> ±64px · <kbd>Home</kbd>/<kbd>End</kbd> min/max.</dd>
+        <dt>narrow screens</dt>
+        <dd>Workspace under <b>960px</b> → opens as an <b>overlay drawer</b> instead (scrim, focus trap).</dd>
+      </dl>
+    </section>
+
+    <!-- ─── 4 · BOTH TYPES ────────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Both types</h2>
+        <p class="sec__sub">Shared chrome, motion and SnapGPT placement</p>
+      </header>
+      <dl class="spec">
+        <dt>chrome</dt>
+        <dd>Header 56px (title 18/28 ExtraBold + close X) · body padded 20/24, scrolls · footer 64px.</dd>
+        <dt>motion</dt>
+        <dd>Slides in from the right, <b>240ms</b> cubic-bezier(0.2, 0, 0, 1). Out in reverse.</dd>
+        <dt>with SnapGPT</dt>
+        <dd>Sits to the <b>left of the SnapGPT panel</b>, which stays uncovered and interactive. See <b>Drawer + SnapGPT</b>.</dd>
+      </dl>
+    </section>
+
+    <!-- ─── 5 · BUILD REFERENCE ───────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">At a glance</h2>
+        <p class="sec__sub">Build contract for each type</p>
+      </header>
+      <table class="compare">
+        <thead><tr><th></th><th>Overlay drawer</th><th>Push drawer</th></tr></thead>
+        <tbody>
+          <tr><th>Position</th><td>Over the workspace</td><td>Beside the workspace (reflows)</td></tr>
+          <tr><th>Scrim</th><td><code>--color-scrim</code></td><td>None</td></tr>
+          <tr><th>Page while open</th><td>Blocked</td><td>Interactive</td></tr>
+          <tr><th>Focus</th><td>Trapped</td><td>Not trapped</td></tr>
+          <tr><th>Role</th><td><code>dialog</code> + <code>aria-modal</code></td><td><code>region</code></td></tr>
+          <tr><th>Edge</th><td><code>--shadow-overlay</code></td><td>1px <code>Grey 300</code> border</td></tr>
+          <tr><th>Width</th><td>480 · 560 · 720, fixed</td><td>320–720, resizable</td></tr>
+          <tr><th>Footer</th><td>Required</td><td>Optional</td></tr>
+          <tr><th>Closes on</th><td>X · <kbd>Esc</kbd> · scrim</td><td>X · <kbd>Esc</kbd></td></tr>
+        </tbody>
+      </table>
+    </section>
   </div>
   <script>lucide.createIcons();</script>
 </body>

@@ -2137,7 +2137,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
         <p class="detail-tagline" id="detailTagline"></p>
 
         <section class="doc-section" id="doc-examples">
-          <h2>Examples</h2>
+          <h2 id="docExamplesTitle">Examples</h2>
           <div class="preview-host" id="previewHost" data-loading="false">
             <div class="preview-render" id="previewRender"></div>
           </div>
@@ -2171,7 +2171,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
 
       <nav class="detail-toc" aria-label="On this page">
         <h3>On this page</h3>
-        <a href="#doc-examples"   data-toc="doc-examples">Examples</a>
+        <a href="#doc-examples"   data-toc="doc-examples" id="tocExamples">Examples</a>
         <a href="#doc-anatomy"    data-toc="doc-anatomy">Anatomy</a>
         <a href="#doc-options"    data-toc="doc-options">Options</a>
         <a href="#doc-usage"      data-toc="doc-usage">Usage guidelines</a>
@@ -2975,6 +2975,14 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     detailTitle.textContent = item.name;
     detailTagline.textContent = item.tagline || "";
 
+    // Pages flagged guidelinesInPreview carry their own full guidelines, so the
+    // generated doc sections would repeat them. Their meta still feeds llms.txt /
+    // jellyroll.json for agents; the gallery just doesn't re-render it.
+    const inPreview = !!item.guidelinesInPreview;
+    const examplesLabel = inPreview ? "Guidelines" : "Examples";
+    document.getElementById("docExamplesTitle").textContent = examplesLabel;
+    document.getElementById("tocExamples").textContent = examplesLabel;
+
     // Populate doc sections; hide ones the item didn't author + their TOC entry.
     const meta = item.meta || {};
     docFields.forEach(({ key, secId, bodyId }) => {
@@ -2982,7 +2990,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
       const bodyEl = document.getElementById(bodyId);
       const tocLink = document.querySelector(`.detail-toc a[data-toc="${secId}"]`);
       const v = meta[key];
-      if (v && v.trim()) {
+      if (v && v.trim() && !inPreview) {
         secEl.setAttribute("data-hide", "false");
         bodyEl.innerHTML = renderMarkdownLite(v, key);
         if (tocLink) tocLink.setAttribute("data-hide", "false");

@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="card.css" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
-  .card { gap: 16px; width: 100%; }
+  .card { width: 100%; }
 
   .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
   .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
@@ -37,7 +37,7 @@
     display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer;
   }
-  .wiz__close i { width: 16px; height: 16px; }
+  .wiz__close svg { width: 16px; height: 16px; }
 
   /* Step indicator (top) */
   .wiz__steps {
@@ -70,9 +70,14 @@
     border-radius: 2px;
   }
   .step--done .step__dot { background: var(--sl-blue-600); border-color: var(--sl-blue-600); color: var(--sl-white); }
-  .step--done .step__dot i { width: 14px; height: 14px; }
+  .step--done .step__dot svg { width: 16px; height: 16px; stroke-width: 3; }  /* ~2px rendered stroke */
   .step--done .step__label { color: var(--color-text-body); }
   .step--done + .step__connector { background: var(--sl-blue-600); }
+  /* Completed steps are buttons (jump back). Current + upcoming are not interactive. */
+  button.step, button.vrow { background: none; border: 0; text-align: left; cursor: pointer; }
+  button.step { padding: 2px 4px; margin: -2px -4px; border-radius: var(--radius-xs); }
+  .step--done:hover .step__dot { background: var(--sl-blue-700); border-color: var(--sl-blue-700); }
+  .step--done:focus-visible { outline: none; box-shadow: var(--shadow-focus-ring); }
   .step--current .step__dot { background: var(--sl-white); border: 2px solid var(--sl-blue-600); color: var(--sl-blue-600); }
   .step--current .step__label { color: var(--sl-blue-900); }
   .step--current .step__dot.with-num { font-weight: 800; }
@@ -121,7 +126,11 @@
   .btn--ghost { background: transparent; color: var(--color-text-body); border-color: transparent; }
   .btn--ghost:hover { background: var(--sl-grey-100); }
   .btn:disabled { background: var(--sl-blue-200); color: var(--sl-white); border-color: var(--sl-blue-200); cursor: not-allowed; }
-  .btn i { width: 14px; height: 14px; }
+  .btn svg { width: 16px; height: 16px; flex: none; }
+  /* Chevron glyph is 4px wide in a 16px box — pull the 6px of empty box
+     into the outer padding so the edge optically matches the text side (18px). */
+  .btn svg.lucide-chevron-left:first-child { margin-left: -6px; }
+  .btn svg.lucide-chevron-right:last-child { margin-right: -6px; }
 
   /* Vertical step-indicator variant */
   .vstep {
@@ -153,7 +162,11 @@
   .vrow__lbl { font-weight: 800; color: var(--color-text-body); }
   .vrow__lbl small { display: block; font-weight: 400; font-size: 11px; color: var(--color-text-subtle); }
   .vrow.done .vrow__dot { background: var(--sl-blue-600); border-color: var(--sl-blue-600); color: var(--sl-white); }
-  .vrow.done .vrow__dot i { width: 12px; height: 12px; }
+  .vrow.done .vrow__dot svg { width: 14px; height: 14px; stroke-width: 3; }
+  button.vrow { width: 100%; }
+  .vrow.done:hover { background: var(--sl-grey-100); }
+  .vrow.done:hover .vrow__dot { background: var(--sl-blue-700); border-color: var(--sl-blue-700); }
+  .vrow.done:focus-visible { outline: none; box-shadow: var(--shadow-focus-ring); }
   .vrow.cur { background: var(--sl-blue-50); }
   .vrow.cur .vrow__dot { border: 2px solid var(--sl-blue-600); color: var(--sl-blue-600); }
   .vrow.cur .vrow__lbl { color: var(--sl-blue-900); }
@@ -170,7 +183,55 @@
   .vstep__pane h4 { margin: 0 0 4px; font: 800 16px/24px var(--font-sans); color: var(--color-text-heading); }
   .vstep__pane p { margin: 0 0 14px; font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); }
 
-  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
+  /* Page sections */
+  .card { gap: 32px; }
+  .sec { display: flex; flex-direction: column; gap: 16px; }
+  .sec + .sec { padding-top: 32px; border-top: 1px solid var(--sl-grey-200); }
+  .sec__head { display: flex; flex-direction: column; gap: 2px; }
+  .sec__h { margin: 0; font: 800 18px/28px var(--font-sans); color: var(--color-text-heading); }
+  .sec__sub { margin: 0; font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); }
+  .sub-h { margin: 0; font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
+
+  /* Anatomy callouts */
+  .pin {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 50%; flex: none;
+    background: var(--sl-grey-1000); color: var(--sl-white);
+    font: 800 10px/1 var(--font-mono);
+    margin-right: 8px; vertical-align: middle;
+  }
+  .wiz__steps > .pin { margin-right: 12px; }
+  /* On the rail, pins float at the row's right edge so dots and connectors stay aligned */
+  .pin--float { position: absolute; right: 8px; top: 50%; margin: -9px 0 0; }
+  .vstep__rail { position: relative; }
+  .pin--rail { position: absolute; top: -14px; right: -9px; margin: 0; }
+  .legend { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+  .legend li { display: flex; align-items: flex-start; font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); }
+  .legend li .pin { margin-top: 1px; }
+  .legend b { color: var(--color-text-body); }
+
+  /* Two-column cards: when to use / variations */
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .panel { border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); padding: 16px; display: flex; flex-direction: column; gap: 8px; background: var(--sl-white); }
+  .panel__h { display: flex; align-items: center; gap: 8px; font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
+  .panel__h svg { width: 16px; height: 16px; flex: none; }
+  .panel--do .panel__h svg { color: var(--sl-green-600); }
+  .panel--dont .panel__h svg { color: var(--sl-red-600); }
+  .panel p { margin: 0; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); }
+  .panel ul, .rules { margin: 0; padding-left: 18px; font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); display: flex; flex-direction: column; gap: 4px; }
+  .rules b, .panel ul b { color: var(--color-text-body); }
+  .panel__meta { margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--sl-grey-200); font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+
+  /* Review step mock */
+  .review { display: flex; flex-direction: column; gap: 12px; max-width: 520px; }
+  .review__sec { border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
+  .review__sec header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--sl-grey-200); font: 800 13px/20px var(--font-sans); color: var(--color-text-heading); }
+  .review__sec header a { font: 800 13px/20px var(--font-sans); color: var(--sl-blue-600); text-decoration: none; }
+  .review__sec dl { margin: 0; padding: 8px 12px; display: grid; grid-template-columns: 120px 1fr; gap: 4px 12px; font: 400 13px/20px var(--font-sans); }
+  .review__sec dt { color: var(--color-text-subtle); }
+  .review__sec dd { margin: 0; color: var(--color-text-body); }
+
+  .spec { display: grid; grid-template-columns: 130px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); }
   .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
   .spec dd { margin: 0; color: var(--color-text-subtle); }
   .spec dd b { color: var(--color-text-body); }
@@ -182,33 +243,144 @@
   "section": "Patterns",
   "url": "https://sl-design-team.github.io/jellyroll/preview/patterns-wizard.html",
   "tagline": "Guided multi-step flow with a numbered step indicator.",
-  "anatomy": "Step indicator · body panel · footer with `Cancel` (ghost, left) and `Back` / `Next` (right). Horizontal indicator: 24px numbered circles joined by 2px connectors, upcoming white with a 1.5px Grey-400 border, current white with a 2px Blue-600 ring and Blue-600 numeral, complete Blue-600 filled with a white check; connectors turn Blue-600 behind completed steps. Vertical indicator: a 240px rail of rows with 22px dots using the same three states. Step labels are 13/20 ExtraBold with an optional 11px regular sub-label.",
-  "options": "Horizontal indicator for 3–5 steps (modal or page wizard), or the vertical 240px rail for 7+ steps, branching, and review-able sections. Optional per-step sub-labels. `Save draft` in the header for long wizards.",
-  "usage": "Use for tasks that genuinely break into sequential steps where each builds on the last (account setup, pipeline scaffolding, integration onboarding). For shorter flows, use a single Modal with sections. Past 5 steps switch to the vertical rail rather than compressing the horizontal one. Always end with a Review step listing every input as label/value pairs with per-section `Edit` links.",
-  "behaviors": "`Next` validates the current step before advancing and stays disabled until it does — never auto-advance. `Back` returns without losing values, and going back never resets downstream state. Clicking a completed step returns to it; jumping forward over uncompleted steps is not allowed. Wizards of 5+ steps offer `Save draft`, which persists 14 days and resumes at the last completed step. An unsaved-changes confirm appears if the user closes mid-flow. The indicator is a `nav` labelled `Steps`, with `aria-current=\"step\"` on the current step and `aria-disabled` (not removal) on locked forward steps."
+  "anatomy": "Eight elements: (1) header with an action-led title and close `×` · (2) 240px vertical step rail (the default) · (3) completed step — Blue-600 fill with a 16px white check, clickable · (4) current step — white with a 2px Blue-600 ring, `aria-current=\"step\"` · (5) upcoming step — white with a 1.5px Grey-400 border, `aria-disabled` · (6) step title — a question or instruction expanding the label · (7) scrolling body · (8) footer with `Cancel` (ghost, left) and `Back` / `Next` (right), one primary. Rail: 22px dots with a 14px check, Blue-50 current row, connectors that turn Blue-600 behind completed steps. Exception: a horizontal indicator (24px dots, 2px connectors) only when a modal is too narrow for the rail, for 3–5 steps. Labels 13/20 ExtraBold with an optional 11px sub-label.",
+  "options": "The vertical step rail is the default. Modal wizard for shorter flows, or in-page wizard for longer flows and steps with substantial content (title in the page header). Horizontal indicator only as an exception, when a modal is too narrow for the rail and the flow has 3–5 steps. Optional steps are marked `(optional)`; when only optional steps remain, a tertiary `Skip to review` sits beside Back. `Save draft` in the header for wizards of 5+ steps.",
+  "usage": "Use for a long task that breaks into 3+ ordered steps where later choices depend on earlier ones, or first-time setup that needs guidance (AutoSync setup, creating a Task, connection setup). Don't use for fewer than 3 steps (single form), non-linear editing (form sections with Save), or simple data entry. Always end with a Review step listing every input as label/value pairs grouped by step with `Edit` links. The final primary names the result (`Create task`, `Start sync`) — never Finish or Submit. Wizard title is verb + object; step labels are 1–2 word nouns; the last step is labelled Review.",
+  "behaviors": "`Next` validates the current step and stays disabled until it does — never auto-advance. `Back` keeps all values and is disabled on the first step; going back never resets later steps. Clicking a completed step returns to it (hover: dot to Blue-700, plus Grey-100 row fill on the vertical rail; focus: `--shadow-focus-ring` on the whole step); jumping forward over uncompleted steps is not allowed. Cancel or close with unsaved input asks to confirm. `Save draft` persists 14 days and resumes at the last completed step. Long-running submits show a progress bar and status message in the body with the footer disabled; completion shows a success or error message with one primary action and Close, and errors keep the input with `Back to review`. The indicator is a `nav` labelled `Steps`; completed steps are buttons; on step change focus moves to the new step title; validation errors move focus to the first invalid field."
 }
 </script>
 </head>
 <body>
   <div class="card">
-    <div class="row-label"><span class="name">Wizard / multi-step flow</span><span class="meta">horizontal indicator · vertical indicator · footer nav</span></div>
+    <div class="row-label"><span class="name">Wizard / multi-step flow</span><span class="meta">guided flow · vertical step rail · footer nav</span></div>
 
-    <div>
-      <div class="section-h">Horizontal step indicator <span class="meta">3–5 sequential steps · modal/page wizard</span></div>
+    <!-- ─── 1 · ELEMENTS ──────────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Elements</h2>
+        <p class="sec__sub">A guided flow that breaks one complex task into ordered steps.</p>
+      </header>
+      <div class="wiz">
+        <div class="wiz__head">
+          <h3><span class="pin" aria-hidden="true">1</span>Configure pipeline task <small>· hourly-orders-rollup</small></h3>
+          <button class="wiz__close" aria-label="Close"><i data-lucide="x"></i></button>
+        </div>
+        <div class="vstep">
+          <nav class="vstep__rail" aria-label="Steps">
+            <span class="pin pin--rail" aria-hidden="true">2</span>
+            <button type="button" class="vrow done"><span class="vrow__dot"><i data-lucide="check"></i></span><span class="vrow__lbl">Choose pipeline<small>hourly-orders-rollup</small></span><span class="pin pin--float" aria-hidden="true">3</span></button>
+            <button type="button" class="vrow done"><span class="vrow__dot"><i data-lucide="check"></i></span><span class="vrow__lbl">Snaplex<small>prod-us-west-2</small></span></button>
+            <div class="vrow cur" aria-current="step"><span class="vrow__dot">3</span><span class="vrow__lbl">Schedule<small>Cron or trigger</small></span><span class="pin pin--float" aria-hidden="true">4</span></div>
+            <div class="vrow" aria-disabled="true"><span class="vrow__dot">4</span><span class="vrow__lbl">Parameters<small>Runtime overrides</small></span><span class="pin pin--float" aria-hidden="true">5</span></div>
+            <div class="vrow" aria-disabled="true"><span class="vrow__dot">5</span><span class="vrow__lbl">Notifications<small>Email · webhook</small></span></div>
+            <div class="vrow" aria-disabled="true"><span class="vrow__dot">6</span><span class="vrow__lbl">Review<small>Confirm and create</small></span></div>
+          </nav>
+          <div class="vstep__pane">
+            <h4><span class="pin" aria-hidden="true">6</span>When should this task run?</h4>
+            <p>Use a cron expression, or trigger it from another pipeline.</p>
+            <div class="field">
+              <label><span class="pin" aria-hidden="true">7</span>Cron expression</label>
+              <input value="0 * * * *" />
+              <span class="hint">Every hour, on the hour, UTC.</span>
+            </div>
+          </div>
+        </div>
+        <div class="wiz__foot">
+          <span class="pin" aria-hidden="true">8</span>
+          <button class="btn btn--ghost">Cancel</button>
+          <span class="spacer"></span>
+          <button class="btn btn--secondary"><i data-lucide="chevron-left"></i>Back</button>
+          <button class="btn btn--primary">Next<i data-lucide="chevron-right"></i></button>
+        </div>
+      </div>
+      <ol class="legend">
+        <li><span class="pin">1</span><span><b>Header</b> — action-led title (<i>Configure pipeline task</i>) with optional context, plus close <code>×</code>.</span></li>
+        <li><span class="pin">5</span><span><b>Upcoming step</b> — grey, numbered, not clickable. <code>aria-disabled</code>, never removed.</span></li>
+        <li><span class="pin">2</span><span><b>Step rail</b> — 240px, every step in order, down the left side.</span></li>
+        <li><span class="pin">6</span><span><b>Step title</b> — a question or instruction that expands the step label. Unique per step.</span></li>
+        <li><span class="pin">3</span><span><b>Completed step</b> — Blue 600 with a check. Click to go back.</span></li>
+        <li><span class="pin">7</span><span><b>Body</b> — the step's fields, right of the rail. Scrolls; header and footer stay fixed.</span></li>
+        <li><span class="pin">4</span><span><b>Current step</b> — ringed dot, Blue 50 row, Blue 900 label, <code>aria-current="step"</code>.</span></li>
+        <li><span class="pin">8</span><span><b>Footer</b> — <b>Cancel</b> (ghost, left) · <b>Back</b> / <b>Next</b> (right). One primary button.</span></li>
+      </ol>
+      <div class="sub-h">Specs</div>
+      <dl class="spec">
+        <dt>vertical rail</dt><dd><b>Default.</b> 240px rail, 22px dots, 14px white check (stroke 3). Upcoming: white, 1.5px <code>Grey 400</code> border. Current: 2px <code>Blue 600</code> ring. Completed: <code>Blue 600</code> fill. Current row: <code>Blue 50</code> fill. Connector centered on the dots.</dd>
+        <dt>horizontal</dt><dd>Exception only. 24px dots, 2px connectors. Upcoming: white, 1.5px <code>Grey 400</code> border. Current: white, 2px <code>Blue 600</code> ring, Blue 600 numeral. Completed: <code>Blue 600</code> fill, 16px white check (stroke 3). Connectors behind completed steps turn Blue 600.</dd>
+        <dt>labels</dt><dd>13/20 ExtraBold; optional 11px regular sub-label.</dd>
+        <dt>hover</dt><dd>Completed steps only: dot to <code>Blue 700</code>; vertical rows also get a <code>Grey 100</code> fill.</dd>
+        <dt>focus</dt><dd><code>--shadow-focus-ring</code> on the whole step.</dd>
+        <dt>footer icons</dt><dd>16px chevrons, pulled 6px into the outer padding so the icon side matches the text side.</dd>
+      </dl>
+    </section>
+
+    <!-- ─── 2 · USAGE ─────────────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Usage</h2>
+      </header>
+      <div class="pair">
+        <div class="panel panel--do">
+          <div class="panel__h"><i data-lucide="check-circle-2"></i>When to use</div>
+          <ul>
+            <li>A long task that breaks into <b>3 or more</b> ordered steps</li>
+            <li>Later choices depend on earlier ones</li>
+            <li>First-time setup where users need guidance</li>
+          </ul>
+          <div class="panel__meta">AutoSync setup · creating a Task · connection setup · first-time org config</div>
+        </div>
+        <div class="panel panel--dont">
+          <div class="panel__h"><i data-lucide="x-circle"></i>When not to use</div>
+          <ul>
+            <li><b>Fewer than 3 steps</b> — use a single form</li>
+            <li><b>Non-linear</b> editing, where users jump around — use form sections with Save</li>
+            <li>Simple data entry that fits on one screen</li>
+          </ul>
+          <div class="panel__meta">Editing an existing object is almost never a wizard.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 3 · VARIATIONS ────────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Variations</h2>
+        <p class="sec__sub">The vertical rail is the default in both containers. Pick the container by length.</p>
+      </header>
+      <div class="pair">
+        <div class="panel">
+          <div class="panel__h">Modal wizard</div>
+          <p>Opens in a large Modal. Keeps the user on one task until they finish or cancel.</p>
+          <ul>
+            <li>Shorter flows, a few fields per step</li>
+            <li>Vertical rail inside the modal</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel__h">In-page wizard</div>
+          <p>Fills the page content area. Title and description go in the page header.</p>
+          <ul>
+            <li>Longer flows, or steps with substantial content</li>
+            <li>Leaving the page asks to confirm unsaved input</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-h">Exception: horizontal indicator</div>
+      <p class="sec__sub" style="margin-top: -8px;">Only when a modal is too narrow for a 240px rail, and only for 3–5 steps. Same three step states and interactions as the rail.</p>
       <div class="wiz">
         <div class="wiz__head">
           <h3>Set up AutoSync <small>· Salesforce → Snowflake</small></h3>
           <button class="wiz__close" aria-label="Close"><i data-lucide="x"></i></button>
         </div>
-        <div class="wiz__steps">
-          <div class="step step--done"><span class="step__dot"><i data-lucide="check"></i></span><span class="step__label">Source<small>Salesforce</small></span></div>
+        <nav class="wiz__steps" aria-label="Steps">
+          <button type="button" class="step step--done"><span class="step__dot"><i data-lucide="check"></i></span><span class="step__label">Source<small>Salesforce</small></span></button>
           <span class="step__connector"></span>
-          <div class="step step--done"><span class="step__dot"><i data-lucide="check"></i></span><span class="step__label">Destination<small>Snowflake</small></span></div>
+          <button type="button" class="step step--done"><span class="step__dot"><i data-lucide="check"></i></span><span class="step__label">Destination<small>Snowflake</small></span></button>
           <span class="step__connector"></span>
-          <div class="step step--current"><span class="step__dot with-num">3</span><span class="step__label">Schedule<small>How often</small></span></div>
+          <div class="step step--current" aria-current="step"><span class="step__dot with-num">3</span><span class="step__label">Schedule<small>How often</small></span></div>
           <span class="step__connector"></span>
-          <div class="step"><span class="step__dot">4</span><span class="step__label">Review<small>Confirm</small></span></div>
-        </div>
+          <div class="step" aria-disabled="true"><span class="step__dot">4</span><span class="step__label">Review<small>Confirm</small></span></div>
+        </nav>
         <div class="wiz__body">
           <h4>How often should this sync run?</h4>
           <p>You can change this later from the AutoSync detail page.</p>
@@ -234,55 +406,97 @@
           <button class="btn btn--primary">Next<i data-lucide="chevron-right"></i></button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="divider"></div>
-
-    <div>
-      <div class="section-h">Vertical step indicator <span class="meta">7+ steps · branching · review-able sections</span></div>
-      <div class="wiz">
-        <div class="wiz__head">
-          <h3>Configure pipeline task <small>· hourly-orders-rollup</small></h3>
-          <button class="wiz__close" aria-label="Close"><i data-lucide="x"></i></button>
+    <!-- ─── 4 · BEHAVIOR ──────────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Behavior</h2>
+      </header>
+      <div class="pair">
+        <div class="panel">
+          <div class="sub-h">Moving through steps</div>
+          <ul class="rules">
+            <li><b>Next</b> validates the step and stays disabled until it's valid. Never auto-advance.</li>
+            <li><b>Back</b> keeps every value. It's disabled on the first step.</li>
+            <li>Going back never resets later steps.</li>
+          </ul>
         </div>
-        <div class="vstep">
-          <div class="vstep__rail">
-            <div class="vrow done"><span class="vrow__dot"><i data-lucide="check"></i></span><span class="vrow__lbl">Choose pipeline<small>hourly-orders-rollup</small></span></div>
-            <div class="vrow done"><span class="vrow__dot"><i data-lucide="check"></i></span><span class="vrow__lbl">Snaplex<small>prod-us-west-2</small></span></div>
-            <div class="vrow cur"><span class="vrow__dot">3</span><span class="vrow__lbl">Schedule<small>Cron or trigger</small></span></div>
-            <div class="vrow"><span class="vrow__dot">4</span><span class="vrow__lbl">Parameters<small>Runtime overrides</small></span></div>
-            <div class="vrow"><span class="vrow__dot">5</span><span class="vrow__lbl">Notifications<small>Email · webhook</small></span></div>
-            <div class="vrow"><span class="vrow__dot">6</span><span class="vrow__lbl">Review<small>Confirm and create</small></span></div>
-          </div>
-          <div class="vstep__pane">
-            <h4>Schedule</h4>
-            <p>When should this task run?</p>
-            <div class="field">
-              <label>Cron expression</label>
-              <input value="0 * * * *" />
-              <span class="hint">Every hour, on the hour, UTC.</span>
-            </div>
-          </div>
+        <div class="panel">
+          <div class="sub-h">Jumping between steps</div>
+          <ul class="rules">
+            <li>Click a <b>completed</b> step to return to it.</li>
+            <li>Can't skip forward over uncompleted steps.</li>
+            <li>Hover deepens the dot to Blue 700; keyboard focus shows <code>--shadow-focus-ring</code>.</li>
+          </ul>
         </div>
-        <div class="wiz__foot">
-          <button class="btn btn--ghost">Cancel</button>
-          <span class="spacer"></span>
-          <button class="btn btn--secondary"><i data-lucide="chevron-left"></i>Back</button>
-          <button class="btn btn--primary">Next<i data-lucide="chevron-right"></i></button>
+        <div class="panel">
+          <div class="sub-h">Leaving</div>
+          <ul class="rules">
+            <li><b>Cancel</b> or <code>×</code> with unsaved input asks to confirm before discarding.</li>
+            <li>Wizards of <b>5+ steps</b> offer <b>Save draft</b> in the header. Drafts last 14 days and reopen at the last completed step.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="sub-h">Optional steps</div>
+          <ul class="rules">
+            <li>Mark them <i>(optional)</i> in the step label.</li>
+            <li>When only optional steps remain, add a tertiary <b>Skip to review</b> button beside Back.</li>
+          </ul>
         </div>
       </div>
-    </div>
+    </section>
 
-    <dl class="spec">
-      <dt>when to use</dt><dd>Long sequential tasks: AutoSync setup · creating a Task · connection setup · first-time org config. Don't use a wizard for &lt;3 steps — a single form is fine. Don't use for non-linear flows — use sections + save.</dd>
-      <dt>horizontal</dt><dd>3–5 steps. Each step has a short label and a one-line sublabel. Done steps fill blue with a check; current uses a ringed dot; future is grey. Connectors fill blue as you progress.</dd>
-      <dt>vertical</dt><dd>≥6 steps, or steps with substantive content. Rail on the left with the current pane on the right. Active step has a <code>Blue 50</code> background. Connectors are vertical lines between dots.</dd>
-      <dt>nav</dt><dd>Footer always shows <b>Cancel</b> (ghost, left) and <b>Back / Next</b> (right). Final step's primary turns into "Create" / "Start sync" — verb-led. Disable Next until current step validates. Don't auto-advance.</dd>
-      <dt>jumping</dt><dd>Allow clicking back to a <b>completed</b> step (badge shows check). Don't allow jumping forward over uncompleted steps. Don't reset downstream state when going back — preserve user input.</dd>
-      <dt>review step</dt><dd>Always end with a Review step listing all inputs as label/value pairs and a "Create" CTA. Each section has an inline <b>"Edit"</b> link that jumps back to that step.</dd>
-      <dt>save & exit</dt><dd>Long wizards (5+ steps) include a "Save draft" option in the header. Draft persists for 14 days. Reopening resumes at the last completed step.</dd>
-      <dt>a11y</dt><dd>Step indicator is <code>&lt;nav aria-label="Steps"&gt;</code> with each step having <code>aria-current="step"</code> when current. Disabled forward steps are <code>aria-disabled</code>, not removed.</dd>
-    </dl>
+    <!-- ─── 5 · REVIEW & COMPLETION ───────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Review and completion</h2>
+        <p class="sec__sub">Every wizard ends on a Review step.</p>
+      </header>
+      <div class="review">
+        <div class="review__sec">
+          <header>Source <a href="#">Edit</a></header>
+          <dl><dt>Application</dt><dd>Salesforce</dd><dt>Objects</dt><dd>Account, Opportunity</dd></dl>
+        </div>
+        <div class="review__sec">
+          <header>Schedule <a href="#">Edit</a></header>
+          <dl><dt>Frequency</dt><dd>Every 15 minutes</dd><dt>Start time</dt><dd>2026-05-20 02:00 UTC</dd></dl>
+        </div>
+      </div>
+      <ul class="rules">
+        <li><b>Review</b> lists every input as label/value pairs, grouped by step, each group with an <b>Edit</b> link back to that step.</li>
+        <li>The final primary button names the result: <b>Create task</b>, <b>Start sync</b> — never "Finish" or "Submit".</li>
+        <li><b>Long-running submit:</b> the body shows a progress bar and a short status message; footer buttons disable.</li>
+        <li><b>Done:</b> the body shows a success or error message with one primary action (<i>View AutoSync</i>) and <b>Close</b>. On error, keep the user's input and offer <b>Back to review</b>.</li>
+      </ul>
+    </section>
+
+    <!-- ─── 6 · CONTENT ───────────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Content</h2>
+      </header>
+      <ul class="rules">
+        <li><b>Wizard title:</b> verb + object — <i>Set up AutoSync</i>, <i>Create task</i>.</li>
+        <li><b>Step labels:</b> 1–2 words, sentence case, nouns (<i>Source</i>, <i>Schedule</i>). Optional sub-label shows the choice made or a hint.</li>
+        <li><b>Step titles:</b> expand the label as a question or instruction — <i>How often should this sync run?</i></li>
+        <li>The last step is always labelled <b>Review</b>.</li>
+      </ul>
+    </section>
+
+    <!-- ─── 7 · ACCESSIBILITY ─────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Accessibility</h2>
+      </header>
+      <ul class="rules">
+        <li>The step rail is <code>&lt;nav aria-label="Steps"&gt;</code>. The current step has <code>aria-current="step"</code>; locked steps are <code>aria-disabled</code>, never removed.</li>
+        <li>Completed steps are <code>&lt;button&gt;</code>s.</li>
+        <li>On step change, move focus to the new step title.</li>
+        <li>Validation errors are announced and focus moves to the first invalid field.</li>
+      </ul>
+    </section>
+
   </div>
   <script>lucide.createIcons();</script>
 </body>
