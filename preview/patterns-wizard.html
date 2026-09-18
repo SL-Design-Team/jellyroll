@@ -86,6 +86,7 @@
   .btn--ghost { background: transparent; color: var(--color-text-body); border-color: transparent; }
   .btn--ghost:hover { background: var(--sl-grey-100); }
   .btn:disabled { background: var(--sl-blue-200); color: var(--sl-white); border-color: var(--sl-blue-200); cursor: not-allowed; }
+  .btn--secondary:disabled { background: var(--sl-white); color: var(--sl-blue-300); border-color: var(--sl-blue-200); }
   .btn svg { width: 16px; height: 16px; flex: none; }
   /* Chevron glyph is 4px wide in a 16px box — pull the 6px of empty box
      into the outer padding so the edge optically matches the text side (18px). */
@@ -161,6 +162,7 @@
     margin-right: 8px; vertical-align: middle;
   }
   /* On the rail, pins float at the row's right edge so dots and connectors stay aligned */
+  .pin[hidden] { display: none; }
   .pin--float { position: absolute; right: 8px; top: 50%; margin: -9px 0 0; }
   .vstep__rail { position: relative; }
   .pin--rail { position: absolute; top: -14px; right: -9px; margin: 0; }
@@ -181,8 +183,16 @@
   .rules b, .panel ul b { color: var(--color-text-body); }
   .panel__meta { margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--sl-grey-200); font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
 
-  /* Review step mock */
-  .review { display: flex; flex-direction: column; gap: 12px; max-width: 520px; }
+  .vrow[aria-disabled="true"] { cursor: default; }
+  .vrow.visited:hover { background: var(--sl-grey-100); }
+  .vrow.visited:focus-visible { outline: none; box-shadow: var(--shadow-focus-ring); }
+  .vstep__pane { min-height: 360px; }
+  .vstep__pane h4 { display: flex; align-items: center; }
+  .vstep__pane h4:focus { outline: none; }  /* programmatic focus target on step change */
+  .field label { display: flex; align-items: center; }
+
+  /* Review step (rendered by the live demo) */
+  .review { display: flex; flex-direction: column; gap: 12px; }
   .review__sec { border: 1px solid var(--sl-grey-300); border-radius: var(--radius-sm); }
   .review__sec header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--sl-grey-200); font: 800 13px/20px var(--font-sans); color: var(--color-text-heading); }
   .review__sec header a { font: 800 13px/20px var(--font-sans); color: var(--sl-blue-600); text-decoration: none; }
@@ -205,7 +215,7 @@
   "anatomy": "Eight elements: (1) header with an action-led title and close `×` · (2) 240px vertical step rail · (3) completed step — Blue-600 fill with a 16px white check, clickable · (4) current step — white with a 2px Blue-600 ring, `aria-current=\"step\"` · (5) upcoming step — white with a 1.5px Grey-400 border, `aria-disabled` · (6) step title — a question or instruction expanding the label · (7) scrolling body · (8) footer with `Cancel` (ghost, left) and `Back` / `Next` (right), one primary. Rail: 22px dots with a 14px check, Blue-50 current row, connectors that turn Blue-600 behind completed steps. Labels 13/20 ExtraBold with an optional 11px sub-label.",
   "options": "Every wizard uses the vertical step rail. Modal wizard for shorter flows, or in-page wizard for longer flows and steps with substantial content (title in the page header). Optional steps are marked `(optional)`; when only optional steps remain, a tertiary `Skip to review` sits beside Back. `Save draft` in the header for wizards of 5+ steps.",
   "usage": "Use for a long task that breaks into 3+ ordered steps where later choices depend on earlier ones, or first-time setup that needs guidance (AutoSync setup, creating a Task, connection setup). Don't use for fewer than 3 steps (single form), non-linear editing (form sections with Save), or simple data entry. Always end with a Review step listing every input as label/value pairs grouped by step with `Edit` links. The final primary names the result (`Create task`, `Start sync`) — never Finish or Submit. Wizard title is verb + object; step labels are 1–2 word nouns; the last step is labelled Review.",
-  "behaviors": "`Next` validates the current step and stays disabled until it does — never auto-advance. `Back` keeps all values and is disabled on the first step; going back never resets later steps. Clicking a completed step returns to it (hover: dot to Blue-700, plus Grey-100 row fill on the vertical rail; focus: `--shadow-focus-ring` on the whole step); jumping forward over uncompleted steps is not allowed. Cancel or close with unsaved input asks to confirm. `Save draft` persists 14 days and resumes at the last completed step. Long-running submits show a progress bar and status message in the body with the footer disabled; completion shows a success or error message with one primary action and Close, and errors keep the input with `Back to review`. The indicator is a `nav` labelled `Steps`; completed steps are buttons; on step change focus moves to the new step title; validation errors move focus to the first invalid field."
+  "behaviors": "`Next` validates the current step and stays disabled until it does — never auto-advance. `Back` keeps all values and is disabled on the first step; going back never resets later steps. Clicking a completed step returns to it (hover: dot to Blue-700, plus Grey-100 row fill on the vertical rail; focus: `--shadow-focus-ring` on the whole step); going back keeps later steps completed so the user can jump straight back; jumping forward to a step not yet reached is not allowed. Cancel or close with unsaved input asks to confirm. `Save draft` persists 14 days and resumes at the last completed step. Long-running submits show a progress bar and status message in the body with the footer disabled; completion shows a success or error message with one primary action and Close, and errors keep the input with `Back to review`. The indicator is a `nav` labelled `Steps`; completed steps are buttons; on step change focus moves to the new step title; validation errors move focus to the first invalid field."
 }
 </script>
 </head>
@@ -219,7 +229,7 @@
         <h2 class="sec__h">Elements</h2>
         <p class="sec__sub">A guided flow that breaks one complex task into ordered steps.</p>
       </header>
-      <div class="wiz">
+      <div class="wiz" id="wiz-live">
         <div class="wiz__head">
           <h3><span class="pin" aria-hidden="true">1</span>Configure pipeline task <small>· hourly-orders-rollup</small></h3>
           <button class="wiz__close" aria-label="Close"><i data-lucide="x"></i></button>
@@ -248,10 +258,11 @@
           <span class="pin" aria-hidden="true">8</span>
           <button class="btn btn--ghost">Cancel</button>
           <span class="spacer"></span>
-          <button class="btn btn--secondary"><i data-lucide="chevron-left"></i>Back</button>
-          <button class="btn btn--primary">Next<i data-lucide="chevron-right"></i></button>
+          <button class="btn btn--secondary" data-wiz="back"><i data-lucide="chevron-left"></i>Back</button>
+          <button class="btn btn--primary" data-wiz="next"><span>Next</span><i data-lucide="chevron-right"></i></button>
         </div>
       </div>
+      <p class="sec__sub">Live demo — use <b>Back</b>, <b>Next</b>, or a completed step to move through it, and continue to <b>Review</b> to see the final step.</p>
       <ol class="legend">
         <li><span class="pin">1</span><span><b>Header</b> — action-led title (<i>Configure pipeline task</i>) with optional context, plus close <code>×</code>.</span></li>
         <li><span class="pin">5</span><span><b>Upcoming step</b> — grey, numbered, not clickable. <code>aria-disabled</code>, never removed.</span></li>
@@ -342,8 +353,8 @@
         <div class="panel">
           <div class="sub-h">Jumping between steps</div>
           <ul class="rules">
-            <li>Click a <b>completed</b> step to return to it.</li>
-            <li>Can't skip forward over uncompleted steps.</li>
+            <li>Click a <b>completed</b> step to return to it. Going back keeps later steps completed, so the user can jump straight back to where they were.</li>
+            <li>Can't skip forward to a step they haven't reached.</li>
             <li>Hover deepens the dot to Blue 700; keyboard focus shows <code>--shadow-focus-ring</code>.</li>
           </ul>
         </div>
@@ -368,18 +379,8 @@
     <section class="sec">
       <header class="sec__head">
         <h2 class="sec__h">Review and completion</h2>
-        <p class="sec__sub">Every wizard ends on a Review step.</p>
+        <p class="sec__sub">Every wizard ends on a Review step — step through the demo in Elements to see it.</p>
       </header>
-      <div class="review">
-        <div class="review__sec">
-          <header>Source <a href="#">Edit</a></header>
-          <dl><dt>Application</dt><dd>Salesforce</dd><dt>Objects</dt><dd>Account, Opportunity</dd></dl>
-        </div>
-        <div class="review__sec">
-          <header>Schedule <a href="#">Edit</a></header>
-          <dl><dt>Frequency</dt><dd>Every 15 minutes</dd><dt>Start time</dt><dd>2026-05-20 02:00 UTC</dd></dl>
-        </div>
-      </div>
       <ul class="rules">
         <li><b>Review</b> lists every input as label/value pairs, grouped by step, each group with an <b>Edit</b> link back to that step.</li>
         <li>The final primary button names the result: <b>Create task</b>, <b>Start sync</b> — never "Finish" or "Submit".</li>
@@ -416,5 +417,133 @@
 
   </div>
   <script>lucide.createIcons();</script>
+
+  <script>
+  /* ── Live wizard ─────────────────────────────────────────────────────────
+     Progressive enhancement: the static markup above (step 3, annotated) is the
+     no-JS fallback and copy-paste reference. This makes it walkable, ending on
+     the Review step, and keeps the numbered callouts on the right elements. */
+  (function () {
+    // index.html renders previews in a Shadow DOM — find the hosting root.
+    function findRoot() {
+      if (document.getElementById('wiz-live')) return document;
+      const stack = Array.from(document.querySelectorAll('*'));
+      while (stack.length) {
+        const el = stack.pop();
+        if (el.shadowRoot) {
+          if (el.shadowRoot.getElementById && el.shadowRoot.getElementById('wiz-live')) return el.shadowRoot;
+          stack.push(...el.shadowRoot.querySelectorAll('*'));
+        }
+      }
+      return null;
+    }
+    const root = findRoot();
+    if (!root) return;
+    const wiz = root.getElementById ? root.getElementById('wiz-live') : root.querySelector('#wiz-live');
+
+    const STEPS = [
+      { label: 'Choose pipeline', title: 'Which pipeline should this task run?', lead: 'Pick a pipeline from this project.',
+        fields: [{ id: 'pipeline', label: 'Pipeline', value: 'hourly-orders-rollup', hint: 'Only pipelines you can execute are listed.' }] },
+      { label: 'Snaplex', title: 'Where should it run?', lead: 'Choose the Snaplex that executes the task.',
+        fields: [{ id: 'snaplex', label: 'Snaplex', value: 'prod-us-west-2' }] },
+      { label: 'Schedule', title: 'When should this task run?', lead: 'Use a cron expression, or trigger it from another pipeline.',
+        fields: [{ id: 'cron', label: 'Cron expression', value: '0 * * * *', hint: 'Every hour, on the hour, UTC.' }] },
+      { label: 'Parameters', title: 'Override any runtime parameters?', lead: 'Leave a value blank to use the pipeline default.',
+        fields: [{ id: 'batch', label: 'batch_size', value: '500' }] },
+      { label: 'Notifications', title: 'Who should hear about failures?', lead: 'We email this address when a run fails.',
+        fields: [{ id: 'email', label: 'Email', value: 'data-ops@example.com' }] },
+      { label: 'Review', title: 'Review and create', lead: 'Check everything before you create the task.', review: true },
+    ];
+    const values = {};
+    STEPS.forEach(s => (s.fields || []).forEach(f => { values[f.id] = f.value; }));
+
+    const rows = Array.from(wiz.querySelectorAll('.vrow'));
+    const pane = wiz.querySelector('.vstep__pane');
+    const backBtn = wiz.querySelector('[data-wiz="back"]');
+    const nextBtn = wiz.querySelector('[data-wiz="next"]');
+    const nextLabel = nextBtn.querySelector('span');
+    const nextIcon = nextBtn.querySelector('svg');
+    const checkSvg = wiz.querySelector('.vrow.done .vrow__dot svg');
+    const pin = n => Array.from(wiz.querySelectorAll('.pin')).find(p => p.textContent === String(n));
+    const pins = { 3: pin(3), 4: pin(4), 5: pin(5), 6: pin(6), 7: pin(7) };
+    let cur = 2;
+    let furthest = 2;  // steps already reached stay reachable after going back
+
+    // Rows become buttons so completed ones are focusable; locked ones are aria-disabled.
+    rows.forEach((row, i) => {
+      if (row.tagName !== 'BUTTON') {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = row.className;
+        while (row.firstChild) b.appendChild(row.firstChild);
+        row.replaceWith(b); rows[i] = b;
+      }
+      rows[i].addEventListener('click', () => { if (i <= furthest && i !== cur) go(i); });
+    });
+
+    const esc = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    function paintRail() {
+      rows.forEach((row, i) => {
+        row.classList.toggle('done', i < furthest && i !== cur);
+        row.classList.toggle('visited', i === furthest && i !== cur);
+        row.classList.toggle('cur', i === cur);
+        if (i === cur) row.setAttribute('aria-current', 'step'); else row.removeAttribute('aria-current');
+        if (i > furthest) row.setAttribute('aria-disabled', 'true'); else row.removeAttribute('aria-disabled');
+        const dot = row.querySelector('.vrow__dot');
+        dot.textContent = '';
+        if (i < furthest && i !== cur && checkSvg) dot.appendChild(checkSvg.cloneNode(true)); else dot.textContent = String(i + 1);
+      });
+      place(pins[3], rows.find((r, i) => i < furthest && i !== cur));
+      place(pins[4], rows[cur]);
+      place(pins[5], rows.find((r, i) => i > furthest));
+    }
+    function place(p, host) {
+      if (!p) return;
+      if (host) { host.appendChild(p); p.hidden = false; } else { p.hidden = true; }
+    }
+
+    function paintPane() {
+      const step = STEPS[cur];
+      let body = '';
+      if (step.review) {
+        body = '<div class="review">' + STEPS.filter(s => !s.review).map((s, i) =>
+          '<div class="review__sec"><header><span>' + esc(s.label) + '</span><a href="#" data-edit="' + i + '">Edit</a></header><dl>' +
+          s.fields.map(f => '<dt>' + esc(f.label) + '</dt><dd>' + esc(values[f.id]) + '</dd>').join('') +
+          '</dl></div>').join('') + '</div>';
+      } else {
+        body = step.fields.map(f =>
+          '<div class="field"><label for="wf-' + f.id + '">' + esc(f.label) + '</label>' +
+          '<input id="wf-' + f.id + '" data-field="' + f.id + '" value="' + esc(values[f.id]) + '" />' +
+          (f.hint ? '<span class="hint">' + esc(f.hint) + '</span>' : '') + '</div>').join('');
+      }
+      pane.innerHTML = '<h4 tabindex="-1">' + esc(step.title) + '</h4><p>' + esc(step.lead) + '</p>' + body;
+      pane.querySelectorAll('[data-field]').forEach(inp => inp.addEventListener('input', () => { values[inp.dataset.field] = inp.value; }));
+      pane.querySelectorAll('[data-edit]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); go(+a.dataset.edit); }));
+      const h = pane.querySelector('h4');
+      h.prepend(pins[6]);
+      const second = pane.querySelector('.field label, .review__sec header span');
+      if (second) second.prepend(pins[7]);
+    }
+
+    function paintFoot() {
+      backBtn.disabled = cur === 0;
+      const last = STEPS[cur].review;
+      nextLabel.textContent = last ? 'Create task' : 'Next';
+      if (nextIcon) nextIcon.style.display = last ? 'none' : '';
+    }
+
+    function go(i, focus = true) {
+      cur = Math.max(0, Math.min(STEPS.length - 1, i));
+      furthest = Math.max(furthest, cur);
+      paintRail(); paintPane(); paintFoot();
+      if (focus) pane.querySelector('h4').focus({ preventScroll: true });
+    }
+
+    backBtn.addEventListener('click', () => go(cur - 1));
+    nextBtn.addEventListener('click', () => { if (!STEPS[cur].review) go(cur + 1); });
+    go(cur, false);
+  })();
+  </script>
 </body>
 </html>
