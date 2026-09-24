@@ -9,6 +9,11 @@
   .grid { display: grid; grid-template-columns: 110px 1fr; gap: 14px 20px; align-items: center; }
   .tag { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
   .sect { font: 800 11px/16px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-heading); margin-top: 20px; padding-bottom: 6px; border-bottom: 1px solid var(--sl-grey-300); }
+  .sect-note { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); margin: 0 0 4px; }
+  .sect-note code { font: 400 11px/18px var(--font-mono); color: var(--color-text-body); }
+  /* Second line on a state tag, for the three states that can only be
+     shown as a static render. */
+  .tag em { display: block; font: 400 9px/12px var(--font-mono); font-style: normal; text-transform: none; letter-spacing: 0; opacity: 0.7; }
 
   /* ── Static state gallery ───────────────────────────────────── */
   .sl-wrap { position: relative; height: 28px; }
@@ -187,84 +192,73 @@
     <div class="row-label"><span class="name">Slider</span><span class="meta">16px thumb · 3px track</span></div>
 
     <div class="sect">States</div>
+    <p class="sect-note">Every state below is a live <code>input[type=range]</code> except hover, focus, and pressed — those can't be frozen on a working control, so they're shown as static renders of the same treatment.</p>
     <div class="grid">
       <span class="tag">Default</span>
       <div>
-        <div class="sl-wrap">
-          <div class="sl-track"></div>
-          <div class="sl-fill" style="width: 30%"></div>
-          <div class="sl-thumb" style="left: 30%"></div>
-        </div>
-        <div class="scale-labels"><span>0</span><span>90</span></div>
+        <div class="sl-range-wrap"><input class="sl-range" type="range" min="0" max="100" value="30" style="--pct: 30%" aria-label="Default state example" /></div>
+        <div class="scale-labels"><span>0</span><span>100</span></div>
       </div>
-      <span class="tag">Hover</span>
+
+      <span class="tag">Hover<em>static</em></span>
       <div>
         <div class="sl-wrap">
           <div class="sl-track"></div>
           <div class="sl-fill" style="width: 40%"></div>
           <div class="sl-thumb hover" style="left: 40%"></div>
         </div>
-        <div class="scale-labels"><span>0</span><span>90</span></div>
+        <div class="scale-labels"><span>0</span><span>100</span></div>
       </div>
-      <span class="tag">Focus</span>
+
+      <span class="tag">Focus<em>static</em></span>
       <div>
         <div class="sl-wrap">
           <div class="sl-track"></div>
           <div class="sl-fill" style="width: 35%"></div>
           <div class="sl-thumb focus" style="left: 35%"></div>
         </div>
-        <div class="scale-labels"><span>0</span><span>90</span></div>
+        <div class="scale-labels"><span>0</span><span>100</span></div>
       </div>
-      <span class="tag">Pressed</span>
+
+      <span class="tag">Pressed<em>static</em></span>
       <div>
         <div class="sl-wrap">
           <div class="sl-track"></div>
           <div class="sl-fill" style="width: 32%"></div>
           <div class="sl-thumb pressed" style="left: 32%"></div>
         </div>
-        <div class="scale-labels"><span>0</span><span>90</span></div>
+        <div class="scale-labels"><span>0</span><span>100</span></div>
       </div>
+
       <span class="tag">Error</span>
       <div>
-        <div class="sl-wrap">
-          <div class="sl-track error"></div>
-          <div class="sl-fill error" style="width: 28%"></div>
-          <div class="sl-thumb error" style="left: 28%"></div>
-        </div>
-        <div class="scale-labels"><span>0</span><span>90</span></div>
+        <div class="sl-range-wrap"><input class="sl-range error" type="range" min="0" max="100" value="92" style="--pct: 92%" aria-label="Error state example" aria-describedby="sl-err-msg" /></div>
+        <div class="scale-labels"><span>0</span><span>100</span></div>
+        <div class="field-help err" id="sl-err-msg">Above 90 requests/second this pipeline will be rate-limited.</div>
       </div>
+
       <span class="tag">Disabled</span>
       <div>
-        <div class="sl-wrap">
-          <div class="sl-track disabled"></div>
-          <div class="sl-fill disabled" style="width: 45%"></div>
-          <div class="sl-thumb disabled" style="left: 45%"></div>
-        </div>
-        <div class="scale-labels"><span>0</span><span>90</span></div>
+        <div class="sl-range-wrap"><input class="sl-range" type="range" min="0" max="100" value="45" style="--pct: 45%" aria-label="Disabled state example" disabled /></div>
+        <div class="scale-labels"><span>0</span><span>100</span></div>
       </div>
+
       <span class="tag">At minimum</span>
       <div>
-        <div class="sl-wrap">
-          <div class="sl-track"></div>
-          <div class="sl-fill" style="width: 0%"></div>
-          <div class="sl-thumb" style="left: 0%"></div>
-        </div>
-        <div class="scale-labels"><span>0</span><span>90</span></div>
+        <div class="sl-range-wrap"><input class="sl-range" type="range" min="0" max="100" value="0" style="--pct: 0%" aria-label="Minimum value example" /></div>
+        <div class="scale-labels"><span>0</span><span>100</span></div>
       </div>
+
       <span class="tag">At maximum</span>
       <div>
-        <div class="sl-wrap">
-          <div class="sl-track"></div>
-          <div class="sl-fill" style="width: 100%"></div>
-          <div class="sl-thumb" style="left: 100%"></div>
-        </div>
-        <div class="scale-labels"><span>0</span><span>90</span></div>
+        <div class="sl-range-wrap"><input class="sl-range" type="range" min="0" max="100" value="100" style="--pct: 100%" aria-label="Maximum value example" /></div>
+        <div class="scale-labels"><span>0</span><span>100</span></div>
       </div>
     </div>
 
-    <div class="sect">Live control — native input</div>
+    <div class="sect">Options</div>
     <div class="grid">
-      <span class="tag">Try it</span>
+      <span class="tag">Full field</span>
       <div class="field-demo">
         <div class="field-label-row">
           <label class="field-label" for="sl-live">Sample rate</label>
@@ -272,11 +266,11 @@
         </div>
         <div class="readout-row">
           <div class="sl-range-wrap">
-            <input class="sl-range" id="sl-live" type="range" min="0" max="100" step="1" value="40" style="--pct: 40%" />
+            <input class="sl-range" id="sl-live" type="range" min="0" max="100" step="1" value="40" style="--pct: 40%" aria-describedby="sl-live-help" />
           </div>
           <span class="readout" id="sl-live-out" aria-hidden="true">40</span>
         </div>
-        <span class="field-help">Drag, or focus the thumb and use the arrow keys.</span>
+        <span class="field-help" id="sl-live-help">Drag, or focus the thumb and use the arrow keys.</span>
       </div>
 
       <span class="tag">Stepped</span>
@@ -293,53 +287,7 @@
         </div>
       </div>
 
-      <span class="tag">Error</span>
-      <div class="field-demo">
-        <div class="field-label-row">
-          <label class="field-label" for="sl-err">Throttle</label>
-          <span class="field-range">0 – 100</span>
-        </div>
-        <div class="readout-row">
-          <div class="sl-range-wrap">
-            <input class="sl-range error" id="sl-err" type="range" min="0" max="100" step="1" value="92"
-                   style="--pct: 92%" aria-describedby="sl-err-msg" />
-          </div>
-          <span class="readout" id="sl-err-out" aria-hidden="true">92</span>
-        </div>
-        <span class="field-help err" id="sl-err-msg">Above 90 requests/second this pipeline will be rate-limited.</span>
-      </div>
-
-      <span class="tag">Disabled</span>
-      <div class="field-demo">
-        <div class="field-label-row">
-          <label class="field-label" for="sl-dis">Concurrency</label>
-          <span class="field-range">0 – 100</span>
-        </div>
-        <div class="readout-row">
-          <div class="sl-range-wrap">
-            <input class="sl-range" id="sl-dis" type="range" min="0" max="100" value="45" style="--pct: 45%" disabled />
-          </div>
-          <span class="readout" id="sl-dis-out" aria-hidden="true" style="color: var(--color-text-subtle)">45</span>
-        </div>
-        <span class="field-help">Set by the plan tier. Contact an admin to change it.</span>
-      </div>
-    </div>
-
-    <div class="sect">Widths</div>
-    <div class="grid">
-      <span class="tag">Small 160</span>
-      <div class="sl-range-wrap w-sm"><input class="sl-range" type="range" min="0" max="100" value="50" style="--pct: 50%" aria-label="Small width example" /></div>
-      <span class="tag">Medium 240</span>
-      <div class="sl-range-wrap w-md"><input class="sl-range" type="range" min="0" max="100" value="50" style="--pct: 50%" aria-label="Medium width example" /></div>
-      <span class="tag">Large 320</span>
-      <div class="sl-range-wrap w-lg"><input class="sl-range" type="range" min="0" max="100" value="50" style="--pct: 50%" aria-label="Large width example" /></div>
-      <span class="tag">Fluid</span>
-      <div class="sl-range-wrap"><input class="sl-range" type="range" min="0" max="100" value="50" style="--pct: 50%" aria-label="Fluid width example" /></div>
-    </div>
-
-    <div class="sect">With number input</div>
-    <div class="grid">
-      <span class="tag">Exact value</span>
+      <span class="tag">Number input</span>
       <div class="field-demo">
         <div class="field-label-row">
           <label class="field-label" for="sl-num">Opacity</label>
@@ -352,6 +300,18 @@
           <div class="num-field"><span class="value" id="sl-num-out">72</span><span class="unit">%</span></div>
         </div>
       </div>
+
+      <span class="tag">Small 160</span>
+      <div class="sl-range-wrap w-sm"><input class="sl-range" type="range" min="0" max="100" value="50" style="--pct: 50%" aria-label="Small width example" /></div>
+
+      <span class="tag">Medium 240</span>
+      <div class="sl-range-wrap w-md"><input class="sl-range" type="range" min="0" max="100" value="50" style="--pct: 50%" aria-label="Medium width example" /></div>
+
+      <span class="tag">Large 320</span>
+      <div class="sl-range-wrap w-lg"><input class="sl-range" type="range" min="0" max="100" value="50" style="--pct: 50%" aria-label="Large width example" /></div>
+
+      <span class="tag">Fluid</span>
+      <div class="sl-range-wrap"><input class="sl-range" type="range" min="0" max="100" value="50" style="--pct: 50%" aria-label="Fluid width example" /></div>
     </div>
     <dl class="spec">
       <dt>markup</dt><dd>Build on a native <b>&lt;input type="range"&gt;</b>. It supplies the keyboard model, the value announcement, and <b>min</b> / <b>max</b> / <b>step</b> for free. Drive the fill from a <b>--pct</b> custom property.</dd>
