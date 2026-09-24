@@ -153,7 +153,6 @@
   .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
   .spec dd { margin: 0; color: var(--color-text-subtle); }
   .spec dd b { color: var(--color-text-body); }
-  .code { font: 400 11px/18px var(--font-mono); color: var(--color-text-body); background: var(--sl-grey-100); border-radius: var(--radius-xs); padding: 12px 14px; white-space: pre; overflow-x: auto; }
 </style>
 <script type="application/json" id="jellyroll-meta">
 {
@@ -354,22 +353,6 @@
         </div>
       </div>
     </div>
-
-    <div class="sect">Markup</div>
-    <div class="code">&lt;div class="field-label-row"&gt;
-  &lt;label class="field-label" for="opacity"&gt;Opacity&lt;/label&gt;
-  &lt;span class="field-range"&gt;0 – 100&lt;/span&gt;
-&lt;/div&gt;
-&lt;div class="readout-row"&gt;
-  &lt;div class="sl-range-wrap"&gt;
-    &lt;input class="sl-range" id="opacity" type="range"
-           min="0" max="100" step="1" value="72"
-           style="--pct: 72%" aria-describedby="opacity-help" /&gt;
-  &lt;/div&gt;
-  &lt;span class="readout" aria-hidden="true"&gt;72&lt;/span&gt;
-&lt;/div&gt;
-&lt;span class="field-help" id="opacity-help"&gt;Applies to the whole layer.&lt;/span&gt;</div>
-
     <dl class="spec">
       <dt>markup</dt><dd>Build on a native <b>&lt;input type="range"&gt;</b>. It supplies the keyboard model, the value announcement, and <b>min</b> / <b>max</b> / <b>step</b> for free. Drive the fill from a <b>--pct</b> custom property.</dd>
       <dt>keyboard</dt><dd>Arrow keys move one <b>step</b>. Page Up/Down moves ten steps. Home/End jump to min/max.</dd>
