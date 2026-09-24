@@ -51,6 +51,15 @@ The `index.html` gallery renders preview files by injecting their `<body>` conte
 - **Primary brand color:** `--sl-blue-600` (#0841B4). Primary hover is the teal→blue gradient in `--color-background-primary-hover` — not a darker blue.
 - **Focus rings:** always `box-shadow: var(--ring-focus)` with `border-color: var(--sl-teal-600)`. Reference the token — never hardcode the rgba value, or it drifts.
 
+## Composition
+
+When one component appears inside another, **use the real component and switch off the parts the host already provides.** Never hand-roll a lookalike to adjust its height, font, or affix treatment — that produces two definitions that drift on the next edit to either one.
+
+- Shared component CSS lives in **`preview/card.css`**, not in a single preview's `<style>`. `.sl-checkbox` and `.sl-number` are there for exactly this reason: one definition, every consumer updates together. Promote a component to `card.css` the moment a second preview needs it.
+- **One value, one increment affordance.** A Number input paired with a Slider omits its stepper — the thumb and arrow keys already do that job. Same logic anywhere two controls would drive the same value.
+- Size fields to the values they can hold. `.sl-number--fit` with `--digits` set to the longest legal value beats a fixed pixel width; a 0–100 range is 3 characters, not 5.
+- Suppress native browser chrome that competes with the system's own (e.g. `type="number"` spin buttons) in the shared definition, so every consumer inherits the fix.
+
 ## Content and visual rules
 
 - **Sentence case everywhere.** Pills/tags = 10px ExtraBold UPPERCASE only.
