@@ -415,9 +415,14 @@
   main {
     padding: 32px 40px 80px;
     min-width: 0;
-    max-width: 1320px; /* content stays comfortable on ultra-wide screens */
+    /* Wide screens: grow to 1680, then center in the space beside the sidebar
+       so the extra width becomes even gutters instead of one empty right side.
+       Long text keeps its own ch-based measure inside. */
+    width: 100%;
+    max-width: 1680px;
+    margin-inline: auto;
   }
-  body[data-view="detail"] main { padding: 0; max-width: 1320px; }
+  body[data-view="detail"] main { padding: 0; max-width: 1440px; }
   @media (max-width: 900px) {
     main { padding: 16px 16px 64px; }
   }
@@ -464,7 +469,10 @@
     gap: 48px;
     align-items: center;
   }
-  @media (max-width: 900px) {
+  /* The hero drops its illustration when the hero itself is narrow — at
+     laptop widths the sidebar leaves it far less room than the viewport implies. */
+  .hero { container: hero / inline-size; }
+  @container hero (max-width: 900px) {
     .hero-grid { grid-template-columns: 1fr; }
     .hero-visual { display: none; }
   }
@@ -764,6 +772,11 @@
     padding: var(--space-8, 32px);
     box-shadow: var(--shadow-raised);
   }
+  /* Layout inside each panel responds to the panel's own width (container
+     queries), not the viewport — the sidebar and page padding make viewport
+     width a poor proxy for the room the steps actually have. */
+  .gs-panel--build   { container: gsbuild / inline-size; }
+  .gs-panel--explore { container: gsexplore / inline-size; }
   .gs-panel--explore {
     background: linear-gradient(180deg, var(--sl-teal-50, #F2F8F8) 0%, var(--sl-white) 40%);
   }
@@ -836,8 +849,12 @@
     margin: 0 0 var(--space-6, 24px);
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* Six peers: 3×2 or 2×3, never a 5+1 orphan. */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-3, 12px);
+  }
+  @container gsexplore (max-width: 760px) {
+    .gs-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   .gs-links a {
     display: flex;
@@ -978,10 +995,10 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 0;
   }
-  @media (max-width: 1180px) {
+  @container gsbuild (max-width: 1000px) {
     .gs-flow { grid-template-columns: repeat(2, 1fr); row-gap: var(--space-8, 32px); }
   }
-  @media (max-width: 720px) {
+  @container gsbuild (max-width: 560px) {
     .gs-flow { grid-template-columns: 1fr; }
   }
 
@@ -995,14 +1012,14 @@
   .gs-flow-step:last-child  { padding-right: 0; }
   /* Column rules — the strongest evenness cue in the row. */
   .gs-flow-step + .gs-flow-step { border-left: 1px solid var(--sl-grey-300, #D7DCE3); }
-  @media (max-width: 1180px) {
+  @container gsbuild (max-width: 1000px) {
     /* Two-up: only the second column in each row keeps a rule, and the first
        column of row two must not inherit one. */
     .gs-flow-step { padding: 0 var(--space-6, 24px); }
     .gs-flow-step:nth-child(odd) { padding-left: 0; border-left: 0; }
     .gs-flow-step:nth-child(even) { padding-right: 0; }
   }
-  @media (max-width: 720px) {
+  @container gsbuild (max-width: 560px) {
     .gs-flow-step { padding: 0; border-left: 0; }
   }
 
@@ -1049,7 +1066,7 @@
   .gs-flow-rail svg { flex: none; width: 15px; height: 15px; stroke-width: 2; }
   /* The last step ends the sequence — the rail runs out but points nowhere. */
   .gs-flow-step:last-child .gs-flow-rail svg { display: none; }
-  @media (max-width: 1180px) {
+  @container gsbuild (max-width: 1000px) {
     .gs-flow-step:nth-child(even) .gs-flow-rail svg { display: none; }
   }
 
@@ -1175,7 +1192,7 @@
     border: 1px solid var(--sl-blue-200, #CED9F0);
     border-radius: var(--radius-md, 6px);
   }
-  @media (max-width: 860px) {
+  @container gsbuild (max-width: 820px) {
     .gs-flow-foot { flex-direction: column; align-items: flex-start; gap: var(--space-4, 16px); }
   }
   .gs-flow-foot .foot-main { flex: 1; min-width: 0; }
@@ -1197,9 +1214,62 @@
   .gs-flow-foot p a:hover { color: var(--color-text-link-hover); text-decoration: underline; }
   .gs-flow-foot p a:focus-visible { outline: none; box-shadow: var(--ring-focus); border-radius: var(--radius-xs); }
   .gs-flow-foot .foot-rule { width: 1px; align-self: stretch; background: var(--sl-blue-200, #CED9F0); flex: none; }
-  @media (max-width: 860px) { .gs-flow-foot .foot-rule { display: none; } }
+  @container gsbuild (max-width: 820px) {
+    .gs-flow-foot .foot-rule { display: none; }
+    .gs-panel--build .gs-flow-foot .foot-help { max-width: none; }
+  }
+  /* Below laptop width the outer Get started card goes flat: the two panels
+     already carry their own chrome, and the nesting costs the steps ~80px. */
+  @media (max-width: 1100px) {
+    .getting-started { padding: 0; border: 0; background: none; box-shadow: none; overflow: visible; margin-bottom: 32px; }
+    .getting-started::before { display: none; }
+  }
+
+  /* ── Get started · phone ──
+     Below 720px every inset is width taken from the content, so the page
+     sheds nesting: the outer Get started card goes flat (the two panels
+     already carry their own chrome) and panel padding tightens. */
+  @media (max-width: 720px) {
+    .hero { padding: 36px 20px 40px; margin-bottom: 24px; }
+    .hero h1 { font-size: 36px; line-height: 42px; }
+    .hero-lead { font-size: 15px; line-height: 24px; }
+    .hero-actions .hero-btn { flex: 1 1 100%; justify-content: center; }
+
+
+    .gs-panel { padding: var(--space-5, 20px) var(--space-4, 16px); }
+    .gs-build-head { margin-bottom: var(--space-6, 24px); }
+    .gs-build-head h4 { font-size: 28px; line-height: 34px; }
+  }
+
+  /* Build steps stacked in one column: order is the reading order, so the
+     step-to-step arrows go and thin rules separate the steps instead. */
+  @container gsbuild (max-width: 560px) {
+    .gs-flow { row-gap: var(--space-6, 24px); }
+    /* Same specificity as the desktop rule so the stacked steps drop the column rules. */
+    .gs-flow-step + .gs-flow-step { border-left: 0; padding-top: var(--space-6, 24px); border-top: 1px solid var(--sl-grey-200, #E5E8EE); }
+    .gs-flow-rail { display: none; }
+    .gs-flow-head { margin-bottom: var(--space-3, 12px); }
+    .gs-flow-n { width: 44px; height: 44px; font-size: 20px; }
+    .gs-flow-foot { margin-top: var(--space-6, 24px); padding: var(--space-4, 16px); }
+  }
+
+  /* Explore in a narrow panel: head stacks, the six peers become a list of
+     compact rows, and the footer items take full rows. */
+  @container gsexplore (max-width: 480px) {
+    .gs-panel-head { flex-direction: column; gap: var(--space-3, 12px); }
+    .gs-panel-head .r-icon { width: 44px; height: 44px; }
+    .gs-links { grid-template-columns: 1fr; }
+    .gs-links a { flex-direction: row; align-items: center; gap: var(--space-3, 12px); padding: var(--space-3, 12px) var(--space-4, 16px); }
+    .gs-links .l-text { flex: 1; }
+    .gs-links .r-chev { margin-top: 0; align-self: center; }
+    .gs-explore-foot .gs-tokenbar { flex-basis: 100%; }
+    .gs-cta { flex: 1 1 100%; justify-content: center; }
+  }
+
   .gs-flow-foot .foot-help {
-    flex: none;
+    /* Shrinkable, so a long help line wraps instead of crushing the main text. */
+    flex: 0 1 auto;
+    max-width: 50%;
     display: flex;
     align-items: center;
     gap: var(--space-3, 12px);
