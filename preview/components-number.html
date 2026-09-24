@@ -12,55 +12,8 @@
   .sl-field__label { font: 800 14px/22px var(--font-sans); color: var(--sl-indigo-900); }
   .sl-field__meta { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
 
-  .sl-number {
-    height: var(--field-height-md);
-    border-radius: var(--field-radius);
-    border: 1px solid var(--field-border-default);
-    background: var(--field-bg-default);
-    display: inline-flex; align-items: stretch;
-    transition: border-color 150ms, box-shadow 150ms;
-    width: 100%;
-  }
-  .sl-number:hover { border-color: var(--field-border-hover); }
-  .sl-number.focus { border-color: var(--field-border-focus); box-shadow: var(--ring-focus); }
-  .sl-number.error { border-color: var(--field-border-error); }
-
-  .sl-number .affix {
-    display: inline-flex; align-items: center;
-    padding: 0 12px;
-    background: var(--sl-grey-100);
-    color: var(--color-text-subtle);
-    font: 400 14px/22px var(--font-sans);
-    flex: none;
-    border-right: 1px solid var(--sl-grey-200);
-  }
-  .sl-number .affix.suffix { border-right: 0; border-left: 1px solid var(--sl-grey-200); }
-  .sl-number input {
-    border: 0; outline: 0; background: transparent;
-    padding: 0 var(--field-padding-x);
-    flex: 1; min-width: 0;
-    font: 400 14px/22px var(--font-mono);
-    color: var(--field-text-default);
-    text-align: right;
-  }
-  .sl-number--left input { text-align: left; }
-
-  .sl-number .stepper {
-    display: flex; flex-direction: column;
-    border-left: 1px solid var(--sl-grey-200);
-    flex: none;
-  }
-  .sl-number .stepper button {
-    width: 24px; height: 50%;
-    border: 0; background: transparent;
-    color: var(--color-text-body);
-    cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    padding: 0;
-  }
-  .sl-number .stepper button:hover { background: var(--sl-grey-100); }
-  .sl-number .stepper button:first-child { border-bottom: 1px solid var(--sl-grey-200); }
-  .sl-number .stepper svg { width: 10px; height: 10px; }
+  /* .sl-number lives in card.css — shared with the Slider's paired-value
+     row so the two can't drift. Only page-local styles below. */
 
   .sl-field__error { color: var(--sl-red-700); display: inline-flex; align-items: center; gap: 4px; }
   .sl-field__error svg { width: 12px; height: 12px; }
