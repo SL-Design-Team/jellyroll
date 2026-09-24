@@ -133,6 +133,13 @@ body {
 }
 .sl-number--left input { text-align: left; }
 
+/* Suppress the browser's own spinner. The component draws its own stepper
+   when it wants one, and the native buttons otherwise sit on top of the
+   value and clip it. */
+.sl-number input::-webkit-outer-spin-button,
+.sl-number input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.sl-number input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
 /* Size the field to the widest value it can actually hold, rather than a
    round guess. Set --digits to the character count of the longest legal
    value, counting the decimal point and any minus sign. The value font is
@@ -140,7 +147,8 @@ body {
 .sl-number--fit { width: auto; }
 .sl-number--fit input {
   flex: none;
-  width: calc(var(--digits, 4) * 1ch + var(--field-padding-x) * 2);
+  /* + 2px leaves room for the caret so the last digit is never clipped. */
+  width: calc(var(--digits, 4) * 1ch + var(--field-padding-x) * 2 + 2px);
 }
 
 .sl-number .stepper {
