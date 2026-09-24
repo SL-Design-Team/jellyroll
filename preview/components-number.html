@@ -130,7 +130,7 @@
 
     <dl class="spec">
       <dt>type</dt><dd><code>type="number"</code> · also set <code>inputmode="numeric"</code> for mobile keyboards. Use <code>step</code>, <code>min</code>, <code>max</code> for native clamping.</dd>
-      <dt>steppers</dt><dd>24px wide column on the right. Hover-elevate, click increments by <code>step</code> (default 1). Hold for repeat. Hidden if <code>readonly</code>.</dd>
+      <dt>steppers</dt><dd>24px wide column on the right. Hover-elevate, click increments by <code>step</code> (default 1). Hold for repeat. Hidden if <code>readonly</code>, and omitted when another control already increments the value — e.g. a paired Slider.</dd>
       <dt>alignment</dt><dd>Numbers <b>right-aligned</b> by default (units / currency reads cleanly). With prefix, switch to left-aligned (<code>.sl-number--left</code>).</dd>
       <dt>monospace</dt><dd>Input text uses <code>var(--font-mono)</code> so digits line up in tables and series.</dd>
       <dt>clamping</dt><dd>On blur, snap to <code>min</code>/<code>max</code> and show inline error if invalid. Don't silently rewrite the user's typed value while they're typing.</dd>

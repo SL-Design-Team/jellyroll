@@ -5,7 +5,6 @@
 <title>Components · Slider</title>
 <link rel="stylesheet" href="../colors_and_type.css" />
 <link rel="stylesheet" href="card.css" />
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
   .grid { display: grid; grid-template-columns: 110px 1fr; gap: 14px 20px; align-items: center; }
   .tag { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-subtle); }
@@ -158,7 +157,7 @@
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-slider.html",
   "tagline": "Drag to pick a value from a continuous track.",
   "anatomy": "Label row (label left, min–max range right) · single-thumb horizontal track — 3px track, 16px circular thumb, 28px visual height · optional value readout or a paired Number input on the right — the canonical component, not a lookalike · optional help/error text below. Filled portion Blue-600; unfilled track Blue-200. Disabled uses Grey-200 track with Grey-400 fill/thumb.",
-  "options": "Widths: fluid (default), sm 160px, md 240px, lg 320px. Value display: none, read-only readout, or a paired Number input sized off `--digits` so the field is never wider than the slider's longest legal value. Optional label, min–max range caption, unit suffix, and help text. No tick marks, value bubble, vertical orientation, or dual-thumb range in the base component.",
+  "options": "Widths: fluid (default), sm 160px, md 240px, lg 320px. Value display: none, read-only readout, or a paired Number input (stepper omitted — the slider already increments) sized off `--digits` so the field is never wider than the slider's longest legal value. Optional label, min–max range caption, unit suffix, and help text. No tick marks, value bubble, vertical orientation, or dual-thumb range in the base component.",
   "usage": "Use for approximate continuous values — opacity, zoom, throttling. Pair with a number input alongside when the user may want to type an exact value; use the read-only readout when they only need to see where they landed. Place the label above and the slider + value in one row. Do not use a slider where only a handful of discrete options exist — use a radio group or segmented control.",
   "behaviors": "Build on a native `input[type=range]`: it supplies the full keyboard model for free. Arrow keys move one `step`; Page Up/Down moves ten steps; Home/End jump to min/max. Click on the track jumps the thumb. Visual height is 28px, with an invisible 44px hit area for pointer/touch input. Thumb shadow transitions in 150ms; value movement follows input directly and is never eased. Label uses `for`/`id`; a read-only readout is `aria-hidden` because the input already announces its value; error text is wired with `aria-describedby`. Disabled removes hover/focus affordances and uses a not-allowed cursor.",
   "tokens": [
@@ -278,10 +277,6 @@
           <div class="sl-number sl-number--fit" style="--digits: 3">
             <input type="number" id="sl-num-out" value="72" min="0" max="100" inputmode="numeric" aria-label="Opacity value" />
             <span class="affix suffix">%</span>
-            <div class="stepper">
-              <button type="button" aria-label="Increment"><i data-lucide="chevron-up"></i></button>
-              <button type="button" aria-label="Decrement"><i data-lucide="chevron-down"></i></button>
-            </div>
           </div>
         </div>
       </div>
@@ -305,6 +300,7 @@
       <dt>hit area</dt><dd>Visual control remains 28px tall; the input is 44px tall and vertically centred, so the touch target extends past the visual without opening up the row.</dd>
       <dt>widths</dt><dd>Fluid by default. Presets: <b>160</b> / <b>240</b> / <b>320</b>px. Below 160px the track is too short to aim at — use a number input instead.</dd>
       <dt>value display</dt><dd>Read-only readout in a fixed 44px column when the user only needs to see the landing value. When exact values matter, pair the canonical <b>Number input</b> component — not a lookalike — with the unit as its suffix affix.</dd>
+      <dt>no stepper</dt><dd>Omit the Number input's stepper when it is paired with a slider — the thumb and the arrow keys already increment the value, so chevrons are a second control for the same job.</dd>
       <dt>field width</dt><dd>Size the paired input off <b>--digits</b>, set to the character count of the slider's longest legal value (0–100 is <b>3</b>). Never leave a five-character field on a three-character range.</dd>
       <dt>not included</dt><dd>No tick marks, value bubble, loading state, vertical orientation, or dual-thumb range variant in the base Slider. Vertical is deliberately out — every SnapLogic form is horizontal, and the usual implementation is a rotate hack that breaks the hit area.</dd>
       <dt>don't</dt><dd>Don't use a slider for a handful of discrete options — use a radio group or segmented control. Don't use one where the exact number matters and no number input is paired.</dd>
@@ -318,12 +314,6 @@
     const ROOT = (document.currentScript && document.currentScript.getRootNode())
               || (document.querySelector('#previewRender, .preview-render') || {}).shadowRoot
               || document;
-
-    // Draw the stepper chevrons. The gallery re-runs this inside a shadow
-    // root, where a bare createIcons() would miss them.
-    if (window.lucide && window.lucide.createIcons) {
-      try { window.lucide.createIcons({ root: ROOT }); } catch (e) { try { window.lucide.createIcons(); } catch (e2) {} }
-    }
 
     // Keep --pct and the readout in sync. The fill is pure CSS; only the
     // percentage crosses over from JS.
