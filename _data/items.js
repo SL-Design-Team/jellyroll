@@ -411,10 +411,10 @@ window.JELLYROLL_DATA = {
           name: "Slider",
           tagline: "Drag to pick a value from a continuous track.",
           meta: {
-            anatomy: "Single-thumb horizontal slider with 3px track, 16px circular thumb, and 28px visual height. Filled portion Blue-600; unfilled track Blue-200. Disabled uses Grey-200 track with Grey-400 fill/thumb.",
-            options: "With or without label, unit suffix, and paired number input. No tick marks, value bubble, or range variant in the base component.",
-            usage: "Use for approximate continuous values — opacity, zoom, throttling. Pair with a number input alongside when the user may want to type an exact value; place the label above and the slider + number input in one row.",
-            behaviors: "Click on the track jumps the thumb. Drag, arrow keys, Page Up/Down (large step), and Home/End (min/max) move the thumb. Visual height is 28px, with an invisible 44px hit area for pointer/touch input. Thumb shadow transitions in 150ms; value movement follows input directly. Disabled removes hover/focus affordances and uses a not-allowed cursor."
+            anatomy: "Label row (label left, min–max range right) · single-thumb horizontal track — 3px track, 16px circular thumb, 28px visual height · optional value readout or paired number input on the right · optional help/error text below. Filled portion Blue-600; unfilled track Blue-200. Disabled uses Grey-200 track with Grey-400 fill/thumb.",
+            options: "Widths: fluid (default), sm 160px, md 240px, lg 320px. Value display: none, read-only readout, or paired number input. Optional label, min–max range caption, unit suffix, and help text. No tick marks, value bubble, vertical orientation, or dual-thumb range in the base component.",
+            usage: "Use for approximate continuous values — opacity, zoom, throttling. Pair with a number input alongside when the user may want to type an exact value; use the read-only readout when they only need to see where they landed. Place the label above and the slider + value in one row. Do not use a slider where only a handful of discrete options exist — use a radio group or segmented control.",
+            behaviors: "Build on a native `input[type=range]`: it supplies the full keyboard model for free. Arrow keys move one `step`; Page Up/Down moves ten steps; Home/End jump to min/max. Click on the track jumps the thumb. Visual height is 28px, with an invisible 44px hit area for pointer/touch input. Thumb shadow transitions in 150ms; value movement follows input directly and is never eased. Label uses `for`/`id`; a read-only readout is `aria-hidden` because the input already announces its value; error text is wired with `aria-describedby`. Disabled removes hover/focus affordances and uses a not-allowed cursor."
           }
         },
         {
