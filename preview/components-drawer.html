@@ -263,6 +263,26 @@
   .compare tbody tr:nth-child(even) { background: var(--sl-grey-50); }
   .compare code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 11px; }
 
+  .rules { margin: 0; padding-left: 18px; font: 400 13px/20px var(--font-sans); color: var(--color-text-subtle); display: flex; flex-direction: column; gap: 6px; }
+  .rules b { color: var(--color-text-body); }
+
+  /* Decide — ordered test, then the cases it resolves */
+  .test { margin: 0; padding: 0; list-style: none; counter-reset: t; display: flex; flex-direction: column; gap: 10px; }
+  .test li { counter-increment: t; display: grid; grid-template-columns: 24px 1fr; gap: 12px; align-items: start; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); }
+  .test li::before {
+    content: counter(t);
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--sl-blue-600); color: var(--sl-white);
+    font: 800 11px/24px var(--font-mono); text-align: center;
+  }
+  .test b { color: var(--color-text-heading); }
+  .test .answer { display: inline-flex; align-items: center; gap: 4px; font-weight: 800; }
+  .test .answer--push { color: var(--sl-teal-700); }
+  .test .answer--overlay { color: var(--sl-blue-600); }
+  .cases td:last-child { font-weight: 800; white-space: nowrap; }
+  .cases .t-push { color: var(--sl-teal-700); }
+  .cases .t-overlay { color: var(--sl-blue-600); }
+
   .rule { font: 400 13px/20px var(--font-sans); color: var(--color-text-body); padding: 10px 12px; border-left: 3px solid var(--sl-blue-600); background: var(--sl-blue-50); border-radius: var(--radius-xs); }
 
   /* Layout helpers */
@@ -292,7 +312,7 @@
   "tagline": "Side panel that slides in from the right for details or secondary tasks.",
   "anatomy": "Two types: overlay drawer (floats over the page with a scrim) and push drawer (a column beside the page; the page reflows). Both: panel slides from right · 56px header with title and close `×` · scrolling body padded 20/24 · 64px footer (required on overlay, optional on push).",
   "options": "Overlay drawer: modal, scrim, fixed widths 480 / 560 (default) / 720. Push drawer: non-modal, no scrim, 1px Grey-300 left border, resizable 320–720 (default 480). Never float a panel over content without a scrim.",
-  "usage": "Pick an overlay drawer for one focused task the user starts, finishes and closes (build pipeline, configure a Snap, account settings). Pick a push drawer when the user needs the drawer and the page at the same time — details about a selected object, or a reference that stays open (run details, lint results, patterns catalog, MCP servers). For confirms, use a Modal. For temporary notifications, use a Toast.",
+  "usage": "Work down this test and stop at the first rule that applies: (1) the user needs the page and the drawer at the same time — push; (2) it is one task that must be finished or abandoned, with a Save/Create/Continue action — overlay; (3) opened by selecting an object on the page — push, opened from a toolbar or menu to start something new — overlay; (4) they would keep it open across several actions — push; (5) still unsure: read-mostly content — push, a form that commits — overlay. Tiebreakers: content wider than 720 or a two-column body — overlay; workspace under 960 — overlay; when both fit, choose push. A push drawer may open an overlay drawer or modal on top, but never stack two overlay drawers. For confirms use a Modal; for temporary notifications use a Toast.",
   "behaviors": "Slides in 240ms. Overlay drawer: scrim fades 200ms, blocks the page, traps focus (`role=\"dialog\" aria-modal=\"true\"`), closes on X / Esc / scrim click. Push drawer: the page reflows narrower and stays fully interactive, no focus trap (`role=\"region\"`), outside click does not close, selecting another object swaps content in place. Push drawers resize via an 8px left-edge handle (`role=\"separator\"`, arrow keys ±16px) showing a 2px Blue-600 line on hover/drag and Teal-600 on keyboard focus. Under a 960px workspace a push drawer opens as an overlay drawer.",
   "tokens": [
     "--color-scrim",
@@ -359,7 +379,45 @@
       <div class="rule"><b>Never float a panel over the page without a scrim.</b> Covered content is blocked (overlay). Usable content moves over (push). Existing no-scrim panels that cover the page migrate to push drawers.</div>
     </section>
 
-    <!-- ─── 2 · OVERLAY DRAWER ────────────────────────────────── -->
+    <!-- ─── 2 · WHICH ONE ─────────────────────────────────────── -->
+    <section class="sec">
+      <header class="sec__head">
+        <h2 class="sec__h">Which one</h2>
+        <p class="sec__sub">Work down the list and stop at the first rule that applies.</p>
+      </header>
+      <ol class="test">
+        <li><span>Does the user need <b>the page and the drawer at the same time</b> — clicking rows, comparing, scrolling behind it? → <span class="answer answer--push">Push</span></span></li>
+        <li><span>Is it <b>one task that must be finished or abandoned</b>, with a Save / Create / Continue action, where half-finished state isn't valid? → <span class="answer answer--overlay">Overlay</span></span></li>
+        <li><span>Is it opened by <b>selecting an object</b> on the page (a row, a node, a card)? → <span class="answer answer--push">Push</span>. Opened from a toolbar or menu to start something new? → <span class="answer answer--overlay">Overlay</span></span></li>
+        <li><span>Would the user <b>keep it open</b> across several actions, or open it many times in a session? → <span class="answer answer--push">Push</span></span></li>
+        <li><span>Still unsure: <b>read-mostly content</b> → <span class="answer answer--push">Push</span>. <b>A form that commits</b> → <span class="answer answer--overlay">Overlay</span></span></li>
+      </ol>
+
+      <div class="sub-h">Common cases</div>
+      <table class="compare cases">
+        <thead><tr><th>The user is…</th><th>Why</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>Creating a pipeline, task, or connection</td><td>One task, commits at the end</td><td class="t-overlay">Overlay</td></tr>
+          <tr><td>Configuring a Snap</td><td>Focused edit; the canvas shouldn't move underneath</td><td class="t-overlay">Overlay</td></tr>
+          <tr><td>Editing account or org settings</td><td>A form that saves</td><td class="t-overlay">Overlay</td></tr>
+          <tr><td>Inspecting a run in Monitoring</td><td>Selection-driven, swaps as they click rows</td><td class="t-push">Push</td></tr>
+          <tr><td>Reading lint or validation results</td><td>Stays open while they fix the pipeline</td><td class="t-push">Push</td></tr>
+          <tr><td>Browsing the patterns catalog or MCP servers</td><td>A reference shelf beside the work</td><td class="t-push">Push</td></tr>
+          <tr><td>Confirming a destructive action</td><td>Neither — use a <b>Modal</b></td><td>Modal</td></tr>
+          <tr><td>Being told something finished</td><td>Neither — use a <b>Toast</b></td><td>Toast</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sub-h">Tiebreakers</div>
+      <ul class="rules">
+        <li><b>Width:</b> content needing more than 720px or a two-column body → overlay. Push caps at 720 and every pixel comes out of the page.</li>
+        <li><b>Small workspace:</b> under 960px there isn't room for both → overlay, always.</li>
+        <li><b>Stacking:</b> a push drawer may open an overlay drawer or modal on top (a confirm, a sub-task); the scrim covers the push drawer too. Never stack two overlay drawers.</li>
+        <li><b>When both fit,</b> choose push. It keeps the user's context and never traps them mid-task.</li>
+      </ul>
+    </section>
+
+    <!-- ─── 3 · OVERLAY DRAWER ────────────────────────────────── -->
     <section class="sec">
       <header class="sec__head">
         <h2 class="sec__h">Overlay drawer</h2>
@@ -454,7 +512,7 @@
       </dl>
     </section>
 
-    <!-- ─── 3 · PUSH DRAWER ───────────────────────────────────── -->
+    <!-- ─── 4 · PUSH DRAWER ───────────────────────────────────── -->
     <section class="sec">
       <header class="sec__head">
         <h2 class="sec__h">Push drawer</h2>
@@ -493,7 +551,7 @@
       </dl>
     </section>
 
-    <!-- ─── 4 · BOTH TYPES ────────────────────────────────────── -->
+    <!-- ─── 5 · BOTH TYPES ────────────────────────────────────── -->
     <section class="sec">
       <header class="sec__head">
         <h2 class="sec__h">Both types</h2>
@@ -509,7 +567,7 @@
       </dl>
     </section>
 
-    <!-- ─── 5 · BUILD REFERENCE ───────────────────────────────── -->
+    <!-- ─── 6 · BUILD REFERENCE ───────────────────────────────── -->
     <section class="sec">
       <header class="sec__head">
         <h2 class="sec__h">At a glance</h2>
