@@ -1,0 +1,70 @@
+/* Acherus Grotesque — metric-matched fallbacks.
+   PUBLIC LAYER. Contains no font binaries, so this file is safe to
+   redistribute; the licensed Acherus files are referenced only by fonts.css.
+
+   Two fallback tiers, tried in order by --font-sans:
+
+     1. "Acherus Fallback Web"     Montserrat. Declared in fallback-web.css,
+                                   an OPT-IN import. Costs ~38kB; best match.
+     2. "Acherus Fallback System"  a local() system face. Declared BELOW and
+                                   always active. Costs nothing.
+
+   This file is tier 2 only, so importing it never downloads a font.
+
+   WHY THESE OVERRIDES EXIST
+   A missing brand font reflows every string. Measured over a 73-character
+   sample, normalized by x-height (what size-adjust does), running width
+   against Acherus:
+
+     Montserrat       -0.1%   <- tier 1 target
+     Outfit           -2.3%
+     Avenir Next      +3.4%
+     Poppins          -5.3%
+     Figtree          -5.3%
+     Helvetica Neue   -8.2%   <- tier 2 target
+     Segoe UI         -8% approx
+     SF Pro           -12.0%  <- what you get with no fallback tier at all
+
+   Montserrat is the best available match and is OFL-1.1, so unlike the
+   brand face it may be redistributed. Note the match is a WIDTH match after
+   x-height normalization, not a shape match: Montserrat's x/cap is 0.750
+   against Acherus's 0.727, and its raw advances are ~12% wider. It only
+   lands correctly WITH the size-adjust below. Never list Montserrat as a
+   bare family name and expect it to match.
+
+   DERIVATION (Acherus Regular: x-height 0.509, hhea asc 0.945 / desc 0.279
+   / gap 0.025, all as ratios of em)
+     size-adjust       = 0.509 / fallbackXHeight
+     ascent-override   = 0.945 / size-adjust
+     descent-override  = 0.279 / size-adjust
+     line-gap-override = 0.025 / size-adjust
+
+   Re-derive with fontTools rather than hand-tuning. x/cap is scale-invariant,
+   so size-adjust cannot correct a shape mismatch — only a size one.
+*/
+
+/* ── Tier 2: system face (Helvetica Neue x-height 0.517) ──────────────────
+   Closest system match on shape (x/cap 0.724 vs 0.727). Segoe UI and Avenir
+   Next follow for Windows and older macOS; the overrides are tuned to
+   Helvetica Neue and are approximate for those.                            */
+@font-face {
+  font-family: "Acherus Fallback System";
+  font-style: normal;
+  font-weight: 100 900;
+  src: local("Helvetica Neue"), local("Segoe UI"), local("Avenir Next");
+  size-adjust: 98.45%;
+  ascent-override: 95.99%;
+  descent-override: 28.34%;
+  line-gap-override: 2.54%;
+}
+@font-face {
+  font-family: "Acherus Fallback System";
+  font-style: italic;
+  font-weight: 100 900;
+  src: local("Helvetica Neue Italic"), local("Segoe UI Italic"),
+       local("Avenir Next Italic");
+  size-adjust: 98.45%;
+  ascent-override: 95.99%;
+  descent-override: 28.34%;
+  line-gap-override: 2.54%;
+}

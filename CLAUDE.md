@@ -85,6 +85,48 @@ When one component appears inside another, **use the real component and switch o
 - **inline `<head>` metadata** — each `preview/*.html` gets a `<script type="application/json" id="jellyroll-meta">` block (inert in the gallery; readable by agents fetching raw HTML).
 - **`snippets/<name>.html`** — hand-authored, chrome-free copy-paste blocks (not generated; a curated subset).
 
+## npm package (public)
+
+`scripts/build-npm.js` assembles the **public** package into `npm-dist/` (gitignored):
+
+```bash
+node scripts/build-npm.js
+cd npm-dist && npm publish
+```
+
+The package is `@snaplogic/jellyroll` — tokens, `card.css`, `jellyroll.json`,
+`llms.txt`, and `snippets/`. It deliberately excludes `preview/`, `icons/`,
+and `assets/`; those stay on the live site.
+
+**It must never contain Acherus Grotesque binaries** — they are licensed and
+cannot be redistributed. Two things enforce this:
+
+- The repo's `fonts.css` is the *licensed* layer (`@font-face` → `fonts/*.woff2`).
+  The build publishes `fonts-fallback.css` **under the filename** `fonts.css`, so
+  `colors_and_type.css` keeps one unchanging `@import "./fonts.css"` line in both
+  builds. The swap happens at the package boundary, never in the token file.
+- `assertFontsAreRedistributable()` refuses any Acherus asset outright, and any
+  font binary — or CSS `url()` pointing at one — that is not on an explicit
+  filename allowlist. Allowlisted fonts must ship their license text. If it
+  throws, fix the leak or add the filename *and* its license; do not widen the
+  pattern.
+
+**Two fallback tiers**, both rescaled with `size-adjust`/`ascent-override` so the
+line box matches Acherus and text does not reflow when the brand font is absent:
+
+- `fonts-fallback.css` — tier 2, `"Acherus Fallback System"`. A `local()` system
+  face. Always imported, costs nothing, ~8% narrow.
+- `fallback-web.css` — tier 1, `"Acherus Fallback Web"`. Montserrat Variable,
+  vendored in `vendor/montserrat/` (OFL-1.1, so redistributable). Opt-in import,
+  ~38 kB, ~2% narrow.
+
+Montserrat only matches because `size-adjust` normalizes its x-height 0.525 →
+0.509; its raw advances are ~12% wider and its x/cap is 0.750 vs Acherus's
+0.727. Never list it as a bare family name and expect a match. `x/cap` is
+scale-invariant, so `size-adjust` corrects size mismatches, never shape ones.
+Measured derivations are in each file's header — re-derive with fontTools
+rather than hand-tuning.
+
 ## For AI agents building with this system
 
 Start at the index, then fetch the token CSS and the specific component you need:

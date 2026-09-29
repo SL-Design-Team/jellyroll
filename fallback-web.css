@@ -1,0 +1,44 @@
+/* Acherus Grotesque — tier 1 fallback (OPT-IN).
+   Import this IN ADDITION to the tokens when you want the closest available
+   match to Acherus Grotesque and can afford ~38kB per style:
+
+     import '@snaplogic-ux/jellyroll/tokens.css';
+     import '@snaplogic-ux/jellyroll/fallback-web.css';   <- this file
+
+   Without it, --font-sans falls through to "Acherus Fallback System", which
+   costs nothing and is ~8% narrow. See fonts-fallback.css for the numbers.
+
+   Montserrat Variable, bundled under vendor/montserrat/. Licensed OFL-1.1
+   (see vendor/montserrat/OFL.txt) and therefore redistributable — unlike
+   Acherus Grotesque, which is NOT in this package.
+
+   Montserrat matches Acherus's running width to 0.1% ONLY after the
+   size-adjust below normalizes x-height (0.525 -> 0.509). Its raw advances
+   are ~12% wider and its x/cap is 0.750 vs 0.727. Do not use it as a bare
+   family name and expect a match. */
+
+@font-face {
+  font-family: "Acherus Fallback Web";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./vendor/montserrat/montserrat-latin-wght-normal.woff2") format("woff2-variations"),
+       local("Montserrat");
+  size-adjust: 96.95%;
+  ascent-override: 97.47%;
+  descent-override: 28.78%;
+  line-gap-override: 2.58%;
+}
+
+@font-face {
+  font-family: "Acherus Fallback Web";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./vendor/montserrat/montserrat-latin-wght-italic.woff2") format("woff2-variations"),
+       local("Montserrat Italic");
+  size-adjust: 96.95%;
+  ascent-override: 97.47%;
+  descent-override: 28.78%;
+  line-gap-override: 2.58%;
+}

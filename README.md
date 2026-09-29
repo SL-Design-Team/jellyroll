@@ -98,7 +98,9 @@ If you want to publish this on GitHub Pages, push to a repo and enable Pages fro
 
 ## Use the tokens in your project
 
-Drop `colors_and_type.css` and `fonts.css` (with the `fonts/` directory) into your app, then `@import` or `<link>` the stylesheet:
+Drop `colors_and_type.css` and `fonts.css` (with the `fonts/` directory) into your app, then `@import` or `<link>` the stylesheet.
+
+**Internal SnapLogic projects must ship Acherus Grotesque** — SnapLogic holds the license, and the `fonts/` directory here is the source. If your app renders in a fallback sans, that's a bug. See [FONTS.md](FONTS.md) for how to verify what your app actually painted (your own machine will lie to you if Acherus is installed locally).
 
 ```html
 <link rel="stylesheet" href="/jellyroll/colors_and_type.css" />
@@ -167,7 +169,7 @@ jellyroll-design-system/
 - **Icons are Lucide via CDN** as a substitute for the Figma's Untitled UI Icons (~95% visual match). If pixel-perfect Untitled UI Icons are required, swap in the Pro SVGs.
 - **Product launcher gradient icons** (Designer, APIM, AutoSync, Admin Manager, Monitor, Project Manager) are placeholder gradient circles with Lucide glyphs. Real product icons were not exported from Figma.
 - **No formal dark theme.** The dark global navbar is treated as inverted chrome, not full dark mode.
-- **Acherus Grotesque** is licensed; the WOFF2/OTF files in `fonts/` are bundled for use within SnapLogic surfaces. Confirm license terms before re-distributing outside SnapLogic.
+- **Acherus Grotesque** is licensed; the WOFF2/OTF files in `fonts/` are bundled for use within SnapLogic surfaces. They are never published to the public npm package — `scripts/build-npm.js` refuses to build if one reaches the tarball. External consumers get a metric-matched fallback instead. See [FONTS.md](FONTS.md).
 
 ## Sources
 

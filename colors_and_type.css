@@ -266,7 +266,7 @@
      Sans: Acherus Grotesque, system-ui fallback.
      Mono: SF Mono (system).
   */
-  --font-sans: "Acherus Grotesque", system-ui, "SF Pro", "Segoe UI", sans-serif;
+  --font-sans: "Acherus Grotesque", "Acherus Fallback Web", "Acherus Fallback System", system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* Typescale (from /Typography/Fonts-Typograpy) */

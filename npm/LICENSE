@@ -1,0 +1,46 @@
+MIT License
+
+Copyright (c) 2026 SnapLogic, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+TRADEMARKS
+
+The MIT license above covers copyright in this software. It grants no rights
+in trademarks. "SnapLogic", "JellyRoll", the SnapLogic logo, and SnapLogic's
+product names, wordmarks and brand identity remain trademarks of SnapLogic,
+Inc. and are not licensed here.
+
+You may use this software to build your own products. You may not use it to
+represent your product as SnapLogic's, or as endorsed by or affiliated with
+SnapLogic.
+
+---
+
+FONTS
+
+This package contains no Acherus Grotesque font files. Acherus Grotesque is
+SnapLogic's licensed brand typeface, is licensed from its foundry, and is NOT
+redistributed here or covered by this license. See fonts-fallback.css.
+
+Montserrat (vendor/montserrat/) is licensed separately under the SIL Open Font
+License 1.1. See vendor/montserrat/OFL.txt. The MIT license above does not
+apply to it.
