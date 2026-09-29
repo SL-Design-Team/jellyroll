@@ -94,7 +94,7 @@ node scripts/build-npm.js
 cd npm-dist && npm publish
 ```
 
-The package is `@snaplogic/jellyroll` — tokens, `card.css`, `jellyroll.json`,
+The package is `@snaplogic-ux/jellyroll` — tokens, `card.css`, `jellyroll.json`,
 `llms.txt`, and `snippets/`. It deliberately excludes `preview/`, `icons/`,
 and `assets/`; those stay on the live site.
 

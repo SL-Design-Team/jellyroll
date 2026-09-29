@@ -840,6 +840,68 @@
     max-width: 62ch;
   }
 
+  /* Use in your code — npm and stylesheet-link paths side by side, then the
+     font caveat. Same container-query approach as the other panels: it stacks
+     on the panel's own width, not the viewport's. */
+  .gs-panel--code { container: gscode / inline-size; }
+  .gs-code-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6, 24px);
+    margin-bottom: var(--space-5, 20px);
+  }
+  .gs-code-col h5 {
+    margin: 0 0 var(--space-1, 4px);
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+  }
+  .gs-code-col > p {
+    margin: 0 0 var(--space-3, 12px);
+    font-size: 13px;
+    line-height: 19px;
+    color: var(--color-text-subtle);
+  }
+  .gs-code-col > p code { font-size: 12px; }
+  .gs-note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3, 12px);
+    padding: var(--space-4, 16px);
+    background: var(--sl-teal-50, #F2F8F8);
+    border: 1px solid var(--sl-teal-200, #CEE6E5);
+    border-radius: var(--radius-md, 6px);
+  }
+  .gs-note > svg {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    stroke-width: 2;
+    color: var(--sl-teal-700, #076766);
+  }
+  .gs-note strong {
+    display: block;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 800;
+    color: var(--color-text-heading);
+  }
+  .gs-note p {
+    margin: var(--space-1, 4px) 0 0;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--color-text-body);
+    max-width: 78ch;
+  }
+  .gs-note p + p { margin-top: var(--space-2, 8px); }
+  .gs-note p strong { display: inline; font-size: inherit; line-height: inherit; }
+  .gs-note a { color: var(--sl-blue-600, #0841B4); font-weight: 700; }
+  @container gscode (max-width: 620px) {
+    .gs-code-grid { grid-template-columns: 1fr; }
+  }
+
   /* Explore destinations — laid out horizontally as a tile grid. There is no
      order to these six, so a vertical list wrongly implied a sequence; a grid
      reads as six peers you pick from. Cards use the standard card treatment:
@@ -920,42 +982,15 @@
     border-color: var(--sl-teal-600);
   }
 
-  /* Explore footer — token stylesheet, live count, and the CTA on one row. */
+  /* Explore footer — live count and the CTA on one row. */
   .gs-explore-foot {
     display: flex;
     align-items: center;
     gap: var(--space-4, 16px);
     flex-wrap: wrap;
   }
-  .gs-explore-foot .gs-tokenbar { flex: 1 1 340px; margin-bottom: 0; }
   .gs-explore-foot .gs-count { margin: 0; }
 
-  .gs-tokenbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3, 12px);
-    flex-wrap: wrap;
-    padding: var(--space-3, 12px);
-    background: var(--sl-white);
-    border: 1px solid var(--sl-grey-300, #D7DCE3);
-    border-radius: var(--radius-md, 6px);
-    box-shadow: var(--shadow-raised);
-    margin-bottom: var(--space-4, 16px);
-  }
-  .gs-tokenbar strong {
-    display: block;
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 800;
-    color: var(--color-text-heading);
-  }
-  .gs-tokenbar span {
-    display: block;
-    font-size: 13px;
-    line-height: 19px;
-    color: var(--color-text-subtle);
-  }
   .gs-count {
     margin: 0 0 var(--space-4, 16px);
     font-family: var(--font-mono);
@@ -1262,7 +1297,6 @@
     .gs-links a { flex-direction: row; align-items: center; gap: var(--space-3, 12px); padding: var(--space-3, 12px) var(--space-4, 16px); }
     .gs-links .l-text { flex: 1; }
     .gs-links .r-chev { margin-top: 0; align-self: center; }
-    .gs-explore-foot .gs-tokenbar { flex-basis: 100%; }
     .gs-cta { flex: 1 1 100%; justify-content: center; }
   }
 
@@ -2137,6 +2171,49 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
             </div>
           </div>
 
+          <div class="gs-panel gs-panel--code">
+            <div class="gs-panel-head">
+              <span class="r-icon"><i data-lucide="package"></i></span>
+              <div>
+                <h4>Use JellyRoll in your code</h4>
+                <p>Prefer to write it yourself? Install the tokens from npm or link the stylesheet. Either way you get every color, type, spacing and shadow token as a CSS custom property.</p>
+              </div>
+            </div>
+
+            <div class="gs-code-grid">
+              <div class="gs-code-col">
+                <h5>Install from npm</h5>
+                <p>For apps with a bundler. Two lines, then use the tokens.</p>
+                <div class="gs-codewrap">
+                  <div class="gs-code-head"><span class="gs-where">Terminal</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
+<pre class="code-block">npm install @snaplogic-ux/jellyroll</pre>
+                </div>
+                <div class="gs-codewrap">
+                  <div class="gs-code-head"><span class="gs-where">JavaScript</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
+<pre class="code-block">import '@snaplogic-ux/jellyroll/tokens.css';</pre>
+                </div>
+              </div>
+
+              <div class="gs-code-col">
+                <h5>Link the stylesheet</h5>
+                <p>For prototypes and plain HTML. No install, nothing to build.</p>
+                <div class="gs-codewrap">
+                  <div class="gs-code-head"><span class="gs-where">HTML</span><button type="button" class="gs-copy" onclick="copyBlock(this)"><i data-lucide="copy"></i>Copy</button></div>
+<pre class="code-block">&lt;link rel="stylesheet" href="https://sl-design-team.github.io/jellyroll/colors_and_type.css"&gt;</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="gs-note">
+              <i data-lucide="type"></i>
+              <div>
+                <strong>About the font</strong>
+                <p>The npm package doesn't include Acherus Grotesque. It's a licensed typeface and can't be redistributed publicly, so outside SnapLogic you get a metric-matched fallback that keeps layouts from shifting.</p>
+                <p><strong>Building for SnapLogic? Use Acherus.</strong> SnapLogic holds the license, so internal projects should always ship it. Copy <code>fonts/</code>, <code>fonts.css</code> and <code>colors_and_type.css</code> from the repo, not from the npm package. <a href="./FONTS.md">Read the font guide</a></p>
+              </div>
+            </div>
+          </div>
+
           <div class="gs-panel gs-panel--explore">
             <div class="gs-panel-head">
               <span class="r-icon"><i data-lucide="palette"></i></span>
@@ -2178,13 +2255,6 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
               </a></li>
             </ul>
             <div class="gs-explore-foot">
-              <div class="gs-tokenbar">
-                <div>
-                  <strong>Use the tokens directly</strong>
-                  <span>One stylesheet, no install — colors, type, spacing, shadows.</span>
-                </div>
-                <button type="button" class="gs-copy" onclick="copyTokenLink(this)"><i data-lucide="copy"></i>Copy &lt;link&gt;</button>
-              </div>
               <p class="gs-count" id="gsExploreCount"></p>
               <a class="gs-cta" href="#section-foundations">Explore the design system<i data-lucide="arrow-right"></i></a>
             </div>
@@ -3258,14 +3328,6 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   applyHash();
 })();
 
-const TOKEN_LINK = '<link rel="stylesheet" href="https://sl-design-team.github.io/jellyroll/colors_and_type.css">';
-function copyTokenLink(btn) {
-  navigator.clipboard.writeText(TOKEN_LINK).then(() => {
-    const label = btn.lastChild;
-    label.textContent = 'Copied';
-    setTimeout(() => { label.textContent = 'Copy <link>'; }, 1600);
-  });
-}
 function copyBlock(btn) {
   const box = btn.closest('.gs-codewrap');
   const src = box.querySelector('pre') || box.querySelector('ul');
