@@ -25,23 +25,30 @@ choice.
 
 ### Getting the files
 
-The full family (weights 100–900, roman and italic, WOFF2 + OTF) lives in
-[`fonts/`](https://github.com/SL-Design-Team/jellyroll/tree/main/fonts) in this repo. Copy that directory into your project
-alongside `fonts.css`, which already declares every `@font-face`:
+The full family (weights 100–900, roman and italic, WOFF2 + OTF) lives in the
+[JellyRoll repo](https://github.com/SL-Design-Team/jellyroll), under `fonts/`.
+Copy that directory into your project along with the repo's `fonts.css` and
+`colors_and_type.css`:
 
 ```
 your-app/
-├── fonts/                  # copied from this repo
-├── fonts.css               # copied from this repo
-└── colors_and_type.css     # copied from this repo
+├── fonts/                  # from the repo
+├── fonts.css               # from the repo — declares Acherus @font-face
+└── colors_and_type.css     # from the repo
 ```
 
 ```html
 <link rel="stylesheet" href="/colors_and_type.css">
 ```
 
-`colors_and_type.css` imports `fonts.css`, which declares Acherus and imports
-the fallback layer behind it. One link tag is all you need.
+`colors_and_type.css` imports `fonts.css`, which declares Acherus and pulls the
+fallback layer in behind it. One link tag is all you need.
+
+> **Take these three files from the repo, not from the npm package.** The
+> `fonts.css` published to npm is the *fallback* layer — it declares no Acherus
+> faces at all, because the package ships no Acherus binaries. Copying the npm
+> copy leaves you silently on the fallback, which is the exact failure this page
+> exists to prevent.
 
 ### If you consume the public npm package internally
 
