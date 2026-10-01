@@ -5,10 +5,10 @@
   "tokensCss": "https://sl-design-team.github.io/jellyroll/colors_and_type.css",
   "sections": [
     {
-      "num": "01",
-      "id": "foundations",
-      "name": "Foundations",
-      "description": "The rules every component inherits — design tokens, spacing, motion, elevation, accessibility, and shared UX behavior.",
+      "num": "",
+      "id": "guidance",
+      "name": "Getting started",
+      "description": "How to think about and use the system — accessibility, design principles, and how to write for the UI.",
       "items": [
         {
           "name": "Accessibility",
@@ -42,6 +42,52 @@
           "tagline": "SnapLogic terms, product names, word choices, and spelling.",
           "options": "Grouped as SnapLogic terms, Snaplex nodes and hosts, lowercase terms, product and technical names (including account types), word swaps, usage notes, and spelling and compound words.",
           "usage": "Check here before naming anything in the UI. SnapLogic terms (Snap, Snaplex, Triggered Task, SnapLogic Platform) are capitalized exactly as listed; common nouns such as pipeline, account, asset, and control plane stay lowercase. Product and technical names use the owner's exact casing. Prefer the word on the left in Use this, not that. Where this list differs from the Microsoft Writing Style Guide A–Z word list or Merriam-Webster, this list wins."
+        }
+      ]
+    },
+    {
+      "num": "01",
+      "id": "foundations",
+      "name": "Foundations",
+      "description": "The visual and system primitives every component inherits — type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.",
+      "items": [
+        {
+          "name": "Type scale",
+          "file": "preview/type-scale.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/type-scale.html",
+          "tagline": "Display through Micro — eight steps with set line heights and weight conventions.",
+          "usage": "Use these eight steps for every text element. Body and labels are 14/22 Regular; headings step up from Card Title 18 to Display 56. Labels and headings sit at ExtraBold (800); body at Regular (400). The contrast between thin body and chunky labels is the system's signature — do not introduce intermediate weights for emphasis.",
+          "tokens": [
+            {
+              "name": "--font-sans",
+              "value": "'Acherus Grotesque', system-ui, 'SF Pro', 'Segoe UI', sans-serif",
+              "role": "Body, labels, headings"
+            },
+            {
+              "name": "--font-mono",
+              "value": "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+              "role": "Code, tokens, JSON, timestamps"
+            }
+          ]
+        },
+        {
+          "name": "Type specimen",
+          "file": "preview/type-faces.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/type-faces.html",
+          "tagline": "Acherus Grotesque, weights 200–900, plus the SF Mono code font.",
+          "usage": "Acherus Grotesque is the system sans across every weight. Reach for the mono stack only inside code blocks, tokens, JSON snippets, and timestamps. Italic is reserved for placeholders (Light Italic 300) and the rare in-line citation — never used for emphasis.",
+          "tokens": [
+            {
+              "name": "--font-sans",
+              "value": "'Acherus Grotesque', system-ui, 'SF Pro', 'Segoe UI', sans-serif",
+              "role": "Body, labels, headings"
+            },
+            {
+              "name": "--font-mono",
+              "value": "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+              "role": "Code, tokens, JSON, timestamps"
+            }
+          ]
         },
         {
           "name": "Iconography",
@@ -52,6 +98,75 @@
           "options": "Sizes: 24px default, 16px inline / dense contexts, 20px nav rail. Outlined glyphs by default; filled status pictograms (running check, failed dot, sticky star) are the only exception. Click any icon in the gallery to copy its name.",
           "usage": "Pick the icon whose metaphor matches the action or object directly — never invent a custom mark. Drop the SVG inline (or reference via `<svg><use href=\"icons/{name}.svg\">`) so it picks up the surrounding text color. For vendor logos (AWS, Salesforce, GitHub) the system falls back to Font Awesome 6 brands at matching stroke weight.",
           "behaviors": "Icon-only buttons require an explicit `aria-label`. Icons paired with text take `aria-hidden=\"true\"` so screen readers don't read them twice. The icon inherits `currentColor` from its parent — never hardcode a tint."
+        },
+        {
+          "name": "Spacing",
+          "file": "preview/spacing-scale.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/spacing-scale.html",
+          "tagline": "Strict 4-pt grid: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.",
+          "usage": "Use `--space-*` tokens for every margin, padding, and gap. Never hardcode pixel values. Layout containers use 64px horizontal padding, frame headers use 48px top/bottom padding, cards use 16px internal padding, and inputs use 8px top/bottom × 12px left/right for a 40px-tall field.",
+          "tokens": [
+            {
+              "name": "--space-0",
+              "value": "0px",
+              "role": "Zero (flush)"
+            },
+            {
+              "name": "--space-1",
+              "value": "4px",
+              "role": "Smallest gap — between tightly-coupled atoms"
+            },
+            {
+              "name": "--space-2",
+              "value": "8px",
+              "role": "Default gap between sibling atoms"
+            },
+            {
+              "name": "--space-3",
+              "value": "12px",
+              "role": "Input horizontal padding"
+            },
+            {
+              "name": "--space-4",
+              "value": "16px",
+              "role": "Card padding — the system's default"
+            },
+            {
+              "name": "--space-5",
+              "value": "20px",
+              "role": "Mid-density grouping"
+            },
+            {
+              "name": "--space-6",
+              "value": "24px",
+              "role": "Section internal padding"
+            },
+            {
+              "name": "--space-8",
+              "value": "32px",
+              "role": "Between unrelated content blocks"
+            },
+            {
+              "name": "--space-10",
+              "value": "40px",
+              "role": "Page-level vertical rhythm"
+            },
+            {
+              "name": "--space-12",
+              "value": "48px",
+              "role": "Frame header top/bottom padding"
+            },
+            {
+              "name": "--space-16",
+              "value": "64px",
+              "role": "Layout container horizontal padding"
+            },
+            {
+              "name": "--space-20",
+              "value": "80px",
+              "role": "Top-level page spacing"
+            }
+          ]
         },
         {
           "name": "Radius",
@@ -127,82 +242,6 @@
           ]
         },
         {
-          "name": "Spacing",
-          "file": "preview/spacing-scale.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/spacing-scale.html",
-          "tagline": "Strict 4-pt grid: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.",
-          "usage": "Use `--space-*` tokens for every margin, padding, and gap. Never hardcode pixel values. Layout containers use 64px horizontal padding, frame headers use 48px top/bottom padding, cards use 16px internal padding, and inputs use 8px top/bottom × 12px left/right for a 40px-tall field.",
-          "tokens": [
-            {
-              "name": "--space-0",
-              "value": "0px",
-              "role": "Zero (flush)"
-            },
-            {
-              "name": "--space-1",
-              "value": "4px",
-              "role": "Smallest gap — between tightly-coupled atoms"
-            },
-            {
-              "name": "--space-2",
-              "value": "8px",
-              "role": "Default gap between sibling atoms"
-            },
-            {
-              "name": "--space-3",
-              "value": "12px",
-              "role": "Input horizontal padding"
-            },
-            {
-              "name": "--space-4",
-              "value": "16px",
-              "role": "Card padding — the system's default"
-            },
-            {
-              "name": "--space-5",
-              "value": "20px",
-              "role": "Mid-density grouping"
-            },
-            {
-              "name": "--space-6",
-              "value": "24px",
-              "role": "Section internal padding"
-            },
-            {
-              "name": "--space-8",
-              "value": "32px",
-              "role": "Between unrelated content blocks"
-            },
-            {
-              "name": "--space-10",
-              "value": "40px",
-              "role": "Page-level vertical rhythm"
-            },
-            {
-              "name": "--space-12",
-              "value": "48px",
-              "role": "Frame header top/bottom padding"
-            },
-            {
-              "name": "--space-16",
-              "value": "64px",
-              "role": "Layout container horizontal padding"
-            },
-            {
-              "name": "--space-20",
-              "value": "80px",
-              "role": "Top-level page spacing"
-            }
-          ]
-        },
-        {
-          "name": "Tokens",
-          "file": "preview/foundations-tokens.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-tokens.html",
-          "tagline": "All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.",
-          "usage": "Import `colors_and_type.css` and reference tokens by name in your CSS or inline styles. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code. Raw ramp tokens (`--sl-blue-600`) are appropriate only when building new semantic tokens or one-off brand moments."
-        },
-        {
           "name": "Surfaces",
           "file": "preview/colors-surfaces.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/colors-surfaces.html",
@@ -242,44 +281,6 @@
           ]
         },
         {
-          "name": "Type scale",
-          "file": "preview/type-scale.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/type-scale.html",
-          "tagline": "Display through Micro — eight steps with set line heights and weight conventions.",
-          "usage": "Use these eight steps for every text element. Body and labels are 14/22 Regular; headings step up from Card Title 18 to Display 56. Labels and headings sit at ExtraBold (800); body at Regular (400). The contrast between thin body and chunky labels is the system's signature — do not introduce intermediate weights for emphasis.",
-          "tokens": [
-            {
-              "name": "--font-sans",
-              "value": "'Acherus Grotesque', system-ui, 'SF Pro', 'Segoe UI', sans-serif",
-              "role": "Body, labels, headings"
-            },
-            {
-              "name": "--font-mono",
-              "value": "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
-              "role": "Code, tokens, JSON, timestamps"
-            }
-          ]
-        },
-        {
-          "name": "Type specimen",
-          "file": "preview/type-faces.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/type-faces.html",
-          "tagline": "Acherus Grotesque, weights 200–900, plus the SF Mono code font.",
-          "usage": "Acherus Grotesque is the system sans across every weight. Reach for the mono stack only inside code blocks, tokens, JSON snippets, and timestamps. Italic is reserved for placeholders (Light Italic 300) and the rare in-line citation — never used for emphasis.",
-          "tokens": [
-            {
-              "name": "--font-sans",
-              "value": "'Acherus Grotesque', system-ui, 'SF Pro', 'Segoe UI', sans-serif",
-              "role": "Body, labels, headings"
-            },
-            {
-              "name": "--font-mono",
-              "value": "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
-              "role": "Code, tokens, JSON, timestamps"
-            }
-          ]
-        },
-        {
           "name": "Motion",
           "file": "preview/foundations-motion.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-motion.html",
@@ -315,6 +316,35 @@
               "name": "--ease-out",
               "value": "cubic-bezier(0, 0, 0.2, 1)",
               "role": "Entrances and reveals"
+            }
+          ]
+        },
+        {
+          "name": "Breakpoints",
+          "file": "preview/foundations-breakpoints.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-breakpoints.html",
+          "tagline": "Viewport widths — sm 640, md 768, lg 1024, xl 1280.",
+          "usage": "The breakpoint scale targets four common widths. Because CSS custom properties cannot be used inside `@media` queries, the `--bp-*` tokens are exposed for JS (matchMedia, ResizeObserver) and the same numbers should be mirrored in your SCSS or CSS-in-JS layer for media query authoring. Mobile-first: write base styles for the smallest viewport and add `min-width` media queries to step up.",
+          "tokens": [
+            {
+              "name": "--bp-sm",
+              "value": "640px",
+              "role": "Phone — narrow viewports"
+            },
+            {
+              "name": "--bp-md",
+              "value": "768px",
+              "role": "Tablet"
+            },
+            {
+              "name": "--bp-lg",
+              "value": "1024px",
+              "role": "Laptop — standard product width"
+            },
+            {
+              "name": "--bp-xl",
+              "value": "1280px",
+              "role": "Desktop — wide canvases"
             }
           ]
         },
@@ -368,35 +398,6 @@
           ]
         },
         {
-          "name": "Breakpoints",
-          "file": "preview/foundations-breakpoints.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-breakpoints.html",
-          "tagline": "Viewport widths — sm 640, md 768, lg 1024, xl 1280.",
-          "usage": "The breakpoint scale targets four common widths. Because CSS custom properties cannot be used inside `@media` queries, the `--bp-*` tokens are exposed for JS (matchMedia, ResizeObserver) and the same numbers should be mirrored in your SCSS or CSS-in-JS layer for media query authoring. Mobile-first: write base styles for the smallest viewport and add `min-width` media queries to step up.",
-          "tokens": [
-            {
-              "name": "--bp-sm",
-              "value": "640px",
-              "role": "Phone — narrow viewports"
-            },
-            {
-              "name": "--bp-md",
-              "value": "768px",
-              "role": "Tablet"
-            },
-            {
-              "name": "--bp-lg",
-              "value": "1024px",
-              "role": "Laptop — standard product width"
-            },
-            {
-              "name": "--bp-xl",
-              "value": "1280px",
-              "role": "Desktop — wide canvases"
-            }
-          ]
-        },
-        {
           "name": "Selection & skeleton",
           "file": "preview/foundations-selection-skeleton.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-selection-skeleton.html",
@@ -424,6 +425,13 @@
               "role": "Skeleton band, dark surface — white@10%"
             }
           ]
+        },
+        {
+          "name": "Tokens",
+          "file": "preview/foundations-tokens.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-tokens.html",
+          "tagline": "All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.",
+          "usage": "Import `colors_and_type.css` and reference tokens by name in your CSS or inline styles. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code. Raw ramp tokens (`--sl-blue-600`) are appropriate only when building new semantic tokens or one-off brand moments."
         }
       ]
     },

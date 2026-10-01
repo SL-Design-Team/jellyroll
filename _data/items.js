@@ -7,10 +7,10 @@
 window.JELLYROLL_DATA = {
   sections: [
     {
-      num: "01",
-      id: "foundations",
-      name: "Foundations",
-      description: "The rules every component inherits — design tokens, spacing, motion, elevation, accessibility, and shared UX behavior.",
+      num: "",
+      id: "guidance",
+      name: "Getting started",
+      description: "How to think about and use the system — accessibility, design principles, and how to write for the UI.",
       items: [
         {
           file: "preview/foundations-accessibility.html",
@@ -48,6 +48,30 @@ window.JELLYROLL_DATA = {
             usage: "Check here before naming anything in the UI. SnapLogic terms (Snap, Snaplex, Triggered Task, SnapLogic Platform) are capitalized exactly as listed; common nouns such as pipeline, account, asset, and control plane stay lowercase. Product and technical names use the owner's exact casing. Prefer the word on the left in Use this, not that. Where this list differs from the Microsoft Writing Style Guide A–Z word list or Merriam-Webster, this list wins.",
             options: "Grouped as SnapLogic terms, Snaplex nodes and hosts, lowercase terms, product and technical names (including account types), word swaps, usage notes, and spelling and compound words."
           }
+        }
+      ]
+    },
+    {
+      num: "01",
+      id: "foundations",
+      name: "Foundations",
+      description: "The visual and system primitives every component inherits — type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.",
+      items: [
+        {
+          file: "preview/type-scale.html",
+          name: "Type scale",
+          tagline: "Display through Micro — eight steps with set line heights and weight conventions.",
+          meta: {
+            usage: "Use these eight steps for every text element. Body and labels are 14/22 Regular; headings step up from Card Title 18 to Display 56. Labels and headings sit at ExtraBold (800); body at Regular (400). The contrast between thin body and chunky labels is the system's signature — do not introduce intermediate weights for emphasis."
+          }
+        },
+        {
+          file: "preview/type-faces.html",
+          name: "Type specimen",
+          tagline: "Acherus Grotesque, weights 200–900, plus the SF Mono code font.",
+          meta: {
+            usage: "Acherus Grotesque is the system sans across every weight. Reach for the mono stack only inside code blocks, tokens, JSON snippets, and timestamps. Italic is reserved for placeholders (Light Italic 300) and the rare in-line citation — never used for emphasis."
+          }
         },
         {
           file: "preview/brand-iconography.html",
@@ -58,6 +82,14 @@ window.JELLYROLL_DATA = {
             options: "Sizes: 24px default, 16px inline / dense contexts, 20px nav rail. Outlined glyphs by default; filled status pictograms (running check, failed dot, sticky star) are the only exception. Click any icon in the gallery to copy its name.",
             usage: "Pick the icon whose metaphor matches the action or object directly — never invent a custom mark. Drop the SVG inline (or reference via `<svg><use href=\"icons/{name}.svg\">`) so it picks up the surrounding text color. For vendor logos (AWS, Salesforce, GitHub) the system falls back to Font Awesome 6 brands at matching stroke weight.",
             behaviors: "Icon-only buttons require an explicit `aria-label`. Icons paired with text take `aria-hidden=\"true\"` so screen readers don't read them twice. The icon inherits `currentColor` from its parent — never hardcode a tint."
+          }
+        },
+        {
+          file: "preview/spacing-scale.html",
+          name: "Spacing",
+          tagline: "Strict 4-pt grid: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.",
+          meta: {
+            usage: "Use `--space-*` tokens for every margin, padding, and gap. Never hardcode pixel values. Layout containers use 64px horizontal padding, frame headers use 48px top/bottom padding, cards use 16px internal padding, and inputs use 8px top/bottom × 12px left/right for a 40px-tall field."
           }
         },
         {
@@ -77,43 +109,11 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "preview/spacing-scale.html",
-          name: "Spacing",
-          tagline: "Strict 4-pt grid: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.",
-          meta: {
-            usage: "Use `--space-*` tokens for every margin, padding, and gap. Never hardcode pixel values. Layout containers use 64px horizontal padding, frame headers use 48px top/bottom padding, cards use 16px internal padding, and inputs use 8px top/bottom × 12px left/right for a 40px-tall field."
-          }
-        },
-        {
-          file: "preview/foundations-tokens.html",
-          name: "Tokens",
-          tagline: "All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.",
-          meta: {
-            usage: "Import `colors_and_type.css` and reference tokens by name in your CSS or inline styles. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code. Raw ramp tokens (`--sl-blue-600`) are appropriate only when building new semantic tokens or one-off brand moments."
-          }
-        },
-        {
           file: "preview/colors-surfaces.html",
           name: "Surfaces",
           tagline: "Navbar · Canvas · Sunken · Raised · Overlay — five elevation planes.",
           meta: {
             usage: "Compose interfaces from five surfaces. Navbar (Indigo-1000) carries the dark global chrome only. Canvas (white) is the default page. Sunken (Grey-100) nests inside Canvas for inline panels. Raised (white + shadow) lifts cards and drawers. Overlay sits on top for modals and popovers. Use elevation to organize complexity, not for decoration."
-          }
-        },
-        {
-          file: "preview/type-scale.html",
-          name: "Type scale",
-          tagline: "Display through Micro — eight steps with set line heights and weight conventions.",
-          meta: {
-            usage: "Use these eight steps for every text element. Body and labels are 14/22 Regular; headings step up from Card Title 18 to Display 56. Labels and headings sit at ExtraBold (800); body at Regular (400). The contrast between thin body and chunky labels is the system's signature — do not introduce intermediate weights for emphasis."
-          }
-        },
-        {
-          file: "preview/type-faces.html",
-          name: "Type specimen",
-          tagline: "Acherus Grotesque, weights 200–900, plus the SF Mono code font.",
-          meta: {
-            usage: "Acherus Grotesque is the system sans across every weight. Reach for the mono stack only inside code blocks, tokens, JSON snippets, and timestamps. Italic is reserved for placeholders (Light Italic 300) and the rare in-line citation — never used for emphasis."
           }
         },
         {
@@ -125,14 +125,6 @@ window.JELLYROLL_DATA = {
           }
         },
         {
-          file: "preview/foundations-zindex.html",
-          name: "Z-index",
-          tagline: "8-step stacking scale — base through toast.",
-          meta: {
-            usage: "Use `--z-*` tokens instead of literal z-index values. The scale runs Base (0), Dropdown (1000), Sticky (1100), Overlay (1200), Modal (1300), Popover (1400), Tooltip (1500), Toast (1600). Tooltips sit above popovers because they can appear inside popovers; toasts sit highest so they're never occluded. Never set z-index outside this scale."
-          }
-        },
-        {
           file: "preview/foundations-breakpoints.html",
           name: "Breakpoints",
           tagline: "Viewport widths — sm 640, md 768, lg 1024, xl 1280.",
@@ -141,11 +133,27 @@ window.JELLYROLL_DATA = {
           }
         },
         {
+          file: "preview/foundations-zindex.html",
+          name: "Z-index",
+          tagline: "8-step stacking scale — base through toast.",
+          meta: {
+            usage: "Use `--z-*` tokens instead of literal z-index values. The scale runs Base (0), Dropdown (1000), Sticky (1100), Overlay (1200), Modal (1300), Popover (1400), Tooltip (1500), Toast (1600). Tooltips sit above popovers because they can appear inside popovers; toasts sit highest so they're never occluded. Never set z-index outside this scale."
+          }
+        },
+        {
           file: "preview/foundations-selection-skeleton.html",
           name: "Selection & skeleton",
           tagline: "Text highlight and loading placeholder colors.",
           meta: {
             usage: "`--color-selection-bg` and `--color-selection-text` style the browser's text-highlight via a global `::selection` rule — no per-component wiring needed. For loading placeholders, fill bands with `--color-skeleton` on light surfaces and `--color-skeleton-on-dark` (a white-alpha overlay) on dark surfaces like the nav rail — light grey reads too bright on navy. Bands pulse opacity 1 → 0.5 → 1 at 2s (disabled under prefers-reduced-motion); keep it subtle. Skeletons should match the eventual content's geometry — same row heights, same line widths."
+          }
+        },
+        {
+          file: "preview/foundations-tokens.html",
+          name: "Tokens",
+          tagline: "All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.",
+          meta: {
+            usage: "Import `colors_and_type.css` and reference tokens by name in your CSS or inline styles. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code. Raw ramp tokens (`--sl-blue-600`) are appropriate only when building new semantic tokens or one-off brand moments."
           }
         }
       ]

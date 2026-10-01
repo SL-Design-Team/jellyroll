@@ -14,6 +14,7 @@
   :root {
     --topbar-h: 72px;
     --sidebar-w: 300px;
+    --cat-guidance:       var(--sl-blue-700);
     --cat-foundations:    var(--sl-indigo-600);
     --cat-color:          var(--sl-pink-600);
     --cat-brand:          var(--sl-purple-600);
@@ -249,39 +250,6 @@
   .sidebar-nav {
     overflow-y: auto;
     padding: 10px 12px 24px 24px;
-  }
-  /* Match the .sec-header layout (14px icon col + 1fr label + auto trailing) so the
-     Getting Started row sits at the exact same indent as the category headers. */
-  .sidebar-nav .top-link {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 14px 1fr auto;
-    column-gap: 6px;
-    align-items: center;
-    padding: 8px 8px;
-    border-radius: var(--radius-sm);
-    color: var(--color-text-heading);
-    text-decoration: none;
-    font-family: var(--font-sans);
-    font-weight: 800;
-    font-size: 12px;
-    line-height: 16px;
-    margin-bottom: 2px;
-  }
-  .sidebar-nav .top-link svg {
-    width: 12px;
-    height: 12px;
-    stroke-width: 2.25;
-    color: var(--color-text-subtle);
-  }
-  .sidebar-nav .top-link:hover {
-    background: var(--sl-blue-100, #E8F0FF);
-    color: var(--sl-blue-700);
-  }
-  .sidebar-nav .top-link:hover svg { color: var(--sl-blue-700); }
-  .sidebar-nav .top-link[data-active="true"] {
-    background: var(--sl-blue-100, #E8F0FF);
-    color: var(--sl-blue-700);
   }
   .sidebar-nav .nav-divider {
     height: 1px;
@@ -2421,6 +2389,9 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   const sidebarSearchEl = document.getElementById("sidebarSearch");
   const emptyFilterEl = document.getElementById("emptyFilter");
 
+  // Sections without a number (Getting started) show just their name.
+  const secLabel = sec => sec.num ? `${sec.num} · ${sec.name}` : sec.name;
+
   totalCountEl.textContent = flat.length + " assets";
   searchInput.placeholder = "Search " + flat.length + " assets";
 
@@ -2435,27 +2406,25 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   const searchBox = document.getElementById("searchInput");
   if (searchBox) searchBox.setAttribute("placeholder", `Search ${totalAssets} assets`);
 
-  // Sidebar — top-level Getting Started link, an icon-search results section,
-  // then the categorized accordion.
+  // Sidebar — an icon-search results section, then the categorized accordion.
+  // The Getting started group opens on load and leads with an Overview link to
+  // the home page, so the group and the page it describes share one entry.
+  const OPEN_BY_DEFAULT = "guidance";
   const topLinksHtml = `
-    <a class="top-link" href="#getting-started" data-top-link="getting-started">
-      <i data-lucide="compass"></i>
-      <span>Getting started</span>
-    </a>
-    <div class="nav-divider"></div>
     <div class="sidebar-icons" id="sidebarIcons" aria-live="polite">
       <div class="si-label"><span>Icons</span><span class="si-count" id="siCount">0</span></div>
       <div class="si-list" id="siList"></div>
     </div>
   `;
   sidebarEl.innerHTML = topLinksHtml + sections.map(sec => `
-    <div class="sec" data-section-id="${sec.id}" data-open="false">
-      <button class="sec-header" type="button" data-toggle="${sec.id}" aria-expanded="false"${sec.description ? ` title="${escapeHtml(sec.description)}"` : ""}>
+    <div class="sec" data-section-id="${sec.id}" data-open="${sec.id === OPEN_BY_DEFAULT}">
+      <button class="sec-header" type="button" data-toggle="${sec.id}" aria-expanded="${sec.id === OPEN_BY_DEFAULT}"${sec.description ? ` title="${escapeHtml(sec.description)}"` : ""}>
         <i data-lucide="chevron-right" class="chev"></i>
-        <span>${escapeHtml(sec.num)} · ${escapeHtml(sec.name)}</span>
+        <span>${escapeHtml(secLabel(sec))}</span>
         <span class="count-pill">${sec.items.length}</span>
       </button>
       <div class="sec-items">
+        ${sec.id === OPEN_BY_DEFAULT ? `<a class="item-link" href="#getting-started" data-top-link="getting-started" data-search="getting started overview">Overview</a>` : ""}
         ${(() => {
           // Items with a `parent` are nested in the nav directly under that
           // parent (left-nav only — they remain normal items everywhere else).
@@ -2508,6 +2477,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   // ── Tile visuals ────────────────────────────────────────────────────
   // Default Lucide icon per category, used when an asset has no custom visual.
   const CATEGORY_DEFAULT_ICON = {
+    "guidance":         "compass",
     "foundations":      "ruler",
     "color":            "palette",
     "brand":            "gem",
@@ -2640,6 +2610,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
 
   // Category background tint + accent color CSS variables consumed by .tile + .tile-visual.
   const CATEGORY_VARS = {
+    "guidance":         { color: "var(--cat-guidance)",       tint: "var(--sl-blue-50,   #F2F6FC)" },
     "foundations":      { color: "var(--cat-foundations)",   tint: "var(--sl-indigo-50, #F4F6F9)" },
     "color":            { color: "var(--cat-color)",         tint: "var(--sl-pink-50,   #FDF3F8)" },
     "brand":            { color: "var(--cat-brand)",         tint: "var(--sl-purple-50, #F7F5F9)" },
@@ -2756,7 +2727,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     <section class="section" id="section-${sec.id}" data-section-id="${sec.id}">
       <div class="section-head">
         <div class="section-head-row">
-          <span class="label-num">${escapeHtml(sec.num)}</span>
+          ${sec.num ? `<span class="label-num">${escapeHtml(sec.num)}</span>` : ""}
           <h2>${escapeHtml(sec.name)}</h2>
           <span class="label-count" data-section-count="${sec.id}">${sec.items.length} ${sec.items.length === 1 ? "asset" : "assets"}</span>
         </div>
@@ -3094,6 +3065,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     const sec = item.section;
     const cssVar = `--cat-${sec.id}`;
     const tintMap = {
+      "guidance": "var(--sl-blue-50, #F2F6FC)",
       "foundations": "var(--sl-indigo-50, #F4F6F9)",
       "color": "var(--sl-pink-50, #FDF3F8)",
       "brand": "var(--sl-purple-50, #F7F5F9)",
@@ -3108,7 +3080,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     detailMetaStrip.style.setProperty("--tile-tint", tintMap[sec.id] || "var(--sl-blue-50)");
 
     detailMetaStrip.innerHTML = `
-      <span class="cat-chip">${escapeHtml(sec.num)} · ${escapeHtml(sec.name)}</span>
+      <span class="cat-chip">${escapeHtml(secLabel(sec))}</span>
       <span class="crumb-sep">/</span>
       <span>${escapeHtml(fileLabel(item.file))}</span>
     `;
@@ -3253,7 +3225,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     }
   }
   function setTopLinkActive(key) {
-    sidebarEl.querySelectorAll(".top-link").forEach(a => {
+    sidebarEl.querySelectorAll("[data-top-link]").forEach(a => {
       if (key && a.getAttribute("data-top-link") === key) a.setAttribute("data-active", "true");
       else a.removeAttribute("data-active");
     });
@@ -3282,7 +3254,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
 
   // Close drawer when a nav item is tapped
   sidebarEl.addEventListener("click", (e) => {
-    if (e.target.closest(".item-link") || e.target.closest(".top-link")) closeMobileNav();
+    if (e.target.closest(".item-link")) closeMobileNav();
   });
 
   // Close on Escape

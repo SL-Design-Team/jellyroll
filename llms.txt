@@ -10,26 +10,31 @@ self-contained — inline component CSS, token usage, and markup. Prefer semanti
 tokens over raw ramp variables. Sentence case (Microsoft style, except Snap names and 
 SnapLogic terms; see Content guidelines and Terminology); no emoji; Lucide icons only.
 
-## Foundations
+## Getting started
 
-The rules every component inherits — design tokens, spacing, motion, elevation, accessibility, and shared UX behavior.
+How to think about and use the system — accessibility, design principles, and how to write for the UI.
 
 - [Accessibility](https://sl-design-team.github.io/jellyroll/preview/foundations-accessibility.html): WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.
 - [Design principles](https://sl-design-team.github.io/jellyroll/preview/foundations-design-principles.html): Human-centered principles, visual principles, and cross-component behavior rules.
 - [Content guidelines](https://sl-design-team.github.io/jellyroll/preview/foundations-content-guidelines.html): Sentence-style capitalization, punctuation, field and checkbox labels, and Snap error messages.
 - [Terminology](https://sl-design-team.github.io/jellyroll/preview/foundations-terminology.html): SnapLogic terms, product names, word choices, and spelling.
-- [Iconography](https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html): 202 outlined line icons — 24×24 viewbox, currentColor stroke.
-- [Radius](https://sl-design-team.github.io/jellyroll/preview/spacing-radius.html): Restrained corners: 2 / 4 / 6–8 / 999px.
-- [Shadows](https://sl-design-team.github.io/jellyroll/preview/spacing-shadows.html): Light, blueish, low-spread — borders carry more weight than shadows in this system.
-- [Spacing](https://sl-design-team.github.io/jellyroll/preview/spacing-scale.html): Strict 4-pt grid: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.
-- [Tokens](https://sl-design-team.github.io/jellyroll/preview/foundations-tokens.html): All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.
-- [Surfaces](https://sl-design-team.github.io/jellyroll/preview/colors-surfaces.html): Navbar · Canvas · Sunken · Raised · Overlay — five elevation planes.
+
+## Foundations
+
+The visual and system primitives every component inherits — type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.
+
 - [Type scale](https://sl-design-team.github.io/jellyroll/preview/type-scale.html): Display through Micro — eight steps with set line heights and weight conventions.
 - [Type specimen](https://sl-design-team.github.io/jellyroll/preview/type-faces.html): Acherus Grotesque, weights 200–900, plus the SF Mono code font.
+- [Iconography](https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html): 202 outlined line icons — 24×24 viewbox, currentColor stroke.
+- [Spacing](https://sl-design-team.github.io/jellyroll/preview/spacing-scale.html): Strict 4-pt grid: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.
+- [Radius](https://sl-design-team.github.io/jellyroll/preview/spacing-radius.html): Restrained corners: 2 / 4 / 6–8 / 999px.
+- [Shadows](https://sl-design-team.github.io/jellyroll/preview/spacing-shadows.html): Light, blueish, low-spread — borders carry more weight than shadows in this system.
+- [Surfaces](https://sl-design-team.github.io/jellyroll/preview/colors-surfaces.html): Navbar · Canvas · Sunken · Raised · Overlay — five elevation planes.
 - [Motion](https://sl-design-team.github.io/jellyroll/preview/foundations-motion.html): Durations and easings for transitions and animations.
-- [Z-index](https://sl-design-team.github.io/jellyroll/preview/foundations-zindex.html): 8-step stacking scale — base through toast.
 - [Breakpoints](https://sl-design-team.github.io/jellyroll/preview/foundations-breakpoints.html): Viewport widths — sm 640, md 768, lg 1024, xl 1280.
+- [Z-index](https://sl-design-team.github.io/jellyroll/preview/foundations-zindex.html): 8-step stacking scale — base through toast.
 - [Selection & skeleton](https://sl-design-team.github.io/jellyroll/preview/foundations-selection-skeleton.html): Text highlight and loading placeholder colors.
+- [Tokens](https://sl-design-team.github.io/jellyroll/preview/foundations-tokens.html): All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.
 
 ## Color
 

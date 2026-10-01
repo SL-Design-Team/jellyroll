@@ -154,15 +154,18 @@ jellyroll-design-system/
 
 | #  | Category              | Count | Examples                                            |
 |----|-----------------------|-------|-----------------------------------------------------|
-| 01 | Foundations           | 5     | Type scale, type faces, spacing, radii, shadows     |
-| 02 | Color                 | 4     | All 10 ramps (one page) + semantic text + surfaces + brand gradient |
-| 03 | Brand                 | 4     | Logo, iconography, launcher, brand gradient demo    |
-| 04 | Primitives            | 27    | Buttons, inputs, badges, status, spinner, avatar… |
-| 05 | Components            | 18    | Card, modal, table, tabs, toast, global header…   |
-| 06 | Advanced editors      | 7     | Code, JSON, schema, connection, API param builder   |
-| 07 | Patterns              | 17    | Validation, save/discard, AI-assisted input, wizard |
-| 08 | Templates             | 1     | Designer · Empty canvas                             |
-| 09 | Data visualization    | 23    | KPI, sparkline, time series, Sankey, Gantt, hive plot… |
+| —  | Getting started       | 4     | Accessibility, design principles, content guidelines, terminology |
+| 01 | Foundations           | 12    | Type scale, type faces, iconography, spacing, radii, shadows, surfaces, motion, breakpoints, z-index, tokens |
+| 02 | Color                 | 7     | Color ramps, brand gradient, semantic text, status colors, data-viz palettes |
+| 03 | Brand                 | 1     | Logo                                                |
+| 04 | Building blocks       | 25    | Buttons, inputs, badges, checkbox, number input, avatar, menu… |
+| 05 | Composed components   | 26    | Combobox, date picker, drawer, modal, table, tabs, toast, global header… |
+| 06 | Patterns              | 22    | Validation, save/discard, AI-assisted input, wizard, agent activity |
+| 07 | Data visualization    | 17    | KPI, sparkline, time series, heatmap, histogram, hive plot… |
+| 08 | Advanced editors      | 7     | Code, JSON, schema, connection picker, API parameter builder |
+| 09 | Templates             | 1     | Designer · Empty canvas                             |
+
+**Getting started** holds the guidance for how to think about and use the system. **Foundations** holds the visual and system primitives every component inherits.
 
 ## Caveats
 
