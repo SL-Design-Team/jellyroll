@@ -127,7 +127,7 @@ This gives you every JellyRoll token as a CSS custom property — color ramps, s
 - **Secondary buttons:** white fill; on hover only the border + text shift blue → teal.
 - **Body text:** `--color-text-body` (`#031A48`, dark navy). Subtle text: `--color-text-subtle` (`#7D8695`).
 - **Cards:** white, 1px Grey-300 border, 4px radius, 16px padding, `--shadow-raised`. Borders — not shadow — indicate selection (1px → 1.5px on hover → 3px when selected).
-- **Sentence case** everywhere. Pills/tags = 10px ExtraBold UPPERCASE only.
+- **Sentence case** everywhere (Microsoft style), except Snap names and SnapLogic terms such as Snaplex and Triggered Task. Pills/tags = 10px ExtraBold UPPERCASE only, via CSS. See the **Content guidelines** and **Terminology** cards under Foundations.
 - **No emoji.** Icons via [Lucide](https://lucide.dev) CDN; Font Awesome 6 as a fallback for vendor logos and domain pictograms.
 - **No gradients in normal UI.** Reserved for the 6 product launcher icons + SnapGPT accent + the brand gradient.
 

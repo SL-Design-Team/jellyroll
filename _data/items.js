@@ -32,6 +32,24 @@ window.JELLYROLL_DATA = {
           }
         },
         {
+          file: "preview/foundations-content-guidelines.html",
+          name: "Content guidelines",
+          tagline: "Sentence-style capitalization, punctuation, field and checkbox labels, and Snap error messages.",
+          meta: {
+            usage: "Applies to all content in the UI, notifications, and error messages. Use Microsoft sentence-style capitalization for everything except Snap names and SnapLogic terms, which keep their own capitalization (see Terminology). Use a period for sentences and strings that act as sentences, and none for short labels. Field names describe contents rather than give instructions, and checkbox labels never use double negatives. Pills and tags are uppercase only through CSS; write the source string in sentence case.",
+            behaviors: "Snap error messages are three strings: error, reason, and resolution. Keep each as short as possible, keep them generic, quote messages that come from other systems, and never repeat the error as the reason. The SnapLogic Platform appends a semicolon to each message, so don't add end punctuation. Errors and notifications in the new UI (Monitor, Admin Manager, AutoSync) are designed by UX; follow the Error states pattern for those."
+          }
+        },
+        {
+          file: "preview/foundations-terminology.html",
+          name: "Terminology",
+          tagline: "SnapLogic terms, product names, word choices, and spelling.",
+          meta: {
+            usage: "Check here before naming anything in the UI. SnapLogic terms (Snap, Snaplex, Triggered Task, SnapLogic Platform) are capitalized exactly as listed; common nouns such as pipeline, account, asset, and control plane stay lowercase. Product and technical names use the owner's exact casing. Prefer the word on the left in Use this, not that. Where this list differs from the Microsoft Writing Style Guide A–Z word list or Merriam-Webster, this list wins.",
+            options: "Grouped as SnapLogic terms, Snaplex nodes and hosts, lowercase terms, product and technical names (including account types), word swaps, usage notes, and spelling and compound words."
+          }
+        },
+        {
           file: "preview/brand-iconography.html",
           name: "Iconography",
           tagline: "202 outlined line icons — 24×24 viewbox, currentColor stroke.",

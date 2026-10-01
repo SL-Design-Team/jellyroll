@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Foundations · Terminology</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { width: 100%; gap: 0; padding: 0; }
+  .tm-body { padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 40px; }
+
+  .sec-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .sec-heading .icon-wrap {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-blue-50);
+    color: var(--sl-blue-600);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-heading .icon-wrap i { width: 14px; height: 14px; }
+  .sec-heading h2 { font: 800 16px/22px var(--font-sans); color: var(--color-text-heading); margin: 0; }
+  .sec-lede { margin: 0 0 14px; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); max-width: 72ch; }
+  .sec-divider { height: 1px; background: var(--sl-grey-200); }
+  .sub-heading { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); margin: 24px 0 10px; }
+
+  .note {
+    display: flex; gap: 10px;
+    padding: 12px 14px;
+    background: var(--sl-blue-50);
+    border: 1px solid var(--sl-blue-200);
+    border-left: 3px solid var(--sl-blue-600);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .note i { width: 15px; height: 15px; color: var(--sl-blue-600); flex-shrink: 0; margin-top: 1px; }
+  .note a { color: var(--sl-blue-600); font-weight: 700; }
+
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tm-table {
+    width: 100%;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    border-collapse: separate; border-spacing: 0;
+    overflow: hidden;
+  }
+  .tm-table th {
+    background: var(--sl-grey-50);
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-subtle);
+    padding: 9px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .tm-table td {
+    padding: 9px 14px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    border-bottom: 1px solid var(--sl-grey-100);
+    vertical-align: top;
+  }
+  .tm-table tr:last-child td { border-bottom: 0; }
+  .tm-table td.term { font-weight: 800; color: var(--color-text-heading); width: 30%; }
+  .tm-table td.yes { color: var(--sl-green-800); font-weight: 700; width: 26%; }
+  .tm-table td.no { color: var(--sl-red-700); text-decoration: line-through; text-decoration-color: var(--sl-red-300); width: 26%; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    padding: 4px 10px;
+    border: 1px solid var(--sl-grey-300);
+    border-radius: var(--radius-sm);
+    background: var(--sl-white);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-heading);
+  }
+
+  @media (max-width: 700px) {
+    .tm-body { padding: 24px 20px 40px; gap: 28px; }
+    .tm-table { min-width: 520px; }
+  }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Terminology",
+  "section": "Foundations",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-terminology.html",
+  "tagline": "SnapLogic terms, product names, word choices, and spelling.",
+  "options": "Grouped as SnapLogic terms, Snaplex nodes and hosts, lowercase terms, product and technical names (including account types), word swaps, usage notes, and spelling and compound words.",
+  "usage": "Check here before naming anything in the UI. SnapLogic terms (Snap, Snaplex, Triggered Task, SnapLogic Platform) are capitalized exactly as listed; common nouns such as pipeline, account, asset, and control plane stay lowercase. Product and technical names use the owner's exact casing. Prefer the word on the left in Use this, not that. Where this list differs from the Microsoft Writing Style Guide A–Z word list or Merriam-Webster, this list wins."
+}
+</script>
+</head>
+<body>
+<div class="card">
+
+  <div class="tm-body">
+
+    <div class="note">
+      <i data-lucide="info"></i>
+      <div>Use this list with the Microsoft Writing Style Guide A–Z word list and Merriam-Webster. Where we differ from them, this page wins, because it reflects how our technology is named. Capitalization rules are in <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-content-guidelines.html">Content guidelines</a>.</div>
+    </div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="blocks"></i></div>
+        <h2>SnapLogic terms</h2>
+      </div>
+      <p class="sec-lede">Capitalize these exactly as written, wherever they appear. They’re the exception to sentence case.</p>
+      <div class="tbl-wrap"><table class="tm-table"><thead><tr><th>Term</th><th>Guidance</th></tr></thead><tbody>
+<tr><td class="term">AutoPrep</td><td></td></tr>
+<tr><td class="term">AutoSync</td><td></td></tr>
+<tr><td class="term">Cache Pipeline</td><td>A SnapLogic feature.</td></tr>
+<tr><td class="term">Cloudplex</td><td>A Snaplex managed by SnapLogic.</td></tr>
+<tr><td class="term">Groundplex</td><td>A Snaplex managed by the customer.</td></tr>
+<tr><td class="term">FeedMaster</td><td></td></tr>
+<tr><td class="term">Iris</td><td></td></tr>
+<tr><td class="term">Snap, Snap Pack</td><td></td></tr>
+<tr><td class="term">Snaplex</td><td>A container that defines configuration for a set of nodes (JCC, FeedMaster, or both). You configure, start, or stop the nodes as a group from the Snaplex.</td></tr>
+<tr><td class="term">Scheduled Task</td><td></td></tr>
+<tr><td class="term">Triggered Task</td><td>The Execution overview and Dashboard refer to these as API calls.</td></tr>
+<tr><td class="term">Ultra Task</td><td>Use for the entity in the UI. For the underlying design type, write “a pipeline called by an Ultra Task”. Avoid Ultra Pipeline unless it appears in the UI.</td></tr>
+<tr><td class="term">SnapLogic Platform, the Platform</td><td>Capitalize when you mean the specific, named platform from SnapLogic. Use lowercase platform for platforms in general. The article “a” before platform is the cue.</td></tr>
+<tr><td class="term">SnapLogic Cloud Pattern Catalog</td><td>Available from the Patterns tab in Designer, unless an admin has disabled it. It isn’t the same as the public pattern library in the waffle menu, although some patterns are in both.</td></tr>
+<tr><td class="term">SnapLogic Integration Nation</td><td>Formerly SnapLogic Community.</td></tr>
+<tr><td class="term">Asset catalog</td><td>The only place asset is capitalized.</td></tr>
+<tr><td class="term">Environment</td><td>Formerly Org. Org is always shortened to avoid confusion with organization, which can mean a customer’s company or department.</td></tr>
+<tr><td class="term">Environment admin</td><td>In the new interface and log messages. The legacy interface says Org admin.</td></tr>
+<tr><td class="term">Designer, Classic Manager</td><td>Don’t write IIP Designer or IIP Manager. Use these names to stay consistent with the waffle menu.</td></tr>
+<tr><td class="term">IIP</td><td>Intelligent Integration Platform.</td></tr>
+<tr><td class="term">SnapLogic</td><td>A trademark, so never possessive. Write “the SnapLogic thingamajig”, not “SnapLogic’s thingamajig”.</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="server"></i></div>
+        <h2>Snaplex nodes and hosts</h2>
+      </div>
+      <p class="sec-lede">Be specific about what you mean. “Node” applies to many concepts.</p>
+      <div class="tbl-wrap"><table class="tm-table"><thead><tr><th>Term</th><th>Guidance</th></tr></thead><tbody>
+<tr><td class="term">Snaplex node</td><td>The most generic term. A JCC (Java Component Container) or FeedMaster service installed on a host.</td></tr>
+<tr><td class="term">JCC node</td><td>The runtime environment: the service plus its host.</td></tr>
+<tr><td class="term">FeedMaster node</td><td>The node designated as a message broker for request-and-response pipelines called by Ultra Tasks.</td></tr>
+<tr><td class="term">host</td><td>Use only for the hardware or virtual machine, such as the amount of RAM. Write “the host for a Snaplex node has a minimum of 8 MB RAM”, not “a JCC node needs 8 MB RAM”.</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="case-lower"></i></div>
+        <h2>Lowercase terms</h2>
+      </div>
+      <p class="sec-lede">These stay lowercase in running text, headings, and labels, even though SnapLogic-specific.</p>
+      <div class="tbl-wrap"><table class="tm-table"><thead><tr><th>Term</th><th>Guidance</th></tr></thead><tbody>
+<tr><td class="term">account, asset</td><td>Lowercase. For SnapLogic ones, put SnapLogic first: SnapLogic account, SnapLogic asset.</td></tr>
+<tr><td class="term">pipeline</td><td>Lowercase. Capitalize only for an Ultra Pipeline that appears in the UI.</td></tr>
+<tr><td class="term">task</td><td>Lowercase when generic. Scheduled Task, Triggered Task, and Ultra Task are named types.</td></tr>
+<tr><td class="term">pattern</td><td>Lowercase. Capitalize only for the SnapLogic Cloud Pattern Catalog.</td></tr>
+<tr><td class="term">platform</td><td>Lowercase in general use. See SnapLogic Platform.</td></tr>
+<tr><td class="term">control plane</td><td>Always lowercase.</td></tr>
+<tr><td class="term">data plane</td><td>The Snaplexes that execute integrations. See control plane.</td></tr>
+<tr><td class="term">data pipeline</td><td>The type of pipeline created with AutoSync.</td></tr>
+<tr><td class="term">cloud</td><td>Lowercase, except in Microsoft Cloud or a product name. Use it mostly as an adjective: cloud services, cloud computing.</td></tr>
+<tr><td class="term">cloud data warehouse</td><td></td></tr>
+<tr><td class="term">vault</td><td>Lowercase, except in HashiCorp Vault or a product name.</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="building-2"></i></div>
+        <h2>Product and technical names</h2>
+      </div>
+      <p class="sec-lede">Use the exact casing of the owner’s name. When in doubt, check the company’s website.</p>
+      <div class="tbl-wrap"><table class="tm-table"><thead><tr><th>Term</th><th>Guidance</th></tr></thead><tbody>
+<tr><td class="term">Amazon</td><td>Use AWS plus the product name for AWS products. Everything else from the company is Amazon.</td></tr>
+<tr><td class="term">JSON</td><td>Don’t spell out JavaScript Object Notation. For files, write .json file.</td></tr>
+<tr><td class="term">Microsoft Azure</td><td>Never abbreviate Microsoft. Include Microsoft the first time you mention a product. When you list several, Microsoft before the first name is enough.</td></tr>
+<tr><td class="term">Oracle NetSuite</td><td>Never NetSuite alone.</td></tr>
+<tr><td class="term">ZIP file</td><td>For a specific extension, write .zip.</td></tr>
+<tr><td class="term">Boolean</td><td>Capitalized in a normal sentence. For a reserved word in a programming language, use the exact casing that language requires, and name the language.</td></tr>
+<tr><td class="term">slpropz</td><td>The Snaplex configuration file. It holds Java properties and is updated automatically when someone changes Snaplex settings in the Admin Manager.</td></tr>
+<tr><td class="term">US</td><td>The abbreviation for United States.</td></tr>
+<tr><td class="term">EMEA</td><td>The control plane hosted for SnapLogic customers in Europe.</td></tr>
+<tr><td class="term">CSM</td><td>Customer Success Manager.</td></tr>
+</tbody></table></div><div class="sub-heading">Written exactly as shown</div><div class="chips"><span class="chip">AWS</span><span class="chip">cURL</span><span class="chip">GitHub</span><span class="chip">Gainsight</span><span class="chip">Google Analytics</span><span class="chip">Google BigQuery</span><span class="chip">Google Directory</span><span class="chip">Google Spreadsheet</span><span class="chip">HashiCorp</span><span class="chip">IBM MQ</span><span class="chip">Jira</span><span class="chip">Marketo</span><span class="chip">Microsoft Azure MySQL</span><span class="chip">Microsoft Dynamics</span><span class="chip">Microsoft Exchange</span><span class="chip">Microsoft OneDrive</span><span class="chip">Microsoft SharePoint</span><span class="chip">Microsoft SQL</span><span class="chip">Microsoft Teams</span><span class="chip">MongoDB</span><span class="chip">MySQL</span><span class="chip">OAuth 1.0, OAuth 2.0</span><span class="chip">OpenAPI</span><span class="chip">Oracle JDBC Thin</span><span class="chip">PostgreSQL</span><span class="chip">Reltio</span><span class="chip">Salesforce</span><span class="chip">SAP Data Warehouse Cloud</span><span class="chip">Teradata Database</span><span class="chip">Workday</span><span class="chip">Zendesk</span><span class="chip">regex</span><span class="chip">N/A</span><span class="chip">AM, PM</span></div><div class="sub-heading">Account types</div><p class="sec-lede" style="margin-bottom:10px;">Written exactly as listed.</p><div class="chips"><span class="chip">Google Dynamic</span><span class="chip">MongoDB Replica Set Dynamic</span><span class="chip">PostgreSQL Dynamic</span><span class="chip">Remote Python Executor Dynamic</span><span class="chip">REST AWS SigV4</span><span class="chip">REST Dynamic OAuth2</span><span class="chip">Shopify Dynamic OAuth2</span><span class="chip">Slack Dynamic OAuth2</span><span class="chip">Snowflake Azure Dynamic OAuth2</span><span class="chip">Snowflake S3 Dynamic</span><span class="chip">Teradata Database Dynamic</span><span class="chip">Workday Dynamic</span><span class="chip">Zuora Dynamic OAuth2</span></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="arrow-right-left"></i></div>
+        <h2>Use this, not that</h2>
+      </div>
+      <p class="sec-lede">Common word swaps. They also keep content easier to translate.</p>
+      <div class="tbl-wrap"><table class="tm-table"><thead><tr><th>Use</th><th>Don’t use</th><th>Notes</th></tr></thead><tbody>
+<tr><td class="yes">affect</td><td class="no">impact (as a verb)</td><td></td></tr>
+<tr><td class="yes">with</td><td class="no">along with</td><td></td></tr>
+<tr><td class="yes">and</td><td class="no">as well as</td><td></td></tr>
+<tr><td class="yes">or</td><td class="no">and/or</td><td>Most of the time, or can stand on its own. Use and/or only when it avoids lengthy, complex wording.</td></tr>
+<tr><td class="yes">as much as possible</td><td class="no">as far as possible</td><td></td></tr>
+<tr><td class="yes">app</td><td class="no">application</td><td></td></tr>
+<tr><td class="yes">because</td><td class="no">since</td><td>Don’t use since to mean because.</td></tr>
+<tr><td class="yes">because of</td><td class="no">due to</td><td></td></tr>
+<tr><td class="yes">therefore</td><td class="no">hence</td><td>Hence is archaic.</td></tr>
+<tr><td class="yes">regardless</td><td class="no">irrespective</td><td></td></tr>
+<tr><td class="yes">might</td><td class="no">may</td><td></td></tr>
+<tr><td class="yes">run</td><td class="no">execute</td><td>Use execute only when it is the label of a UI element.</td></tr>
+<tr><td class="yes">does not run</td><td class="no">fail</td><td>When asked to avoid the word fail.</td></tr>
+<tr><td class="yes">such as</td><td class="no">like</td><td></td></tr>
+<tr><td class="yes">refer to</td><td class="no">see</td><td></td></tr>
+<tr><td class="yes">plan to</td><td class="no">want</td><td>If you plan to use an Ultra Task, learn about its requirements.</td></tr>
+<tr><td class="yes">after, when</td><td class="no">once</td><td></td></tr>
+<tr><td class="yes">using, through</td><td class="no">via</td><td></td></tr>
+<tr><td class="yes">use, using</td><td class="no">utilize</td><td></td></tr>
+<tr><td class="yes">parent/child</td><td class="no">master/slave</td><td></td></tr>
+<tr><td class="yes">specified</td><td class="no">given</td><td>Don’t use given to mean specified, particular, or fixed.</td></tr>
+<tr><td class="yes">unneeded</td><td class="no">unwanted, not required, not necessary, not needed</td><td></td></tr>
+<tr><td class="yes">synchronize</td><td class="no">sync</td><td></td></tr>
+<tr><td class="yes">license</td><td class="no">licence</td><td>American English spelling.</td></tr>
+<tr><td class="yes">click</td><td class="no">click on</td><td></td></tr>
+<tr><td class="yes">control plane</td><td class="no">pod</td><td>In customer-facing content.</td></tr>
+<tr><td class="yes">appears, opens</td><td class="no">displays</td><td>Often you can use one of these. Use displays when it’s clearly the better fit.</td></tr>
+<tr><td class="yes">option</td><td class="no">radio button</td><td></td></tr>
+<tr><td class="yes">on</td><td class="no">in</td><td>For page references, including website pages.</td></tr>
+<tr><td class="yes">in</td><td class="no">within</td><td>Use within in legal content, such as within the grace period.</td></tr>
+<tr><td class="yes">the correct result, a valid result, the result you need</td><td class="no">desired result</td><td>Don’t use desired. Reword for the context.</td></tr>
+<tr><td class="yes">otherwise</td><td class="no">else (to mean otherwise)</td><td>Else isn’t synonymous with if not.</td></tr>
+<tr><td class="yes">for example, such as</td><td class="no">i.e., e.g., etc.</td><td>Don’t use Latin abbreviations.</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="message-square-text"></i></div>
+        <h2>Usage notes</h2>
+      </div>
+      <p class="sec-lede">How to choose between similar words, and a few rules that apply to a single term.</p>
+      <div class="tbl-wrap"><table class="tm-table"><thead><tr><th>Term</th><th>Guidance</th></tr></thead><tbody>
+<tr><td class="term">allows</td><td>Use when you permit the user to do something: “The Password field allows you to enter alphanumeric values.” If you can swap in permits, use allows.</td></tr>
+<tr><td class="term">enables</td><td>Use when you mean provide with the means or opportunity. If you can swap in empowers, use enables.</td></tr>
+<tr><td class="term">alternative</td><td>Use for choices.</td></tr>
+<tr><td class="term">can</td><td>Use when ability is what you’re expressing: actions the reader or program is able to do.</td></tr>
+<tr><td class="term">should</td><td>A recommended, optional action, not a probability. “You should drop the table before trying to reload.”</td></tr>
+<tr><td class="term">must</td><td>Avoid. Exception: your code must catch and handle errors.</td></tr>
+<tr><td class="term">need to, have to, required</td><td>Use for a requirement or obligation. “You need to retrieve the API key before you configure the YAML file.”</td></tr>
+<tr><td class="term">if, whether, that, which</td><td>Use if for a condition and whether for uncertainty. Use that for a specific object, item, person, or condition, and never omit it. Use which to add information, with commas before it and at the end of the clause.</td></tr>
+<tr><td class="term">when, while</td><td>Use when for situations that need preparation or for the passage of time. Use while only for simultaneous actions or contrast. Otherwise use and, when, although, or whereas.</td></tr>
+<tr><td class="term">specific, specified</td><td>Use specific to highlight distinct characteristics: “import specific assets, such as pipelines”. Use specified for something that has been defined: “the specified parameters configure the JVM”.</td></tr>
+<tr><td class="term">compared to, compared with</td><td>Use compared to when one thing is seen as superior to another; it can read as negative. Use compared with for neutral comparisons.</td></tr>
+<tr><td class="term">data is</td><td>Use is, not are.</td></tr>
+<tr><td class="term">data set, field set</td><td>Two words for general references. One word for the HTML element.</td></tr>
+<tr><td class="term">learn more</td><td>Use for general information or when a link covers more than one topic. Prefer an inline link that tells people what they’ll find. A short lead-in makes it clear when the content is outside our own sites.</td></tr>
+<tr><td class="term">log in, log out</td><td>Two words as verbs. One word, login and logout, as nouns.</td></tr>
+<tr><td class="term">now, previously</td><td>Avoid. Describe changes so they don’t go out of date, because the feature might change again.</td></tr>
+<tr><td class="term">please</td><td>Use only when our system is at fault and we need the user to do something: “Failed to retrieve data, please try again.” When documenting a UI string that contains please, copy it as written.</td></tr>
+<tr><td class="term">update, upgrade</td><td>Update is for patches. Upgrade is a change to the next full version.</td></tr>
+<tr><td class="term">upsert</td><td>Use for the update/insert database operation. Our audience knows it.</td></tr>
+<tr><td class="term">username</td><td>When you’re referring to a specific label, use the spelling in the UI.</td></tr>
+<tr><td class="term">node</td><td>Applies to many concepts in programming and networking, so be specific. See Snaplex node.</td></tr>
+<tr><td class="term">vs.</td><td>In headings, the abbreviation vs. in lowercase. In text, spell out versus.</td></tr>
+<tr><td class="term">we</td><td>Use we, the first person plural, when referring to SnapLogic.</td></tr>
+<tr><td class="term">backward compatible</td><td>Hyphenate only when it modifies something: “backward-compatible features”.</td></tr>
+<tr><td class="term">wildcard</td><td>Don’t use on its own. Use as a modifier with terms such as character, certificate, functionality, patterns, search, or tables.</td></tr>
+<tr><td class="term">dashes and hyphens</td><td>See Punctuation in Content guidelines.</td></tr>
+<tr><td class="term">prefixes</td><td>Follow the Microsoft Style Guide on prefixes and hyphens. For words it doesn’t list, check a dictionary.</td></tr>
+<tr><td class="term">product names</td><td>Do your research. Don’t just accept what Dev provides. Check the company’s own website for the actual product name.</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="spell-check"></i></div>
+        <h2>Spelling and compound words</h2>
+      </div>
+      
+      <div class="tbl-wrap"><table class="tm-table"><thead><tr><th>Write</th><th>Not</th></tr></thead><tbody>
+<tr><td class="yes">checkbox</td><td></td></tr>
+<tr><td class="yes">canceled, canceling</td><td class="no">cancelled, cancelling</td></tr>
+<tr><td class="yes">dropdown list, dropdown menu</td><td></td></tr>
+<tr><td class="yes">equal sign</td><td></td></tr>
+<tr><td class="yes">file name</td><td class="no">filename</td></tr>
+<tr><td class="yes">flowchart</td><td></td></tr>
+<tr><td class="yes">host name</td><td class="no">hostname</td></tr>
+<tr><td class="yes">inline</td><td class="no">in-line</td></tr>
+<tr><td class="yes">keystore</td><td class="no">KeyStore, unless it’s the Java KeyStore class or a UI label that spells it that way</td></tr>
+<tr><td class="yes">life cycle</td><td class="no">lifecycle</td></tr>
+<tr><td class="yes">namespace</td><td></td></tr>
+<tr><td class="yes">off-premises, on-premises</td><td></td></tr>
+<tr><td class="yes">plug-in</td><td class="no">plugin</td></tr>
+<tr><td class="yes">pop-up</td><td class="no">popup</td></tr>
+<tr><td class="yes">re-create</td><td class="no">recreate</td></tr>
+<tr><td class="yes">standalone</td><td class="no">stand-alone</td></tr>
+<tr><td class="yes">timestamp</td><td class="no">time stamp</td></tr>
+<tr><td class="yes">workaround</td><td></td></tr>
+<tr><td class="yes">uppercase, lowercase</td><td></td></tr>
+<tr><td class="yes">hang, hangs</td><td class="no">hung</td></tr>
+</tbody></table></div>
+    </div>
+
+  </div><!-- /tm-body -->
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

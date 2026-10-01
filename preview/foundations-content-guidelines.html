@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Foundations · Content guidelines</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { width: 100%; gap: 0; padding: 0; }
+
+  .cg-body { padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 40px; }
+
+  /* ── Section headings ── */
+  .sec-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .sec-heading .icon-wrap {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-blue-50);
+    color: var(--sl-blue-600);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-heading .icon-wrap i { width: 14px; height: 14px; }
+  .sec-heading h2 { font: 800 16px/22px var(--font-sans); color: var(--color-text-heading); margin: 0; }
+  .sec-lede { margin: 0 0 16px; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); max-width: 72ch; }
+  .sec-divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* ── Note block ── */
+  .note {
+    display: flex; gap: 10px;
+    padding: 12px 14px;
+    background: var(--sl-blue-50);
+    border: 1px solid var(--sl-blue-200);
+    border-left: 3px solid var(--sl-blue-600);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .note i { width: 15px; height: 15px; color: var(--sl-blue-600); flex-shrink: 0; margin-top: 1px; }
+  .note a { color: var(--sl-blue-600); font-weight: 700; }
+
+  /* ── The three capitalization cases ── */
+  .cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .case {
+    padding: 16px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-grey-50);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .case .c-name { font: 800 12px/16px var(--font-sans); color: var(--color-text-heading); }
+  .case .c-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .case .c-eg {
+    margin-top: auto;
+    padding: 8px 10px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-heading);
+  }
+
+  /* ── Guideline rows ── */
+  .guidelines { display: flex; flex-direction: column; gap: 10px; }
+  .guideline {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    align-items: start;
+  }
+  .guideline .g-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--sl-green-100);
+    color: var(--sl-green-700);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .guideline .g-check i { width: 11px; height: 11px; stroke-width: 2.5; }
+  .guideline .g-text { display: flex; flex-direction: column; gap: 3px; }
+  .guideline .g-title { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .guideline .g-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .guideline code, .sec-lede code {
+    font: 400 11px/15px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sl-indigo-700);
+  }
+  .eg-inline { color: var(--color-text-heading); font-weight: 700; }
+
+  /* ── Write / not tables ── */
+  .eg-table { width: 100%; border: 1px solid var(--sl-grey-200); border-radius: var(--radius-md); border-collapse: separate; border-spacing: 0; overflow: hidden; }
+  .eg-table th {
+    background: var(--sl-grey-50);
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-subtle);
+    padding: 9px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .eg-table td {
+    padding: 10px 14px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    border-bottom: 1px solid var(--sl-grey-100);
+    vertical-align: top;
+  }
+  .eg-table tr:last-child td { border-bottom: 0; }
+  .eg-table td.ctx { color: var(--color-text-subtle); width: 22%; }
+  .eg-table td.yes { color: var(--sl-green-800); font-weight: 700; }
+  .eg-table td.no { color: var(--sl-red-700); text-decoration: line-through; text-decoration-color: var(--sl-red-300); }
+  .eg-table td.why { color: var(--color-text-subtle); }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl-wrap .eg-table { min-width: 560px; }
+
+  /* ── Snap error anatomy ── */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .trio .t-card {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-white);
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .trio .t-n { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.08em; color: var(--sl-blue-600); }
+  .trio .t-name { font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
+  .trio .t-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .trio .t-eg {
+    margin-top: auto;
+    font: 400 11px/16px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--sl-indigo-700);
+    overflow-wrap: anywhere;
+  }
+
+  .steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: grid; grid-template-columns: 24px 1fr; gap: 12px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .steps li::before {
+    content: counter(step);
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    font: 800 11px/24px var(--font-sans);
+    text-align: center;
+  }
+
+  .sub-heading { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); margin: 24px 0 10px; }
+
+  /* ── Resources ── */
+  .resources { display: flex; flex-direction: column; gap: 8px; }
+  .resource-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    text-decoration: none; color: inherit;
+    background: var(--sl-white);
+    transition: border-color 120ms ease-out, background 120ms ease-out;
+  }
+  .resource-link:hover { border-color: var(--sl-blue-400); background: var(--sl-blue-50); }
+  .resource-link .r-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-100);
+    color: var(--color-text-subtle);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .resource-link .r-icon i { width: 15px; height: 15px; }
+  .resource-link .r-text { flex: 1; }
+  .resource-link .r-name { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .resource-link .r-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .resource-link .r-arrow { color: var(--sl-grey-400); }
+  .resource-link .r-arrow i { width: 14px; height: 14px; }
+
+  @media (max-width: 700px) {
+    .cg-body { padding: 24px 20px 40px; gap: 28px; }
+    .cases, .trio { grid-template-columns: 1fr; }
+  }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Content guidelines",
+  "section": "Foundations",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-guidelines.html",
+  "tagline": "Sentence-style capitalization, punctuation, field and checkbox labels, and Snap error messages.",
+  "usage": "Applies to all content in the UI, notifications, and error messages. Use Microsoft sentence-style capitalization for everything except Snap names and SnapLogic terms, which keep their own capitalization (see Terminology). Use a period for sentences and strings that act as sentences, and none for short labels. Field names describe contents rather than give instructions, and checkbox labels never use double negatives. Pills and tags are uppercase only through CSS; write the source string in sentence case.",
+  "behaviors": "Snap error messages are three strings: error, reason, and resolution. Keep each as short as possible, keep them generic, quote messages that come from other systems, and never repeat the error as the reason. The SnapLogic Platform appends a semicolon to each message, so don't add end punctuation. Errors and notifications in the new UI (Monitor, Admin Manager, AutoSync) are designed by UX; follow the Error states pattern for those."
+}
+</script>
+</head>
+<body>
+<div class="card">
+
+  <div class="cg-body">
+
+    <div class="note">
+      <i data-lucide="info"></i>
+      <div>These guidelines apply to content in the UI, notifications, and error messages. For word choices, product names, and spelling, see <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-terminology.html">Terminology</a>.</div>
+    </div>
+
+    <!-- Capitalization -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="type"></i></div>
+        <h2>Capitalization</h2>
+      </div>
+      <p class="sec-lede">We follow <a href="https://learn.microsoft.com/en-us/style-guide/capitalization" style="color:var(--sl-blue-600);font-weight:700;">Microsoft style</a>: sentence-style capitalization for everything, with two exceptions that come from SnapLogic itself. Capitalize the first word and proper nouns, and use lowercase for the rest.</p>
+
+      <div class="cases">
+        <div class="case">
+          <div class="c-name">Sentence case</div>
+          <div class="c-desc">The default for sentences, headings, titles, buttons, checkboxes, and labels.</div>
+          <div class="c-eg">Create a table if it doesn’t exist</div>
+        </div>
+        <div class="case">
+          <div class="c-name">Snap names</div>
+          <div class="c-desc">Written exactly as the Snap is titled. They are product names.</div>
+          <div class="c-eg">Snowflake - Bulk Load</div>
+        </div>
+        <div class="case">
+          <div class="c-name">SnapLogic terms</div>
+          <div class="c-desc">Capitalized as listed in Terminology, wherever they appear.</div>
+          <div class="c-eg">Snaplex, Triggered Task</div>
+        </div>
+      </div>
+
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Capitalize the first word of anything that stands alone</div>
+            <div class="g-desc">That covers sentences, headings, titles, UI labels such as the name of a button or checkbox, and standalone phrases.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Capitalize proper nouns, including brand, product, and service names</div>
+            <div class="g-desc">Reserve capitalization for names. Everything else is lowercase, including <span class="eg-inline">pipeline</span>, <span class="eg-inline">account</span>, <span class="eg-inline">asset</span>, and <span class="eg-inline">control plane</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">After a colon in a heading or title, capitalize the first word</div>
+            <div class="g-desc">Example: <span class="eg-inline">Error handling: Retry failed requests</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t capitalize the spelled-out form of an acronym</div>
+            <div class="g-desc">Unless it’s a proper noun. Example: <span class="eg-inline">single sign-on (SSO)</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">When words are joined by a slash, match the word before it</div>
+            <div class="g-desc">Capitalize the word after the slash if the word before it is capitalized. Example: <span class="eg-inline">Country/Region</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">No internal capitals unless it’s a brand name</div>
+            <div class="g-desc">AutoSync, AutoPrep, and FeedMaster are brand names, so they keep theirs. <span class="eg-inline">AutoScale</span> as a generic word would not.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t use all uppercase for emphasis, or all lowercase as a design choice</div>
+            <div class="g-desc">Pills and tags look uppercase because the component applies <code>text-transform: uppercase</code>. Write the string itself in sentence case.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-heading">Examples</div>
+      <div class="tbl-wrap">
+        <table class="eg-table">
+          <thead><tr><th>Context</th><th>Write</th><th>Not</th></tr></thead>
+          <tbody>
+            <tr><td class="ctx">Sentence</td><td class="yes">Create a table if it doesn’t exist</td><td class="no">Create a Table If It Doesn’t Exist</td></tr>
+            <tr><td class="ctx">Instruction</td><td class="yes">Click columns that you do not want to synchronize</td><td class="no">Click Columns That You Do Not Want to Synchronize</td></tr>
+            <tr><td class="ctx">Short label</td><td class="yes">Pipeline overview</td><td class="no">Pipeline Overview</td></tr>
+            <tr><td class="ctx">Snap title</td><td class="yes">Snowflake - Bulk Load</td><td class="no">Snowflake - bulk load</td></tr>
+            <tr><td class="ctx">SnapLogic term</td><td class="yes">Snaplex</td><td class="no">snaplex, SnapLex</td></tr>
+            <tr><td class="ctx">SnapLogic term</td><td class="yes">Triggered Task</td><td class="no">triggered task</td></tr>
+            <tr><td class="ctx">Common noun</td><td class="yes">Run the pipeline</td><td class="no">Run the Pipeline</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Punctuation -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="pilcrow"></i></div>
+        <h2>Punctuation</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use a period for sentences and for strings that act as sentences</div>
+            <div class="g-desc">Example: <span class="eg-inline">Could not get server task result messages.</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t use a period for short labels</div>
+            <div class="g-desc">Example: <span class="eg-inline">Pipeline overview</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">If a list mixes full sentences and phrases, treat all of it as sentences</div>
+            <div class="g-desc">Every item ends with a period, so the list reads as one thing.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Be concise, even if the result is an incomplete sentence</div>
+            <div class="g-desc">Quickly scannable text matters more than a complete sentence.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Dashes and hyphens follow Microsoft style</div>
+            <div class="g-desc">Use an em dash with no spaces around it to set off a phrase. Use an en dash for ranges of numbers and dates, and for a minus sign. Use a hyphen to join words and connect prefixes. Never use two hyphens in place of an em dash.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use a colon to introduce definitions, explanations, and lists</div>
+            <div class="g-desc">Use parentheses for supplementary or optional information, and for abbreviations and acronyms.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Fields and checkboxes -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="text-cursor-input"></i></div>
+        <h2>Field names and checkboxes</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Field names describe the contents. They don’t give instructions</div>
+            <div class="g-desc">When the design calls for an instruction, edit it so the label is as clear as possible. Example: <span class="eg-inline">Select existing credentials</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Checkbox labels never use double negatives</div>
+            <div class="g-desc">It must be obvious what happens when someone selects the box. Write <span class="eg-inline">Log errors in a separate table</span>, not <span class="eg-inline">Do not skip logging errors</span>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- Error messages -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="triangle-alert"></i></div>
+        <h2>Error messages</h2>
+      </div>
+      <div class="note" style="margin-bottom:16px;">
+        <i data-lucide="info"></i>
+        <div>Microsoft’s guidance on warnings, confirmations, and notifications is obsolete for us. Use the conventions below. Errors and notifications in the new UI (Monitor, Admin Manager, and AutoSync) are designed by UX and live in Figma. For those, follow the <a href="https://sl-design-team.github.io/jellyroll/#preview/patterns-error-states.html">Error states</a> pattern. The conventions on this page are for <b>Snap error messages</b>.</div>
+      </div>
+
+      <p class="sec-lede">A Snap error message is three strings. The user reads all three together, so they must fit on screen without scrolling.</p>
+      <div class="trio">
+        <div class="t-card">
+          <div class="t-n">String 1</div>
+          <div class="t-name">Error</div>
+          <div class="t-desc">Describes the error that occurred. It can contain the name of the relevant entity.</div>
+          <div class="t-eg">Unable to read dataset %s</div>
+        </div>
+        <div class="t-card">
+          <div class="t-n">String 2</div>
+          <div class="t-name">Reason</div>
+          <div class="t-desc">Explains why it happened. It can be passed through from an endpoint, or mix our text with the endpoint’s.</div>
+          <div class="t-eg">Error fetching fields for the %s schema: %s</div>
+        </div>
+        <div class="t-card">
+          <div class="t-n">String 3</div>
+          <div class="t-name">Resolution</div>
+          <div class="t-desc">Explains what the user must do to resolve it.</div>
+          <div class="t-eg">Check the schema name and try again.</div>
+        </div>
+      </div>
+
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Keep messages as short as possible</div>
+            <div class="g-desc">If a noun phrase does the job, don’t write a sentence. The SnapLogic Platform appends a semicolon (;) to each message automatically, so don’t add end punctuation.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Keep messages generic</div>
+            <div class="g-desc">Focus on the principle, not on a particular event.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Put messages from other systems in quotation marks</div>
+            <div class="g-desc">Example: <span class="eg-inline">“Bad Gateway” error</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Avoid generic messages such as “Snap configuration error”</div>
+            <div class="g-desc">Every problem with a Snap’s settings is a configuration error. Read the reason and resolution, then rewrite the error string. For a reason of <span class="eg-inline">No dataset with ID %s exists</span>, write <span class="eg-inline">Unable to read dataset ID %s</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Connect the error to the reason, and never repeat the error as the reason</div>
+            <div class="g-desc">The reason should add information the error string doesn’t have.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-heading">Examples</div>
+      <div class="tbl-wrap">
+        <table class="eg-table">
+          <thead><tr><th>Not recommended</th><th>Recommended</th></tr></thead>
+          <tbody>
+            <tr><td class="no">The Snap configuration is invalid</td><td class="yes">Invalid Snap configuration</td></tr>
+            <tr><td class="no">Encountered an error while fetching fields from the given schema</td><td class="yes">Unable to fetch fields from the specified schema</td></tr>
+            <tr><td class="no">The Parquet type listed is not supported</td><td class="yes">Unsupported Parquet type</td></tr>
+            <tr><td class="no">Review and verify the contents of the private key used.</td><td class="yes">Check the private key</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub-heading">When an error string has too little information</div>
+      <p class="sec-lede" style="margin-bottom:12px;">A string such as “Dn error” tells neither you nor the user anything. To suggest a better message:</p>
+      <ol class="steps">
+        <li><span>Review the reason and resolution strings for clues. A reason of “Dn is null” with a resolution of “Please try with a non-null value” tells you a null value is in the wrong place.</span></li>
+        <li><span>Search for the error string online. Here, you would find that “Dn” can refer to the descriptive name of a user or system on a network. Compose the message accordingly.</span></li>
+        <li><span>Reach out to your Dev and QA contacts and verify.</span></li>
+      </ol>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <!-- References -->
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="book-open"></i></div>
+        <h2>References</h2>
+      </div>
+      <p class="sec-lede">When a term isn’t covered here or in Terminology, check the Microsoft Writing Style Guide A–Z word list, then Merriam-Webster. If neither settles it, use the most common technical spelling.</p>
+      <div class="resources">
+        <a class="resource-link" href="https://learn.microsoft.com/en-us/style-guide/capitalization" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="type"></i></div>
+          <div class="r-text">
+            <div class="r-name">Microsoft Writing Style Guide: Capitalization</div>
+            <div class="r-desc">The source for our sentence-style rules.</div>
+          </div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://sl-design-team.github.io/jellyroll/#preview/foundations-terminology.html">
+          <div class="r-icon"><i data-lucide="book-a"></i></div>
+          <div class="r-text">
+            <div class="r-name">Terminology</div>
+            <div class="r-desc">SnapLogic terms, product names, word choices, and spelling.</div>
+          </div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://sl-design-team.github.io/jellyroll/#preview/patterns-error-states.html">
+          <div class="r-icon"><i data-lucide="circle-alert"></i></div>
+          <div class="r-text">
+            <div class="r-name">Error states</div>
+            <div class="r-desc">Layout and behavior for errors in the product UI.</div>
+          </div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /cg-body -->
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

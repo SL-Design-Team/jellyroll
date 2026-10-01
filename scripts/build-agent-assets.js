@@ -80,7 +80,8 @@ function buildLlmsTxt() {
   lines.push('(color ramps, semantic tokens, spacing, radii, shadows, type) is at ');
   lines.push('[colors_and_type.css](' + SITE + '/colors_and_type.css). Each preview HTML is ');
   lines.push('self-contained — inline component CSS, token usage, and markup. Prefer semantic ');
-  lines.push('tokens over raw ramp variables. Sentence case; no emoji; Lucide icons only.');
+  lines.push('tokens over raw ramp variables. Sentence case (Microsoft style, except Snap names and ');
+  lines.push('SnapLogic terms; see Content guidelines and Terminology); no emoji; Lucide icons only.');
   lines.push('');
   for (const sec of DATA.sections) {
     lines.push('## ' + sec.name);

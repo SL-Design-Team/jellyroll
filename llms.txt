@@ -7,7 +7,8 @@ is at [jellyroll.json](https://sl-design-team.github.io/jellyroll/jellyroll.json
 (color ramps, semantic tokens, spacing, radii, shadows, type) is at 
 [colors_and_type.css](https://sl-design-team.github.io/jellyroll/colors_and_type.css). Each preview HTML is 
 self-contained — inline component CSS, token usage, and markup. Prefer semantic 
-tokens over raw ramp variables. Sentence case; no emoji; Lucide icons only.
+tokens over raw ramp variables. Sentence case (Microsoft style, except Snap names and 
+SnapLogic terms; see Content guidelines and Terminology); no emoji; Lucide icons only.
 
 ## Foundations
 
@@ -15,6 +16,8 @@ The rules every component inherits — design tokens, spacing, motion, elevation
 
 - [Accessibility](https://sl-design-team.github.io/jellyroll/preview/foundations-accessibility.html): WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.
 - [Design principles](https://sl-design-team.github.io/jellyroll/preview/foundations-design-principles.html): Human-centered principles, visual principles, and cross-component behavior rules.
+- [Content guidelines](https://sl-design-team.github.io/jellyroll/preview/foundations-content-guidelines.html): Sentence-style capitalization, punctuation, field and checkbox labels, and Snap error messages.
+- [Terminology](https://sl-design-team.github.io/jellyroll/preview/foundations-terminology.html): SnapLogic terms, product names, word choices, and spelling.
 - [Iconography](https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html): 202 outlined line icons — 24×24 viewbox, currentColor stroke.
 - [Radius](https://sl-design-team.github.io/jellyroll/preview/spacing-radius.html): Restrained corners: 2 / 4 / 6–8 / 999px.
 - [Shadows](https://sl-design-team.github.io/jellyroll/preview/spacing-shadows.html): Light, blueish, low-spread — borders carry more weight than shadows in this system.
