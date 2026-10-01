@@ -16,7 +16,6 @@
     --sidebar-w: 300px;
     --cat-guidance:       var(--sl-blue-700);
     --cat-foundations:    var(--sl-indigo-600);
-    --cat-brand:          var(--sl-purple-600);
     --cat-primitives:     var(--sl-blue-600);
     --cat-components:     var(--sl-teal-600);
     --cat-editors:        var(--sl-indigo-700, #26386A);
@@ -250,38 +249,25 @@
     overflow-y: auto;
     padding: 10px 12px 24px 24px;
   }
-  /* Match the .sec-header layout (14px icon col + 1fr label + auto trailing) so the
-     Getting Started row sits at the exact same indent as the category headers. */
-  .sidebar-nav .top-link {
-    width: 100%;
+  /* Getting started label: same icon + label columns as the .sec-header rows so it
+     sits at the same indent as the category headers. It is a heading, not a link. */
+  .sidebar-nav .nav-heading {
     display: grid;
-    grid-template-columns: 14px 1fr auto;
+    grid-template-columns: 14px 1fr;
     column-gap: 6px;
     align-items: center;
-    padding: 8px 8px;
-    border-radius: var(--radius-sm);
+    padding: 8px 8px 4px;
     color: var(--color-text-heading);
-    text-decoration: none;
     font-family: var(--font-sans);
     font-weight: 800;
     font-size: 12px;
     line-height: 16px;
-    margin-bottom: 2px;
   }
-  .sidebar-nav .top-link svg {
+  .sidebar-nav .nav-heading svg {
     width: 12px;
     height: 12px;
     stroke-width: 2.25;
     color: var(--color-text-subtle);
-  }
-  .sidebar-nav .top-link:hover {
-    background: var(--sl-blue-100, #E8F0FF);
-    color: var(--sl-blue-700);
-  }
-  .sidebar-nav .top-link:hover svg { color: var(--sl-blue-700); }
-  .sidebar-nav .top-link[data-active="true"] {
-    background: var(--sl-blue-100, #E8F0FF);
-    color: var(--sl-blue-700);
   }
   .sidebar-nav .nav-divider {
     height: 1px;
@@ -2027,7 +2013,7 @@
                 Get started
                 <i data-lucide="arrow-right"></i>
               </a>
-              <a class="hero-btn secondary" href="#section-components">
+              <a class="hero-btn secondary" href="#section-primitives">
                 Browse components
               </a>
             </div>
@@ -2234,24 +2220,24 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
               </div>
             </div>
             <ul class="gs-links">
-              <li><a href="#section-components">
-                <span class="l-icon" style="background:var(--sl-blue-100);color:var(--sl-blue-600)"><i data-lucide="layout-grid"></i></span>
-                <span class="l-text"><strong>Component library</strong><span>Ready-made components for new projects and refactors.</span></span>
-                <i data-lucide="chevron-right" class="r-chev"></i>
-              </a></li>
               <li><a href="#section-foundations">
                 <span class="l-icon" style="background:var(--sl-teal-100);color:var(--sl-teal-700)"><i data-lucide="droplet"></i></span>
-                <span class="l-text"><strong>Style guide</strong><span>Colors, type, spacing, and more for visual consistency.</span></span>
+                <span class="l-text"><strong>Style guide</strong><span>Color, type, spacing, and more for visual consistency.</span></span>
+                <i data-lucide="chevron-right" class="r-chev"></i>
+              </a></li>
+              <li><a href="#section-primitives">
+                <span class="l-icon" style="background:var(--sl-indigo-100);color:var(--sl-indigo-700)"><i data-lucide="box"></i></span>
+                <span class="l-text"><strong>Components</strong><span>Buttons, inputs, menus, and the other single-purpose components.</span></span>
+                <i data-lucide="chevron-right" class="r-chev"></i>
+              </a></li>
+              <li><a href="#section-components">
+                <span class="l-icon" style="background:var(--sl-blue-100);color:var(--sl-blue-600)"><i data-lucide="layout-grid"></i></span>
+                <span class="l-text"><strong>Composite components</strong><span>Modals, tables, tabs, and other assemblies of components.</span></span>
                 <i data-lucide="chevron-right" class="r-chev"></i>
               </a></li>
               <li><a href="#section-patterns">
                 <span class="l-icon" style="background:var(--sl-purple-100);color:var(--sl-purple-700)"><i data-lucide="layers"></i></span>
                 <span class="l-text"><strong>Patterns and templates</strong><span>Whole flows and page layouts, already assembled.</span></span>
-                <i data-lucide="chevron-right" class="r-chev"></i>
-              </a></li>
-              <li><a href="#section-primitives">
-                <span class="l-icon" style="background:var(--sl-indigo-100);color:var(--sl-indigo-700)"><i data-lucide="box"></i></span>
-                <span class="l-text"><strong>Building blocks</strong><span>The primitives components are assembled from.</span></span>
                 <i data-lucide="chevron-right" class="r-chev"></i>
               </a></li>
               <li><a href="#section-data-viz">
@@ -2449,9 +2435,9 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   const searchBox = document.getElementById("searchInput");
   if (searchBox) searchBox.setAttribute("placeholder", `Search ${totalAssets} assets`);
 
-  // Sidebar — the Getting started link (it goes to the home page) with its
-  // guidance pages listed beneath it, an icon-search results section, then the
-  // categorized accordion. Getting started is pinned: always open, no collapse.
+  // Sidebar — the Getting started group (Overview, which is the home page, then
+  // the guidance pages), an icon-search results section, then the categorized
+  // accordion. Getting started is pinned: always open, no collapse, no count.
   const PINNED_SECTION = "guidance";
   // `navName` is the short topic label shown in the nav when it differs from
   // the page title (Color → "Color ramps"). `more` is the count of nested pages
@@ -2463,12 +2449,15 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
        data-search="${escapeHtml(((it.navName ? it.navName + " " : "") + it.name + " " + (it.tagline||"") + " " + fileLabel(it.file)).toLowerCase())}">${escapeHtml(it.navName || it.name)}${more ? `<span class="nav-more" aria-hidden="true">+${more}</span>` : ""}</a>`;
   const pinnedSec = sections.find(sec => sec.id === PINNED_SECTION);
   const topLinksHtml = `
-    <a class="top-link" href="#getting-started" data-top-link="getting-started">
+    <div class="nav-heading">
       <i data-lucide="compass"></i>
       <span>Getting started</span>
-    </a>
+    </div>
     ${pinnedSec ? `<div class="sec sec--pinned" data-section-id="${pinnedSec.id}" data-open="true">
-      <div class="sec-items">${pinnedSec.items.map(it => navLink(it, false)).join("")}</div>
+      <div class="sec-items">
+        <a class="item-link" href="#getting-started" data-top-link="getting-started" data-search="getting started overview home">Overview</a>
+        ${pinnedSec.items.map(it => navLink(it, false)).join("")}
+      </div>
     </div>` : ""}
     <div class="nav-divider"></div>
     <div class="sidebar-icons" id="sidebarIcons" aria-live="polite">
@@ -2552,7 +2541,6 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   const CATEGORY_DEFAULT_ICON = {
     "guidance":         "compass",
     "foundations":      "ruler",
-    "brand":            "gem",
     "primitives":       "square",
     "components":       "layout-grid",
     "advanced-editors": "code-2",
@@ -2684,7 +2672,6 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   const CATEGORY_VARS = {
     "guidance":         { color: "var(--cat-guidance)",       tint: "var(--sl-blue-50,   #F2F6FC)" },
     "foundations":      { color: "var(--cat-foundations)",   tint: "var(--sl-indigo-50, #F4F6F9)" },
-    "brand":            { color: "var(--cat-brand)",         tint: "var(--sl-purple-50, #F7F5F9)" },
     "primitives":       { color: "var(--cat-primitives)",    tint: "var(--sl-blue-50,   #F2F6FC)" },
     "components":       { color: "var(--cat-components)",    tint: "var(--sl-teal-50,   #F2F8F8)" },
     "advanced-editors": { color: "var(--cat-editors)",       tint: "var(--sl-indigo-50, #F4F6F9)" },
@@ -3139,7 +3126,6 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     const tintMap = {
       "guidance": "var(--sl-blue-50, #F2F6FC)",
       "foundations": "var(--sl-indigo-50, #F4F6F9)",
-      "brand": "var(--sl-purple-50, #F7F5F9)",
       "primitives": "var(--sl-blue-50, #F2F6FC)",
       "components": "var(--sl-teal-50, #F2F8F8)",
       "advanced-editors": "var(--sl-indigo-50, #F4F6F9)",
@@ -3325,7 +3311,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
 
   // Close drawer when a nav item is tapped
   sidebarEl.addEventListener("click", (e) => {
-    if (e.target.closest(".item-link") || e.target.closest(".top-link")) closeMobileNav();
+    if (e.target.closest(".item-link")) closeMobileNav();
   });
 
   // Close on Escape

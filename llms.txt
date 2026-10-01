@@ -21,18 +21,19 @@ How to think about and use the system — accessibility, design principles, and 
 
 ## Foundations
 
-The visual and system primitives every component inherits — color, type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.
+The visual and system primitives every component inherits — color, type, icons and logo, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.
 
 - [Color ramps](https://sl-design-team.github.io/jellyroll/preview/colors-all-ramps.html): Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.
 - [Brand gradient](https://sl-design-team.github.io/jellyroll/preview/colors-gradient-brand.html): linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.
 - [Semantic text](https://sl-design-team.github.io/jellyroll/preview/colors-semantic-text.html): Body, subtle, link, status, information, discovery, accents.
-- [Palette · Categorical](https://sl-design-team.github.io/jellyroll/preview/dataviz-categorical.html): Five-color chart palette for unordered categories — designed for light and dark backgrounds.
-- [Palette · Diverging](https://sl-design-team.github.io/jellyroll/preview/dataviz-diverging.html): Two-hue chart ramps for values around a meaningful midpoint.
-- [Palette · Sequential](https://sl-design-team.github.io/jellyroll/preview/dataviz-sequential.html): Single-hue chart ramps for ordered values — counts, magnitudes, percentages.
 - [Status colors](https://sl-design-team.github.io/jellyroll/preview/dataviz-status.html): Green / Yellow / Red / Blue mapping for pipeline run states.
+- [Categorical palette](https://sl-design-team.github.io/jellyroll/preview/dataviz-categorical.html): Five-color chart palette for unordered categories — designed for light and dark backgrounds.
+- [Diverging palette](https://sl-design-team.github.io/jellyroll/preview/dataviz-diverging.html): Two-hue chart ramps for values around a meaningful midpoint.
+- [Sequential palette](https://sl-design-team.github.io/jellyroll/preview/dataviz-sequential.html): Single-hue chart ramps for ordered values — counts, magnitudes, percentages.
 - [Type scale](https://sl-design-team.github.io/jellyroll/preview/type-scale.html): Display through Micro — eight steps with set line heights and weight conventions.
 - [Type specimen](https://sl-design-team.github.io/jellyroll/preview/type-faces.html): Acherus Grotesque, weights 200–900, plus the SF Mono code font.
 - [Iconography](https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html): 202 outlined line icons — 24×24 viewbox, currentColor stroke.
+- [Logo](https://sl-design-team.github.io/jellyroll/preview/brand-logo.html): SnapLogic wordmark + snap-icon. White-on-dark version supplied.
 - [Spacing](https://sl-design-team.github.io/jellyroll/preview/spacing-scale.html): Strict 4-pt grid: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.
 - [Radius](https://sl-design-team.github.io/jellyroll/preview/spacing-radius.html): Restrained corners: 2 / 4 / 6–8 / 999px.
 - [Shadows](https://sl-design-team.github.io/jellyroll/preview/spacing-shadows.html): Light, blueish, low-spread — borders carry more weight than shadows in this system.
@@ -43,15 +44,9 @@ The visual and system primitives every component inherits — color, type, icons
 - [Selection & skeleton](https://sl-design-team.github.io/jellyroll/preview/foundations-selection-skeleton.html): Text highlight and loading placeholder colors.
 - [Tokens](https://sl-design-team.github.io/jellyroll/preview/foundations-tokens.html): All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.
 
-## Brand
+## Components
 
-The SnapLogic logo and brand marks, and how to apply them.
-
-- [Logo](https://sl-design-team.github.io/jellyroll/preview/brand-logo.html): SnapLogic wordmark + snap-icon. White-on-dark version supplied.
-
-## Building blocks
-
-Single-purpose controls — each does one job. The atoms you compose with.
+Single-purpose components — each does one job. What composite components and patterns are assembled from.
 
 - [Avatar](https://sl-design-team.github.io/jellyroll/preview/components-avatar.html): User identity glyph — initials, photo, or fallback icon.
 - [Badge](https://sl-design-team.github.io/jellyroll/preview/components-badges.html): Compact status or metadata pill, 10px ExtraBold uppercase.
@@ -79,9 +74,9 @@ Single-purpose controls — each does one job. The atoms you compose with.
 - [Tooltip](https://sl-design-team.github.io/jellyroll/preview/components-tooltip.html): Short label or description surfaced on hover or focus.
 - [Tree](https://sl-design-team.github.io/jellyroll/preview/components-tree.html): Hierarchical list of nodes with expand/collapse, indentation, and selection.
 
-## Composed components
+## Composite components
 
-Several building blocks assembled into a complete piece of the interface.
+Several components assembled into a complete piece of the interface.
 
 - [Avatar group](https://sl-design-team.github.io/jellyroll/preview/components-avatar-group.html): Stack of overlapping avatars with overflow count.
 - [Broadcast banner](https://sl-design-team.github.io/jellyroll/preview/components-broadcast-banner.html): Full-width system message across the top of the app.

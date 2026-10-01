@@ -5,6 +5,9 @@
 // Voice: professional, technical, calm. Sentence case. No emoji.
 
 window.JELLYROLL_DATA = {
+  // Section `id`s are stable URL anchors (#section-<id>) and style keys, so they
+  // do not change when a section is renamed: id "primitives" is displayed as
+  // "Components" and id "components" as "Composite components".
   sections: [
     {
       num: "",
@@ -55,7 +58,7 @@ window.JELLYROLL_DATA = {
       num: "01",
       id: "foundations",
       name: "Foundations",
-      description: "The visual and system primitives every component inherits — color, type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.",
+      description: "The visual and system primitives every component inherits — color, type, icons and logo, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.",
       items: [
         {
           file: "preview/colors-all-ramps.html",
@@ -86,8 +89,17 @@ window.JELLYROLL_DATA = {
           }
         },
         {
+          file: "preview/dataviz-status.html",
+          name: "Status colors",
+          parent: "preview/colors-all-ramps.html",
+          tagline: "Green / Yellow / Red / Blue mapping for pipeline run states.",
+          meta: {
+            usage: "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite."
+          }
+        },
+        {
           file: "preview/dataviz-categorical.html",
-          name: "Palette · Categorical",
+          name: "Categorical palette",
           parent: "preview/colors-all-ramps.html",
           tagline: "Five-color chart palette for unordered categories — designed for light and dark backgrounds.",
           meta: {
@@ -96,7 +108,7 @@ window.JELLYROLL_DATA = {
         },
         {
           file: "preview/dataviz-diverging.html",
-          name: "Palette · Diverging",
+          name: "Diverging palette",
           parent: "preview/colors-all-ramps.html",
           tagline: "Two-hue chart ramps for values around a meaningful midpoint.",
           meta: {
@@ -105,20 +117,11 @@ window.JELLYROLL_DATA = {
         },
         {
           file: "preview/dataviz-sequential.html",
-          name: "Palette · Sequential",
+          name: "Sequential palette",
           parent: "preview/colors-all-ramps.html",
           tagline: "Single-hue chart ramps for ordered values — counts, magnitudes, percentages.",
           meta: {
             usage: "Use a sequential ramp when the value has a meaningful order with one extreme. Most often Green (success / volume) or Blue (neutral). Encode larger values with the darker step. For two-sided values around a meaningful zero, use a Diverging palette."
-          }
-        },
-        {
-          file: "preview/dataviz-status.html",
-          name: "Status colors",
-          parent: "preview/colors-all-ramps.html",
-          tagline: "Green / Yellow / Red / Blue mapping for pipeline run states.",
-          meta: {
-            usage: "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite."
           }
         },
         {
@@ -149,6 +152,14 @@ window.JELLYROLL_DATA = {
             options: "Sizes: 24px default, 16px inline / dense contexts, 20px nav rail. Outlined glyphs by default; filled status pictograms (running check, failed dot, sticky star) are the only exception. Click any icon in the gallery to copy its name.",
             usage: "Pick the icon whose metaphor matches the action or object directly — never invent a custom mark. Drop the SVG inline (or reference via `<svg><use href=\"icons/{name}.svg\">`) so it picks up the surrounding text color. For vendor logos (AWS, Salesforce, GitHub) the system falls back to Font Awesome 6 brands at matching stroke weight.",
             behaviors: "Icon-only buttons require an explicit `aria-label`. Icons paired with text take `aria-hidden=\"true\"` so screen readers don't read them twice. The icon inherits `currentColor` from its parent — never hardcode a tint."
+          }
+        },
+        {
+          file: "preview/brand-logo.html",
+          name: "Logo",
+          tagline: "SnapLogic wordmark + snap-icon. White-on-dark version supplied.",
+          meta: {
+            usage: "Use the white wordmark on the dark navbar and any dark brand surface. The wordmark and snap-icon ship together — do not separate them, recolor them, or pair the wordmark with a non-system glyph. Minimum clear space around the mark is the height of the snap-icon."
           }
         },
         {
@@ -227,25 +238,9 @@ window.JELLYROLL_DATA = {
     },
     {
       num: "02",
-      id: "brand",
-      name: "Brand",
-      description: "The SnapLogic logo and brand marks, and how to apply them.",
-      items: [
-        {
-          file: "preview/brand-logo.html",
-          name: "Logo",
-          tagline: "SnapLogic wordmark + snap-icon. White-on-dark version supplied.",
-          meta: {
-            usage: "Use the white wordmark on the dark navbar and any dark brand surface. The wordmark and snap-icon ship together — do not separate them, recolor them, or pair the wordmark with a non-system glyph. Minimum clear space around the mark is the height of the snap-icon."
-          }
-        }
-      ]
-    },
-    {
-      num: "03",
       id: "primitives",
-      name: "Building blocks",
-      description: "Single-purpose controls — each does one job. The atoms you compose with.",
+      name: "Components",
+      description: "Single-purpose components — each does one job. What composite components and patterns are assembled from.",
       items: [
         {
           file: "preview/components-avatar.html",
@@ -512,10 +507,10 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "04",
+      num: "03",
       id: "components",
-      name: "Composed components",
-      description: "Several building blocks assembled into a complete piece of the interface.",
+      name: "Composite components",
+      description: "Several components assembled into a complete piece of the interface.",
       items: [
         {
           file: "preview/components-avatar-group.html",
@@ -797,7 +792,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "05",
+      num: "04",
       id: "patterns",
       name: "Patterns",
       description: "Reusable flows that combine components to solve a recurring product problem.",
@@ -1006,7 +1001,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "06",
+      num: "05",
       id: "data-viz",
       name: "Data visualization",
       description: "Chart and graph types, with guidance on when to use each.",
@@ -1167,7 +1162,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "07",
+      num: "06",
       id: "advanced-editors",
       name: "Advanced editors",
       description: "Specialized multi-field editors for SnapLogic's configuration surfaces.",
@@ -1251,7 +1246,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "08",
+      num: "07",
       id: "templates",
       name: "Templates",
       description: "Full-page starting points — complete screens assembled from components and patterns.",
