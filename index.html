@@ -2925,7 +2925,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     function fix(el, attr) {
       const v = el.getAttribute(attr);
       if (!v || /^(https?:|data:|mailto:|#|\/\/)/.test(v)) return;
-      try { el.setAttribute(attr, new URL(v, baseUrl).pathname); } catch {}
+      try { const u = new URL(v, baseUrl); el.setAttribute(attr, u.pathname + u.search + u.hash); } catch {}
     }
     doc.querySelectorAll("[href]").forEach(el => fix(el, "href"));
     doc.querySelectorAll("[src]").forEach(el => fix(el, "src"));
@@ -3028,17 +3028,21 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
       // pages like the icon gallery.)
       while (doc.body.firstChild) shadow.appendChild(doc.body.firstChild);
 
-      // Links from one preview page to another stay inside the gallery. The cards
-      // link to sibling files (so they also work opened on their own); here we
-      // route those clicks through the hash router instead of leaving the page.
+      // Links from one preview page to another stay inside the gallery. Cards link
+      // to the gallery URL for the page they mean (index.html#preview%2F...) so they
+      // also work opened on their own; here we route those clicks through the hash
+      // router instead of reloading, and do the same for a plain sibling-file link.
       shadow.addEventListener("click", (e) => {
         if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
         const a = e.composedPath().find(n => n instanceof HTMLAnchorElement);
         if (!a || a.target === "_blank") return;
-        const m = a.pathname.match(/\/preview\/([^/]+\.html)$/);
-        if (m && byFile.has("preview/" + m[1])) {
+        let file = null;
+        const sibling = a.pathname.match(/\/preview\/([^/]+\.html)$/);
+        if (sibling) file = "preview/" + sibling[1];
+        else if (/(^|\/)(index\.html)?$/.test(a.pathname) && a.hash.length > 1) file = decodeURIComponent(a.hash.slice(1));
+        if (file && byFile.has(file)) {
           e.preventDefault();
-          window.location.hash = encodeURIComponent("preview/" + m[1]);
+          window.location.hash = encodeURIComponent(file);
         }
       });
 
