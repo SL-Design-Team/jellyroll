@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Foundations · Error messages</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { width: 100%; gap: 0; padding: 0; }
+
+  .cg-body { padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 40px; }
+
+  /* ── Section headings ── */
+  .sec-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .sec-heading .icon-wrap {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-blue-50);
+    color: var(--sl-blue-600);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-heading .icon-wrap i { width: 14px; height: 14px; }
+  .sec-heading h2 { font: 800 16px/22px var(--font-sans); color: var(--color-text-heading); margin: 0; }
+  .sec-lede { margin: 0 0 16px; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); max-width: 72ch; }
+  .sec-divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* ── Note block ── */
+  .note {
+    display: flex; gap: 10px;
+    padding: 12px 14px;
+    background: var(--sl-blue-50);
+    border: 1px solid var(--sl-blue-200);
+    border-left: 3px solid var(--sl-blue-600);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .note i { width: 15px; height: 15px; color: var(--sl-blue-600); flex-shrink: 0; margin-top: 1px; }
+  .note a { color: var(--sl-blue-600); font-weight: 700; }
+
+  /* ── The three capitalization cases ── */
+  .cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .case {
+    padding: 16px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-grey-50);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .case .c-name { font: 800 12px/16px var(--font-sans); color: var(--color-text-heading); }
+  .case .c-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .case .c-eg {
+    margin-top: auto;
+    padding: 8px 10px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-heading);
+  }
+
+  /* ── Guideline rows ── */
+  .guidelines { display: flex; flex-direction: column; gap: 10px; }
+  .guideline {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    align-items: start;
+  }
+  .guideline .g-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--sl-green-100);
+    color: var(--sl-green-700);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .guideline .g-check i { width: 11px; height: 11px; stroke-width: 2.5; }
+  .guideline .g-text { display: flex; flex-direction: column; gap: 3px; }
+  .guideline .g-title { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .guideline .g-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .guideline code, .sec-lede code {
+    font: 400 11px/15px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sl-indigo-700);
+  }
+  .eg-inline { color: var(--color-text-heading); font-weight: 700; }
+
+  /* ── Write / not tables ── */
+  .eg-table { width: 100%; border: 1px solid var(--sl-grey-200); border-radius: var(--radius-md); border-collapse: separate; border-spacing: 0; overflow: hidden; }
+  .eg-table th {
+    background: var(--sl-grey-50);
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-subtle);
+    padding: 9px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .eg-table td {
+    padding: 10px 14px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    border-bottom: 1px solid var(--sl-grey-100);
+    vertical-align: top;
+  }
+  .eg-table tr:last-child td { border-bottom: 0; }
+  .eg-table td.ctx { color: var(--color-text-subtle); width: 22%; }
+  .eg-table td.yes { color: var(--sl-green-800); font-weight: 700; }
+  .eg-table td.no { color: var(--sl-red-700); text-decoration: line-through; text-decoration-color: var(--sl-red-300); }
+  .eg-table td.why { color: var(--color-text-subtle); }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl-wrap .eg-table { min-width: 560px; }
+
+  /* ── Snap error anatomy ── */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .trio .t-card {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-white);
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .trio .t-n { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.08em; color: var(--sl-blue-600); }
+  .trio .t-name { font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
+  .trio .t-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .trio .t-eg {
+    margin-top: auto;
+    font: 400 11px/16px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--sl-indigo-700);
+    overflow-wrap: anywhere;
+  }
+
+  .steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: grid; grid-template-columns: 24px 1fr; gap: 12px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .steps li::before {
+    content: counter(step);
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    font: 800 11px/24px var(--font-sans);
+    text-align: center;
+  }
+
+  .sub-heading { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); margin: 24px 0 10px; }
+
+  /* ── Resources ── */
+  .resources { display: flex; flex-direction: column; gap: 8px; }
+  .resource-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    text-decoration: none; color: inherit;
+    background: var(--sl-white);
+    transition: border-color 120ms ease-out, background 120ms ease-out;
+  }
+  .resource-link:hover { border-color: var(--sl-blue-400); background: var(--sl-blue-50); }
+  .resource-link .r-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-100);
+    color: var(--color-text-subtle);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .resource-link .r-icon i { width: 15px; height: 15px; }
+  .resource-link .r-text { flex: 1; }
+  .resource-link .r-name { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .resource-link .r-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .resource-link .r-arrow { color: var(--sl-grey-400); }
+  .resource-link .r-arrow i { width: 14px; height: 14px; }
+
+  @media (max-width: 700px) {
+    .cg-body { padding: 24px 20px 40px; gap: 28px; }
+    .cases, .trio { grid-template-columns: 1fr; }
+  }
+
+  .sc { display: inline-block; padding: 1px 6px; border-radius: 999px; background: var(--sl-blue-50); color: var(--sl-blue-700); font: 800 10px/14px var(--font-mono); white-space: nowrap; }
+  .eg-table td.sc-cell { width: 18%; white-space: nowrap; font-weight: 800; color: var(--color-text-heading); }
+  .eg-table td.lvl { width: 8%; font: 800 11px/18px var(--font-mono); color: var(--color-text-subtle); }
+  .eg-table td.plain { color: var(--color-text-body); }
+  .guideline .sc { margin-left: 4px; vertical-align: 1px; }
+  .principles3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 700px) { .principles3 { grid-template-columns: 1fr; } }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Error messages",
+  "section": "Getting started",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-errors.html",
+  "tagline": "What happened, why, and what to do next, without blaming the person.",
+  "usage": "Every error says what happened, why when it helps, and what to do next. Name the specific thing, write as a person would (couldn't, not invalid), make the next step doable, and never blame. Match the tone to the severity. Snap error messages are three strings (error, reason, resolution) written as one set, as fragments with no end punctuation because the platform appends a semicolon, with placeholders carrying the specifics.",
+  "behaviors": "Layout and behavior belong to the Error states and Form validation patterns; this page owns the words. Errors must be described in text (not color alone), suggest a fix when one is known, and make sense read on their own."
+}
+</script>
+</head>
+<body>
+<div class="card">
+
+  <div class="cg-body">
+
+    <div class="note">
+      <i data-lucide="info"></i>
+      <div>These principles apply to every error in the product. Layout and behavior are in <a href="https://sl-design-team.github.io/jellyroll/#preview/patterns-error-states.html">Error states</a>. For capitalization and punctuation, refer to <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-content-guidelines.html">Content guidelines</a>.</div>
+    </div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="circle-check"></i></div>
+        <h2>What a good error message does</h2>
+      </div>
+      <p class="sec-lede">A good error tells someone three things, in this order: what happened, why (when it helps), and what to do next. Everything else is decoration.</p>
+      <div class="principles3">
+        <div class="case"><div class="c-name">What happened</div><div class="c-desc">Name the thing that went wrong, in the person’s terms.</div><div class="c-eg">Couldn’t connect to Salesforce</div></div>
+        <div class="case"><div class="c-name">Why</div><div class="c-desc">Give the reason when it helps them act. Skip it when it doesn’t.</div><div class="c-eg">The password for this account has expired.</div></div>
+        <div class="case"><div class="c-name">What to do next</div><div class="c-desc">A specific step they can take, led by a verb.</div><div class="c-eg">Update the password in Accounts, then try again.</div></div>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Name the specific thing</div>
+            <div class="g-desc"><span class="eg-inline">Couldn’t read dataset 4821</span> beats <span class="eg-inline">Read error</span>. Include the name, ID, or value that failed.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Write as a person would, not as a system</div>
+            <div class="g-desc">Use <span class="eg-inline">couldn’t</span>, <span class="eg-inline">isn’t</span>, and <span class="eg-inline">doesn’t</span>. Avoid <span class="eg-inline">invalid</span>, <span class="eg-inline">illegal</span>, <span class="eg-inline">exception</span>, and <span class="eg-inline">failed</span> on its own.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Make the next step doable</div>
+            <div class="g-desc">Lead with a verb: <span class="eg-inline">Check the schema name and try again.</span> If there’s nothing the person can do, say what happens next, or who to ask and what to ask for.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Never blame the person</div>
+            <div class="g-desc">Write <span class="eg-inline">Enter a name</span>, not <span class="eg-inline">You forgot to enter a name</span>. Talk about what the system needs, not what they did wrong.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Say what you know</div>
+            <div class="g-desc"><span class="eg-inline">Something went wrong</span> and <span class="eg-inline">An unexpected error occurred</span> tell people nothing. If you only know what you were doing, say that.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Stay calm</div>
+            <div class="g-desc">No exclamation points, no <span class="eg-inline">Oops</span>, no jokes. Apologize only when we’re at fault and the person has lost something. Use <span class="eg-inline">please</span> only when our system is at fault and you need them to act.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Reassure when their work is safe</div>
+            <div class="g-desc">If nothing was lost, say so: <span class="eg-inline">Your changes are still here.</span> If something was lost, say that too.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Put codes and IDs last</div>
+            <div class="g-desc">Request IDs and codes help support, but they’re not the message. Place them after the plain-language text.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Make it work on its own</div>
+            <div class="g-desc">A screen reader might read the message without its field or heading. Write <span class="eg-inline">Name is required</span>, not <span class="eg-inline">Required</span>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="pencil-line"></i></div>
+        <h2>Rewrites</h2>
+      </div>
+      <p class="sec-lede">The same problem, written for the person who’s reading it.</p>
+      <div class="tbl-wrap"><table class="eg-table"><thead><tr><th>Instead of</th><th>Write</th><th>Why</th></tr></thead><tbody>
+<tr><td class="ctx">Invalid input</td><td class="yes">Enter an email address such as name@example.com</td><td class="why">Says what’s expected and shows its shape. No judgment.</td></tr>
+<tr><td class="ctx">Error 500</td><td class="yes">Couldn’t load your pipelines. Try again, or contact your admin if it keeps happening.</td><td class="why">A code alone means nothing. Name what failed and offer a way forward.</td></tr>
+<tr><td class="ctx">Something went wrong</td><td class="yes">Couldn’t save the pipeline. Your changes are still here, so try again.</td><td class="why">Names the action and reassures.</td></tr>
+<tr><td class="ctx">You entered an incorrect password</td><td class="yes">That password doesn’t match. Try again, or reset it.</td><td class="why">Talks about the system, not the person, and gives a next step.</td></tr>
+<tr><td class="ctx">Access denied</td><td class="yes">You don’t have permission to edit this pipeline. Ask an environment admin for access.</td><td class="why">Includes a verb and says who can fix it.</td></tr>
+<tr><td class="ctx">Operation failed. Please try again later.</td><td class="yes">Couldn’t run the pipeline. Check that the Snaplex is running, then try again.</td><td class="why">“Later” is vague. Tell them what to check.</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="gauge"></i></div>
+        <h2>Match the tone to the severity</h2>
+      </div>
+      <div class="tbl-wrap"><table class="eg-table"><thead><tr><th>Situation</th><th>What to write</th><th>Example</th></tr></thead><tbody>
+<tr><td class="ctx">A field has a problem</td><td class="why">Quiet and instructive, right at the field.</td><td class="plain">Enter a name</td></tr>
+<tr><td class="ctx">A retry might fix it</td><td class="why">A plain statement and a Retry action.</td><td class="plain">Couldn’t load your pipelines</td></tr>
+<tr><td class="ctx">The person lacks permission</td><td class="why">Say what’s blocked and who can unblock it.</td><td class="plain">You don’t have permission to delete this pipeline. Ask an environment admin.</td></tr>
+<tr><td class="ctx">Something broke on our side</td><td class="why">Calm and honest. Say what’s affected and what isn’t.</td><td class="plain">We couldn’t load Monitor. Your pipelines aren’t affected.</td></tr>
+<tr><td class="ctx">An action can’t be undone</td><td class="why">That’s a confirmation, not an error.</td><td class="plain">Refer to the Destructive confirm pattern.</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="layout-template"></i></div>
+        <h2>Where each part goes</h2>
+      </div>
+      <p class="sec-lede">Layout and behavior belong to the <a href="https://sl-design-team.github.io/jellyroll/#preview/patterns-error-states.html">Error states</a> and <a href="https://sl-design-team.github.io/jellyroll/#preview/patterns-form-validation.html">Form validation</a> patterns. This is how the words map onto them.</p>
+      <div class="tbl-wrap"><table class="eg-table"><thead><tr><th>Part</th><th>Job</th><th>Example</th></tr></thead><tbody>
+<tr><td class="ctx">Headline</td><td class="why">What happened.</td><td class="plain">Couldn’t save the pipeline</td></tr>
+<tr><td class="ctx">Body</td><td class="why">Why, and what to do next.</td><td class="plain">A pipeline named “Orders” already exists. Enter a different name.</td></tr>
+<tr><td class="ctx">Action</td><td class="why">A verb-led button or link for the next step.</td><td class="plain">Retry, Rename, Contact admin</td></tr>
+</tbody></table></div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Inline field errors state the fix or the constraint</div>
+            <div class="g-desc"><span class="eg-inline">Enter an email address such as name@example.com</span> or <span class="eg-inline">Must be 8 to 64 characters</span>. Show one error at a time.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Every retryable error offers Retry</div>
+            <div class="g-desc">The button label is <span class="eg-inline">Retry</span>, and the text says what is being retried.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="braces"></i></div>
+        <h2>Snap error messages</h2>
+      </div>
+      <p class="sec-lede">Errors in the new UI (Monitor, Admin Manager, and AutoSync) are designed by UX and live in Figma. Snap error messages are written by the Snap team, and the platform shows three strings together. The principles above apply in full. These rules cover the format.</p>
+      <div class="principles3">
+        <div class="case"><div class="c-name">Error</div><div class="c-desc">What happened. Can name the entity.</div><div class="c-eg">Couldn’t read dataset %s</div></div>
+        <div class="case"><div class="c-name">Reason</div><div class="c-desc">Why it happened. Can come from the endpoint, or mix our text with the endpoint’s.</div><div class="c-eg">No dataset with ID %s exists</div></div>
+        <div class="case"><div class="c-name">Resolution</div><div class="c-desc">What to do next.</div><div class="c-eg">Check the dataset ID and try again</div></div>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Write the three strings as one set</div>
+            <div class="g-desc">They’re read together, in order, and must fit on screen without scrolling. Don’t repeat the error as the reason. The reason adds information.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Write fragments with no end punctuation</div>
+            <div class="g-desc">The SnapLogic Platform appends a semicolon (;) after each string automatically.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Let placeholders carry the specifics</div>
+            <div class="g-desc">Keep the wording reusable, and use <span class="eg-inline">%s</span> so the displayed message names the dataset, schema, or value that failed.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Quote messages from other systems</div>
+            <div class="g-desc">Keep the endpoint’s own words as the reason: <span class="eg-inline">“Bad Gateway” error</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Name the setting, not “configuration”</div>
+            <div class="g-desc">Every problem with a Snap’s settings is a configuration error, so <span class="eg-inline">Snap configuration error</span> says nothing. Say which setting and what it needs.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Start new strings with “Couldn’t”</div>
+            <div class="g-desc">It’s plainer than <span class="eg-inline">Unable to</span>. Leave existing <span class="eg-inline">Unable to</span> strings alone unless you’re already editing them.</div>
+          </div>
+        </div>
+      </div>
+      <div class="sub-heading">Rewrites</div>
+      <div class="tbl-wrap"><table class="eg-table"><thead><tr><th>Before</th><th>Error</th><th>Reason</th><th>Resolution</th></tr></thead><tbody>
+<tr><td class="no">Invalid Snap configuration</td><td class="yes">Couldn’t validate %s</td><td class="plain">The %s setting is empty</td><td class="plain">Enter a value for %s</td></tr>
+<tr><td class="no">Unable to fetch fields from the specified schema</td><td class="yes">Couldn’t get the fields for schema %s</td><td class="plain">No schema named %s exists</td><td class="plain">Check the schema name and try again</td></tr>
+<tr><td class="no">Unsupported Parquet type</td><td class="yes">Couldn’t write column %s to Parquet</td><td class="plain">Parquet doesn’t support the %s type</td><td class="plain">Convert the column to a supported type, then run the pipeline again</td></tr>
+<tr><td class="no">Review and verify the contents of the private key used.</td><td class="yes">Couldn’t connect with the private key</td><td class="plain">The key was rejected</td><td class="plain">Check the private key and try again</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="search"></i></div>
+        <h2>When the error string is cryptic</h2>
+      </div>
+      <p class="sec-lede">Sometimes all you have is something such as <span class="eg-inline">Dn error</span>. Write for the person, not for the log. To suggest a better message:</p>
+      <ol class="steps">
+        <li><span>Review the reason and resolution strings for clues. A reason of “Dn is null” with a resolution of “Please try with a non-null value” tells you a null value is in the wrong place.</span></li>
+        <li><span>Search for the error string online. Here, you would find that “Dn” can refer to the descriptive name of a user or system on a network. Compose the message accordingly.</span></li>
+        <li><span>Reach out to your Dev and QA contacts and verify that the message is accurate.</span></li>
+        <li><span>Read the final message as someone who has never seen the system. Does it say what happened and what to do?</span></li>
+      </ol>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="ban"></i></div>
+        <h2>Words and phrases to avoid</h2>
+      </div>
+      <div class="tbl-wrap"><table class="eg-table"><thead><tr><th>Avoid</th><th>Why, and what to write instead</th></tr></thead><tbody>
+<tr><td class="ctx">invalid, illegal, bad, wrong, incorrect</td><td class="plain">They tell people they’re wrong. Say what’s expected.</td></tr>
+<tr><td class="ctx">failed, failure (on its own)</td><td class="plain">Say what couldn’t happen: <span class="eg-inline">Couldn’t save</span>.</td></tr>
+<tr><td class="ctx">An error occurred</td><td class="plain">It carries no information. Name the error.</td></tr>
+<tr><td class="ctx">Something went wrong, unknown error, unexpected error</td><td class="plain">Say what you know.</td></tr>
+<tr><td class="ctx">Oops, uh-oh, whoops</td><td class="plain">Flippant when someone’s work is at stake.</td></tr>
+<tr><td class="ctx">Please try again later</td><td class="plain">Vague. Say what to check, or when to retry.</td></tr>
+<tr><td class="ctx">Contact your administrator (alone)</td><td class="plain">Say what to ask for: <span class="eg-inline">Ask an environment admin for access.</span></td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="accessibility"></i></div>
+        <h2>Accessible errors</h2>
+      </div>
+      <p class="sec-lede">Errors have to work for people who can’t see the red. Refer to <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-content-accessibility.html">Writing for accessibility</a> for the full guidance.</p>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Describe the error in text, not only with color or an icon <span class="sc">1.4.1</span><span class="sc">3.3.1</span></div>
+            
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Suggest a fix when you know one <span class="sc">3.3.3</span></div>
+            
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Confirm or allow undo before consequential submissions <span class="sc">3.3.4</span></div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="book-open"></i></div>
+        <h2>References</h2>
+      </div>
+      <div class="resources">
+        <a class="resource-link" href="https://sl-design-team.github.io/jellyroll/#preview/patterns-error-states.html">
+          <div class="r-icon"><i data-lucide="circle-alert"></i></div>
+          <div class="r-text"><div class="r-name">Error states</div><div class="r-desc">Layout and behavior for errors in the product UI.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://sl-design-team.github.io/jellyroll/#preview/patterns-form-validation.html">
+          <div class="r-icon"><i data-lucide="text-cursor-input"></i></div>
+          <div class="r-text"><div class="r-name">Form validation</div><div class="r-desc">When and where field errors appear.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://www.w3.org/WAI/WCAG21/Understanding/error-identification.html" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="shield-alert"></i></div>
+          <div class="r-text"><div class="r-name">WCAG: Error Identification (3.3.1)</div><div class="r-desc">Describe the error in text.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://www.w3.org/WAI/WCAG21/Understanding/error-suggestion.html" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="lightbulb"></i></div>
+          <div class="r-text"><div class="r-name">WCAG: Error Suggestion (3.3.3)</div><div class="r-desc">Suggest a fix when you can.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /cg-body -->
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -2448,6 +2448,26 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
        href="#${encodeURIComponent(it.file)}"
        data-file="${escapeHtml(it.file)}"
        data-search="${escapeHtml(((it.navName ? it.navName + " " : "") + it.name + " " + (it.tagline||"") + " " + fileLabel(it.file)).toLowerCase())}">${escapeHtml(it.navName || it.name)}${more ? `<span class="nav-more" aria-hidden="true">+${more}</span>` : ""}</a>`;
+  // One rendering path for a list of items, shared by the pinned group and the
+  // accordions. Items with a `parent` nest under it (left-nav only; they stay
+  // normal items everywhere else). A parent with `collapseChildren` keeps its
+  // nested pages tucked away until you are inside the topic.
+  const navItemsHtml = items => {
+    const childrenOf = {};
+    for (const it of items) {
+      if (it.parent) (childrenOf[it.parent] = childrenOf[it.parent] || []).push(it);
+    }
+    return items
+      .filter(it => !it.parent)
+      .map(it => {
+        const kids = childrenOf[it.file] || [];
+        const kidsHtml = kids.map(c => navLink(c, true)).join("");
+        return it.collapseChildren && kids.length
+          ? `<div class="nav-group" data-collapsible="true">${navLink(it, false, kids.length)}${kidsHtml}</div>`
+          : navLink(it, false) + kidsHtml;
+      })
+      .join("");
+  };
   const pinnedSec = sections.find(sec => sec.id === PINNED_SECTION);
   const topLinksHtml = `
     <div class="nav-heading">
@@ -2457,7 +2477,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     ${pinnedSec ? `<div class="sec sec--pinned" data-section-id="${pinnedSec.id}" data-open="true">
       <div class="sec-items">
         <a class="item-link" href="#getting-started" data-top-link="getting-started" data-search="getting started overview home">Overview</a>
-        ${pinnedSec.items.map(it => navLink(it, false)).join("")}
+        ${navItemsHtml(pinnedSec.items)}
       </div>
     </div>` : ""}
     <div class="nav-divider"></div>
@@ -2474,26 +2494,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
         <span class="count-pill">${sec.items.length}</span>
       </button>
       <div class="sec-items">
-        ${(() => {
-          // Items with a `parent` are nested in the nav directly under that
-          // parent (left-nav only — they remain normal items everywhere else).
-          const childrenOf = {};
-          for (const it of sec.items) {
-            if (it.parent) (childrenOf[it.parent] = childrenOf[it.parent] || []).push(it);
-          }
-          return sec.items
-            .filter(it => !it.parent)                     // skip children at their normal spot
-            .map(it => {
-              const kids = childrenOf[it.file] || [];
-              const kidsHtml = kids.map(c => navLink(c, true)).join("");
-              // Topics that opt in keep their nested pages tucked away until you
-              // are inside the topic, so the section stays one line per topic.
-              return it.collapseChildren && kids.length
-                ? `<div class="nav-group" data-collapsible="true">${navLink(it, false, kids.length)}${kidsHtml}</div>`
-                : navLink(it, false) + kidsHtml;
-            })
-            .join("");
-        })()}
+        ${navItemsHtml(sec.items)}
       </div>
     </div>
   `).join("");

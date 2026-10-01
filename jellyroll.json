@@ -31,9 +31,45 @@
           "name": "Content guidelines",
           "file": "preview/foundations-content-guidelines.html",
           "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-guidelines.html",
-          "tagline": "Sentence-style capitalization, punctuation, field and checkbox labels, and Snap error messages.",
-          "usage": "Applies to all content in the UI, notifications, and error messages. Use Microsoft sentence-style capitalization for everything except Snap names and SnapLogic terms, which keep their own capitalization (see Terminology). Use a period for sentences and strings that act as sentences, and none for short labels. Field names describe contents rather than give instructions, and checkbox labels never use double negatives. Pills and tags are uppercase only through CSS; write the source string in sentence case.",
-          "behaviors": "Snap error messages are three strings: error, reason, and resolution. Keep each as short as possible, keep them generic, quote messages that come from other systems, and never repeat the error as the reason. The SnapLogic Platform appends a semicolon to each message, so don't add end punctuation. Errors and notifications in the new UI (Monitor, Admin Manager, AutoSync) are designed by UX; follow the Error states pattern for those."
+          "tagline": "Capitalization, punctuation, and field and checkbox labels. The pages beneath it cover voice, numbers, microcopy, errors, and accessibility.",
+          "usage": "Applies to all content in the UI, notifications, and error messages. Use Microsoft sentence-style capitalization for everything except Snap names and SnapLogic terms, which keep their own capitalization (refer to Terminology). Use a period for sentences and strings that act as sentences, and none for short labels or headings. Field names describe contents rather than give instructions, and checkbox labels never use double negatives. Pills and tags are uppercase only through CSS; write the source string in sentence case.",
+          "behaviors": "Start here, then use the pages beneath it: Voice and grammar, Numbers, dates, and units, UI microcopy, Error messages, and Writing for accessibility."
+        },
+        {
+          "name": "Voice and grammar",
+          "file": "preview/foundations-content-voice-grammar.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-voice-grammar.html",
+          "tagline": "How we sound, plus grammar, inclusive language, and writing for translation.",
+          "usage": "The UI voice is clear, calm, and helpful; tone shifts with the moment but the voice doesn't. Use active voice, address people as you, write in the present tense, use contractions (keep do not and cannot in irreversible-action warnings and Snap error messages), and lead with what matters. One idea per sentence, aim for an eighth-grade reading level, avoid exclamation points, and use inclusive, translatable language."
+        },
+        {
+          "name": "Numbers, dates, and units",
+          "file": "preview/foundations-content-numbers.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-numbers.html",
+          "tagline": "Numerals, number formatting, dates, times, time zones, units, counts, and currency.",
+          "usage": "Follows the Microsoft Writing Style Guide. In UI text use numerals for every number; in running text spell out zero through nine. Write dates as month, day, year (October 1, 2026) and use ISO 8601 where the value is data. Times take AM or PM, noon and midnight are spelled out, and time zones appear when they matter. Let the product format locale-sensitive numbers rather than typing separators by hand."
+        },
+        {
+          "name": "UI microcopy",
+          "file": "preview/foundations-content-microcopy.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-microcopy.html",
+          "tagline": "The words in buttons, fields, confirmations, empty states, and tooltips.",
+          "usage": "Button labels start with a verb and name the action (Save changes, Delete pipeline), never OK or Yes. Always label a field with visible text; placeholders show the shape, not an instruction. A confirm's buttons say the action, results are reported in the past tense, empty states say why they are empty and what to do, and tooltips stay to one short sentence. Errors have their own page."
+        },
+        {
+          "name": "Error messages",
+          "file": "preview/foundations-content-errors.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-errors.html",
+          "tagline": "What happened, why, and what to do next, without blaming the person.",
+          "usage": "Every error says what happened, why when it helps, and what to do next. Name the specific thing, write as a person would (couldn't, not invalid), make the next step doable, and never blame. Match the tone to the severity. Snap error messages are three strings (error, reason, resolution) written as one set, as fragments with no end punctuation because the platform appends a semicolon, with placeholders carrying the specifics.",
+          "behaviors": "Layout and behavior belong to the Error states and Form validation patterns; this page owns the words. Errors must be described in text (not color alone), suggest a fix when one is known, and make sense read on their own."
+        },
+        {
+          "name": "Writing for accessibility",
+          "file": "preview/foundations-content-accessibility.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-accessibility.html",
+          "tagline": "What writers control in WCAG 2.1 AA: plain language, links, instructions, images, and errors.",
+          "usage": "Maps content rules to the WCAG 2.1 AA success criteria a writer controls (1.1.1, 1.3.1, 1.3.3, 1.4.1, 1.4.5, 2.4.2, 2.4.4, 2.4.6, 2.5.3, 3.1.x, 3.2.4, 3.3.1 to 3.3.4, 4.1.3). Write plainly, make link text meaningful on its own, don't rely on position, shape, or color in instructions, use verbs that work with any input, label every input with visible text, describe the purpose of images, and write errors and status text that make sense read alone."
         },
         {
           "name": "Terminology",

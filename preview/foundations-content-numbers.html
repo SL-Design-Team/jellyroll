@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Foundations · Numbers, dates, and units</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { width: 100%; gap: 0; padding: 0; }
+
+  .cg-body { padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 40px; }
+
+  /* ── Section headings ── */
+  .sec-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .sec-heading .icon-wrap {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-blue-50);
+    color: var(--sl-blue-600);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-heading .icon-wrap i { width: 14px; height: 14px; }
+  .sec-heading h2 { font: 800 16px/22px var(--font-sans); color: var(--color-text-heading); margin: 0; }
+  .sec-lede { margin: 0 0 16px; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); max-width: 72ch; }
+  .sec-divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* ── Note block ── */
+  .note {
+    display: flex; gap: 10px;
+    padding: 12px 14px;
+    background: var(--sl-blue-50);
+    border: 1px solid var(--sl-blue-200);
+    border-left: 3px solid var(--sl-blue-600);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .note i { width: 15px; height: 15px; color: var(--sl-blue-600); flex-shrink: 0; margin-top: 1px; }
+  .note a { color: var(--sl-blue-600); font-weight: 700; }
+
+  /* ── The three capitalization cases ── */
+  .cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .case {
+    padding: 16px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-grey-50);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .case .c-name { font: 800 12px/16px var(--font-sans); color: var(--color-text-heading); }
+  .case .c-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .case .c-eg {
+    margin-top: auto;
+    padding: 8px 10px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-heading);
+  }
+
+  /* ── Guideline rows ── */
+  .guidelines { display: flex; flex-direction: column; gap: 10px; }
+  .guideline {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    align-items: start;
+  }
+  .guideline .g-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--sl-green-100);
+    color: var(--sl-green-700);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .guideline .g-check i { width: 11px; height: 11px; stroke-width: 2.5; }
+  .guideline .g-text { display: flex; flex-direction: column; gap: 3px; }
+  .guideline .g-title { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .guideline .g-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .guideline code, .sec-lede code {
+    font: 400 11px/15px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sl-indigo-700);
+  }
+  .eg-inline { color: var(--color-text-heading); font-weight: 700; }
+
+  /* ── Write / not tables ── */
+  .eg-table { width: 100%; border: 1px solid var(--sl-grey-200); border-radius: var(--radius-md); border-collapse: separate; border-spacing: 0; overflow: hidden; }
+  .eg-table th {
+    background: var(--sl-grey-50);
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-subtle);
+    padding: 9px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .eg-table td {
+    padding: 10px 14px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    border-bottom: 1px solid var(--sl-grey-100);
+    vertical-align: top;
+  }
+  .eg-table tr:last-child td { border-bottom: 0; }
+  .eg-table td.ctx { color: var(--color-text-subtle); width: 22%; }
+  .eg-table td.yes { color: var(--sl-green-800); font-weight: 700; }
+  .eg-table td.no { color: var(--sl-red-700); text-decoration: line-through; text-decoration-color: var(--sl-red-300); }
+  .eg-table td.why { color: var(--color-text-subtle); }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl-wrap .eg-table { min-width: 560px; }
+
+  /* ── Snap error anatomy ── */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .trio .t-card {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-white);
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .trio .t-n { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.08em; color: var(--sl-blue-600); }
+  .trio .t-name { font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
+  .trio .t-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .trio .t-eg {
+    margin-top: auto;
+    font: 400 11px/16px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--sl-indigo-700);
+    overflow-wrap: anywhere;
+  }
+
+  .steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: grid; grid-template-columns: 24px 1fr; gap: 12px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .steps li::before {
+    content: counter(step);
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    font: 800 11px/24px var(--font-sans);
+    text-align: center;
+  }
+
+  .sub-heading { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); margin: 24px 0 10px; }
+
+  /* ── Resources ── */
+  .resources { display: flex; flex-direction: column; gap: 8px; }
+  .resource-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    text-decoration: none; color: inherit;
+    background: var(--sl-white);
+    transition: border-color 120ms ease-out, background 120ms ease-out;
+  }
+  .resource-link:hover { border-color: var(--sl-blue-400); background: var(--sl-blue-50); }
+  .resource-link .r-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-100);
+    color: var(--color-text-subtle);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .resource-link .r-icon i { width: 15px; height: 15px; }
+  .resource-link .r-text { flex: 1; }
+  .resource-link .r-name { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .resource-link .r-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .resource-link .r-arrow { color: var(--sl-grey-400); }
+  .resource-link .r-arrow i { width: 14px; height: 14px; }
+
+  @media (max-width: 700px) {
+    .cg-body { padding: 24px 20px 40px; gap: 28px; }
+    .cases, .trio { grid-template-columns: 1fr; }
+  }
+
+  .sc { display: inline-block; padding: 1px 6px; border-radius: 999px; background: var(--sl-blue-50); color: var(--sl-blue-700); font: 800 10px/14px var(--font-mono); white-space: nowrap; }
+  .eg-table td.sc-cell { width: 18%; white-space: nowrap; font-weight: 800; color: var(--color-text-heading); }
+  .eg-table td.lvl { width: 8%; font: 800 11px/18px var(--font-mono); color: var(--color-text-subtle); }
+  .eg-table td.plain { color: var(--color-text-body); }
+  .guideline .sc { margin-left: 4px; vertical-align: 1px; }
+  .principles3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 700px) { .principles3 { grid-template-columns: 1fr; } }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Numbers, dates, and units",
+  "section": "Getting started",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-numbers.html",
+  "tagline": "Numerals, number formatting, dates, times, time zones, units, counts, and currency.",
+  "usage": "Follows the Microsoft Writing Style Guide. In UI text use numerals for every number; in running text spell out zero through nine. Write dates as month, day, year (October 1, 2026) and use ISO 8601 where the value is data. Times take AM or PM, noon and midnight are spelled out, and time zones appear when they matter. Let the product format locale-sensitive numbers rather than typing separators by hand."
+}
+</script>
+</head>
+<body>
+<div class="card">
+
+  <div class="cg-body">
+
+    <div class="note">
+      <i data-lucide="info"></i>
+      <div>The enterprise-software defaults for numbers, dates, times, and units, taken from the Microsoft Writing Style Guide. Where we add to it for a data-heavy product (ISO 8601, relative time, KPI abbreviations), the rule says so.</div>
+    </div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="hash"></i></div>
+        <h2>Numerals and words</h2>
+      </div>
+      <p class="sec-lede">We follow the Microsoft Writing Style Guide. In UI, the product should format numbers, dates, and times for the person’s locale automatically. This page covers the text we write ourselves.</p>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">In UI text, use numerals for every number</div>
+            <div class="g-desc">Labels, counts, badges, and tables use numerals even for zero through nine. Example: <span class="eg-inline">3 pipelines selected</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">In running text, spell out zero through nine</div>
+            <div class="g-desc">Use numerals for 10 and greater. Example: <span class="eg-inline">five connections</span>, <span class="eg-inline">12 connections</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Always use numerals for these</div>
+            <div class="g-desc">Measurements (<span class="eg-inline">3 GB</span>, <span class="eg-inline">250 ms</span>), values someone is told to enter, percentages, time of day, dimensions, and step or version numbers.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Be consistent in a group</div>
+            <div class="g-desc">If one item needs a numeral, use numerals for every item of that type.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t start a sentence with a numeral</div>
+            <div class="g-desc">Rewrite it, or spell the number out. <span class="eg-inline">More than 10 pipelines ran.</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Spell out ordinals</div>
+            <div class="g-desc"><span class="eg-inline">the first row</span>. Never <span class="eg-inline">firstly</span> or <span class="eg-inline">secondly</span>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="ruler"></i></div>
+        <h2>Formatting numbers</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use commas in numbers of four or more digits</div>
+            <div class="g-desc"><span class="eg-inline">1,024</span>. Exceptions: years, pixel sizes, page numbers, and addresses take a comma only at five or more digits, if at all. Never use a comma after the decimal point.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Add a zero before a decimal point</div>
+            <div class="g-desc"><span class="eg-inline">0.5 cm</span>. Align decimals on the point in tables.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use a real minus sign for negative numbers</div>
+            <div class="g-desc"><span class="eg-inline">−79</span>, not an en dash or a hyphen.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use <em>from</em> and <em>through</em> for ranges in prose</div>
+            <div class="g-desc"><span class="eg-inline">from 9 through 17</span>. Use an en dash in tables and tight UI: <span class="eg-inline">2016–2020</span>. Use <span class="eg-inline">to</span> for times: <span class="eg-inline">10:00 AM to 2:00 PM</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Spell out thousand, million, and billion in prose</div>
+            <div class="g-desc"><span class="eg-inline">$30 million</span>. In KPI tiles and chart axes, where space is tight, <span class="eg-inline">1.2M</span> is acceptable: capitalize K, M, and B, use no space, and give the full value in a tooltip or accessible name.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Percentages: a numeral and the word in prose, the symbol in UI</div>
+            <div class="g-desc"><span class="eg-inline">5 percent</span> in sentences, <span class="eg-inline">42%</span> in tables, tiles, and charts.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use a space between a number and its unit</div>
+            <div class="g-desc"><span class="eg-inline">5 GB</span>, <span class="eg-inline">250 ms</span>, <span class="eg-inline">3 cm</span>. Choose one convention for data sizes on a surface and keep it.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use hyphens in phone numbers</div>
+            <div class="g-desc"><span class="eg-inline">612-555-0175</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t type numbers that the product can format</div>
+            <div class="g-desc">Locale decides the thousands and decimal separators. Hand-typed separators in a string can be wrong for a reader.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="calendar"></i></div>
+        <h2>Dates and times</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Write dates as month, day, year</div>
+            <div class="g-desc"><span class="eg-inline">October 1, 2026</span>. Spell out the month so no one has to guess whether 6/12 means June or December. Never use ordinals: <span class="eg-inline">June 1</span>, not <span class="eg-inline">June 1st</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use ISO 8601 where the value is data</div>
+            <div class="g-desc">Logs, exports, API fields, and code-facing inputs use <span class="eg-inline">2026-10-01T14:30:00Z</span>. Write the friendly format for people and ISO for machines.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Write the time with AM or PM</div>
+            <div class="g-desc"><span class="eg-inline">10:45 AM</span>, <span class="eg-inline">6:30 PM</span>. Capitalize both letters and add a space. Use <span class="eg-inline">noon</span> and <span class="eg-inline">midnight</span>, never 12:00.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Say which time zone when it matters</div>
+            <div class="g-desc">Include it when people in other zones might see the time. Write <span class="eg-inline">UTC</span>, never GMT, and use an offset such as <span class="eg-inline">Eastern Time (UTC−5)</span>. Show timestamps in the person’s local time, and make the zone available.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use relative time for recent events</div>
+            <div class="g-desc"><span class="eg-inline">5 minutes ago</span> for the last day, then an absolute date. Always give the exact timestamp on hover or focus.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use a time range with <em>to</em> in text</div>
+            <div class="g-desc"><span class="eg-inline">10:00 AM to 2:00 PM</span>. Use an en dash with no spaces in schedules and listings: <span class="eg-inline">10:00 AM–2:00 PM</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Capitalize days and months, and abbreviate only when space is tight</div>
+            <div class="g-desc">Three letters, no period: <span class="eg-inline">Mon</span>, <span class="eg-inline">Jan</span>. Calendars and date pickers can use two letters or one.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Avoid seasons and 24/7</div>
+            <div class="g-desc">Use a month or quarter instead of a season. Use <span class="eg-inline">always</span> or <span class="eg-inline">all day, every day</span> instead of 24/7.</div>
+          </div>
+        </div>
+      </div>
+      <div class="sub-heading">Abbreviating units of time</div>
+      <p class="sec-lede">Spell units out in prose. Abbreviate in UI only when space is tight.</p>
+      <div class="tbl-wrap"><table class="eg-table"><thead><tr><th>Unit</th><th>Abbreviation</th></tr></thead><tbody>
+<tr><td class="ctx">hour</td><td class="plain">h</td></tr>
+<tr><td class="ctx">minute</td><td class="plain">min</td></tr>
+<tr><td class="ctx">second</td><td class="plain">sec</td></tr>
+<tr><td class="ctx">millisecond</td><td class="plain">ms</td></tr>
+<tr><td class="ctx">day, week, month, year</td><td class="plain">Spell out. In tight UI: d, wk, mo, yr.</td></tr>
+<tr><td class="ctx">microsecond, nanosecond</td><td class="plain">Don’t abbreviate.</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="list-ordered"></i></div>
+        <h2>Counts, plurals, and currency</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Match the count</div>
+            <div class="g-desc"><span class="eg-inline">1 pipeline</span>, <span class="eg-inline">2 pipelines</span>. Never <span class="eg-inline">pipeline(s)</span>; it can’t be translated correctly.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Say <em>No</em> in prose, <em>0</em> in counters</div>
+            <div class="g-desc"><span class="eg-inline">No pipelines match your filters</span>. In a tab badge or table, a plain <span class="eg-inline">0</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Show progress as <em>of</em></div>
+            <div class="g-desc"><span class="eg-inline">3 of 12 selected</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Put the currency symbol before the amount</div>
+            <div class="g-desc"><span class="eg-inline">$1,200.00</span>. When more than one currency can appear on a screen, use the ISO code so none is ambiguous: <span class="eg-inline">USD 1,200.00</span>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="book-open"></i></div>
+        <h2>References</h2>
+      </div>
+      <div class="resources">
+        <a class="resource-link" href="https://learn.microsoft.com/en-us/style-guide/numbers" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="hash"></i></div>
+          <div class="r-text"><div class="r-name">Microsoft: Numbers</div><div class="r-desc">Numerals, commas, ranges, and abbreviations.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://learn.microsoft.com/en-us/style-guide/a-z-word-list-term-collections/term-collections/date-time-terms" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="calendar"></i></div>
+          <div class="r-text"><div class="r-name">Microsoft: Date and time terms</div><div class="r-desc">Dates, times, time zones, and unit abbreviations.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /cg-body -->
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

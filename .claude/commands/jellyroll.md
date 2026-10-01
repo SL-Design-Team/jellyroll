@@ -107,7 +107,7 @@ Produce a single self-contained `.html` file.
 - Use Lucide icons via CDN (`https://unpkg.com/lucide@latest`)
 - Include hover, focus, active, and disabled states
 - Follow the quick rules from the README (sentence case, no decorative gradients, border-based card selection, etc.)
-- Write UI copy to the content guidelines: Microsoft sentence case except Snap names and SnapLogic terms (Snaplex, Triggered Task, SnapLogic Platform), periods only on sentences, and the word choices in `https://sl-design-team.github.io/jellyroll/preview/foundations-terminology.html`. Rules are at `https://sl-design-team.github.io/jellyroll/preview/foundations-content-guidelines.html`.
+- Write UI copy to the content guidelines: Microsoft sentence case except Snap names and SnapLogic terms (Snaplex, Triggered Task, SnapLogic Platform), periods only on sentences, and the word choices in `https://sl-design-team.github.io/jellyroll/preview/foundations-terminology.html`. Rules are at `https://sl-design-team.github.io/jellyroll/preview/foundations-content-guidelines.html`; for voice, numbers and dates, button and field copy, error messages, and accessible writing, fetch `foundations-content-voice-grammar.html`, `foundations-content-numbers.html`, `foundations-content-microcopy.html`, `foundations-content-errors.html`, and `foundations-content-accessibility.html` from the same folder.
 
 #### React mode (opt-in via trigger words above)
 

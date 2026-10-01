@@ -62,7 +62,7 @@ When one component appears inside another, **use the real component and switch o
 
 ## Content and visual rules
 
-- **Sentence case everywhere** (Microsoft style): capitalize the first word and proper nouns only. Exceptions are Snap names and SnapLogic terms (Snap, Snaplex, Triggered Task, SnapLogic Platform), which keep their own capitalization. Pills/tags = 10px ExtraBold UPPERCASE only, applied by CSS `text-transform`; the source string stays sentence case. Full rules in `preview/foundations-content-guidelines.html`; term-by-term casing and word choice in `preview/foundations-terminology.html`. Check Terminology before naming anything in the UI.
+- **Sentence case everywhere** (Microsoft style): capitalize the first word and proper nouns only. Exceptions are Snap names and SnapLogic terms (Snap, Snaplex, Triggered Task, SnapLogic Platform), which keep their own capitalization. Pills/tags = 10px ExtraBold UPPERCASE only, applied by CSS `text-transform`; the source string stays sentence case. Full rules in `preview/foundations-content-guidelines.html`, with voice and grammar, numbers/dates/units, UI microcopy, error messages, and writing for accessibility (WCAG 2.1 AA) on the pages beneath it; term-by-term casing and word choice in `preview/foundations-terminology.html`. Check Terminology before naming anything in the UI, and write errors to `foundations-content-errors.html`.
 - **No emoji** anywhere in the system.
 - **No gradients in normal UI.** Reserved for the 6 product launcher icons, SnapGPT accent, and the brand gradient.
 - **Lucide icons only** — never hardcode SVG paths that aren't from Lucide. Icon-only buttons require `aria-label`.

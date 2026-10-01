@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Foundations · Writing for accessibility</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { width: 100%; gap: 0; padding: 0; }
+
+  .cg-body { padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 40px; }
+
+  /* ── Section headings ── */
+  .sec-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .sec-heading .icon-wrap {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-blue-50);
+    color: var(--sl-blue-600);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-heading .icon-wrap i { width: 14px; height: 14px; }
+  .sec-heading h2 { font: 800 16px/22px var(--font-sans); color: var(--color-text-heading); margin: 0; }
+  .sec-lede { margin: 0 0 16px; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); max-width: 72ch; }
+  .sec-divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* ── Note block ── */
+  .note {
+    display: flex; gap: 10px;
+    padding: 12px 14px;
+    background: var(--sl-blue-50);
+    border: 1px solid var(--sl-blue-200);
+    border-left: 3px solid var(--sl-blue-600);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .note i { width: 15px; height: 15px; color: var(--sl-blue-600); flex-shrink: 0; margin-top: 1px; }
+  .note a { color: var(--sl-blue-600); font-weight: 700; }
+
+  /* ── The three capitalization cases ── */
+  .cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .case {
+    padding: 16px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-grey-50);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .case .c-name { font: 800 12px/16px var(--font-sans); color: var(--color-text-heading); }
+  .case .c-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .case .c-eg {
+    margin-top: auto;
+    padding: 8px 10px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-heading);
+  }
+
+  /* ── Guideline rows ── */
+  .guidelines { display: flex; flex-direction: column; gap: 10px; }
+  .guideline {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    align-items: start;
+  }
+  .guideline .g-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--sl-green-100);
+    color: var(--sl-green-700);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .guideline .g-check i { width: 11px; height: 11px; stroke-width: 2.5; }
+  .guideline .g-text { display: flex; flex-direction: column; gap: 3px; }
+  .guideline .g-title { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .guideline .g-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .guideline code, .sec-lede code {
+    font: 400 11px/15px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sl-indigo-700);
+  }
+  .eg-inline { color: var(--color-text-heading); font-weight: 700; }
+
+  /* ── Write / not tables ── */
+  .eg-table { width: 100%; border: 1px solid var(--sl-grey-200); border-radius: var(--radius-md); border-collapse: separate; border-spacing: 0; overflow: hidden; }
+  .eg-table th {
+    background: var(--sl-grey-50);
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-subtle);
+    padding: 9px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .eg-table td {
+    padding: 10px 14px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    border-bottom: 1px solid var(--sl-grey-100);
+    vertical-align: top;
+  }
+  .eg-table tr:last-child td { border-bottom: 0; }
+  .eg-table td.ctx { color: var(--color-text-subtle); width: 22%; }
+  .eg-table td.yes { color: var(--sl-green-800); font-weight: 700; }
+  .eg-table td.no { color: var(--sl-red-700); text-decoration: line-through; text-decoration-color: var(--sl-red-300); }
+  .eg-table td.why { color: var(--color-text-subtle); }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl-wrap .eg-table { min-width: 560px; }
+
+  /* ── Snap error anatomy ── */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .trio .t-card {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-white);
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .trio .t-n { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.08em; color: var(--sl-blue-600); }
+  .trio .t-name { font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
+  .trio .t-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .trio .t-eg {
+    margin-top: auto;
+    font: 400 11px/16px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--sl-indigo-700);
+    overflow-wrap: anywhere;
+  }
+
+  .steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: grid; grid-template-columns: 24px 1fr; gap: 12px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .steps li::before {
+    content: counter(step);
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    font: 800 11px/24px var(--font-sans);
+    text-align: center;
+  }
+
+  .sub-heading { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); margin: 24px 0 10px; }
+
+  /* ── Resources ── */
+  .resources { display: flex; flex-direction: column; gap: 8px; }
+  .resource-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    text-decoration: none; color: inherit;
+    background: var(--sl-white);
+    transition: border-color 120ms ease-out, background 120ms ease-out;
+  }
+  .resource-link:hover { border-color: var(--sl-blue-400); background: var(--sl-blue-50); }
+  .resource-link .r-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-100);
+    color: var(--color-text-subtle);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .resource-link .r-icon i { width: 15px; height: 15px; }
+  .resource-link .r-text { flex: 1; }
+  .resource-link .r-name { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .resource-link .r-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .resource-link .r-arrow { color: var(--sl-grey-400); }
+  .resource-link .r-arrow i { width: 14px; height: 14px; }
+
+  @media (max-width: 700px) {
+    .cg-body { padding: 24px 20px 40px; gap: 28px; }
+    .cases, .trio { grid-template-columns: 1fr; }
+  }
+
+  .sc { display: inline-block; padding: 1px 6px; border-radius: 999px; background: var(--sl-blue-50); color: var(--sl-blue-700); font: 800 10px/14px var(--font-mono); white-space: nowrap; }
+  .eg-table td.sc-cell { width: 18%; white-space: nowrap; font-weight: 800; color: var(--color-text-heading); }
+  .eg-table td.lvl { width: 8%; font: 800 11px/18px var(--font-mono); color: var(--color-text-subtle); }
+  .eg-table td.plain { color: var(--color-text-body); }
+  .guideline .sc { margin-left: 4px; vertical-align: 1px; }
+  .principles3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 700px) { .principles3 { grid-template-columns: 1fr; } }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Writing for accessibility",
+  "section": "Getting started",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-accessibility.html",
+  "tagline": "What writers control in WCAG 2.1 AA: plain language, links, instructions, images, and errors.",
+  "usage": "Maps content rules to the WCAG 2.1 AA success criteria a writer controls (1.1.1, 1.3.1, 1.3.3, 1.4.1, 1.4.5, 2.4.2, 2.4.4, 2.4.6, 2.5.3, 3.1.x, 3.2.4, 3.3.1 to 3.3.4, 4.1.3). Write plainly, make link text meaningful on its own, don't rely on position, shape, or color in instructions, use verbs that work with any input, label every input with visible text, describe the purpose of images, and write errors and status text that make sense read alone."
+}
+</script>
+</head>
+<body>
+<div class="card">
+
+  <div class="cg-body">
+
+    <div class="note">
+      <i data-lucide="info"></i>
+      <div>What writers control in WCAG 2.1 AA. Each rule is tagged with the success criteria it supports. For error wording, refer to <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-content-errors.html">Error messages</a>.</div>
+    </div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="scale"></i></div>
+        <h2>WCAG criteria that writing affects</h2>
+      </div>
+      <p class="sec-lede">WCAG 2.1 AA is our baseline, and the <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-accessibility.html">Accessibility</a> page covers the design and engineering side. These are the criteria a writer controls.</p>
+      <div class="tbl-wrap"><table class="eg-table"><thead><tr><th>Criterion</th><th>Level</th><th>What it asks of writers</th></tr></thead><tbody>
+<tr><td class="sc-cell">1.1.1 Non-text content</td><td class="lvl">A</td><td class="plain">Give every meaningful image, icon, and chart a text alternative. Hide decorative ones.</td></tr>
+<tr><td class="sc-cell">1.3.1 Info and relationships</td><td class="lvl">A</td><td class="plain">Write headings, lists, and labels as real structure, not only formatting.</td></tr>
+<tr><td class="sc-cell">1.3.3 Sensory characteristics</td><td class="lvl">A</td><td class="plain">Don’t rely only on shape, color, size, position, or sound in instructions.</td></tr>
+<tr><td class="sc-cell">1.4.1 Use of color</td><td class="lvl">A</td><td class="plain">Say it in words, not only in color: <span class="eg-inline">Required</span>, <span class="eg-inline">Failed</span>.</td></tr>
+<tr><td class="sc-cell">1.4.5 Images of text</td><td class="lvl">AA</td><td class="plain">Use real text, not text in an image.</td></tr>
+<tr><td class="sc-cell">2.4.2 Page titled</td><td class="lvl">A</td><td class="plain">Give each page a title that describes its topic.</td></tr>
+<tr><td class="sc-cell">2.4.4 Link purpose (in context)</td><td class="lvl">A</td><td class="plain">Link text, or the text around it, says where the link goes.</td></tr>
+<tr><td class="sc-cell">2.4.6 Headings and labels</td><td class="lvl">AA</td><td class="plain">Headings and labels describe their topic or purpose.</td></tr>
+<tr><td class="sc-cell">2.5.3 Label in name</td><td class="lvl">A</td><td class="plain">A control’s accessible name starts with its visible label.</td></tr>
+<tr><td class="sc-cell">3.1.1, 3.1.2 Language</td><td class="lvl">A, AA</td><td class="plain">Flag text in another language so it’s read correctly.</td></tr>
+<tr><td class="sc-cell">3.2.4 Consistent identification</td><td class="lvl">AA</td><td class="plain">Use the same name for the same function everywhere.</td></tr>
+<tr><td class="sc-cell">3.3.1 Error identification</td><td class="lvl">A</td><td class="plain">Describe the error in text.</td></tr>
+<tr><td class="sc-cell">3.3.2 Labels or instructions</td><td class="lvl">A</td><td class="plain">Label every input and give instructions where they’re needed.</td></tr>
+<tr><td class="sc-cell">3.3.3 Error suggestion</td><td class="lvl">AA</td><td class="plain">Suggest a fix when you know one.</td></tr>
+<tr><td class="sc-cell">3.3.4 Error prevention</td><td class="lvl">AA</td><td class="plain">Confirm, review, or allow undo for consequential submissions.</td></tr>
+<tr><td class="sc-cell">4.1.3 Status messages</td><td class="lvl">AA</td><td class="plain">Write status text so it makes sense when read on its own.</td></tr>
+<tr><td class="sc-cell">3.1.3–3.1.5 Unusual words, abbreviations, reading level</td><td class="lvl">AAA</td><td class="plain">Not required, but we aim for them: explain unusual words and abbreviations, and keep the reading level low.</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="book-open-text"></i></div>
+        <h2>Write plainly</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Keep it short and simple <span class="sc">3.1.5</span></div>
+            <div class="g-desc">Aim for one verb per sentence and short paragraphs. Read the text aloud, imagining a screen reader speaking it.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Lead with what matters</div>
+            <div class="g-desc">Put the key information first so readers know where to focus.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Spell out <em>and</em>, <em>plus</em>, and <em>about</em></div>
+            <div class="g-desc">Screen readers can misread or skip <span class="eg-inline">&amp;</span>, <span class="eg-inline">+</span>, and <span class="eg-inline">~</span>. Use symbols only where they’re part of a name.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Explain abbreviations and unusual terms on first use <span class="sc">3.1.3</span><span class="sc">3.1.4</span></div>
+            <div class="g-desc">Write <span class="eg-inline">single sign-on (SSO)</span> the first time, then SSO.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t use all caps for emphasis</div>
+            <div class="g-desc">Some screen readers spell all-caps words letter by letter.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t force line breaks inside a sentence</div>
+            <div class="g-desc">They break in resized windows and at larger text sizes.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Keep the vocabulary consistent <span class="sc">3.2.4</span></div>
+            <div class="g-desc">One name for one thing. The Terminology page is the reference.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="compass"></i></div>
+        <h2>Instructions and labels</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t depend on position, shape, or color alone <span class="sc">1.3.3</span></div>
+            <div class="g-desc">Write <span class="eg-inline">Select Save</span>, not <span class="eg-inline">Select the green button on the right</span>. Words such as <span class="eg-inline">left</span>, <span class="eg-inline">above</span>, and <span class="eg-inline">below</span> don’t help someone using a screen reader.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use verbs that work with any input</div>
+            <div class="g-desc"><span class="eg-inline">Select</span>, <span class="eg-inline">choose</span>, and <span class="eg-inline">enter</span> work with a mouse, a keyboard, touch, and voice. Use <span class="eg-inline">click</span> only for a pointer-only action.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Label every input with visible text <span class="sc">3.3.2</span></div>
+            <div class="g-desc">State required and optional in words, and give the format or limits before the person types.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Start a control’s accessible name with its visible label <span class="sc">2.5.3</span></div>
+            <div class="g-desc">If the button says <span class="eg-inline">Add Snap</span>, the name starts with <span class="eg-inline">Add Snap</span>, so voice control users can say what they see.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t rely on a toast for anything people must read or act on</div>
+            <div class="g-desc">Toasts disappear. Anything essential belongs in a banner, modal, or the page itself.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="link"></i></div>
+        <h2>Links</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Make link text meaningful on its own <span class="sc">2.4.4</span></div>
+            <div class="g-desc"><span class="eg-inline">Read the Snaplex setup guide</span>, not <span class="eg-inline">Click here</span>. Links should make sense out of context, as in a list of links.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Keep Learn more specific</div>
+            <div class="g-desc"><span class="eg-inline">Learn more</span> is fine after a sentence that names the topic. When several links on a page share that text, give each its own accessible name: <span class="eg-inline">Learn more about Snaplexes</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Say when a link opens something unexpected</div>
+            <div class="g-desc">A new tab, a download, or a file type. <span class="eg-inline">Open the report (PDF, opens in a new tab)</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t use a raw URL as link text</div>
+            <div class="g-desc">Describe the destination instead.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Make links look like links <span class="sc">1.4.1</span></div>
+            <div class="g-desc">Use more than color, such as an underline.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="image"></i></div>
+        <h2>Images, icons, and charts</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Describe the purpose, not the appearance <span class="sc">1.1.1</span></div>
+            <div class="g-desc">Keep alt text to a sentence or two. Don’t start with <span class="eg-inline">Image of</span> or <span class="eg-inline">Photo of</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Hide decorative images</div>
+            <div class="g-desc">Use empty alt text (<code>alt=""</code>) so they’re skipped.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Name icon-only controls by their action</div>
+            <div class="g-desc"><span class="eg-inline">Delete</span>, not the name of the icon.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Give a chart a text takeaway and the data <span class="sc">1.1.1</span></div>
+            <div class="g-desc">State the point in a sentence, and make the underlying numbers available in a table.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use real text, not an image of text <span class="sc">1.4.5</span></div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="heading"></i></div>
+        <h2>Headings, lists, and tables</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use real heading levels to show hierarchy <span class="sc">1.3.1</span></div>
+            <div class="g-desc">Don’t skip levels, and don’t fake a heading with bold text.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Describe what a heading covers <span class="sc">2.4.6</span></div>
+            <div class="g-desc">Write headings and labels that tell people what’s under them.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use a real list for a list</div>
+            <div class="g-desc">Use parallel items, and introduce the list with a sentence that ends in a colon.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Introduce a table in a sentence before it</div>
+            <div class="g-desc">Use short, specific column headings.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="list-checks"></i></div>
+        <h2>Before you ship</h2>
+      </div>
+      <ol class="steps">
+        <li><span>Read it aloud. If it trips you up, it will trip up a screen reader.</span></li>
+        <li><span>Read every link on its own. Does each one say where it goes?</span></li>
+        <li><span>Check every instruction. Would it still work without seeing color, shape, or position?</span></li>
+        <li><span>Check every error and status message. Does it make sense without its field or heading?</span></li>
+        <li><span>Check every image and icon. Does each have a useful name, or is it deliberately hidden?</span></li>
+        <li><span>Run a readability check, and aim for roughly an eighth-grade level.</span></li>
+        <li><span>Test with a screen reader.</span></li>
+      </ol>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="book-open"></i></div>
+        <h2>References</h2>
+      </div>
+      <div class="resources">
+        <a class="resource-link" href="https://www.w3.org/WAI/WCAG21/quickref/" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="scale"></i></div>
+          <div class="r-text"><div class="r-name">WCAG 2.1 Quick Reference</div><div class="r-desc">Every success criterion with techniques.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://learn.microsoft.com/en-us/style-guide/accessibility/writing-all-abilities" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="accessibility"></i></div>
+          <div class="r-text"><div class="r-name">Microsoft: Writing for all abilities</div><div class="r-desc">The basis for much of this page.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://www.plainlanguage.gov/" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="languages"></i></div>
+          <div class="r-text"><div class="r-name">Plain Language</div><div class="r-desc">Federal plain language guidelines.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://sl-design-team.github.io/jellyroll/#preview/foundations-accessibility.html">
+          <div class="r-icon"><i data-lucide="accessibility"></i></div>
+          <div class="r-text"><div class="r-name">Accessibility</div><div class="r-desc">Color contrast, keyboard, and focus requirements.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /cg-body -->
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

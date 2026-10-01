@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Foundations · Voice and grammar</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { width: 100%; gap: 0; padding: 0; }
+
+  .cg-body { padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 40px; }
+
+  /* ── Section headings ── */
+  .sec-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .sec-heading .icon-wrap {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-blue-50);
+    color: var(--sl-blue-600);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-heading .icon-wrap i { width: 14px; height: 14px; }
+  .sec-heading h2 { font: 800 16px/22px var(--font-sans); color: var(--color-text-heading); margin: 0; }
+  .sec-lede { margin: 0 0 16px; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); max-width: 72ch; }
+  .sec-divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* ── Note block ── */
+  .note {
+    display: flex; gap: 10px;
+    padding: 12px 14px;
+    background: var(--sl-blue-50);
+    border: 1px solid var(--sl-blue-200);
+    border-left: 3px solid var(--sl-blue-600);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .note i { width: 15px; height: 15px; color: var(--sl-blue-600); flex-shrink: 0; margin-top: 1px; }
+  .note a { color: var(--sl-blue-600); font-weight: 700; }
+
+  /* ── The three capitalization cases ── */
+  .cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .case {
+    padding: 16px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-grey-50);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .case .c-name { font: 800 12px/16px var(--font-sans); color: var(--color-text-heading); }
+  .case .c-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .case .c-eg {
+    margin-top: auto;
+    padding: 8px 10px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-heading);
+  }
+
+  /* ── Guideline rows ── */
+  .guidelines { display: flex; flex-direction: column; gap: 10px; }
+  .guideline {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    align-items: start;
+  }
+  .guideline .g-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--sl-green-100);
+    color: var(--sl-green-700);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .guideline .g-check i { width: 11px; height: 11px; stroke-width: 2.5; }
+  .guideline .g-text { display: flex; flex-direction: column; gap: 3px; }
+  .guideline .g-title { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .guideline .g-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .guideline code, .sec-lede code {
+    font: 400 11px/15px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sl-indigo-700);
+  }
+  .eg-inline { color: var(--color-text-heading); font-weight: 700; }
+
+  /* ── Write / not tables ── */
+  .eg-table { width: 100%; border: 1px solid var(--sl-grey-200); border-radius: var(--radius-md); border-collapse: separate; border-spacing: 0; overflow: hidden; }
+  .eg-table th {
+    background: var(--sl-grey-50);
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-subtle);
+    padding: 9px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .eg-table td {
+    padding: 10px 14px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    border-bottom: 1px solid var(--sl-grey-100);
+    vertical-align: top;
+  }
+  .eg-table tr:last-child td { border-bottom: 0; }
+  .eg-table td.ctx { color: var(--color-text-subtle); width: 22%; }
+  .eg-table td.yes { color: var(--sl-green-800); font-weight: 700; }
+  .eg-table td.no { color: var(--sl-red-700); text-decoration: line-through; text-decoration-color: var(--sl-red-300); }
+  .eg-table td.why { color: var(--color-text-subtle); }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl-wrap .eg-table { min-width: 560px; }
+
+  /* ── Snap error anatomy ── */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .trio .t-card {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-white);
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .trio .t-n { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.08em; color: var(--sl-blue-600); }
+  .trio .t-name { font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
+  .trio .t-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .trio .t-eg {
+    margin-top: auto;
+    font: 400 11px/16px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--sl-indigo-700);
+    overflow-wrap: anywhere;
+  }
+
+  .steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: grid; grid-template-columns: 24px 1fr; gap: 12px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .steps li::before {
+    content: counter(step);
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    font: 800 11px/24px var(--font-sans);
+    text-align: center;
+  }
+
+  .sub-heading { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); margin: 24px 0 10px; }
+
+  /* ── Resources ── */
+  .resources { display: flex; flex-direction: column; gap: 8px; }
+  .resource-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    text-decoration: none; color: inherit;
+    background: var(--sl-white);
+    transition: border-color 120ms ease-out, background 120ms ease-out;
+  }
+  .resource-link:hover { border-color: var(--sl-blue-400); background: var(--sl-blue-50); }
+  .resource-link .r-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-100);
+    color: var(--color-text-subtle);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .resource-link .r-icon i { width: 15px; height: 15px; }
+  .resource-link .r-text { flex: 1; }
+  .resource-link .r-name { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .resource-link .r-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .resource-link .r-arrow { color: var(--sl-grey-400); }
+  .resource-link .r-arrow i { width: 14px; height: 14px; }
+
+  @media (max-width: 700px) {
+    .cg-body { padding: 24px 20px 40px; gap: 28px; }
+    .cases, .trio { grid-template-columns: 1fr; }
+  }
+
+  .sc { display: inline-block; padding: 1px 6px; border-radius: 999px; background: var(--sl-blue-50); color: var(--sl-blue-700); font: 800 10px/14px var(--font-mono); white-space: nowrap; }
+  .eg-table td.sc-cell { width: 18%; white-space: nowrap; font-weight: 800; color: var(--color-text-heading); }
+  .eg-table td.lvl { width: 8%; font: 800 11px/18px var(--font-mono); color: var(--color-text-subtle); }
+  .eg-table td.plain { color: var(--color-text-body); }
+  .guideline .sc { margin-left: 4px; vertical-align: 1px; }
+  .principles3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 700px) { .principles3 { grid-template-columns: 1fr; } }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "Voice and grammar",
+  "section": "Getting started",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-voice-grammar.html",
+  "tagline": "How we sound, plus grammar, inclusive language, and writing for translation.",
+  "usage": "The UI voice is clear, calm, and helpful; tone shifts with the moment but the voice doesn't. Use active voice, address people as you, write in the present tense, use contractions (keep do not and cannot in irreversible-action warnings and Snap error messages), and lead with what matters. One idea per sentence, aim for an eighth-grade reading level, avoid exclamation points, and use inclusive, translatable language."
+}
+</script>
+</head>
+<body>
+<div class="card">
+
+  <div class="cg-body">
+
+    <div class="note">
+      <i data-lucide="info"></i>
+      <div>How we sound and the grammar rules that go with it. For capitalization and punctuation, refer to <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-content-guidelines.html">Content guidelines</a>. For specific words and spellings, refer to <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-terminology.html">Terminology</a>.</div>
+    </div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="mic"></i></div>
+        <h2>Voice</h2>
+      </div>
+      <p class="sec-lede">Our UI voice is <b>clear, calm, and helpful</b>. People use SnapLogic to do complex, high-stakes integration work, so we get to the point, stay even when something goes wrong, and never make them feel at fault.</p>
+      <div class="principles3">
+        <div class="case"><div class="c-name">Clear and direct</div><div class="c-desc">Lead with what matters. One idea per sentence. Plain words over clever ones.</div><div class="c-eg">Select a Snaplex to run the pipeline</div></div>
+        <div class="case"><div class="c-name">Calm and professional</div><div class="c-desc">No hype, no jokes, no exclamation points. Stay level when things go wrong.</div><div class="c-eg">Couldn’t save the pipeline</div></div>
+        <div class="case"><div class="c-name">Helpful</div><div class="c-desc">Say what happened and what to do next. Never blame the person.</div><div class="c-eg">Enter a name to continue</div></div>
+      </div>
+      <div class="sub-heading">Tone adapts to the moment</div>
+      <p class="sec-lede">The voice stays the same. The tone shifts with what the person is doing and how they’re likely to feel.</p>
+      <div class="tbl-wrap"><table class="eg-table"><thead><tr><th>Moment</th><th>Tone</th><th>Example</th></tr></thead><tbody>
+<tr><td class="ctx">Routine task</td><td class="why">Neutral and brief. Don’t narrate.</td><td class="plain">Pipeline saved</td></tr>
+<tr><td class="ctx">Success</td><td class="why">A short confirmation of the result. No celebration.</td><td class="plain">Pipeline restored</td></tr>
+<tr><td class="ctx">Something went wrong</td><td class="why">Calm and specific, with a way forward. Never blame.</td><td class="plain">Couldn’t read dataset ID 4821. Check the ID and try again.</td></tr>
+<tr><td class="ctx">Irreversible action</td><td class="why">Serious and plain. Name the object and the consequence.</td><td class="plain">‘MG-pipeline-Nov2022’ will be moved to the Recycle Bin and deleted forever after 30 days.</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="text-quote"></i></div>
+        <h2>Grammar and style</h2>
+      </div>
+      <p class="sec-lede">These rules follow the Microsoft Writing Style Guide. They make text quicker to scan, easier to translate, and easier for assistive technology to read aloud.</p>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use active voice</div>
+            <div class="g-desc">Name who or what does the action. Use passive only when the actor is unknown or doesn’t matter.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Write to “you”</div>
+            <div class="g-desc">Address the person as <span class="eg-inline">you</span> and <span class="eg-inline">your</span>. Never write <span class="eg-inline">the user</span> in UI text. Use <span class="eg-inline">we</span> for SnapLogic. Avoid <span class="eg-inline">I</span>, <span class="eg-inline">me</span>, and <span class="eg-inline">my</span> in labels; a plain noun is usually better than <span class="eg-inline">My pipelines</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use the present tense</div>
+            <div class="g-desc">Describe what happens, not what will happen. <span class="eg-inline">The pipeline runs when you select Run.</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use contractions</div>
+            <div class="g-desc"><span class="eg-inline">Don’t</span>, <span class="eg-inline">can’t</span>, <span class="eg-inline">you’re</span>, and <span class="eg-inline">it’s</span> keep text natural. Keep <span class="eg-inline">do not</span> and <span class="eg-inline">cannot</span> in warnings about irreversible actions and in Snap error messages, where the negative must be unmistakable and strings stay terse.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Lead with what matters</div>
+            <div class="g-desc">Put the key word or action first so it survives scanning. Start most statements with a verb, cut <span class="eg-inline">you can</span> when it isn’t needed, and avoid <span class="eg-inline">there is</span> and <span class="eg-inline">there are</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">One idea per sentence</div>
+            <div class="g-desc">Aim for 20 words or fewer. A sentence with more than a couple of commas usually needs splitting. Replace long, complex sentences with a list or a table.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Write in plain language</div>
+            <div class="g-desc">Short, everyday words. No jargon unless it’s a term your audience already uses. Read it aloud: if it doesn’t sound natural when you say it to a colleague, rewrite it.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Keep a consistent reading level</div>
+            <div class="g-desc">Aim for roughly an eighth-grade reading level. WCAG 3.1.5 (AAA) sets lower secondary education as the ceiling for text that has no simpler alternative.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use parallel structure</div>
+            <div class="g-desc">Start every item in a list or every sibling heading with the same kind of word, such as a verb or a singular noun.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Include <em>that</em> and articles</div>
+            <div class="g-desc"><span class="eg-inline">that</span>, <span class="eg-inline">the</span>, and <span class="eg-inline">a</span> make sentence structure clear to readers and to translation software.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Avoid exclamation points</div>
+            <div class="g-desc">They add noise and read as emotion. Save the rare exception for a genuine celebration that your team has approved.</div>
+          </div>
+        </div>
+      </div>
+      <div class="sub-heading">Examples</div>
+      <div class="tbl-wrap"><table class="eg-table"><thead><tr><th>Context</th><th>Write</th><th>Not</th></tr></thead><tbody>
+<tr><td class="ctx">Active voice</td><td class="yes">The Snap couldn’t connect to the endpoint</td><td class="no">The endpoint could not be connected to by the Snap</td></tr>
+<tr><td class="ctx">Second person</td><td class="yes">Your pipelines</td><td class="no">The user’s pipelines</td></tr>
+<tr><td class="ctx">Present tense</td><td class="yes">The pipeline runs when you select Run</td><td class="no">The pipeline will run when Run is selected</td></tr>
+<tr><td class="ctx">Lead with the action</td><td class="yes">Save your changes before you leave</td><td class="no">If you would like to leave this page, you can save your changes first</td></tr>
+<tr><td class="ctx">Plain words</td><td class="yes">Use the same name in both places</td><td class="no">Utilize an identical nomenclature in both locations</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="users"></i></div>
+        <h2>Inclusive language</h2>
+      </div>
+      <p class="sec-lede">Write so that everyone feels addressed. This follows Microsoft’s bias-free communication guidance.</p>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use gender-neutral language</div>
+            <div class="g-desc">Rewrite to use <span class="eg-inline">you</span>, use a plural, or refer to a role such as <span class="eg-inline">owner</span> or <span class="eg-inline">admin</span>. If you can’t write around it, use the singular <span class="eg-inline">they</span>. Never write <span class="eg-inline">he/she</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Put the person first when you mention disability</div>
+            <div class="g-desc">Write <span class="eg-inline">people who are blind or have low vision</span>. Don’t mention disability unless it’s relevant, and avoid words that imply pity.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Choose neutral technical terms</div>
+            <div class="g-desc">Replace terms that carry unintended meaning. The Terminology page lists <span class="eg-inline">parent/child</span> in place of master/slave.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Avoid slang, idioms, and culture-specific references</div>
+            <div class="g-desc">They confuse non-native readers and don’t translate. Say what you mean directly.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Be careful with examples</div>
+            <div class="g-desc">Use varied, realistic names in sample data, and don’t make generalizations about people, places, or cultures.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tbl-wrap"><table class="eg-table"><thead><tr><th>Write</th><th>Not</th></tr></thead><tbody>
+<tr><td class="yes">allowlist, blocklist</td><td class="no">whitelist, blacklist</td></tr>
+<tr><td class="yes">confidence check</td><td class="no">sanity check</td></tr>
+<tr><td class="yes">placeholder value, sample value</td><td class="no">dummy value</td></tr>
+<tr><td class="yes">person-hours</td><td class="no">man-hours</td></tr>
+<tr><td class="yes">everyone, team</td><td class="no">guys</td></tr>
+</tbody></table></div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="languages"></i></div>
+        <h2>Writing for translation</h2>
+      </div>
+      <p class="sec-lede">Text that’s easy to read is easier to translate. Assume your strings will be localized, even if they aren’t yet.</p>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Build complete strings</div>
+            <div class="g-desc">Don’t assemble a sentence from fragments in code. Word order and grammar change between languages, so give translators the whole sentence with placeholders.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Leave room to grow</div>
+            <div class="g-desc">Translated text is often longer than English, commonly by about 30 percent and by more for very short strings. Let containers grow instead of truncating.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Keep modifiers and clauses simple</div>
+            <div class="g-desc">Avoid chains of modifying words, avoid linking more than two clauses with <span class="eg-inline">and</span>, <span class="eg-inline">or</span>, or <span class="eg-inline">but</span>, and keep <span class="eg-inline">only</span> next to the word it limits.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use one word per concept</div>
+            <div class="g-desc">Don’t switch between synonyms for the same feature, and don’t use one word for two things. Terminology lists the words we’ve settled on.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use only common abbreviations</div>
+            <div class="g-desc">Spell out the rest on first use. Don’t put text in images.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="book-open"></i></div>
+        <h2>References</h2>
+      </div>
+      <div class="resources">
+        <a class="resource-link" href="https://learn.microsoft.com/en-us/style-guide/brand-voice-above-all-simple-human" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="mic"></i></div>
+          <div class="r-text"><div class="r-name">Microsoft: Brand voice, simple and human</div><div class="r-desc">The basis for our voice principles.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://learn.microsoft.com/en-us/style-guide/top-10-tips-style-voice" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="list-checks"></i></div>
+          <div class="r-text"><div class="r-name">Microsoft: Top 10 tips for style and voice</div><div class="r-desc">Contractions, active voice, scannable text.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://learn.microsoft.com/en-us/style-guide/bias-free-communication" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="users"></i></div>
+          <div class="r-text"><div class="r-name">Microsoft: Bias-free communication</div><div class="r-desc">Inclusive language and terms to avoid.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+        <a class="resource-link" href="https://learn.microsoft.com/en-us/style-guide/global-communications/writing-tips" target="_blank" rel="noopener">
+          <div class="r-icon"><i data-lucide="languages"></i></div>
+          <div class="r-text"><div class="r-name">Microsoft: Writing tips for a global audience</div><div class="r-desc">Writing that translates well.</div></div>
+          <div class="r-arrow"><i data-lucide="arrow-up-right"></i></div>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /cg-body -->
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

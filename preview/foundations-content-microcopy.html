@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Foundations · UI microcopy</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .card { width: 100%; gap: 0; padding: 0; }
+
+  .cg-body { padding: 32px 40px 48px; display: flex; flex-direction: column; gap: 40px; }
+
+  /* ── Section headings ── */
+  .sec-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .sec-heading .icon-wrap {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-blue-50);
+    color: var(--sl-blue-600);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-heading .icon-wrap i { width: 14px; height: 14px; }
+  .sec-heading h2 { font: 800 16px/22px var(--font-sans); color: var(--color-text-heading); margin: 0; }
+  .sec-lede { margin: 0 0 16px; font: 400 13px/20px var(--font-sans); color: var(--color-text-body); max-width: 72ch; }
+  .sec-divider { height: 1px; background: var(--sl-grey-200); }
+
+  /* ── Note block ── */
+  .note {
+    display: flex; gap: 10px;
+    padding: 12px 14px;
+    background: var(--sl-blue-50);
+    border: 1px solid var(--sl-blue-200);
+    border-left: 3px solid var(--sl-blue-600);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .note i { width: 15px; height: 15px; color: var(--sl-blue-600); flex-shrink: 0; margin-top: 1px; }
+  .note a { color: var(--sl-blue-600); font-weight: 700; }
+
+  /* ── The three capitalization cases ── */
+  .cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .case {
+    padding: 16px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-grey-50);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .case .c-name { font: 800 12px/16px var(--font-sans); color: var(--color-text-heading); }
+  .case .c-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .case .c-eg {
+    margin-top: auto;
+    padding: 8px 10px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-heading);
+  }
+
+  /* ── Guideline rows ── */
+  .guidelines { display: flex; flex-direction: column; gap: 10px; }
+  .guideline {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--sl-white);
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    align-items: start;
+  }
+  .guideline .g-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--sl-green-100);
+    color: var(--sl-green-700);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .guideline .g-check i { width: 11px; height: 11px; stroke-width: 2.5; }
+  .guideline .g-text { display: flex; flex-direction: column; gap: 3px; }
+  .guideline .g-title { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .guideline .g-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .guideline code, .sec-lede code {
+    font: 400 11px/15px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sl-indigo-700);
+  }
+  .eg-inline { color: var(--color-text-heading); font-weight: 700; }
+
+  /* ── Write / not tables ── */
+  .eg-table { width: 100%; border: 1px solid var(--sl-grey-200); border-radius: var(--radius-md); border-collapse: separate; border-spacing: 0; overflow: hidden; }
+  .eg-table th {
+    background: var(--sl-grey-50);
+    font: 800 10px/14px var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-subtle);
+    padding: 9px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-grey-200);
+  }
+  .eg-table td {
+    padding: 10px 14px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+    border-bottom: 1px solid var(--sl-grey-100);
+    vertical-align: top;
+  }
+  .eg-table tr:last-child td { border-bottom: 0; }
+  .eg-table td.ctx { color: var(--color-text-subtle); width: 22%; }
+  .eg-table td.yes { color: var(--sl-green-800); font-weight: 700; }
+  .eg-table td.no { color: var(--sl-red-700); text-decoration: line-through; text-decoration-color: var(--sl-red-300); }
+  .eg-table td.why { color: var(--color-text-subtle); }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl-wrap .eg-table { min-width: 560px; }
+
+  /* ── Snap error anatomy ── */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .trio .t-card {
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-md);
+    background: var(--sl-white);
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .trio .t-n { font: 800 10px/14px var(--font-sans); text-transform: uppercase; letter-spacing: 0.08em; color: var(--sl-blue-600); }
+  .trio .t-name { font: 800 14px/20px var(--font-sans); color: var(--color-text-heading); }
+  .trio .t-desc { font: 400 12px/18px var(--font-sans); color: var(--color-text-subtle); }
+  .trio .t-eg {
+    margin-top: auto;
+    font: 400 11px/16px var(--font-mono);
+    background: var(--sl-grey-100);
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--sl-indigo-700);
+    overflow-wrap: anywhere;
+  }
+
+  .steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: grid; grid-template-columns: 24px 1fr; gap: 12px;
+    font: 400 12px/18px var(--font-sans);
+    color: var(--color-text-body);
+  }
+  .steps li::before {
+    content: counter(step);
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--sl-blue-100);
+    color: var(--sl-blue-700);
+    font: 800 11px/24px var(--font-sans);
+    text-align: center;
+  }
+
+  .sub-heading { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); margin: 24px 0 10px; }
+
+  /* ── Resources ── */
+  .resources { display: flex; flex-direction: column; gap: 8px; }
+  .resource-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--sl-grey-200);
+    border-radius: var(--radius-sm);
+    text-decoration: none; color: inherit;
+    background: var(--sl-white);
+    transition: border-color 120ms ease-out, background 120ms ease-out;
+  }
+  .resource-link:hover { border-color: var(--sl-blue-400); background: var(--sl-blue-50); }
+  .resource-link .r-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--sl-grey-100);
+    color: var(--color-text-subtle);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .resource-link .r-icon i { width: 15px; height: 15px; }
+  .resource-link .r-text { flex: 1; }
+  .resource-link .r-name { font: 800 13px/18px var(--font-sans); color: var(--color-text-heading); }
+  .resource-link .r-desc { font: 400 11px/16px var(--font-sans); color: var(--color-text-subtle); }
+  .resource-link .r-arrow { color: var(--sl-grey-400); }
+  .resource-link .r-arrow i { width: 14px; height: 14px; }
+
+  @media (max-width: 700px) {
+    .cg-body { padding: 24px 20px 40px; gap: 28px; }
+    .cases, .trio { grid-template-columns: 1fr; }
+  }
+
+  .sc { display: inline-block; padding: 1px 6px; border-radius: 999px; background: var(--sl-blue-50); color: var(--sl-blue-700); font: 800 10px/14px var(--font-mono); white-space: nowrap; }
+  .eg-table td.sc-cell { width: 18%; white-space: nowrap; font-weight: 800; color: var(--color-text-heading); }
+  .eg-table td.lvl { width: 8%; font: 800 11px/18px var(--font-mono); color: var(--color-text-subtle); }
+  .eg-table td.plain { color: var(--color-text-body); }
+  .guideline .sc { margin-left: 4px; vertical-align: 1px; }
+  .principles3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 700px) { .principles3 { grid-template-columns: 1fr; } }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "UI microcopy",
+  "section": "Getting started",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-microcopy.html",
+  "tagline": "The words in buttons, fields, confirmations, empty states, and tooltips.",
+  "usage": "Button labels start with a verb and name the action (Save changes, Delete pipeline), never OK or Yes. Always label a field with visible text; placeholders show the shape, not an instruction. A confirm's buttons say the action, results are reported in the past tense, empty states say why they are empty and what to do, and tooltips stay to one short sentence. Errors have their own page."
+}
+</script>
+</head>
+<body>
+<div class="card">
+
+  <div class="cg-body">
+
+    <div class="note">
+      <i data-lucide="info"></i>
+      <div>The words in buttons, fields, confirmations, empty states, and tooltips. Layout and behavior live in the components and patterns. This page covers what to write. For capitalization, punctuation, and wording, refer to <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-content-guidelines.html">Content guidelines</a> and <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-terminology.html">Terminology</a>.</div>
+    </div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="mouse-pointer-click"></i></div>
+        <h2>Buttons and actions</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Start with a verb and keep it to one to three words</div>
+            <div class="g-desc"><span class="eg-inline">Save changes</span>, <span class="eg-inline">Create pipeline</span>, <span class="eg-inline">Run</span>. Sentence case, no end punctuation.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Add the object when the verb alone is ambiguous or destructive</div>
+            <div class="g-desc"><span class="eg-inline">Delete pipeline</span> rather than <span class="eg-inline">Delete</span> when more than one thing could be deleted.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Avoid <em>OK</em>, <em>Submit</em>, and <em>Yes/No</em></div>
+            <div class="g-desc">Name the action. The exception is a confirm where both choices are affirmative, such as <span class="eg-inline">No, don’t save</span> and <span class="eg-inline">Yes, save</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use <em>Create</em> and <em>Delete</em> for objects, <em>Add</em> and <em>Remove</em> for items in a collection</div>
+            <div class="g-desc"><span class="eg-inline">Create pipeline</span>, but <span class="eg-inline">Add Snap</span> to a pipeline.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use <em>Cancel</em> to back out and <em>Close</em> when there’s nothing to cancel</div>
+            
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Give icon-only buttons an accessible name that says the action</div>
+            <div class="g-desc"><span class="eg-inline">Delete</span>, not <span class="eg-inline">Trash can</span>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="text-cursor-input"></i></div>
+        <h2>Labels, placeholders, and help text</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Always label a field with visible text <span class="sc">3.3.2</span></div>
+            <div class="g-desc">A placeholder is not a label. It disappears when someone types and is hard to read.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Placeholders show the shape, not an instruction</div>
+            <div class="g-desc"><span class="eg-inline">dd/mm/yyyy</span> or <span class="eg-inline">Search Snaps</span>, never <span class="eg-inline">Enter your name here</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Help text clarifies, and doesn’t restate the label</div>
+            <div class="g-desc"><span class="eg-inline">Use 8 to 64 characters.</span> beats <span class="eg-inline">Enter a password.</span></div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Mark the exception</div>
+            <div class="g-desc">When most fields are required, mark the optional ones as <span class="eg-inline">optional</span>. Say it in words, not with a symbol alone.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Don’t repeat the section in every label</div>
+            <div class="g-desc">Under a heading of <span class="eg-inline">Pipeline details</span>, write <span class="eg-inline">Name</span> and <span class="eg-inline">Owner</span>, not <span class="eg-inline">Pipeline name</span> and <span class="eg-inline">Pipeline owner</span>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="shield-check"></i></div>
+        <h2>Confirmations and feedback</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Make a confirm’s button say the action</div>
+            <div class="g-desc"><span class="eg-inline">Delete pipeline</span> and <span class="eg-inline">Cancel</span>, never <span class="eg-inline">Yes</span> and <span class="eg-inline">No</span>. The safe action is the default.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Ask a question in the title, and name the object in the body</div>
+            <div class="g-desc">Title: <span class="eg-inline">Delete this pipeline?</span> Body: name it, and say what happens to it and when.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Report a result in the past tense, briefly</div>
+            <div class="g-desc"><span class="eg-inline">Pipeline saved</span>, <span class="eg-inline">Pipeline restored</span>. Skip <span class="eg-inline">successfully</span>. It adds nothing.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Name what is loading</div>
+            <div class="g-desc"><span class="eg-inline">Loading pipelines</span>, not <span class="eg-inline">Loading</span> alone.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Write each status so it makes sense read aloud on its own <span class="sc">4.1.3</span></div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="inbox"></i></div>
+        <h2>Empty states</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Say what the space is for, why it’s empty, and what to do</div>
+            <div class="g-desc">Title: <span class="eg-inline">No pipelines yet</span>. Action: <span class="eg-inline">Create your first pipeline</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">When a filter caused it, say so and offer the way out</div>
+            <div class="g-desc"><span class="eg-inline">No pipelines match your filters</span> with a <span class="eg-inline">Clear filters</span> action.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Keep inline empty states to one line</div>
+            <div class="g-desc">A short message and, if needed, one action.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="message-circle"></i></div>
+        <h2>Tooltips, headings, and navigation</h2>
+      </div>
+      <div class="guidelines">
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Keep a tooltip to one short sentence</div>
+            <div class="g-desc">Don’t repeat the visible label, and never put the only copy of important information in a tooltip.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Write headings that describe their content <span class="sc">2.4.6</span></div>
+            <div class="g-desc">Sentence case, no end punctuation, key word first. <span class="eg-inline">Connection settings</span>, not <span class="eg-inline">Settings for your connection</span>.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Use a noun for a section and a verb for a task</div>
+            <div class="g-desc"><span class="eg-inline">Pipelines</span> is a place. <span class="eg-inline">Create pipeline</span> is an action.</div>
+          </div>
+        </div>
+        <div class="guideline">
+          <div class="g-check"><i data-lucide="check"></i></div>
+          <div class="g-text">
+            <div class="g-title">Match a navigation label to the page it opens <span class="sc">3.2.4</span></div>
+            <div class="g-desc">If the nav says <span class="eg-inline">Monitor</span>, the page title says <span class="eg-inline">Monitor</span>. Use one name for one thing everywhere.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"></div>
+
+    <div>
+      <div class="sec-heading">
+        <div class="icon-wrap"><i data-lucide="triangle-alert"></i></div>
+        <h2>Errors</h2>
+      </div>
+      <p class="sec-lede">Errors have their own page: <a href="https://sl-design-team.github.io/jellyroll/#preview/foundations-content-errors.html">Error messages</a>.</p>
+    </div>
+
+  </div><!-- /cg-body -->
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

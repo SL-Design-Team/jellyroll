@@ -13,7 +13,14 @@ The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 - Numbered sections run 01 Foundations through 08 Templates.
 
 ### New
-- **Content guidelines** — Microsoft sentence-style capitalization (Snap names and SnapLogic terms excepted), punctuation, field and checkbox labels, and the error / reason / resolution convention for Snap error messages.
+- **Content guidelines** now have five pages beneath them, written to enterprise-software standards (Microsoft Writing Style Guide and WCAG 2.1 AA):
+  - **Voice and grammar** — voice principles and tone by situation, active voice, second person, contractions, plain language, inclusive language, and writing for translation.
+  - **Numbers, dates, and units** — numerals vs words, formatting, dates and times, time zones, units, counts, and currency.
+  - **UI microcopy** — buttons, labels and placeholders, confirmations, empty states, tooltips, and headings.
+  - **Error messages** — rewritten. It now leads with what a good error does (what happened, why, what to do next), adds rewrites, severity and tone, and a list of words to avoid, and keeps the error / reason / resolution format for Snap error messages as one section. It replaces the section that used to sit in Content guidelines.
+  - **Writing for accessibility** — the WCAG 2.1 AA criteria that a writer controls, with plain language, links, instructions, images, and a pre-ship checklist.
+- Content guidelines also gains the serial comma, one-space, and no-end-punctuation-on-headings rules.
+- **Content guidelines** (the original page) — Microsoft sentence-style capitalization (Snap names and SnapLogic terms excepted), punctuation, and field and checkbox labels.
 - **Terminology** — SnapLogic terms, product names, word choices, and spelling.
 
 ## 2026-07-21 · Toast spec cleanup & Tree indentation
