@@ -3028,6 +3028,20 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
       // pages like the icon gallery.)
       while (doc.body.firstChild) shadow.appendChild(doc.body.firstChild);
 
+      // Links from one preview page to another stay inside the gallery. The cards
+      // link to sibling files (so they also work opened on their own); here we
+      // route those clicks through the hash router instead of leaving the page.
+      shadow.addEventListener("click", (e) => {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const a = e.composedPath().find(n => n instanceof HTMLAnchorElement);
+        if (!a || a.target === "_blank") return;
+        const m = a.pathname.match(/\/preview\/([^/]+\.html)$/);
+        if (m && byFile.has("preview/" + m[1])) {
+          e.preventDefault();
+          window.location.hash = encodeURIComponent("preview/" + m[1]);
+        }
+      });
+
       // Run Lucide inside the shadow root
       // (Lucide UMD createIcons accepts a `root` option in v0.398+; fall back to document scan.)
       if (window.lucide && window.lucide.createIcons) {
