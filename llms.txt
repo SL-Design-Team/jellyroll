@@ -17,12 +17,12 @@ How to think about and use the system — accessibility, design principles, and 
 - [Accessibility](https://sl-design-team.github.io/jellyroll/preview/foundations-accessibility.html): WCAG 2.1 AA guidelines — color contrast, keyboard nav, screen readers, focus management.
 - [Design principles](https://sl-design-team.github.io/jellyroll/preview/foundations-design-principles.html): Human-centered principles, visual principles, and cross-component behavior rules.
 - [Content guidelines](https://sl-design-team.github.io/jellyroll/preview/foundations-content-guidelines.html): Capitalization, punctuation, and field and checkbox labels. The pages beneath it cover voice, numbers, microcopy, errors, and accessibility.
+- [Terminology](https://sl-design-team.github.io/jellyroll/preview/foundations-terminology.html): SnapLogic terms, product names, word choices, and spelling.
 - [Voice and grammar](https://sl-design-team.github.io/jellyroll/preview/foundations-content-voice-grammar.html): How we sound, plus grammar, inclusive language, and writing for translation.
 - [Numbers, dates, and units](https://sl-design-team.github.io/jellyroll/preview/foundations-content-numbers.html): Numerals, number formatting, dates, times, time zones, units, counts, and currency.
 - [UI microcopy](https://sl-design-team.github.io/jellyroll/preview/foundations-content-microcopy.html): The words in buttons, fields, confirmations, empty states, and tooltips.
 - [Error messages](https://sl-design-team.github.io/jellyroll/preview/foundations-content-errors.html): What happened, why, and what to do next, without blaming the person.
 - [Writing for accessibility](https://sl-design-team.github.io/jellyroll/preview/foundations-content-accessibility.html): What writers control in WCAG 2.1 AA: plain language, links, instructions, images, and errors.
-- [Terminology](https://sl-design-team.github.io/jellyroll/preview/foundations-terminology.html): SnapLogic terms, product names, word choices, and spelling.
 
 ## Foundations
 

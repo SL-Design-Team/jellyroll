@@ -13,7 +13,7 @@ The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 - Numbered sections run 01 Foundations through 08 Templates.
 
 ### New
-- **Content guidelines** now have five pages beneath them, written to enterprise-software standards (Microsoft Writing Style Guide and WCAG 2.1 AA):
+- **Content guidelines** now have six pages beneath them, with **Terminology** moved under it as the first, written to enterprise-software standards (Microsoft Writing Style Guide and WCAG 2.1 AA):
   - **Voice and grammar** — voice principles and tone by situation, active voice, second person, contractions, plain language, inclusive language, and writing for translation.
   - **Numbers, dates, and units** — numerals vs words, formatting, dates and times, time zones, units, counts, and currency.
   - **UI microcopy** — buttons, labels and placeholders, confirmations, empty states, tooltips, and headings.

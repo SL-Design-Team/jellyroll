@@ -33,7 +33,15 @@
           "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-guidelines.html",
           "tagline": "Capitalization, punctuation, and field and checkbox labels. The pages beneath it cover voice, numbers, microcopy, errors, and accessibility.",
           "usage": "Applies to all content in the UI, notifications, and error messages. Use Microsoft sentence-style capitalization for everything except Snap names and SnapLogic terms, which keep their own capitalization (refer to Terminology). Use a period for sentences and strings that act as sentences, and none for short labels or headings. Field names describe contents rather than give instructions, and checkbox labels never use double negatives. Pills and tags are uppercase only through CSS; write the source string in sentence case.",
-          "behaviors": "Start here, then use the pages beneath it: Voice and grammar, Numbers, dates, and units, UI microcopy, Error messages, and Writing for accessibility."
+          "behaviors": "Start here, then use the pages beneath it: Terminology, Voice and grammar, Numbers, dates, and units, UI microcopy, Error messages, and Writing for accessibility."
+        },
+        {
+          "name": "Terminology",
+          "file": "preview/foundations-terminology.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-terminology.html",
+          "tagline": "SnapLogic terms, product names, word choices, and spelling.",
+          "options": "Grouped as SnapLogic terms, Snaplex nodes and hosts, lowercase terms, product and technical names (including account types), word swaps, usage notes, and spelling and compound words.",
+          "usage": "Check here before naming anything in the UI. SnapLogic terms (Snap, Snaplex, Triggered Task, SnapLogic Platform) are capitalized exactly as listed; common nouns such as pipeline, account, asset, and control plane stay lowercase. Product and technical names use the owner's exact casing. Prefer the word on the left in Use this, not that. Where this list differs from the Microsoft Writing Style Guide A–Z word list or Merriam-Webster, this list wins."
         },
         {
           "name": "Voice and grammar",
@@ -70,14 +78,6 @@
           "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-content-accessibility.html",
           "tagline": "What writers control in WCAG 2.1 AA: plain language, links, instructions, images, and errors.",
           "usage": "Maps content rules to the WCAG 2.1 AA success criteria a writer controls (1.1.1, 1.3.1, 1.3.3, 1.4.1, 1.4.5, 2.4.2, 2.4.4, 2.4.6, 2.5.3, 3.1.x, 3.2.4, 3.3.1 to 3.3.4, 4.1.3). Write plainly, make link text meaningful on its own, don't rely on position, shape, or color in instructions, use verbs that work with any input, label every input with visible text, describe the purpose of images, and write errors and status text that make sense read alone."
-        },
-        {
-          "name": "Terminology",
-          "file": "preview/foundations-terminology.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/foundations-terminology.html",
-          "tagline": "SnapLogic terms, product names, word choices, and spelling.",
-          "options": "Grouped as SnapLogic terms, Snaplex nodes and hosts, lowercase terms, product and technical names (including account types), word swaps, usage notes, and spelling and compound words.",
-          "usage": "Check here before naming anything in the UI. SnapLogic terms (Snap, Snaplex, Triggered Task, SnapLogic Platform) are capitalized exactly as listed; common nouns such as pipeline, account, asset, and control plane stay lowercase. Product and technical names use the owner's exact casing. Prefer the word on the left in Use this, not that. Where this list differs from the Microsoft Writing Style Guide A–Z word list or Merriam-Webster, this list wins."
         }
       ]
     },

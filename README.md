@@ -154,7 +154,7 @@ jellyroll-design-system/
 
 | #  | Category              | Count | Examples                                            |
 |----|-----------------------|-------|-----------------------------------------------------|
-| —  | Getting started       | 9     | Overview, accessibility, design principles, content guidelines (voice and grammar, numbers, microcopy, error messages, writing for accessibility), terminology |
+| —  | Getting started       | 9     | Overview, accessibility, design principles, content guidelines (terminology, voice and grammar, numbers, microcopy, error messages, writing for accessibility) |
 | 01 | Foundations           | 17    | Color (ramps, semantic text, status, palettes), typography, spacing, radii, shadows, surfaces, motion, breakpoints, z-index, tokens |
 | 02 | Brand                 | 3     | Logo, brand gradient, iconography                   |
 | 03 | Components            | 25    | Buttons, inputs, badges, checkbox, number input, avatar, menu… |
