@@ -2452,6 +2452,18 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     if (!header) return;
     const sec = header.parentElement;
     const open = sec.getAttribute("data-open") === "true";
+    // The Getting started header is also the way back to the home page, so it
+    // goes there first and only collapses once you are already on it.
+    if (header.dataset.toggle === OPEN_BY_DEFAULT) {
+      const atHome = document.body.getAttribute("data-view") === "grid";
+      if (!(open && atHome)) {
+        sec.setAttribute("data-open", "true");
+        header.setAttribute("aria-expanded", "true");
+        if (window.location.hash === "#getting-started") applyHash();
+        else window.location.hash = "getting-started";
+        return;
+      }
+    }
     sec.setAttribute("data-open", open ? "false" : "true");
     header.setAttribute("aria-expanded", open ? "false" : "true");
   });
