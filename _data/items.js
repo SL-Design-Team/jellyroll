@@ -37,7 +37,6 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/foundations-content-guidelines.html",
           name: "Content guidelines",
-          collapseChildren: true,
           tagline: "Capitalization, punctuation, and field and checkbox labels. The pages beneath it cover voice, numbers, microcopy, errors, and accessibility.",
           meta: {
             usage: "Applies to all content in the UI, notifications, and error messages. Use Microsoft sentence-style capitalization for everything except Snap names and SnapLogic terms, which keep their own capitalization (refer to Terminology). Use a period for sentences and strings that act as sentences, and none for short labels or headings. Field names describe contents rather than give instructions, and checkbox labels never use double negatives. Pills and tags are uppercase only through CSS; write the source string in sentence case.",
