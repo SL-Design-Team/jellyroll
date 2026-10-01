@@ -58,7 +58,7 @@ window.JELLYROLL_DATA = {
       num: "01",
       id: "foundations",
       name: "Foundations",
-      description: "The visual and system primitives every component inherits — color, type, icons and logo, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.",
+      description: "The visual and system primitives every component inherits — color, type, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.",
       items: [
         {
           file: "preview/colors-all-ramps.html",
@@ -68,15 +68,6 @@ window.JELLYROLL_DATA = {
           tagline: "Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.",
           meta: {
             usage: "Use the `--sl-{hue}-{step}` tokens directly. Steps 50–400 read as light backgrounds and supporting tints; 500–700 carry semantic meaning; 800–1000 are nav and on-dark text. The 600 step of each ramp is the canonical default. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code."
-          }
-        },
-        {
-          file: "preview/colors-gradient-brand.html",
-          name: "Brand gradient",
-          parent: "preview/colors-all-ramps.html",
-          tagline: "linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.",
-          meta: {
-            usage: "Reserved for hero/marketing surfaces, launcher backgrounds, and brand moments — never for normal UI. Distinct from `--color-background-primary-hover`, which uses a slightly different teal at a 112.63° diagonal for primary-button hover only."
           }
         },
         {
@@ -141,25 +132,6 @@ window.JELLYROLL_DATA = {
           tagline: "Acherus Grotesque, weights 200–900, plus the SF Mono code font.",
           meta: {
             usage: "Acherus Grotesque is the system sans across every weight. Reach for the mono stack only inside code blocks, tokens, JSON snippets, and timestamps. Italic is reserved for placeholders (Light Italic 300) and the rare in-line citation — never used for emphasis."
-          }
-        },
-        {
-          file: "preview/brand-iconography.html",
-          name: "Iconography",
-          tagline: "202 outlined line icons — 24×24 viewbox, currentColor stroke.",
-          meta: {
-            anatomy: "Each icon is a 24×24 SVG with `viewBox=\"0 0 24 24\"`, 2px stroke, rounded caps and joins, and `stroke=\"currentColor\"` so it inherits text color. No fills (except a single white-fill contrast detail in one icon).",
-            options: "Sizes: 24px default, 16px inline / dense contexts, 20px nav rail. Outlined glyphs by default; filled status pictograms (running check, failed dot, sticky star) are the only exception. Click any icon in the gallery to copy its name.",
-            usage: "Pick the icon whose metaphor matches the action or object directly — never invent a custom mark. Drop the SVG inline (or reference via `<svg><use href=\"icons/{name}.svg\">`) so it picks up the surrounding text color. For vendor logos (AWS, Salesforce, GitHub) the system falls back to Font Awesome 6 brands at matching stroke weight.",
-            behaviors: "Icon-only buttons require an explicit `aria-label`. Icons paired with text take `aria-hidden=\"true\"` so screen readers don't read them twice. The icon inherits `currentColor` from its parent — never hardcode a tint."
-          }
-        },
-        {
-          file: "preview/brand-logo.html",
-          name: "Logo",
-          tagline: "SnapLogic wordmark + snap-icon. White-on-dark version supplied.",
-          meta: {
-            usage: "Use the white wordmark on the dark navbar and any dark brand surface. The wordmark and snap-icon ship together — do not separate them, recolor them, or pair the wordmark with a non-system glyph. Minimum clear space around the mark is the height of the snap-icon."
           }
         },
         {
@@ -238,6 +210,41 @@ window.JELLYROLL_DATA = {
     },
     {
       num: "02",
+      id: "brand",
+      name: "Brand",
+      description: "The SnapLogic logo, brand gradient, and iconography, and how to apply them.",
+      items: [
+        {
+          file: "preview/brand-logo.html",
+          name: "Logo",
+          tagline: "SnapLogic wordmark + snap-icon. White-on-dark version supplied.",
+          meta: {
+            usage: "Use the white wordmark on the dark navbar and any dark brand surface. The wordmark and snap-icon ship together — do not separate them, recolor them, or pair the wordmark with a non-system glyph. Minimum clear space around the mark is the height of the snap-icon."
+          }
+        },
+        {
+          file: "preview/colors-gradient-brand.html",
+          name: "Brand gradient",
+          tagline: "linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.",
+          meta: {
+            usage: "Reserved for hero/marketing surfaces, launcher backgrounds, and brand moments — never for normal UI. Distinct from `--color-background-primary-hover`, which uses a slightly different teal at a 112.63° diagonal for primary-button hover only."
+          }
+        },
+        {
+          file: "preview/brand-iconography.html",
+          name: "Iconography",
+          tagline: "202 outlined line icons — 24×24 viewbox, currentColor stroke.",
+          meta: {
+            anatomy: "Each icon is a 24×24 SVG with `viewBox=\"0 0 24 24\"`, 2px stroke, rounded caps and joins, and `stroke=\"currentColor\"` so it inherits text color. No fills (except a single white-fill contrast detail in one icon).",
+            options: "Sizes: 24px default, 16px inline / dense contexts, 20px nav rail. Outlined glyphs by default; filled status pictograms (running check, failed dot, sticky star) are the only exception. Click any icon in the gallery to copy its name.",
+            usage: "Pick the icon whose metaphor matches the action or object directly — never invent a custom mark. Drop the SVG inline (or reference via `<svg><use href=\"icons/{name}.svg\">`) so it picks up the surrounding text color. For vendor logos (AWS, Salesforce, GitHub) the system falls back to Font Awesome 6 brands at matching stroke weight.",
+            behaviors: "Icon-only buttons require an explicit `aria-label`. Icons paired with text take `aria-hidden=\"true\"` so screen readers don't read them twice. The icon inherits `currentColor` from its parent — never hardcode a tint."
+          }
+        }
+      ]
+    },
+    {
+      num: "03",
       id: "primitives",
       name: "Components",
       description: "Single-purpose components — each does one job. What composite components and patterns are assembled from.",
@@ -507,7 +514,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "03",
+      num: "04",
       id: "components",
       name: "Composite components",
       description: "Several components assembled into a complete piece of the interface.",
@@ -792,7 +799,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "04",
+      num: "05",
       id: "patterns",
       name: "Patterns",
       description: "Reusable flows that combine components to solve a recurring product problem.",
@@ -1001,7 +1008,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "05",
+      num: "06",
       id: "data-viz",
       name: "Data visualization",
       description: "Chart and graph types, with guidance on when to use each.",
@@ -1162,7 +1169,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "06",
+      num: "07",
       id: "advanced-editors",
       name: "Advanced editors",
       description: "Specialized multi-field editors for SnapLogic's configuration surfaces.",
@@ -1246,7 +1253,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "07",
+      num: "08",
       id: "templates",
       name: "Templates",
       description: "Full-page starting points — complete screens assembled from components and patterns.",

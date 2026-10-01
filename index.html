@@ -16,6 +16,7 @@
     --sidebar-w: 300px;
     --cat-guidance:       var(--sl-blue-700);
     --cat-foundations:    var(--sl-indigo-600);
+    --cat-brand:          var(--sl-purple-600);
     --cat-primitives:     var(--sl-blue-600);
     --cat-components:     var(--sl-teal-600);
     --cat-editors:        var(--sl-indigo-700, #26386A);
@@ -2541,6 +2542,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   const CATEGORY_DEFAULT_ICON = {
     "guidance":         "compass",
     "foundations":      "ruler",
+    "brand":            "gem",
     "primitives":       "square",
     "components":       "layout-grid",
     "advanced-editors": "code-2",
@@ -2672,6 +2674,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   const CATEGORY_VARS = {
     "guidance":         { color: "var(--cat-guidance)",       tint: "var(--sl-blue-50,   #F2F6FC)" },
     "foundations":      { color: "var(--cat-foundations)",   tint: "var(--sl-indigo-50, #F4F6F9)" },
+    "brand":            { color: "var(--cat-brand)",         tint: "var(--sl-purple-50, #F7F5F9)" },
     "primitives":       { color: "var(--cat-primitives)",    tint: "var(--sl-blue-50,   #F2F6FC)" },
     "components":       { color: "var(--cat-components)",    tint: "var(--sl-teal-50,   #F2F8F8)" },
     "advanced-editors": { color: "var(--cat-editors)",       tint: "var(--sl-indigo-50, #F4F6F9)" },
@@ -3126,6 +3129,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     const tintMap = {
       "guidance": "var(--sl-blue-50, #F2F6FC)",
       "foundations": "var(--sl-indigo-50, #F4F6F9)",
+      "brand": "var(--sl-purple-50, #F7F5F9)",
       "primitives": "var(--sl-blue-50, #F2F6FC)",
       "components": "var(--sl-teal-50, #F2F8F8)",
       "advanced-editors": "var(--sl-indigo-50, #F4F6F9)",

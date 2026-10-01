@@ -155,15 +155,16 @@ jellyroll-design-system/
 | #  | Category              | Count | Examples                                            |
 |----|-----------------------|-------|-----------------------------------------------------|
 | —  | Getting started       | 4     | Overview, accessibility, design principles, content guidelines, terminology |
-| 01 | Foundations           | 20    | Color (ramps, brand gradient, semantic text, status, palettes), typography, iconography, logo, spacing, radii, shadows, surfaces, motion, breakpoints, z-index, tokens |
-| 02 | Components            | 25    | Buttons, inputs, badges, checkbox, number input, avatar, menu… |
-| 03 | Composite components  | 26    | Combobox, date picker, drawer, modal, table, tabs, toast, global header… |
-| 04 | Patterns              | 22    | Validation, save/discard, AI-assisted input, wizard, agent activity |
-| 05 | Data visualization    | 17    | KPI, sparkline, time series, heatmap, histogram, hive plot… |
-| 06 | Advanced editors      | 7     | Code, JSON, schema, connection picker, API parameter builder |
-| 07 | Templates             | 1     | Designer · Empty canvas                             |
+| 01 | Foundations           | 17    | Color (ramps, semantic text, status, palettes), typography, spacing, radii, shadows, surfaces, motion, breakpoints, z-index, tokens |
+| 02 | Brand                 | 3     | Logo, brand gradient, iconography                   |
+| 03 | Components            | 25    | Buttons, inputs, badges, checkbox, number input, avatar, menu… |
+| 04 | Composite components  | 26    | Combobox, date picker, drawer, modal, table, tabs, toast, global header… |
+| 05 | Patterns              | 22    | Validation, save/discard, AI-assisted input, wizard, agent activity |
+| 06 | Data visualization    | 17    | KPI, sparkline, time series, heatmap, histogram, hive plot… |
+| 07 | Advanced editors      | 7     | Code, JSON, schema, connection picker, API parameter builder |
+| 08 | Templates             | 1     | Designer · Empty canvas                             |
 
-The progression is: learn the system (**Getting started**), then the primitives (**Foundations**), then **Components**, **Composite components** (assembled from components), **Patterns** (recurring flows), and the specialized sections. In the left nav, Foundations shows one line per topic: Color and Typography each open to their other pages when you are inside them.
+The progression is: learn the system (**Getting started**), then the primitives (**Foundations**) and the **Brand** assets, then **Components**, **Composite components** (assembled from components), **Patterns** (recurring flows), and the specialized sections. In the left nav, Foundations shows one line per topic: Color and Typography each open to their other pages when you are inside them.
 
 ## Caveats
 

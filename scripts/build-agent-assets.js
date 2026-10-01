@@ -142,7 +142,7 @@ function injectInlineMeta() {
 // Most sections list their items A→Z. These two are intentionally ordered by
 // meaning (Foundations follows a learning order; Color leads with the ramps),
 // so they're exempt. Warns — never fails — when any other section drifts.
-const UNSORTED_SECTIONS = new Set(['guidance', 'foundations']);
+const UNSORTED_SECTIONS = new Set(['guidance', 'foundations', 'brand']);
 function checkAlphabetical() {
   const warnings = [];
   for (const sec of DATA.sections) {

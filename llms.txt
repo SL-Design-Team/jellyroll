@@ -21,10 +21,9 @@ How to think about and use the system — accessibility, design principles, and 
 
 ## Foundations
 
-The visual and system primitives every component inherits — color, type, icons and logo, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.
+The visual and system primitives every component inherits — color, type, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.
 
 - [Color ramps](https://sl-design-team.github.io/jellyroll/preview/colors-all-ramps.html): Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.
-- [Brand gradient](https://sl-design-team.github.io/jellyroll/preview/colors-gradient-brand.html): linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.
 - [Semantic text](https://sl-design-team.github.io/jellyroll/preview/colors-semantic-text.html): Body, subtle, link, status, information, discovery, accents.
 - [Status colors](https://sl-design-team.github.io/jellyroll/preview/dataviz-status.html): Green / Yellow / Red / Blue mapping for pipeline run states.
 - [Categorical palette](https://sl-design-team.github.io/jellyroll/preview/dataviz-categorical.html): Five-color chart palette for unordered categories — designed for light and dark backgrounds.
@@ -32,8 +31,6 @@ The visual and system primitives every component inherits — color, type, icons
 - [Sequential palette](https://sl-design-team.github.io/jellyroll/preview/dataviz-sequential.html): Single-hue chart ramps for ordered values — counts, magnitudes, percentages.
 - [Type scale](https://sl-design-team.github.io/jellyroll/preview/type-scale.html): Display through Micro — eight steps with set line heights and weight conventions.
 - [Type specimen](https://sl-design-team.github.io/jellyroll/preview/type-faces.html): Acherus Grotesque, weights 200–900, plus the SF Mono code font.
-- [Iconography](https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html): 202 outlined line icons — 24×24 viewbox, currentColor stroke.
-- [Logo](https://sl-design-team.github.io/jellyroll/preview/brand-logo.html): SnapLogic wordmark + snap-icon. White-on-dark version supplied.
 - [Spacing](https://sl-design-team.github.io/jellyroll/preview/spacing-scale.html): Strict 4-pt grid: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.
 - [Radius](https://sl-design-team.github.io/jellyroll/preview/spacing-radius.html): Restrained corners: 2 / 4 / 6–8 / 999px.
 - [Shadows](https://sl-design-team.github.io/jellyroll/preview/spacing-shadows.html): Light, blueish, low-spread — borders carry more weight than shadows in this system.
@@ -43,6 +40,14 @@ The visual and system primitives every component inherits — color, type, icons
 - [Z-index](https://sl-design-team.github.io/jellyroll/preview/foundations-zindex.html): 8-step stacking scale — base through toast.
 - [Selection & skeleton](https://sl-design-team.github.io/jellyroll/preview/foundations-selection-skeleton.html): Text highlight and loading placeholder colors.
 - [Tokens](https://sl-design-team.github.io/jellyroll/preview/foundations-tokens.html): All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.
+
+## Brand
+
+The SnapLogic logo, brand gradient, and iconography, and how to apply them.
+
+- [Logo](https://sl-design-team.github.io/jellyroll/preview/brand-logo.html): SnapLogic wordmark + snap-icon. White-on-dark version supplied.
+- [Brand gradient](https://sl-design-team.github.io/jellyroll/preview/colors-gradient-brand.html): linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.
+- [Iconography](https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html): 202 outlined line icons — 24×24 viewbox, currentColor stroke.
 
 ## Components
 

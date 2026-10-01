@@ -6,11 +6,11 @@ The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
 ### Information architecture
 - **Getting started** is its own group: Overview, Accessibility, Design principles, **Content guidelines**, and **Terminology** (the last two are new — see below). Guidance on how to think about and use the system no longer sits under Foundations.
-- **Color and Typography moved into Foundations** as entries, so Foundations reads one line per topic. Color's pages (ramps, brand gradient, semantic text, status colors, categorical / diverging / sequential palettes) and Type specimen are nested under them and shown while you are inside the topic. The standalone **Color** section is gone.
-- **Logo** moved from the single-item **Brand** section into Foundations, next to Iconography. Brand is removed.
+- **Color and Typography moved into Foundations** as entries, so Foundations reads one line per topic. Color's pages (ramps, semantic text, status colors, categorical / diverging / sequential palettes) and Type specimen are nested under them and shown while you are inside the topic. The standalone **Color** section is gone.
+- **Brand** now groups the brand assets: **Logo**, **Brand gradient** (moved from Color), and **Iconography** (moved from Foundations). Product launcher stays a component.
 - **Renamed:** _Building blocks_ → **Components**, _Composed components_ → **Composite components**. Section ids are unchanged, so existing links and anchors still work.
 - The palette pages are now **Categorical palette**, **Diverging palette**, and **Sequential palette**.
-- Numbered sections run 01 Foundations through 07 Templates.
+- Numbered sections run 01 Foundations through 08 Templates.
 
 ### New
 - **Content guidelines** — Microsoft sentence-style capitalization (Snap names and SnapLogic terms excepted), punctuation, field and checkbox labels, and the error / reason / resolution convention for Snap error messages.
