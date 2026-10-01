@@ -155,17 +155,16 @@ jellyroll-design-system/
 | #  | Category              | Count | Examples                                            |
 |----|-----------------------|-------|-----------------------------------------------------|
 | —  | Getting started       | 4     | Accessibility, design principles, content guidelines, terminology |
-| 01 | Foundations           | 12    | Type scale, type faces, iconography, spacing, radii, shadows, surfaces, motion, breakpoints, z-index, tokens |
-| 02 | Color                 | 7     | Color ramps, brand gradient, semantic text, status colors, data-viz palettes |
-| 03 | Brand                 | 1     | Logo                                                |
-| 04 | Building blocks       | 25    | Buttons, inputs, badges, checkbox, number input, avatar, menu… |
-| 05 | Composed components   | 26    | Combobox, date picker, drawer, modal, table, tabs, toast, global header… |
-| 06 | Patterns              | 22    | Validation, save/discard, AI-assisted input, wizard, agent activity |
-| 07 | Data visualization    | 17    | KPI, sparkline, time series, heatmap, histogram, hive plot… |
-| 08 | Advanced editors      | 7     | Code, JSON, schema, connection picker, API parameter builder |
-| 09 | Templates             | 1     | Designer · Empty canvas                             |
+| 01 | Foundations           | 19    | Color (ramps, brand gradient, semantic text, palettes, status), typography, iconography, spacing, radii, shadows, surfaces, motion, breakpoints, z-index, tokens |
+| 02 | Brand                 | 1     | Logo                                                |
+| 03 | Building blocks       | 25    | Buttons, inputs, badges, checkbox, number input, avatar, menu… |
+| 04 | Composed components   | 26    | Combobox, date picker, drawer, modal, table, tabs, toast, global header… |
+| 05 | Patterns              | 22    | Validation, save/discard, AI-assisted input, wizard, agent activity |
+| 06 | Data visualization    | 17    | KPI, sparkline, time series, heatmap, histogram, hive plot… |
+| 07 | Advanced editors      | 7     | Code, JSON, schema, connection picker, API parameter builder |
+| 08 | Templates             | 1     | Designer · Empty canvas                             |
 
-**Getting started** holds the guidance for how to think about and use the system. **Foundations** holds the visual and system primitives every component inherits.
+**Getting started** holds the guidance for how to think about and use the system. **Foundations** holds the visual and system primitives every component inherits. In the left nav, Foundations shows one line per topic: Color and Typography each open to their other pages when you are inside them.
 
 ## Caveats
 

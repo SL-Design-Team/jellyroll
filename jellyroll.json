@@ -49,8 +49,275 @@
       "num": "01",
       "id": "foundations",
       "name": "Foundations",
-      "description": "The visual and system primitives every component inherits — type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.",
+      "description": "The visual and system primitives every component inherits — color, type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.",
       "items": [
+        {
+          "name": "Color ramps",
+          "file": "preview/colors-all-ramps.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/colors-all-ramps.html",
+          "tagline": "Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.",
+          "usage": "Use the `--sl-{hue}-{step}` tokens directly. Steps 50–400 read as light backgrounds and supporting tints; 500–700 carry semantic meaning; 800–1000 are nav and on-dark text. The 600 step of each ramp is the canonical default. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code.",
+          "tokens": [
+            {
+              "name": "--sl-blue-600",
+              "value": "#0841B4",
+              "role": "Primary brand & action"
+            },
+            {
+              "name": "--sl-teal-600",
+              "value": "#09817F",
+              "role": "Secondary accent — hover, focus"
+            },
+            {
+              "name": "--sl-indigo-600",
+              "value": "#304684",
+              "role": "Information"
+            },
+            {
+              "name": "--sl-orange-600",
+              "value": "#F9660B",
+              "role": "Accent"
+            },
+            {
+              "name": "--sl-yellow-600",
+              "value": "#FBBC04",
+              "role": "Warning"
+            },
+            {
+              "name": "--sl-purple-600",
+              "value": "#623684",
+              "role": "Discovery"
+            },
+            {
+              "name": "--sl-green-600",
+              "value": "#017D1B",
+              "role": "Success"
+            },
+            {
+              "name": "--sl-red-600",
+              "value": "#E31C3D",
+              "role": "Alert / destructive"
+            },
+            {
+              "name": "--sl-pink-600",
+              "value": "#E31C73",
+              "role": "Marketing accent"
+            },
+            {
+              "name": "--sl-grey-600",
+              "value": "#9CA7BA",
+              "role": "Neutral"
+            }
+          ]
+        },
+        {
+          "name": "Brand gradient",
+          "file": "preview/colors-gradient-brand.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/colors-gradient-brand.html",
+          "tagline": "linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.",
+          "usage": "Reserved for hero/marketing surfaces, launcher backgrounds, and brand moments — never for normal UI. Distinct from `--color-background-primary-hover`, which uses a slightly different teal at a 112.63° diagonal for primary-button hover only.",
+          "tokens": [
+            {
+              "name": "--gradient-brand",
+              "value": "linear-gradient(90deg, #008380 29%, #0841B4 100%)",
+              "role": "Horizontal teal → blue brand sweep"
+            },
+            {
+              "name": "--gradient-brand-stop-1",
+              "value": "#008380",
+              "role": "Left stop — teal"
+            },
+            {
+              "name": "--gradient-brand-stop-2",
+              "value": "#0841B4",
+              "role": "Right stop — Blue-600"
+            }
+          ]
+        },
+        {
+          "name": "Semantic text",
+          "file": "preview/colors-semantic-text.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/colors-semantic-text.html",
+          "tagline": "Body, subtle, link, status, information, discovery, accents.",
+          "usage": "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-800 (success), Yellow-1000 (warning), Red-700 (alert/error). Information uses Indigo-700; Discovery uses Purple-700. AI uses the dedicated SL AI ramp — never substitute purple for AI.",
+          "tokens": [
+            {
+              "name": "--color-text-body",
+              "value": "#131C35",
+              "role": "Default body text — Indigo-900"
+            },
+            {
+              "name": "--color-text-heading",
+              "value": "#131C35",
+              "role": "Headings — Indigo-900"
+            },
+            {
+              "name": "--color-text-subtle",
+              "value": "#7D8695",
+              "role": "Secondary copy, captions — Grey-700"
+            },
+            {
+              "name": "--color-text-disabled",
+              "value": "#B0B9C8",
+              "role": "Disabled labels and values — Grey-500"
+            },
+            {
+              "name": "--color-text-inverse",
+              "value": "#FFFFFF",
+              "role": "Text on dark surfaces (navbar)"
+            },
+            {
+              "name": "--color-text-selected",
+              "value": "#0841B4",
+              "role": "Selected text — Blue-600"
+            },
+            {
+              "name": "--color-text-link",
+              "value": "#0841B4",
+              "role": "Default link — Blue-600"
+            },
+            {
+              "name": "--color-text-link-hover",
+              "value": "#09817F",
+              "role": "Link hover — Teal-600"
+            },
+            {
+              "name": "--color-text-link-pressed",
+              "value": "#6BB3B2",
+              "role": "Link pressed — Teal-400"
+            },
+            {
+              "name": "--color-text-success",
+              "value": "#014B10",
+              "role": "Success message text — Green-800"
+            },
+            {
+              "name": "--color-text-warning",
+              "value": "#322601",
+              "role": "Warning message text — Yellow-1000"
+            },
+            {
+              "name": "--color-text-alert",
+              "value": "#B61631",
+              "role": "Error message text — Red-700"
+            },
+            {
+              "name": "--color-text-information",
+              "value": "#26386A",
+              "role": "Informational accent — Indigo-700"
+            },
+            {
+              "name": "--color-text-discovery",
+              "value": "#4E2B6A",
+              "role": "Discovery accent — Purple-700"
+            },
+            {
+              "name": "--color-text-accent-blue",
+              "value": "#0841B4",
+              "role": "Accent text · blue — Blue-600"
+            },
+            {
+              "name": "--color-text-accent-teal",
+              "value": "#09817F",
+              "role": "Accent text · teal — Teal-600"
+            },
+            {
+              "name": "--color-text-accent-indigo",
+              "value": "#304684",
+              "role": "Accent text · indigo — Indigo-600"
+            },
+            {
+              "name": "--color-text-accent-orange",
+              "value": "#F9660B",
+              "role": "Accent text · orange — Orange-600"
+            },
+            {
+              "name": "--color-text-accent-yellow",
+              "value": "#FCC936",
+              "role": "Accent text · yellow — Yellow-500"
+            },
+            {
+              "name": "--color-text-accent-purple",
+              "value": "#623684",
+              "role": "Accent text · purple — Purple-600"
+            },
+            {
+              "name": "--color-text-accent-green",
+              "value": "#017D1B",
+              "role": "Accent text · green — Green-600"
+            },
+            {
+              "name": "--color-text-accent-red",
+              "value": "#E31C3D",
+              "role": "Accent text · red — Red-600"
+            },
+            {
+              "name": "--color-text-accent-pink",
+              "value": "#E31C73",
+              "role": "Accent text · pink — Pink-600"
+            },
+            {
+              "name": "--color-text-accent-grey",
+              "value": "#9CA7BA",
+              "role": "Accent text · grey — Grey-600"
+            }
+          ]
+        },
+        {
+          "name": "Palette · Categorical",
+          "file": "preview/dataviz-categorical.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-categorical.html",
+          "tagline": "Five-color chart palette for unordered categories — designed for light and dark backgrounds.",
+          "usage": "Use the categorical palette only when categories are unordered. The five colors are picked to keep relative perceived weight equal; do not extend with extra colors or you will read order into the order. For more than five categories, use a series of small-multiple charts."
+        },
+        {
+          "name": "Palette · Diverging",
+          "file": "preview/dataviz-diverging.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-diverging.html",
+          "tagline": "Two-hue chart ramps for values around a meaningful midpoint.",
+          "usage": "Use a diverging palette for values that fan out from zero or a target — deltas, sentiment, percent change. The midpoint is always Grey or off-white; ends are color-coded by direction. Pair with a clear legend showing the midpoint and the units."
+        },
+        {
+          "name": "Palette · Sequential",
+          "file": "preview/dataviz-sequential.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-sequential.html",
+          "tagline": "Single-hue chart ramps for ordered values — counts, magnitudes, percentages.",
+          "usage": "Use a sequential ramp when the value has a meaningful order with one extreme. Most often Green (success / volume) or Blue (neutral). Encode larger values with the darker step. For two-sided values around a meaningful zero, use a Diverging palette."
+        },
+        {
+          "name": "Status colors",
+          "file": "preview/dataviz-status.html",
+          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-status.html",
+          "tagline": "Green / Yellow / Red / Blue mapping for pipeline run states.",
+          "usage": "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite.",
+          "tokens": [
+            {
+              "name": "--sl-green-600",
+              "value": "#017D1B",
+              "role": "Success — pipeline completed"
+            },
+            {
+              "name": "--sl-red-600",
+              "value": "#E31C3D",
+              "role": "Failed"
+            },
+            {
+              "name": "--sl-yellow-600",
+              "value": "#FBBC04",
+              "role": "Warning"
+            },
+            {
+              "name": "--sl-blue-600",
+              "value": "#0841B4",
+              "role": "Running"
+            },
+            {
+              "name": "--sl-grey-500",
+              "value": "#B0B9C8",
+              "role": "Queued / idle"
+            }
+          ]
+        },
         {
           "name": "Type scale",
           "file": "preview/type-scale.html",
@@ -437,281 +704,6 @@
     },
     {
       "num": "02",
-      "id": "color",
-      "name": "Color",
-      "description": "The complete color system — the brand gradient, ten ramps, and the semantic tokens built on them.",
-      "items": [
-        {
-          "name": "Color ramps",
-          "file": "preview/colors-all-ramps.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/colors-all-ramps.html",
-          "tagline": "Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.",
-          "usage": "Use the `--sl-{hue}-{step}` tokens directly. Steps 50–400 read as light backgrounds and supporting tints; 500–700 carry semantic meaning; 800–1000 are nav and on-dark text. The 600 step of each ramp is the canonical default. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code.",
-          "tokens": [
-            {
-              "name": "--sl-blue-600",
-              "value": "#0841B4",
-              "role": "Primary brand & action"
-            },
-            {
-              "name": "--sl-teal-600",
-              "value": "#09817F",
-              "role": "Secondary accent — hover, focus"
-            },
-            {
-              "name": "--sl-indigo-600",
-              "value": "#304684",
-              "role": "Information"
-            },
-            {
-              "name": "--sl-orange-600",
-              "value": "#F9660B",
-              "role": "Accent"
-            },
-            {
-              "name": "--sl-yellow-600",
-              "value": "#FBBC04",
-              "role": "Warning"
-            },
-            {
-              "name": "--sl-purple-600",
-              "value": "#623684",
-              "role": "Discovery"
-            },
-            {
-              "name": "--sl-green-600",
-              "value": "#017D1B",
-              "role": "Success"
-            },
-            {
-              "name": "--sl-red-600",
-              "value": "#E31C3D",
-              "role": "Alert / destructive"
-            },
-            {
-              "name": "--sl-pink-600",
-              "value": "#E31C73",
-              "role": "Marketing accent"
-            },
-            {
-              "name": "--sl-grey-600",
-              "value": "#9CA7BA",
-              "role": "Neutral"
-            }
-          ]
-        },
-        {
-          "name": "Brand gradient",
-          "file": "preview/colors-gradient-brand.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/colors-gradient-brand.html",
-          "tagline": "linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.",
-          "usage": "Reserved for hero/marketing surfaces, launcher backgrounds, and brand moments — never for normal UI. Distinct from `--color-background-primary-hover`, which uses a slightly different teal at a 112.63° diagonal for primary-button hover only.",
-          "tokens": [
-            {
-              "name": "--gradient-brand",
-              "value": "linear-gradient(90deg, #008380 29%, #0841B4 100%)",
-              "role": "Horizontal teal → blue brand sweep"
-            },
-            {
-              "name": "--gradient-brand-stop-1",
-              "value": "#008380",
-              "role": "Left stop — teal"
-            },
-            {
-              "name": "--gradient-brand-stop-2",
-              "value": "#0841B4",
-              "role": "Right stop — Blue-600"
-            }
-          ]
-        },
-        {
-          "name": "Semantic text",
-          "file": "preview/colors-semantic-text.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/colors-semantic-text.html",
-          "tagline": "Body, subtle, link, status, information, discovery, accents.",
-          "usage": "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-800 (success), Yellow-1000 (warning), Red-700 (alert/error). Information uses Indigo-700; Discovery uses Purple-700. AI uses the dedicated SL AI ramp — never substitute purple for AI.",
-          "tokens": [
-            {
-              "name": "--color-text-body",
-              "value": "#131C35",
-              "role": "Default body text — Indigo-900"
-            },
-            {
-              "name": "--color-text-heading",
-              "value": "#131C35",
-              "role": "Headings — Indigo-900"
-            },
-            {
-              "name": "--color-text-subtle",
-              "value": "#7D8695",
-              "role": "Secondary copy, captions — Grey-700"
-            },
-            {
-              "name": "--color-text-disabled",
-              "value": "#B0B9C8",
-              "role": "Disabled labels and values — Grey-500"
-            },
-            {
-              "name": "--color-text-inverse",
-              "value": "#FFFFFF",
-              "role": "Text on dark surfaces (navbar)"
-            },
-            {
-              "name": "--color-text-selected",
-              "value": "#0841B4",
-              "role": "Selected text — Blue-600"
-            },
-            {
-              "name": "--color-text-link",
-              "value": "#0841B4",
-              "role": "Default link — Blue-600"
-            },
-            {
-              "name": "--color-text-link-hover",
-              "value": "#09817F",
-              "role": "Link hover — Teal-600"
-            },
-            {
-              "name": "--color-text-link-pressed",
-              "value": "#6BB3B2",
-              "role": "Link pressed — Teal-400"
-            },
-            {
-              "name": "--color-text-success",
-              "value": "#014B10",
-              "role": "Success message text — Green-800"
-            },
-            {
-              "name": "--color-text-warning",
-              "value": "#322601",
-              "role": "Warning message text — Yellow-1000"
-            },
-            {
-              "name": "--color-text-alert",
-              "value": "#B61631",
-              "role": "Error message text — Red-700"
-            },
-            {
-              "name": "--color-text-information",
-              "value": "#26386A",
-              "role": "Informational accent — Indigo-700"
-            },
-            {
-              "name": "--color-text-discovery",
-              "value": "#4E2B6A",
-              "role": "Discovery accent — Purple-700"
-            },
-            {
-              "name": "--color-text-accent-blue",
-              "value": "#0841B4",
-              "role": "Accent text · blue — Blue-600"
-            },
-            {
-              "name": "--color-text-accent-teal",
-              "value": "#09817F",
-              "role": "Accent text · teal — Teal-600"
-            },
-            {
-              "name": "--color-text-accent-indigo",
-              "value": "#304684",
-              "role": "Accent text · indigo — Indigo-600"
-            },
-            {
-              "name": "--color-text-accent-orange",
-              "value": "#F9660B",
-              "role": "Accent text · orange — Orange-600"
-            },
-            {
-              "name": "--color-text-accent-yellow",
-              "value": "#FCC936",
-              "role": "Accent text · yellow — Yellow-500"
-            },
-            {
-              "name": "--color-text-accent-purple",
-              "value": "#623684",
-              "role": "Accent text · purple — Purple-600"
-            },
-            {
-              "name": "--color-text-accent-green",
-              "value": "#017D1B",
-              "role": "Accent text · green — Green-600"
-            },
-            {
-              "name": "--color-text-accent-red",
-              "value": "#E31C3D",
-              "role": "Accent text · red — Red-600"
-            },
-            {
-              "name": "--color-text-accent-pink",
-              "value": "#E31C73",
-              "role": "Accent text · pink — Pink-600"
-            },
-            {
-              "name": "--color-text-accent-grey",
-              "value": "#9CA7BA",
-              "role": "Accent text · grey — Grey-600"
-            }
-          ]
-        },
-        {
-          "name": "Palette · Categorical",
-          "file": "preview/dataviz-categorical.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-categorical.html",
-          "tagline": "Five-color chart palette for unordered categories — designed for light and dark backgrounds.",
-          "usage": "Use the categorical palette only when categories are unordered. The five colors are picked to keep relative perceived weight equal; do not extend with extra colors or you will read order into the order. For more than five categories, use a series of small-multiple charts."
-        },
-        {
-          "name": "Palette · Diverging",
-          "file": "preview/dataviz-diverging.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-diverging.html",
-          "tagline": "Two-hue chart ramps for values around a meaningful midpoint.",
-          "usage": "Use a diverging palette for values that fan out from zero or a target — deltas, sentiment, percent change. The midpoint is always Grey or off-white; ends are color-coded by direction. Pair with a clear legend showing the midpoint and the units."
-        },
-        {
-          "name": "Palette · Sequential",
-          "file": "preview/dataviz-sequential.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-sequential.html",
-          "tagline": "Single-hue chart ramps for ordered values — counts, magnitudes, percentages.",
-          "usage": "Use a sequential ramp when the value has a meaningful order with one extreme. Most often Green (success / volume) or Blue (neutral). Encode larger values with the darker step. For two-sided values around a meaningful zero, use a Diverging palette."
-        },
-        {
-          "name": "Status colors",
-          "file": "preview/dataviz-status.html",
-          "url": "https://sl-design-team.github.io/jellyroll/preview/dataviz-status.html",
-          "tagline": "Green / Yellow / Red / Blue mapping for pipeline run states.",
-          "usage": "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite.",
-          "tokens": [
-            {
-              "name": "--sl-green-600",
-              "value": "#017D1B",
-              "role": "Success — pipeline completed"
-            },
-            {
-              "name": "--sl-red-600",
-              "value": "#E31C3D",
-              "role": "Failed"
-            },
-            {
-              "name": "--sl-yellow-600",
-              "value": "#FBBC04",
-              "role": "Warning"
-            },
-            {
-              "name": "--sl-blue-600",
-              "value": "#0841B4",
-              "role": "Running"
-            },
-            {
-              "name": "--sl-grey-500",
-              "value": "#B0B9C8",
-              "role": "Queued / idle"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "num": "03",
       "id": "brand",
       "name": "Brand",
       "description": "The SnapLogic logo and brand marks, and how to apply them.",
@@ -726,7 +718,7 @@
       ]
     },
     {
-      "num": "04",
+      "num": "03",
       "id": "primitives",
       "name": "Building blocks",
       "description": "Single-purpose controls — each does one job. The atoms you compose with.",
@@ -1256,7 +1248,7 @@
       ]
     },
     {
-      "num": "05",
+      "num": "04",
       "id": "components",
       "name": "Composed components",
       "description": "Several building blocks assembled into a complete piece of the interface.",
@@ -1622,7 +1614,7 @@
       ]
     },
     {
-      "num": "06",
+      "num": "05",
       "id": "patterns",
       "name": "Patterns",
       "description": "Reusable flows that combine components to solve a recurring product problem.",
@@ -1808,7 +1800,7 @@
       ]
     },
     {
-      "num": "07",
+      "num": "06",
       "id": "data-viz",
       "name": "Data visualization",
       "description": "Chart and graph types, with guidance on when to use each.",
@@ -1952,7 +1944,7 @@
       ]
     },
     {
-      "num": "08",
+      "num": "07",
       "id": "advanced-editors",
       "name": "Advanced editors",
       "description": "Specialized multi-field editors for SnapLogic's configuration surfaces.",
@@ -2029,7 +2021,7 @@
       ]
     },
     {
-      "num": "09",
+      "num": "08",
       "id": "templates",
       "name": "Templates",
       "description": "Full-page starting points — complete screens assembled from components and patterns.",

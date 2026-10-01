@@ -55,11 +55,77 @@ window.JELLYROLL_DATA = {
       num: "01",
       id: "foundations",
       name: "Foundations",
-      description: "The visual and system primitives every component inherits — type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.",
+      description: "The visual and system primitives every component inherits — color, type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.",
       items: [
+        {
+          file: "preview/colors-all-ramps.html",
+          name: "Color ramps",
+          navName: "Color",
+          collapseChildren: true,
+          tagline: "Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.",
+          meta: {
+            usage: "Use the `--sl-{hue}-{step}` tokens directly. Steps 50–400 read as light backgrounds and supporting tints; 500–700 carry semantic meaning; 800–1000 are nav and on-dark text. The 600 step of each ramp is the canonical default. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code."
+          }
+        },
+        {
+          file: "preview/colors-gradient-brand.html",
+          name: "Brand gradient",
+          parent: "preview/colors-all-ramps.html",
+          tagline: "linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.",
+          meta: {
+            usage: "Reserved for hero/marketing surfaces, launcher backgrounds, and brand moments — never for normal UI. Distinct from `--color-background-primary-hover`, which uses a slightly different teal at a 112.63° diagonal for primary-button hover only."
+          }
+        },
+        {
+          file: "preview/colors-semantic-text.html",
+          name: "Semantic text",
+          parent: "preview/colors-all-ramps.html",
+          tagline: "Body, subtle, link, status, information, discovery, accents.",
+          meta: {
+            usage: "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-800 (success), Yellow-1000 (warning), Red-700 (alert/error). Information uses Indigo-700; Discovery uses Purple-700. AI uses the dedicated SL AI ramp — never substitute purple for AI."
+          }
+        },
+        {
+          file: "preview/dataviz-categorical.html",
+          name: "Palette · Categorical",
+          parent: "preview/colors-all-ramps.html",
+          tagline: "Five-color chart palette for unordered categories — designed for light and dark backgrounds.",
+          meta: {
+            usage: "Use the categorical palette only when categories are unordered. The five colors are picked to keep relative perceived weight equal; do not extend with extra colors or you will read order into the order. For more than five categories, use a series of small-multiple charts."
+          }
+        },
+        {
+          file: "preview/dataviz-diverging.html",
+          name: "Palette · Diverging",
+          parent: "preview/colors-all-ramps.html",
+          tagline: "Two-hue chart ramps for values around a meaningful midpoint.",
+          meta: {
+            usage: "Use a diverging palette for values that fan out from zero or a target — deltas, sentiment, percent change. The midpoint is always Grey or off-white; ends are color-coded by direction. Pair with a clear legend showing the midpoint and the units."
+          }
+        },
+        {
+          file: "preview/dataviz-sequential.html",
+          name: "Palette · Sequential",
+          parent: "preview/colors-all-ramps.html",
+          tagline: "Single-hue chart ramps for ordered values — counts, magnitudes, percentages.",
+          meta: {
+            usage: "Use a sequential ramp when the value has a meaningful order with one extreme. Most often Green (success / volume) or Blue (neutral). Encode larger values with the darker step. For two-sided values around a meaningful zero, use a Diverging palette."
+          }
+        },
+        {
+          file: "preview/dataviz-status.html",
+          name: "Status colors",
+          parent: "preview/colors-all-ramps.html",
+          tagline: "Green / Yellow / Red / Blue mapping for pipeline run states.",
+          meta: {
+            usage: "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite."
+          }
+        },
         {
           file: "preview/type-scale.html",
           name: "Type scale",
+          navName: "Typography",
+          collapseChildren: true,
           tagline: "Display through Micro — eight steps with set line heights and weight conventions.",
           meta: {
             usage: "Use these eight steps for every text element. Body and labels are 14/22 Regular; headings step up from Card Title 18 to Display 56. Labels and headings sit at ExtraBold (800); body at Regular (400). The contrast between thin body and chunky labels is the system's signature — do not introduce intermediate weights for emphasis."
@@ -68,6 +134,7 @@ window.JELLYROLL_DATA = {
         {
           file: "preview/type-faces.html",
           name: "Type specimen",
+          parent: "preview/type-scale.html",
           tagline: "Acherus Grotesque, weights 200–900, plus the SF Mono code font.",
           meta: {
             usage: "Acherus Grotesque is the system sans across every weight. Reach for the mono stack only inside code blocks, tokens, JSON snippets, and timestamps. Italic is reserved for placeholders (Light Italic 300) and the rare in-line citation — never used for emphasis."
@@ -160,70 +227,6 @@ window.JELLYROLL_DATA = {
     },
     {
       num: "02",
-      id: "color",
-      name: "Color",
-      description: "The complete color system — the brand gradient, ten ramps, and the semantic tokens built on them.",
-      items: [
-        {
-          file: "preview/colors-all-ramps.html",
-          name: "Color ramps",
-          tagline: "Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.",
-          meta: {
-            usage: "Use the `--sl-{hue}-{step}` tokens directly. Steps 50–400 read as light backgrounds and supporting tints; 500–700 carry semantic meaning; 800–1000 are nav and on-dark text. The 600 step of each ramp is the canonical default. Prefer semantic tokens (`--color-text-body`, `--color-background-primary`, etc.) over raw ramp variables in component code."
-          }
-        },
-        {
-          file: "preview/colors-gradient-brand.html",
-          name: "Brand gradient",
-          tagline: "linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.",
-          meta: {
-            usage: "Reserved for hero/marketing surfaces, launcher backgrounds, and brand moments — never for normal UI. Distinct from `--color-background-primary-hover`, which uses a slightly different teal at a 112.63° diagonal for primary-button hover only."
-          }
-        },
-        {
-          file: "preview/colors-semantic-text.html",
-          name: "Semantic text",
-          tagline: "Body, subtle, link, status, information, discovery, accents.",
-          meta: {
-            usage: "Use semantic text tokens rather than raw ramp values: `--color-text-body` (Indigo-900) for primary copy, `--color-text-subtle` (Grey-700) for secondary, `--color-text-link` (Blue-600) for links. Status colors map to Green-800 (success), Yellow-1000 (warning), Red-700 (alert/error). Information uses Indigo-700; Discovery uses Purple-700. AI uses the dedicated SL AI ramp — never substitute purple for AI."
-          }
-        },
-        {
-          file: "preview/dataviz-categorical.html",
-          name: "Palette · Categorical",
-          tagline: "Five-color chart palette for unordered categories — designed for light and dark backgrounds.",
-          meta: {
-            usage: "Use the categorical palette only when categories are unordered. The five colors are picked to keep relative perceived weight equal; do not extend with extra colors or you will read order into the order. For more than five categories, use a series of small-multiple charts."
-          }
-        },
-        {
-          file: "preview/dataviz-diverging.html",
-          name: "Palette · Diverging",
-          tagline: "Two-hue chart ramps for values around a meaningful midpoint.",
-          meta: {
-            usage: "Use a diverging palette for values that fan out from zero or a target — deltas, sentiment, percent change. The midpoint is always Grey or off-white; ends are color-coded by direction. Pair with a clear legend showing the midpoint and the units."
-          }
-        },
-        {
-          file: "preview/dataviz-sequential.html",
-          name: "Palette · Sequential",
-          tagline: "Single-hue chart ramps for ordered values — counts, magnitudes, percentages.",
-          meta: {
-            usage: "Use a sequential ramp when the value has a meaningful order with one extreme. Most often Green (success / volume) or Blue (neutral). Encode larger values with the darker step. For two-sided values around a meaningful zero, use a Diverging palette."
-          }
-        },
-        {
-          file: "preview/dataviz-status.html",
-          name: "Status colors",
-          tagline: "Green / Yellow / Red / Blue mapping for pipeline run states.",
-          meta: {
-            usage: "Use status colors consistently across charts: Green-600 = success, Red-600 = failed, Yellow-600 = warning, Blue-600 = running, Grey-500 = queued or idle. Never re-map the colors per chart — operators learn the mapping once and rely on it across the suite."
-          }
-        }
-      ]
-    },
-    {
-      num: "03",
       id: "brand",
       name: "Brand",
       description: "The SnapLogic logo and brand marks, and how to apply them.",
@@ -239,7 +242,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "04",
+      num: "03",
       id: "primitives",
       name: "Building blocks",
       description: "Single-purpose controls — each does one job. The atoms you compose with.",
@@ -509,7 +512,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "05",
+      num: "04",
       id: "components",
       name: "Composed components",
       description: "Several building blocks assembled into a complete piece of the interface.",
@@ -794,7 +797,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "06",
+      num: "05",
       id: "patterns",
       name: "Patterns",
       description: "Reusable flows that combine components to solve a recurring product problem.",
@@ -1003,7 +1006,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "07",
+      num: "06",
       id: "data-viz",
       name: "Data visualization",
       description: "Chart and graph types, with guidance on when to use each.",
@@ -1164,7 +1167,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "08",
+      num: "07",
       id: "advanced-editors",
       name: "Advanced editors",
       description: "Specialized multi-field editors for SnapLogic's configuration surfaces.",
@@ -1248,7 +1251,7 @@ window.JELLYROLL_DATA = {
       ]
     },
     {
-      num: "09",
+      num: "08",
       id: "templates",
       name: "Templates",
       description: "Full-page starting points — complete screens assembled from components and patterns.",

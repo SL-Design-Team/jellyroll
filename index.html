@@ -16,7 +16,6 @@
     --sidebar-w: 300px;
     --cat-guidance:       var(--sl-blue-700);
     --cat-foundations:    var(--sl-indigo-600);
-    --cat-color:          var(--sl-pink-600);
     --cat-brand:          var(--sl-purple-600);
     --cat-primitives:     var(--sl-blue-600);
     --cat-components:     var(--sl-teal-600);
@@ -354,6 +353,17 @@
     border-left-color: var(--sl-blue-600, #0841B4);
   }
   .sidebar-nav .item-link[data-hide="true"] { display: none; }
+  /* Collapsible topics (Color, Typography): nested pages show only while you are
+     inside the topic. The +N hint on the parent says they exist. */
+  .sidebar-nav .nav-group[data-collapsible="true"]:not([data-expanded="true"]) .item-link--child { display: none; }
+  .sidebar-nav .nav-group[data-expanded="true"] .nav-more { display: none; }
+  .sidebar-nav .nav-more {
+    float: right;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--color-text-subtle);
+  }
   .sidebar-nav .sec[data-hide="true"] { display: none; }
 
   /* Inline icon-search results inside the sidebar */
@@ -2443,11 +2453,14 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   // guidance pages listed beneath it, an icon-search results section, then the
   // categorized accordion. Getting started is pinned: always open, no collapse.
   const PINNED_SECTION = "guidance";
-  const navLink = (it, child) => `
+  // `navName` is the short topic label shown in the nav when it differs from
+  // the page title (Color → "Color ramps"). `more` is the count of nested pages
+  // hidden until you are inside that topic.
+  const navLink = (it, child, more) => `
     <a class="item-link${child ? " item-link--child" : ""}"
        href="#${encodeURIComponent(it.file)}"
        data-file="${escapeHtml(it.file)}"
-       data-search="${escapeHtml((it.name + " " + (it.tagline||"") + " " + fileLabel(it.file)).toLowerCase())}">${escapeHtml(it.name)}</a>`;
+       data-search="${escapeHtml(((it.navName ? it.navName + " " : "") + it.name + " " + (it.tagline||"") + " " + fileLabel(it.file)).toLowerCase())}">${escapeHtml(it.navName || it.name)}${more ? `<span class="nav-more" aria-hidden="true">+${more}</span>` : ""}</a>`;
   const pinnedSec = sections.find(sec => sec.id === PINNED_SECTION);
   const topLinksHtml = `
     <a class="top-link" href="#getting-started" data-top-link="getting-started">
@@ -2480,7 +2493,15 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
           }
           return sec.items
             .filter(it => !it.parent)                     // skip children at their normal spot
-            .map(it => navLink(it, false) + (childrenOf[it.file] || []).map(c => navLink(c, true)).join(""))
+            .map(it => {
+              const kids = childrenOf[it.file] || [];
+              const kidsHtml = kids.map(c => navLink(c, true)).join("");
+              // Topics that opt in keep their nested pages tucked away until you
+              // are inside the topic, so the section stays one line per topic.
+              return it.collapseChildren && kids.length
+                ? `<div class="nav-group" data-collapsible="true">${navLink(it, false, kids.length)}${kidsHtml}</div>`
+                : navLink(it, false) + kidsHtml;
+            })
             .join("");
         })()}
       </div>
@@ -2497,12 +2518,23 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     header.setAttribute("aria-expanded", open ? "false" : "true");
   });
 
+  // Expand a collapsible topic while the active page is inside it, or while a
+  // search is matching something inside it.
+  function syncNavGroups() {
+    sidebarEl.querySelectorAll('.nav-group[data-collapsible="true"]').forEach(g => {
+      const hasActive = !!g.querySelector('.item-link[data-active="true"]');
+      const hasMatch = !!currentQuery && [...g.querySelectorAll(".item-link")].some(a => a.getAttribute("data-hide") !== "true");
+      g.setAttribute("data-expanded", hasActive || hasMatch ? "true" : "false");
+    });
+  }
+
   function setSidebarActive(item) {
     sidebarEl.querySelectorAll(".item-link").forEach(a => a.removeAttribute("data-active"));
-    if (!item) return;
+    if (!item) { syncNavGroups(); return; }
     const link = sidebarEl.querySelector(`.item-link[data-file="${CSS.escape(item.file)}"]`);
     if (!link) return;
     link.setAttribute("data-active", "true");
+    syncNavGroups();
     const sec = sidebarEl.querySelector(`.sec[data-section-id="${item.section.id}"]`);
     if (sec) {
       sec.setAttribute("data-open", "true");
@@ -2520,7 +2552,6 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   const CATEGORY_DEFAULT_ICON = {
     "guidance":         "compass",
     "foundations":      "ruler",
-    "color":            "palette",
     "brand":            "gem",
     "primitives":       "square",
     "components":       "layout-grid",
@@ -2653,7 +2684,6 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
   const CATEGORY_VARS = {
     "guidance":         { color: "var(--cat-guidance)",       tint: "var(--sl-blue-50,   #F2F6FC)" },
     "foundations":      { color: "var(--cat-foundations)",   tint: "var(--sl-indigo-50, #F4F6F9)" },
-    "color":            { color: "var(--cat-color)",         tint: "var(--sl-pink-50,   #FDF3F8)" },
     "brand":            { color: "var(--cat-brand)",         tint: "var(--sl-purple-50, #F7F5F9)" },
     "primitives":       { color: "var(--cat-primitives)",    tint: "var(--sl-blue-50,   #F2F6FC)" },
     "components":       { color: "var(--cat-components)",    tint: "var(--sl-teal-50,   #F2F8F8)" },
@@ -2868,6 +2898,7 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
       }
       totalVisible += secVisible;
     }
+    syncNavGroups();
     emptyFilterEl.style.display = (currentQuery && totalVisible === 0) ? "block" : "none";
   }
 
@@ -3108,7 +3139,6 @@ curl -sL <span class="tk-var">$BASE</span>/jellyroll-setup.md -o ~/.claude/comma
     const tintMap = {
       "guidance": "var(--sl-blue-50, #F2F6FC)",
       "foundations": "var(--sl-indigo-50, #F4F6F9)",
-      "color": "var(--sl-pink-50, #FDF3F8)",
       "brand": "var(--sl-purple-50, #F7F5F9)",
       "primitives": "var(--sl-blue-50, #F2F6FC)",
       "components": "var(--sl-teal-50, #F2F8F8)",

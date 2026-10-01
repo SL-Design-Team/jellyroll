@@ -21,8 +21,15 @@ How to think about and use the system — accessibility, design principles, and 
 
 ## Foundations
 
-The visual and system primitives every component inherits — type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.
+The visual and system primitives every component inherits — color, type, icons, spacing, radius, shadows, surfaces, motion, breakpoints, and tokens.
 
+- [Color ramps](https://sl-design-team.github.io/jellyroll/preview/colors-all-ramps.html): Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.
+- [Brand gradient](https://sl-design-team.github.io/jellyroll/preview/colors-gradient-brand.html): linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.
+- [Semantic text](https://sl-design-team.github.io/jellyroll/preview/colors-semantic-text.html): Body, subtle, link, status, information, discovery, accents.
+- [Palette · Categorical](https://sl-design-team.github.io/jellyroll/preview/dataviz-categorical.html): Five-color chart palette for unordered categories — designed for light and dark backgrounds.
+- [Palette · Diverging](https://sl-design-team.github.io/jellyroll/preview/dataviz-diverging.html): Two-hue chart ramps for values around a meaningful midpoint.
+- [Palette · Sequential](https://sl-design-team.github.io/jellyroll/preview/dataviz-sequential.html): Single-hue chart ramps for ordered values — counts, magnitudes, percentages.
+- [Status colors](https://sl-design-team.github.io/jellyroll/preview/dataviz-status.html): Green / Yellow / Red / Blue mapping for pipeline run states.
 - [Type scale](https://sl-design-team.github.io/jellyroll/preview/type-scale.html): Display through Micro — eight steps with set line heights and weight conventions.
 - [Type specimen](https://sl-design-team.github.io/jellyroll/preview/type-faces.html): Acherus Grotesque, weights 200–900, plus the SF Mono code font.
 - [Iconography](https://sl-design-team.github.io/jellyroll/preview/brand-iconography.html): 202 outlined line icons — 24×24 viewbox, currentColor stroke.
@@ -35,18 +42,6 @@ The visual and system primitives every component inherits — type, icons, spaci
 - [Z-index](https://sl-design-team.github.io/jellyroll/preview/foundations-zindex.html): 8-step stacking scale — base through toast.
 - [Selection & skeleton](https://sl-design-team.github.io/jellyroll/preview/foundations-selection-skeleton.html): Text highlight and loading placeholder colors.
 - [Tokens](https://sl-design-team.github.io/jellyroll/preview/foundations-tokens.html): All CSS custom properties — color ramps, semantic tokens, typography, spacing, radius, shadows, field, and AI.
-
-## Color
-
-The complete color system — the brand gradient, ten ramps, and the semantic tokens built on them.
-
-- [Color ramps](https://sl-design-team.github.io/jellyroll/preview/colors-all-ramps.html): Ten named ramps × eleven steps each. Step 600 is the canonical default for each hue.
-- [Brand gradient](https://sl-design-team.github.io/jellyroll/preview/colors-gradient-brand.html): linear-gradient(90deg, #008380 29%, #0841B4 100%) — horizontal teal → blue.
-- [Semantic text](https://sl-design-team.github.io/jellyroll/preview/colors-semantic-text.html): Body, subtle, link, status, information, discovery, accents.
-- [Palette · Categorical](https://sl-design-team.github.io/jellyroll/preview/dataviz-categorical.html): Five-color chart palette for unordered categories — designed for light and dark backgrounds.
-- [Palette · Diverging](https://sl-design-team.github.io/jellyroll/preview/dataviz-diverging.html): Two-hue chart ramps for values around a meaningful midpoint.
-- [Palette · Sequential](https://sl-design-team.github.io/jellyroll/preview/dataviz-sequential.html): Single-hue chart ramps for ordered values — counts, magnitudes, percentages.
-- [Status colors](https://sl-design-team.github.io/jellyroll/preview/dataviz-status.html): Green / Yellow / Red / Blue mapping for pipeline run states.
 
 ## Brand
 
