@@ -9,21 +9,21 @@
 <style>
   .sl-btn {
     font-family: var(--font-sans);
-    font-weight: 800;
+    font-weight: var(--type-label-weight);
     border: 1.5px solid transparent;
     border-radius: var(--radius-sm);
     cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center;
     gap: 8px;
-    transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+    transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard);
   }
   .sl-btn svg { width: 16px; height: 16px; stroke-width: 2; flex: none; }
   .sl-btn:disabled { cursor: not-allowed; }
 
   /* Sizes */
-  .sl-btn--lg { font-size: 14px; line-height: 22px; padding: 8px 24px; }  /* 40px */
-  .sl-btn--md { font-size: 14px; line-height: 22px; padding: 6px 18px; }  /* 36px */
-  .sl-btn--sm { font-size: 12px; line-height: 16px; padding: 4px 12px; }  /* 28px */
+  .sl-btn--lg { font-size: var(--type-label-size); line-height: var(--type-label-line); padding: 8px 24px; }  /* 40px */
+  .sl-btn--md { font-size: var(--type-label-size); line-height: var(--type-label-line); padding: 6px 18px; }  /* 36px */
+  .sl-btn--sm { font-size: var(--type-label-sm-size); line-height: var(--type-label-sm-line); font-weight: var(--type-label-sm-weight); padding: 4px 12px; }  /* 28px */
 
   /* Primary — solid blue; hover is the teal→blue brand gradient (border-box
      so it fills the transparent border seamlessly); active = teal. */

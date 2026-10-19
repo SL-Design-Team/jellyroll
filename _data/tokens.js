@@ -145,6 +145,8 @@ window.JELLYROLL_TOKENS = {
     { name: "--color-border-default",             value: "#C4CAD6", role: "Default border — Grey-400" },
     { name: "--color-border-focus",               value: "#09817F", role: "Focus ring (Teal-600)" },
     { name: "--radius-sm",                        value: "4px",     role: "Button corner radius" },
+    { name: "--type-label-*",                     value: "14px / 22px / 800", role: "lg and md button text" },
+    { name: "--type-label-sm-*",                  value: "12px / 16px / 800", role: "sm button text" },
     { name: "--shadow-focus-ring",                value: "0 0 0 3px rgba(9, 129, 127, 0.35)", role: "Focus halo" },
   ],
   "preview/components-inputs.html": [
@@ -157,7 +159,7 @@ window.JELLYROLL_TOKENS = {
     { name: "--field-border-error",     value: "#E31C3D",  role: "Error border — Red-600" },
     { name: "--field-border-disabled",  value: "#CED9F0",  role: "Disabled border — Blue-200" },
     { name: "--field-text-default",     value: "#131C35",  role: "Typed value — Indigo-900" },
-    { name: "--field-text-placeholder", value: "#7D8695",  role: "Placeholder text — Grey-700" },
+    { name: "--field-text-placeholder", value: "#5E6470",  role: "Placeholder text — Grey-800" },
     { name: "--field-text-disabled",    value: "#9CB3E1",  role: "Disabled text — Blue-300" },
     { name: "--field-radius",           value: "4px",      role: "Field corner radius" },
     { name: "--field-height-md",        value: "40px",     role: "Default field height" },

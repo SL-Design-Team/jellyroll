@@ -870,6 +870,16 @@
               "role": "Button corner radius"
             },
             {
+              "name": "--type-label-*",
+              "value": "14px / 22px / 800",
+              "role": "lg and md button text"
+            },
+            {
+              "name": "--type-label-sm-*",
+              "value": "12px / 16px / 800",
+              "role": "sm button text"
+            },
+            {
               "name": "--shadow-focus-ring",
               "value": "0 0 0 3px rgba(9, 129, 127, 0.35)",
               "role": "Focus halo"
@@ -1029,8 +1039,8 @@
             },
             {
               "name": "--field-text-placeholder",
-              "value": "#7D8695",
-              "role": "Placeholder text — Grey-700"
+              "value": "#5E6470",
+              "role": "Placeholder text — Grey-800"
             },
             {
               "name": "--field-text-disabled",

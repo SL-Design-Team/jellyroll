@@ -290,6 +290,11 @@
   --type-label-line: 22px;
   --type-label-weight: 800;
 
+  /* Compact controls (sm buttons). Label's weight at Small's size. */
+  --type-label-sm-size: 12px;
+  --type-label-sm-line: 16px;
+  --type-label-sm-weight: 800;
+
   --type-body-size: 14px;
   --type-body-line: 22px;
   --type-body-weight: 400;
@@ -390,7 +395,7 @@
   --field-text-default:  var(--sl-indigo-900);
   --field-text-disabled: var(--sl-blue-300);
   --field-text-readonly: var(--sl-grey-800);
-  --field-text-placeholder: var(--sl-grey-700);
+  --field-text-placeholder: var(--sl-grey-800);
   --field-text-error:    var(--sl-red-700);
   --field-text-warning:  var(--sl-yellow-1000);
   --field-text-success:  var(--sl-green-800);

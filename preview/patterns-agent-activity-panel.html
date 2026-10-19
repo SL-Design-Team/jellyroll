@@ -45,27 +45,7 @@
   }
 
   /* AI spinner */
-  .sl-spinner {
-    --sl-spin-thick: 1px;
-    position: relative;
-    display: inline-block;
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    color: var(--sl-blue-600);
-    background: conic-gradient(from 0deg, transparent 0deg, currentColor 360deg);
-    -webkit-mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
-            mask: radial-gradient(circle, transparent calc(50% - var(--sl-spin-thick)), #000 calc(50% - var(--sl-spin-thick) + 0.5px));
-    animation: sl-spin 1.1s linear infinite;
-    flex: none;
-  }
-  .sl-spinner::after {
-    content: ''; position: absolute; top: 0; left: 50%;
-    width: var(--sl-spin-thick); height: var(--sl-spin-thick);
-    border-radius: 50%; background: currentColor;
-    transform: translateX(-50%);
-  }
-  @keyframes sl-spin { to { transform: rotate(360deg); } }
-  @media (prefers-reduced-motion: reduce) { .sl-spinner { animation-duration: 2.8s; } }
+  .sl-spinner { width: 14px; height: 14px; --sl-spin-thick: 1px; }  /* card.css spinner, sized to the step-row text */
 
   /* ─── SECTION GROUPS ──────────────────────────────────────── */
   .activity-group { }
