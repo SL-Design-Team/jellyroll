@@ -151,7 +151,7 @@ window.JELLYROLL_TOKENS = {
   ],
   "preview/components-inputs.html": [
     { name: "--field-bg-default",       value: "#FFFFFF",  role: "Default field fill" },
-    { name: "--field-bg-error",         value: "#FCE8EC",  role: "Error field fill — Red-100" },
+    { name: "--field-bg-error",         value: "#FFFFFF",  role: "Error field fill — white; the border and message carry the error" },
     { name: "--field-bg-disabled",      value: "#E6ECF8",  role: "Disabled field fill — Blue-100" },
     { name: "--field-border-default",   value: "#C4CAD6",  role: "Default border — Grey-400" },
     { name: "--field-border-hover",     value: "#0841B4",  role: "Hover border — Blue-600" },

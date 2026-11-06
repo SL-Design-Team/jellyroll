@@ -377,7 +377,7 @@
   --field-bg-hover:   var(--sl-white);
   --field-bg-disabled:var(--sl-blue-100);
   --field-bg-readonly:var(--sl-grey-100);
-  --field-bg-error:   var(--sl-red-100);
+  --field-bg-error:   var(--sl-white);    /* no fill: error is carried by the border, icon and message */
 
   --field-border-default:  var(--sl-grey-400);
   --field-border-hover:    var(--sl-blue-600);
