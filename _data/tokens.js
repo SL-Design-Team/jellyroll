@@ -188,6 +188,14 @@ window.JELLYROLL_TOKENS = {
     { name: "--sl-red-100",           value: "#FCE8EC", role: "Danger badge fill" },
     { name: "--sl-purple-100",        value: "#EFEBF3", role: "Discovery badge fill" },
   ],
+  "preview/components-ai-loading-indicator.html": [
+    { name: "--ai-accent",             value: "#6672D8", role: "SnapGPT mark, rings, shimmer band" },
+    { name: "--ai-tint",               value: "#EEF1FF", role: "Loader row and result note" },
+    { name: "--color-text-heading",    value: "#131C35", role: "Label" },
+    { name: "--sl-grey-800",           value: "#5E6470", role: "Elapsed time" },
+    { name: "--color-background-alert", value: "#FCE8EC", role: "Failed row" },
+    { name: "--color-text-alert",      value: "#B61631", role: "Failed row icon" },
+  ],
   "preview/components-spinner.html": [
     { name: "--ai-accent",             value: "var(--sl-ai-500)", role: "AI spinner stroke" },
     { name: "--color-text-link",       value: "#0841B4", role: "Default spinner stroke" },

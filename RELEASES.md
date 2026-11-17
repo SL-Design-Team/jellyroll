@@ -2,6 +2,13 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
+## 2026-11-17 · AI loading indicator
+
+### New
+- **AI loading indicator** (Components): the SnapGPT mark with its six nodes lit in turn, a task label, the elapsed time and Stop. It shows that AI works on a task, not only that something loads.
+- Use it wherever AI works: SnapGPT, a table that the AI fills, a form, an editor.
+- Variants: task (default), fixed label, and bare for the SnapGPT panel. States: reduced motion, failed, and the end of the task.
+
 ## 2026-10-01 · Left nav restructure
 
 ### Information architecture
