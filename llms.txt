@@ -58,6 +58,7 @@ The SnapLogic logo, brand gradient, and iconography, and how to apply them.
 
 Single-purpose components — each does one job. What composite components and patterns are assembled from.
 
+- [AI loading indicator](https://sl-design-team.github.io/jellyroll/preview/components-ai-loading-indicator.html): The SnapGPT mark with its six nodes lit in turn, while AI works on a task.
 - [Avatar](https://sl-design-team.github.io/jellyroll/preview/components-avatar.html): User identity glyph — initials, photo, or fallback icon.
 - [Badge](https://sl-design-team.github.io/jellyroll/preview/components-badges.html): Compact status or metadata pill, 10px ExtraBold uppercase.
 - [Buttons](https://sl-design-team.github.io/jellyroll/preview/components-buttons.html): Verb-led actions in primary, secondary, tertiary, and destructive variants.

@@ -297,6 +297,17 @@ window.JELLYROLL_DATA = {
       description: "Single-purpose components — each does one job. What composite components and patterns are assembled from.",
       items: [
         {
+          file: "preview/components-ai-loading-indicator.html",
+          name: "AI loading indicator",
+          tagline: "The SnapGPT mark with its six nodes lit in turn, while AI works on a task.",
+          meta: {
+            anatomy: "A row on `--ai-tint`: the SnapGPT mark (`assets/snapgpt-icon.svg`, 20px, `--ai-accent`) at 35% opacity with a 1.4px ring on each of its six nodes · task label 13/20 Medium with a shimmer · elapsed time, mono 12/18 · tertiary sm Stop button.",
+            options: "Task (default): task label, elapsed time and Stop. Fixed label: the label is \"Thinking…\". It has no time and no Stop. Use it where the task has no name. Bare: no tint and a 16px mark, for an answer bubble in the SnapGPT panel.",
+            usage: "Use wherever AI works on a task: SnapGPT, a table that the AI fills, a form, an editor. The task can take from a few seconds to a minute. Name the task in the label, for example Generating column descriptions. Name SnapGPT only on SnapGPT surfaces. Use the Spinner for other waits under 10 seconds. Never redraw the mark; animate only the rings. When the mark is an icon in a button or a note, show it static at full opacity.",
+            behaviors: "Each ring goes 0 → 1 → 0 opacity on a 1.8s ease-in-out cycle. Each ring starts 300ms after the one before, clockwise from the top node. The time starts with the task. Stop keeps what the AI already made. The focus stays on the control that started the task. At the end, the loader and the result note use one slot. The mark stops, then the row cross-fades into the note in 200ms. Only one thing changes at a time. A failure shows an alert row with Try again. The row stays until the user acts. The label is `role=\"status\"`, so it is the announcement. A failure is `role=\"alert\"`. The time is `aria-hidden`. With reduced motion, the mark is static at full opacity and the shimmer stops. The time still counts. The end has no animation."
+          }
+        },
+        {
           file: "preview/components-avatar.html",
           name: "Avatar",
           tagline: "User identity glyph — initials, photo, or fallback icon.",

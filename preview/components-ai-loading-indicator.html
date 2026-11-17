@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Components · AI loading indicator</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="card.css" />
+<style>
+  .card { gap: 22px; width: 100%; }
+
+  /* ─── AI LOADING INDICATOR ─────────────────────────────────
+     The SnapGPT mark (assets/snapgpt-icon.svg) at 35% opacity, with one
+     ring over each of its six nodes. The rings light in turn, 300ms apart,
+     on a 1.8s cycle: the agent passes work from node to node. */
+  .sl-ai-loader {
+    display: flex; align-items: center; gap: 10px;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--ai-tint);
+    min-width: 0;
+  }
+  .sl-ai-loader--bare { padding: 0; background: none; }
+  .sl-ai-loader__body { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; flex-wrap: wrap; }
+
+  .sl-ai-mark { width: 20px; height: 20px; flex: none; color: var(--ai-accent); }
+  .sl-ai-mark--sm { width: 16px; height: 16px; }
+  .sl-ai-mark .b { fill: currentColor; stroke: currentColor; stroke-width: .25; opacity: .35; }
+  .sl-ai-mark .n { fill: none; stroke: currentColor; stroke-width: 1.4; opacity: 0; animation: sl-ai-node 1.8s ease-in-out infinite; }
+  .sl-ai-mark .n:nth-of-type(2) { animation-delay: 300ms; }
+  .sl-ai-mark .n:nth-of-type(3) { animation-delay: 600ms; }
+  .sl-ai-mark .n:nth-of-type(4) { animation-delay: 900ms; }
+  .sl-ai-mark .n:nth-of-type(5) { animation-delay: 1200ms; }
+  .sl-ai-mark .n:nth-of-type(6) { animation-delay: 1500ms; }
+  @keyframes sl-ai-node { 0%, 100% { opacity: 0; } 20% { opacity: 1; } 45% { opacity: 0; } }
+  /* Static: reduced motion, stopped, or the mark used as an icon. Full opacity, no rings. */
+  .sl-ai-mark.is-static .b { opacity: 1; }
+  .sl-ai-mark.is-static .n { animation: none; opacity: 0; }
+
+  .sl-ai-loader__label {
+    font: 500 13px/20px var(--font-sans);
+    background-image: linear-gradient(90deg, var(--color-text-heading) 35%, var(--ai-accent) 50%, var(--color-text-heading) 65%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: sl-ai-shimmer 1.4s linear infinite;
+  }
+  .sl-ai-loader__label.is-static { animation: none; background: none; color: var(--color-text-heading); }
+  @keyframes sl-ai-shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+  .sl-ai-loader__time { font: 400 12px/18px var(--font-mono); color: var(--sl-grey-800); font-variant-numeric: tabular-nums; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sl-ai-mark .b { opacity: 1; }
+    .sl-ai-mark .n { animation: none; opacity: 0; }
+    .sl-ai-loader__label { animation: none; background: none; color: var(--color-text-heading); }
+  }
+
+  /* Result note and failed row: same slot as the loader */
+  .sl-ai-note { display: flex; align-items: center; gap: 10px; padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); background: var(--ai-tint); font: 400 13px/20px var(--font-sans); color: var(--color-text-heading); }
+  .sl-ai-note--alert { background: var(--color-background-alert); }
+  .sl-ai-note--alert svg { width: 20px; height: 20px; flex: none; color: var(--color-text-alert); }
+  .sl-ai-note span { flex: 1; min-width: 0; }
+
+  /* Tertiary sm button, as in Buttons (components-buttons.html) */
+  .sl-btn { font-family: var(--font-sans); font-weight: 400; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--sl-blue-600); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; flex: none; font-size: var(--type-label-sm-size); line-height: var(--type-label-sm-line); padding: 4px 8px; }
+  .sl-btn:hover { color: var(--sl-teal-600); text-decoration: underline; }
+  .sl-btn:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+
+  /* Card layout */
+  .section-h { font: 800 13px/16px var(--font-sans); color: var(--color-text-heading); margin-bottom: 10px; }
+  .section-h .meta { font-weight: 400; color: var(--color-text-subtle); font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .divider { height: 1px; background: var(--sl-grey-200); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: var(--space-4); }
+  .cell { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .cap { font: 400 10px/14px var(--font-mono); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: .05em; }
+  .frames { display: grid; grid-template-columns: 1fr; gap: var(--space-3); max-width: 520px; }
+  .chat { display: flex; flex-direction: column; gap: 8px; padding: var(--space-4); border: 1px solid var(--sl-grey-200); border-radius: var(--radius-sm); }
+  .chat .u { align-self: flex-end; padding: 6px 10px; border-radius: var(--radius-sm); background: var(--sl-blue-100); font: 400 13px/20px var(--font-sans); color: var(--color-text-heading); }
+  .chat .bubble { align-self: flex-start; padding: 6px 10px; border-radius: var(--radius-sm); background: var(--sl-grey-100); }
+
+  .spec { display: grid; grid-template-columns: 110px 1fr; gap: 4px 16px; font: 400 11px/16px var(--font-sans); padding: 12px 14px; background: var(--sl-grey-100); border-radius: var(--radius-xs); margin: 0; }
+  .spec dt { font-weight: 800; color: var(--color-text-body); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .spec dd { margin: 0; color: var(--color-text-subtle); }
+  .spec dd b { color: var(--color-text-body); }
+  .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+</style>
+<script type="application/json" id="jellyroll-meta">
+{
+  "name": "AI loading indicator",
+  "section": "Components",
+  "url": "https://sl-design-team.github.io/jellyroll/preview/components-ai-loading-indicator.html",
+  "tagline": "The SnapGPT mark with its six nodes lit in turn, while AI works on a task.",
+  "anatomy": "A row on `--ai-tint`: the SnapGPT mark (`assets/snapgpt-icon.svg`, 20px, `--ai-accent`) at 35% opacity with a 1.4px ring on each of its six nodes · task label 13/20 Medium with a shimmer · elapsed time, mono 12/18 · tertiary sm Stop button.",
+  "options": "Task (default): task label, elapsed time and Stop. Fixed label: the label is \"Thinking…\". It has no time and no Stop. Use it where the task has no name. Bare: no tint and a 16px mark, for an answer bubble in the SnapGPT panel.",
+  "usage": "Use wherever AI works on a task: SnapGPT, a table that the AI fills, a form, an editor. The task can take from a few seconds to a minute. Name the task in the label, for example Generating column descriptions. Name SnapGPT only on SnapGPT surfaces. Use the Spinner for other waits under 10 seconds. Never redraw the mark; animate only the rings. When the mark is an icon in a button or a note, show it static at full opacity.",
+  "behaviors": "Each ring goes 0 → 1 → 0 opacity on a 1.8s ease-in-out cycle. Each ring starts 300ms after the one before, clockwise from the top node. The time starts with the task. Stop keeps what the AI already made. The focus stays on the control that started the task. At the end, the loader and the result note use one slot. The mark stops, then the row cross-fades into the note in 200ms. Only one thing changes at a time. A failure shows an alert row with Try again. The row stays until the user acts. The label is `role=\"status\"`, so it is the announcement. A failure is `role=\"alert\"`. The time is `aria-hidden`. With reduced motion, the mark is static at full opacity and the shimmer stops. The time still counts. The end has no animation.",
+  "tokens": [
+    "--ai-accent",
+    "--ai-tint",
+    "--color-text-heading",
+    "--sl-grey-800",
+    "--color-background-alert",
+    "--color-text-alert"
+  ]
+}
+</script>
+</head>
+<body>
+  <div class="card">
+    <div class="row-label"><span class="name">AI loading indicator</span><span class="meta">SnapGPT mark · six nodes light in turn · 1.8s cycle · label · elapsed time · Stop</span></div>
+
+    <!-- One path from assets/snapgpt-icon.svg. The script copies it into each mark. -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <path id="sl-ai-mark-path" d="M10.4619 3.44238C11.32 1.94368 13.2215 1.43017 14.709 2.2959C16.1957 3.16138 16.7043 5.07724 15.8467 6.5752C15.1033 7.87266 13.5792 8.42732 12.2178 7.99219L11.7256 8.85156C11.7538 8.84912 11.7821 8.84838 11.8105 8.84668V8.83691H15.5479C15.8542 7.43205 17.0934 6.37793 18.5811 6.37793C20.2985 6.37817 21.6895 7.78261 21.6895 9.51172C21.6893 11.2407 20.2983 12.6443 18.5811 12.6445C17.0937 12.6445 15.8544 11.5916 15.5479 10.1865H14.5674C14.5822 10.2078 14.5951 10.2303 14.6094 10.252L14.6182 10.2471L14.6846 10.3633L16.4912 13.5176C17.8531 13.0826 19.3768 13.639 20.1201 14.9365C20.9774 16.4345 20.4692 18.3505 18.9824 19.2158C17.495 20.0814 15.5934 19.567 14.7354 18.0684C13.9925 16.7706 14.277 15.1617 15.332 14.1914L14.8408 13.334C14.8281 13.3615 14.8133 13.388 14.7998 13.415L14.8086 13.4199L14.748 13.5254L12.9404 16.6807C13.9957 17.6508 14.2815 19.2597 13.5381 20.5576C12.68 22.0563 10.7785 22.5698 9.29102 21.7041C7.80417 20.8387 7.29566 18.9228 8.15332 17.4248C8.89651 16.1277 10.4201 15.5723 11.7812 16.0068L12.2754 15.1436C12.2469 15.146 12.2182 15.1467 12.1895 15.1484V15.1582H8.45215C8.1459 16.5632 6.90663 17.6172 5.41895 17.6172C3.70143 17.6171 2.31055 16.2126 2.31055 14.4834C2.3108 12.7544 3.70159 11.3507 5.41895 11.3506C6.90663 11.3506 8.14593 12.4041 8.45215 13.8096H9.43262C9.40677 13.7726 9.38267 13.7344 9.3584 13.6963H9.35156L9.31641 13.6338L7.50879 10.4785C6.14748 10.9132 4.62403 10.3579 3.88086 9.06055C3.02334 7.56252 3.53169 5.64662 5.01855 4.78125C6.50601 3.91565 8.40761 4.43006 9.26562 5.92871C10.0083 7.22643 9.72296 8.8345 8.66797 9.80469L9.15137 10.6475L9.25195 10.4746L11.0586 7.31836C10.004 6.34806 9.71861 4.73997 10.4619 3.44238ZM11.7285 17.4453C10.883 16.9531 9.80155 17.2442 9.3125 18.0977C8.82326 18.9519 9.11383 20.0443 9.95996 20.5371C10.8056 21.0294 11.888 20.7375 12.377 19.8838C12.8662 19.0295 12.5748 17.938 11.7285 17.4453ZM18.958 15.6084C18.4695 14.7551 17.3875 14.4638 16.542 14.9561C15.6959 15.4482 15.4044 16.5403 15.8936 17.3945C16.382 18.2482 17.4649 18.5402 18.3105 18.0479C19.1566 17.5557 19.4471 16.4636 18.958 15.6094V15.6084ZM5.41797 12.6992C4.44233 12.6993 3.64869 13.4972 3.64844 14.4834C3.64844 15.4698 4.44167 16.2685 5.41797 16.2686C6.39382 16.2686 7.1875 15.4698 7.1875 14.4834C7.18725 13.4972 6.39367 12.6992 5.41797 12.6992ZM9.95508 11.998L10.9775 13.7832H13.0205L14.042 11.998L13.0205 10.2139H10.9775L9.95508 11.998ZM18.5811 7.72559C17.6052 7.72559 16.8116 8.52438 16.8115 9.51074C16.8115 10.4972 17.6052 11.2959 18.5811 11.2959C19.5567 11.2957 20.3496 10.497 20.3496 9.51074C20.3495 8.52451 19.5572 7.72583 18.5811 7.72559ZM8.10547 6.60254C7.61704 5.74888 6.53413 5.45687 5.68848 5.94922C4.84262 6.44145 4.55194 7.53353 5.04102 8.3877C5.5294 9.24128 6.61141 9.53319 7.45703 9.04102C8.30312 8.5489 8.59451 7.45681 8.10547 6.60254ZM14.0381 3.46289C13.1925 2.97062 12.111 3.2625 11.6221 4.11621C11.1331 4.97036 11.4236 6.06197 12.2695 6.55469C13.1151 7.04702 14.1976 6.75511 14.6865 5.90137C15.1757 5.04711 14.8843 3.95558 14.0381 3.46289Z"></path>
+      </defs>
+    </svg>
+
+    <div>
+      <div class="section-h">Variants <span class="meta">task label is the default</span></div>
+      <div class="grid">
+        <div class="cell">
+          <span class="cap">Task · label · time · Stop</span>
+          <div class="sl-ai-loader">
+            <svg class="sl-ai-mark" viewBox="0 0 24 24" aria-hidden="true" data-mark></svg>
+            <div class="sl-ai-loader__body"><span class="sl-ai-loader__label" role="status">Generating column descriptions</span><span class="sl-ai-loader__time" aria-hidden="true" data-elapsed>0.0s</span></div>
+            <button type="button" class="sl-btn">Stop</button>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cap">Fixed label · no time</span>
+          <div class="sl-ai-loader">
+            <svg class="sl-ai-mark" viewBox="0 0 24 24" aria-hidden="true" data-mark></svg>
+            <div class="sl-ai-loader__body"><span class="sl-ai-loader__label" role="status">Thinking…</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">States</div>
+      <div class="grid">
+        <div class="cell">
+          <span class="cap">Reduced motion · mark static · time counts</span>
+          <div class="sl-ai-loader">
+            <svg class="sl-ai-mark is-static" viewBox="0 0 24 24" aria-hidden="true" data-mark></svg>
+            <div class="sl-ai-loader__body"><span class="sl-ai-loader__label is-static" role="status">Mapping 12 fields</span><span class="sl-ai-loader__time" aria-hidden="true" data-elapsed>0.0s</span></div>
+            <button type="button" class="sl-btn">Stop</button>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cap">Failed · alert row · Try again</span>
+          <div class="sl-ai-note sl-ai-note--alert" role="alert">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <span>Couldn’t generate the column descriptions.</span>
+            <button type="button" class="sl-btn">Try again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">End of the task <span class="meta">one slot · one change at a time</span></div>
+      <div class="frames">
+        <div class="cell">
+          <span class="cap">1 · Working</span>
+          <div class="sl-ai-loader">
+            <svg class="sl-ai-mark" viewBox="0 0 24 24" aria-hidden="true" data-mark></svg>
+            <div class="sl-ai-loader__body"><span class="sl-ai-loader__label">SnapGPT is writing a draft</span><span class="sl-ai-loader__time" aria-hidden="true">6.4s</span></div>
+            <button type="button" class="sl-btn" tabindex="-1">Stop</button>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cap">2 · Mark stops</span>
+          <div class="sl-ai-loader">
+            <svg class="sl-ai-mark is-static" viewBox="0 0 24 24" aria-hidden="true" data-mark></svg>
+            <div class="sl-ai-loader__body"><span class="sl-ai-loader__label is-static">SnapGPT is writing a draft</span></div>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cap">3 · Cross-fade to the note · 200ms</span>
+          <div class="sl-ai-note">
+            <svg class="sl-ai-mark is-static" viewBox="0 0 24 24" aria-hidden="true" data-mark></svg>
+            <span>SnapGPT wrote this draft from the pipeline.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-h">In context</div>
+      <div class="grid">
+        <div class="cell">
+          <span class="cap">Editor · above the toolbar</span>
+          <div class="sl-ai-loader">
+            <svg class="sl-ai-mark" viewBox="0 0 24 24" aria-hidden="true" data-mark></svg>
+            <div class="sl-ai-loader__body"><span class="sl-ai-loader__label" role="status">SnapGPT is writing a draft</span><span class="sl-ai-loader__time" aria-hidden="true" data-elapsed>0.0s</span></div>
+            <button type="button" class="sl-btn">Stop</button>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cap">SnapGPT panel · answer bubble · 16px mark</span>
+          <div class="chat">
+            <div class="u">Write documentation for this pipeline.</div>
+            <div class="bubble">
+              <div class="sl-ai-loader sl-ai-loader--bare">
+                <svg class="sl-ai-mark sl-ai-mark--sm" viewBox="0 0 24 24" aria-hidden="true" data-mark></svg>
+                <span class="sl-ai-loader__label" role="status">Thinking…</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>mark</dt><dd>The SnapGPT mark (<code>assets/snapgpt-icon.svg</code>) in <code>--ai-accent</code>, at 35% opacity. Each of its six nodes has a 1.4px ring. <b>Never redraw the mark</b>; animate the rings only.</dd>
+      <dt>motion</dt><dd>Each ring goes 0 → 1 → 0 opacity on a <b>1.8s</b> cycle, ease-in-out, 300ms after the one before it, clockwise from the top node.</dd>
+      <dt>label</dt><dd>13/20 Medium, Indigo-900 (15:1 on <code>--ai-tint</code>). A band of <code>--ai-accent</code> crosses the text every 1.4s. Name the task: "Generating column descriptions". Name SnapGPT only on SnapGPT surfaces: "SnapGPT is writing a draft". Use "Thinking…" only where the task has no name.</dd>
+      <dt>time</dt><dd>Elapsed time in mono 12/18, Grey-800, tabular numbers: <code>4.2s</code>, then <code>1m 05s</code>. Starts when the task starts.</dd>
+      <dt>Stop</dt><dd>Tertiary sm button. Stop keeps what the AI already made. The focus stays on the control that started the task.</dd>
+      <dt>end</dt><dd>The loader and the result note are <b>one slot</b>. The mark stops. The row cross-fades into the note (<code>--duration-normal</code>, 200ms, <code>--ease-standard</code>). The slot takes the height of the note. One change at a time.</dd>
+      <dt>a11y</dt><dd>The label is <code>role="status"</code>, so it is the announcement and Stop is not read. The time is <code>aria-hidden</code>, so screen readers do not read every tick. A failure is <code>role="alert"</code> and stays until the user acts.</dd>
+      <dt>reduced motion</dt><dd>The mark is static at full opacity, the shimmer stops, the time still counts. The end changes with no animation.</dd>
+      <dt>vs spinner</dt><dd>Use this indicator wherever AI works on a task: SnapGPT, a table that the AI fills, a form, an editor. The task can take from a few seconds to a minute. Use the Spinner for other waits under 10 seconds.</dd>
+    </dl>
+  </div>
+  <script>
+  (function () {
+    // The gallery renders previews in a shadow root; scope to it. Standalone: document.
+    var ROOT = (document.currentScript && document.currentScript.getRootNode())
+            || (document.querySelector('#previewRender, .preview-render') || {}).shadowRoot
+            || document;
+    var ring = [[13.15, 5.00], [18.58, 9.51], [17.43, 16.50], [10.84, 19.00], [5.42, 14.48], [6.57, 7.50]];
+    var src = ROOT.querySelector('#sl-ai-mark-path');
+    var d = src ? src.getAttribute('d') : '';
+    // Each mark gets its own copy of the path, so it works in the gallery's shadow root.
+    ROOT.querySelectorAll('[data-mark]').forEach(function (svg) {
+      var html = '<path class="b" d="' + d + '"></path>';
+      ring.forEach(function (p) { html += '<circle class="n" cx="' + p[0] + '" cy="' + p[1] + '" r="2.44"></circle>'; });
+      svg.innerHTML = html;
+    });
+
+    var t0 = Date.now();
+    function fmt(s) { if (s < 60) return s.toFixed(1) + 's'; var m = Math.floor(s / 60), r = Math.floor(s % 60); return m + 'm ' + (r < 10 ? '0' : '') + r + 's'; }
+    var els = ROOT.querySelectorAll('[data-elapsed]');
+    var id = setInterval(function () {
+      if (!els.length || !els[0].isConnected) { clearInterval(id); return; }
+      var s = ((Date.now() - t0) / 1000) % 90;
+      els.forEach(function (e) { e.textContent = fmt(s); });
+    }, 100);
+  })();
+  </script>
+</body>
+</html>
