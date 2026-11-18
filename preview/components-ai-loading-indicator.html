@@ -81,6 +81,16 @@
   .spec dd { margin: 0; color: var(--color-text-subtle); }
   .spec dd b { color: var(--color-text-body); }
   .spec code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 2px; font-family: var(--font-mono); font-size: 10px; }
+
+  /* ─── AGENT SIGNATURE · proposal (DSAI-2123) ──────────────
+     An agent uses the same mark. One node, its signature, carries the
+     agent color. At rest the node is a filled dot. While the agent works,
+     the dot in the agent color goes around the six nodes on the same cycle. */
+  .sl-ai-mark[data-agent-node] .n { fill: var(--agent-color); stroke: var(--agent-color); }
+  .sl-ai-mark[data-agent-node].is-static .n.s { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    .sl-ai-mark[data-agent-node] .n.s { opacity: 1; }
+  }
 </style>
 <script type="application/json" id="jellyroll-meta">
 {
@@ -89,7 +99,7 @@
   "url": "https://sl-design-team.github.io/jellyroll/preview/components-ai-loading-indicator.html",
   "tagline": "The SnapGPT mark with its six nodes lit in turn, while AI works on a task.",
   "anatomy": "A row on `--ai-tint`: the SnapGPT mark (`assets/snapgpt-icon.svg`, 20px, `--ai-accent`) at 35% opacity with a 1.4px ring on each of its six nodes · task label 13/20 Medium with a shimmer · elapsed time, mono 12/18 · tertiary sm Stop button.",
-  "options": "Task (default): task label, elapsed time and Stop. Fixed label: the label is \"Thinking…\". It has no time and no Stop. Use it where the task has no name. Bare: no tint and a 16px mark, for an answer bubble in the SnapGPT panel.",
+  "options": "Task (default): task label, elapsed time and Stop. Fixed label: the label is \"Thinking…\". It has no time and no Stop. Use it where the task has no name. Bare: no tint and a 16px mark, for an answer bubble in the SnapGPT panel. Agent (proposal): the same mark, with one signature node in the agent color. The node is a filled dot at rest, and it goes around the nodes while the agent works.",
   "usage": "Use wherever AI works on a task: SnapGPT, a table that the AI fills, a form, an editor. The task can take from a few seconds to a minute. Name the task in the label, for example Generating column descriptions. Name SnapGPT only on SnapGPT surfaces. Use the Spinner for other waits under 10 seconds. Never redraw the mark; animate only the rings. When the mark is an icon in a button or a note, show it static at full opacity.",
   "behaviors": "Each ring goes 0 → 1 → 0 opacity on a 1.8s ease-in-out cycle. Each ring starts 300ms after the one before, clockwise from the top node. The time starts with the task. Stop keeps what the AI already made. The focus stays on the control that started the task. At the end, the loader and the result note use one slot. The mark stops, then the row cross-fades into the note in 200ms. Only one thing changes at a time. A failure shows an alert row with Try again. The row stays until the user acts. The label is `role=\"status\"`, so it is the announcement. A failure is `role=\"alert\"`. The time is `aria-hidden`. With reduced motion, the mark is static at full opacity and the shimmer stops. The time still counts. The end has no animation.",
   "tokens": [
@@ -192,6 +202,42 @@
     <div class="divider"></div>
 
     <div>
+      <div class="section-h">Agents <span class="meta">proposal · one mark · the signature node in the agent color</span></div>
+      <div class="grid">
+        <div class="cell">
+          <span class="cap">At rest · the signature node is a filled dot</span>
+          <div class="sl-ai-note">
+            <svg class="sl-ai-mark is-static" viewBox="0 0 24 24" aria-hidden="true" data-mark data-agent-node="1" style="--agent-color: var(--sl-pink-600)"></svg>
+            <span><b>Pipeline builder</b> answers this chat.</span>
+          </div>
+          <div class="sl-ai-note">
+            <svg class="sl-ai-mark is-static" viewBox="0 0 24 24" aria-hidden="true" data-mark data-agent-node="2" style="--agent-color: var(--sl-teal-700)"></svg>
+            <span><b>Troubleshooter</b> answers this chat.</span>
+          </div>
+          <div class="sl-ai-note">
+            <svg class="sl-ai-mark is-static" viewBox="0 0 24 24" aria-hidden="true" data-mark data-agent-node="3" style="--agent-color: var(--sl-blue-800)"></svg>
+            <span><b>MCP server builder</b> answers this chat.</span>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cap">Working · the dot goes around the six nodes</span>
+          <div class="sl-ai-loader">
+            <svg class="sl-ai-mark" viewBox="0 0 24 24" aria-hidden="true" data-mark data-agent-node="2" style="--agent-color: var(--sl-teal-700)"></svg>
+            <div class="sl-ai-loader__body"><span class="sl-ai-loader__label" role="status">Troubleshooter is reading the run log</span><span class="sl-ai-loader__time" aria-hidden="true" data-elapsed>0.0s</span></div>
+            <button type="button" class="sl-btn">Stop</button>
+          </div>
+          <span class="cap">Auto · no signature · the loader as it is</span>
+          <div class="sl-ai-loader">
+            <svg class="sl-ai-mark" viewBox="0 0 24 24" aria-hidden="true" data-mark></svg>
+            <div class="sl-ai-loader__body"><span class="sl-ai-loader__label" role="status">SnapGPT is choosing the agent</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
       <div class="section-h">In context</div>
       <div class="grid">
         <div class="cell">
@@ -219,6 +265,7 @@
 
     <dl class="spec">
       <dt>mark</dt><dd>The SnapGPT mark (<code>assets/snapgpt-icon.svg</code>) in <code>--ai-accent</code>, at 35% opacity. Each of its six nodes has a 1.4px ring. <b>Never redraw the mark</b>; animate the rings only.</dd>
+      <dt>agent</dt><dd><b>Proposal.</b> An agent of SnapGPT uses the same mark. One node is its signature, in a ramp color of the agent (<code>--agent-color</code>), never a status color. At rest the node is a filled dot. While the agent works, the dot in the agent color goes around the nodes on the same cycle. The label names the agent: "Troubleshooter is reading the run log". Auto has no signature.</dd>
       <dt>motion</dt><dd>Each ring goes 0 → 1 → 0 opacity on a <b>1.8s</b> cycle, ease-in-out, 300ms after the one before it, clockwise from the top node.</dd>
       <dt>label</dt><dd>13/20 Medium, Indigo-900 (15:1 on <code>--ai-tint</code>). A band of <code>--ai-accent</code> crosses the text every 1.4s. Name the task: "Generating column descriptions". Name SnapGPT only on SnapGPT surfaces: "SnapGPT is writing a draft". Use "Thinking…" only where the task has no name.</dd>
       <dt>time</dt><dd>Elapsed time in mono 12/18, Grey-800, tabular numbers: <code>4.2s</code>, then <code>1m 05s</code>. Starts when the task starts.</dd>
@@ -243,6 +290,11 @@
       var html = '<path class="b" d="' + d + '"></path>';
       ring.forEach(function (p) { html += '<circle class="n" cx="' + p[0] + '" cy="' + p[1] + '" r="2.44"></circle>'; });
       svg.innerHTML = html;
+    });
+    // Agent signature (proposal): the node or nodes in data-agent-node get the class s.
+    ROOT.querySelectorAll('[data-mark][data-agent-node]').forEach(function (svg) {
+      var n = svg.querySelectorAll('.n');
+      svg.getAttribute('data-agent-node').split(',').forEach(function (k) { if (n[k - 1]) n[k - 1].classList.add('s'); });
     });
 
     var t0 = Date.now();

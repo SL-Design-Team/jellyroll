@@ -2,6 +2,13 @@
 
 The live gallery is at <https://sl-design-team.github.io/jellyroll/>.
 
+## 2026-11-17 · AI loading indicator: agents (proposal)
+
+### New
+- **Agents** section on the AI loading indicator page: an agent of SnapGPT uses the same mark, with one signature node in the agent color. At rest the node is a filled dot. While the agent works, the dot goes around the six nodes on the same 1.8s cycle.
+- Auto has no signature and uses the loader as it is. The label names the agent.
+- This is a proposal from DSAI-2123. It is not validated.
+
 ## 2026-11-17 · AI loading indicator
 
 ### New
